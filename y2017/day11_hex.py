@@ -16,14 +16,14 @@
 #  \    /    \    /    \    /    \    /
 #   +--+      +--+      +--+      +--+
 #
-#   N  = ( 0,-2)
-#   S  = ( 0,+2)
+#   N  = ( 0, -2)
+#   S  = ( 0, +2)
 #
-#   NW = (-1,-1)
-#   SE = (+1,+1)
+#   NW = (-1, -1)
+#   SE = (+1, +1)
 #
-#   SW = (-1,+1)
-#   NE = (+1,-1)
+#   SW = (-1, +1)
+#   NE = (+1, -1)
 #
 from functools import reduce
 from typing import Iterable
@@ -36,20 +36,16 @@ Pos = Tuple[int, int]
 
 def step(pos: Pos, direction: str) -> Pos:
     x, y = pos
-    if direction == 'n':
-        return x, y - 2
-    elif direction == 's':
-        return x, y + 2
-    elif direction == 'nw':
-        return x - 1, y - 1
-    elif direction == 'se':
-        return x + 1, y + 1
-    elif direction == 'sw':
-        return x - 1, y + 1
-    elif direction == 'ne':
-        return x + 1, y - 1
-    else:
-        raise ValueError(direction)
+    dx, dy = {
+        'n':  (+0, -2),
+        'ne': (+1, -1),
+        'se': (+1, +1),
+        's':  (+0, +2),
+        'sw': (-1, +1),
+        'nw': (-1, -1),
+    }[direction.lower()]
+
+    return x + dx, y + dy
 
 
 def steps(start: Pos, directions: Iterable[str]) -> Iterable[Pos]:
@@ -95,7 +91,7 @@ def part_1(fn: str) -> int:
     start = (0, 0)
     end = reduce(step, load_steps(fn), start)
     d = distance(start, end)
-    print(f"part 1: distance is {d} ({end})")
+    print(f"part 1: distance is {d} {end}")
     return d
 
 
@@ -105,7 +101,7 @@ def part_2(fn: str) -> int:
         steps(start, load_steps(fn)),
         key=lambda p: distance(start, p)
     )
-    print(f"part 2: max distance is {max_d} ({max_pos})")
+    print(f"part 2: max distance is {max_d} {max_pos}")
     return max_d
 
 

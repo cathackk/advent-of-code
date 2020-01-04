@@ -406,3 +406,7 @@ def until_repeat(g: Generator[T, None, None]) -> Generator[T, None, T]:
             yield state
         else:
             return state
+
+
+def count_ones(bs: bytes) -> int:
+    return sum(bin(b).count('1') for b in bs)
