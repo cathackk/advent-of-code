@@ -410,3 +410,22 @@ def until_repeat(g: Generator[T, None, None]) -> Generator[T, None, T]:
 
 def count_ones(bs: bytes) -> int:
     return sum(bin(b).count('1') for b in bs)
+
+
+def create_logger(debug: bool = False) -> Callable[[str], None]:
+    if debug:
+        def log(message: str):
+            print(message)
+        return log
+    else:
+        def nolog(message: str):
+            pass
+        return nolog
+
+
+def only_value(items: Iterable[T]) -> T:
+    distincts = set(items)
+    if len(distincts) == 1:
+        return distincts.pop()
+    else:
+        raise ValueError(f"more than one distinct value: {distincts}")
