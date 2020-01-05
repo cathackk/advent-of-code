@@ -412,13 +412,13 @@ def count_ones(bs: bytes) -> int:
     return sum(bin(b).count('1') for b in bs)
 
 
-def create_logger(debug: bool = False) -> Callable[[str], None]:
+def create_logger(debug: bool = False) -> Callable[[Any], None]:
     if debug:
-        def log(message: str):
-            print(message)
+        def log(o):
+            print(o)
         return log
     else:
-        def nolog(message: str):
+        def nolog(o):
             pass
         return nolog
 

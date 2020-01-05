@@ -1,4 +1,3 @@
-from collections import Counter
 from collections import defaultdict
 from itertools import zip_longest
 from typing import Callable
@@ -7,6 +6,7 @@ from typing import Iterable
 from typing import List
 from typing import Tuple
 
+from utils import create_logger
 from utils import only_value
 
 Pos = Tuple[int, int]
@@ -212,13 +212,6 @@ class RuleBook:
             matching_rule = self.matching_rule(subgrid)
             expanded_subgrid = matching_rule.grid_to
             assert expanded_subgrid.size == subgrid.size + 1
-
-            # print(f"---- subgrid at {(cx, cy)} ----")
-            # print(subgrid)
-            # print("matches")
-            # print(matching_rule)
-            # print()
-
             ecx = (cx // subgrid.size) * expanded_subgrid.size
             ecy = (cy // subgrid.size) * expanded_subgrid.size
             yield (ecx, ecy), expanded_subgrid
@@ -226,6 +219,72 @@ class RuleBook:
     @classmethod
     def load(cls, fn: str):
         return cls(load_rules(fn))
+
+
+def count_pixels(grid: Grid, rulebook: RuleBook, steps: int, debug: bool = False) -> int:
+    """
+    Optimized method for recursively calculating pixels count
+    after large number of expansion steps (tested up to 900).
+
+    Note: Working only for starting grids 3x3 and steps divisible by 3.
+    """
+    log = create_logger(debug)
+
+    # currently optimized only for these values:
+    assert grid.size == 3
+    assert steps % 3 == 0
+
+    # dictionary of grids by their codes
+    code_to_grid: Dict[int, Grid] = {int(grid): grid}
+    # code of 3x3 grid -> 9 subresult codes (nine 3x3 subresults after three-steps expansion)
+    expand_cache: Dict[int, List[int]] = dict()
+    # (code, steps) -> pixels_count
+    pixels_count_cache: Dict[Tuple[int, int], int] = {(int(grid), 0): len(grid.pixels)}
+    log(f">>> pxl: {int(grid)} -> {len(grid.pixels)}")
+
+    def _expand_to_nine_subgrids(grid3: Grid) -> List[Grid]:
+        key = int(grid3)
+        if key not in expand_cache:
+            # expand in three steps from 3x3 -> 9x9
+            assert grid.size == 3
+            grid4 = rulebook.expand(grid3)
+            assert grid4.size == 4
+            grid6 = rulebook.expand(grid4)
+            assert grid6.size == 6
+            grid9 = rulebook.expand(grid6)
+            assert grid9.size == 9
+            # ... yielding nine 3x3 subresults
+            subgrids = list(sg for _, sg in grid9.split())
+            assert len(subgrids) == 9
+
+            # store subresults codes
+            subgrids_codes = [int(sg) for sg in subgrids]
+            # ... into expansion cache,
+            expand_cache[key] = subgrids_codes
+            log(f">>> exp: {key} -> {subgrids_codes}")
+            for h, sg in zip(subgrids_codes, subgrids):
+                if h not in code_to_grid:
+                    # ... dictionary,
+                    code_to_grid[h] = sg
+                    # ... and pixels count cache
+                    pixels_count_cache[(h, 0)] = len(sg.pixels)
+                    log(f">>> pxl: {(h, 0)} -> {len(sg.pixels)}")
+
+        return [code_to_grid[h] for h in expand_cache[key]]
+
+    def _pixels_count(grid3: Grid, in_steps: int) -> int:
+        key = (int(grid3), in_steps)
+        if key not in pixels_count_cache:
+            assert in_steps % 3 == 0
+            assert in_steps >= 0
+            pixels_count_cache[key] = sum(
+                _pixels_count(sg, in_steps - 3)
+                for sg in _expand_to_nine_subgrids(grid3)
+            )
+            log(f">>> pxl: {key} -> {pixels_count_cache[key]}")
+        return pixels_count_cache[key]
+
+    return _pixels_count(grid, steps)
 
 
 def test_grid_rotated():
@@ -364,7 +423,7 @@ def test_grid_join():
     }
     assert sum(len(sg.pixels) for sg in subgrids.values()) == 12
 
-    grid = Grid.join(subgrids.items())
+    grid = Grid.join((pos, sg) for pos, sg in subgrids.items())
     assert grid.size == 6
     assert len(grid.pixels) == 12
     assert grid.pixels == {
@@ -374,7 +433,7 @@ def test_grid_join():
     }
 
 
-def test_expand_starting_grid():
+def test_expand_3x3():
     #
     #  ##.    #..#
     #  #.# => ....
@@ -396,7 +455,7 @@ def test_expand_starting_grid():
     assert grid2 == rule.grid_to
 
 
-def test_expand_with_split_and_join():
+def test_expand_4x4():
     # first rule:
     #
     #  ..    ##.
@@ -457,7 +516,7 @@ def test_expand_with_split_and_join():
     }
 
 
-def test_expand_empty():
+def test_expand_4x4_with_empty_subgrids():
     # first rule:
     #
     # #.    ...
@@ -511,184 +570,37 @@ def test_expand_empty():
     assert len(grid2.pixels) == 13
 
 
-def test_rulebook():
-    fn = "data/21-input.txt"
-    rules = list(load_rules(fn))
-    assert len(rules) == 108
-    size_counts = Counter(rule.grid_from.size for rule in rules)
-    assert size_counts[2] == 6
-    assert size_counts[3] == 102
+def part_1(fn: str, steps: int = 5, debug: bool = False) -> int:
+    log = create_logger(debug)
 
     rulebook = RuleBook.load(fn)
-    assert len(rulebook) == 108
-
-    # (1) '../.. => #.#/###/#.#'
-    grid_1 = Grid(2, [])
-    rule_1 = rulebook.matching_rule(grid_1)
-    assert rule_1.grid_from == grid_1
-    assert rule_1.grid_to == Grid(3, [(0, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (2, 2)])
-
-    # (5) '##/#. => #../#.#/..#'
-    grid_5 = Grid(2, [(0, 0), (1, 0), (0, 1)])
-    rule_5 = rulebook.matching_rule(grid_5)
-    assert rule_5.grid_from == grid_5
-    assert rule_5.grid_to == Grid(3, [(0, 0), (0, 1), (2, 1), (2, 2)])
-
-    # (7) '.../.../... => .###/..##/.#../###.'
-    grid_7 = Grid(3, [])
-    rule_7 = rulebook.matching_rule(grid_7)
-    assert rule_7.grid_from == grid_7
-    assert rule_7.grid_to == Grid(
-        4, [(1, 0), (2, 0), (3, 0), (2, 1), (3, 1), (1, 2), (0, 3), (1, 3), (2, 3)]
-    )
-
-    # (18) '###/#../... => #..#/...#/..#./##.#'
-    grid_18 = Grid(3, [(0, 0), (1, 0), (2, 0), (0, 1)])
-    rule_18 = rulebook.matching_rule(grid_18)
-    assert rule_18.grid_from == grid_18
-    assert rule_18.grid_to == Grid(4, [(0, 0), (3, 0), (3, 1), (2, 2), (0, 3), (1, 3), (3, 3)])
-    assert grid_18.rotated(1) != rule_18.grid_from
-    assert rulebook.matching_rule(grid_18.rotated(1)) is rule_18
-    assert grid_18.flipped_x() != rule_18.grid_from
-    assert rulebook.matching_rule(grid_18.flipped_x()) is rule_18
-
-    # (108) '###/###/### => #..#/.###/##../.##.'
-    grid_108 = Grid(3, [(x, y) for x in range(3) for y in range(3)])
-    rule_108 = rulebook.matching_rule(grid_108)
-    assert rule_108.grid_from == grid_108
-    assert rule_108.grid_to == Grid(
-        4, [(0, 0), (3, 0), (1, 1), (2, 1), (3, 1), (0, 2), (1, 2), (1, 3), (2, 3)]
-    )
-
-
-def test_part_1():
-    rulebook = RuleBook.load("data/21-input.txt")
-
-    grid0 = Grid.create_starting()
-    assert grid0.size == 3
-    assert len(grid0.pixels) == 5
-
-    # ==== Expansion # 1 ====
-    #
-    #  .#.    ##.#
-    #  ..# => #.##
-    #  ###    ##..
-    #         #.##
-    # (63) ##./#.#/#.. => ##.#/#.##/##../#.##
-
-    grid1 = rulebook.expand(grid0)
-    assert grid1.size == 4
-    assert len(grid1.pixels) == 11
-
-    # ==== Expansion # 2 ====
-    #  ##.#    ##|.#    #..|#..
-    #  #.## => #.|## => #.#|#.#
-    #  ##..    --+--    ..#|..#
-    #  #.##    ##|..    ---+---
-    #          #.|##    #..|...
-    #                   #.#|.##
-    #                   ..#|###
-    #
-    # (5) ##/#. => #../#.#/..#
-    # (5) ##/#. => #../#.#/..#
-    # (5) ##/#. => #../#.#/..#
-    # (3) ##/.. => .../.##/###
-
-    grid2 = rulebook.expand(grid1)
-    assert grid2.size == 6
-    assert len(grid2.pixels) == 17
-
-    # ==== Expansion # 3 ====
-    #
-    #  #..#..    #.|.#|..    ...|#..|..#
-    #  #.##.#    #.|##|.#    .##|#.#|...
-    #  ..#..# => --+--+-- => ###|..#|###
-    #  #.....    ..|#.|.#    ---+---+---
-    #  #.#.##    #.|..|..    ..#|..#|..#
-    #  ..####    --+--+--    ...|...|...
-    #            #.|#.|##    ###|###|###
-    #            ..|##|##    ---+---+---
-    #                        ..#|#..|#.#
-    #                        ...|#.#|#..
-    #                        ###|..#|###
-    #
-    # (3) ##/.. => .../.##/### X=0
-    # (2) #./.. => ..#/.../###
-    # (2) #./.. => ..#/.../###
-    # (5) ##/#. => #../#.#/..# X=1
-    # (2) #./.. => ..#/.../###
-    # (5) ##/#. => #../#.#/..#
-    # (2) #./.. => ..#/.../### X=2
-    # (2) #./.. => ..#/.../###
-    # (6) ##/## => #.#/#../###
-
-    grid3 = rulebook.expand(grid2)
-    assert grid3.size == 9
-    assert len(grid3.pixels) == 13 + 12 + 14
-
-    # ==== Expansion # 4 ====
-    #
-    #  ...#....#    ...|#..|..#    ##..|.###|#...    ##...####...
-    #  .###.#...    .##|#.#|...    .#.#|#...|.#..    .#.##....#..
-    #  ###..####    ###|..#|###    ##..|.#..|#.#.    ##...#..#.#.
-    #  ..#..#..#    ---+---+---    .#..|##..|#.#.    .#..##..#.#.
-    #  ......... => ..#|..#|..# => ----+----+---- => #...#...#...
-    #  #########    ...|...|...    #...|#...|#...    .#...#...#..
-    #  ..##..#.#    ###|###|###    .#..|.#..|.#..    #.#.#.#.#.#.
-    #  ...#.##..    ---+---+---    #.#.|#.#.|#.#.    #.#.#.#.#.#.
-    #  ###..####    ..#|#..|#.#    #.#.|#.#.|#.#.    #....###..##
-    #               ...|#.#|#..    ----+----+----    .#..#...###.
-    #               ###|..#|###    #...|.###|..##    #.#..#...###
-    #                              .#..|#...|###.    #.#.##....##
-    #                              #.#.|.#..|.###
-    #                              #.#.|##..|..##
-    #
-    # (30) ###/##./... => ##../.#.#/##../.#.. X=0
-    # (46) ###/.../#.. => #.../.#../#.#./#.#.
-    # (46) ###/.../#.. => #.../.#../#.#./#.#.
-    # (64) ..#/#.#/#.. => .###/#.../.#../##.. X=1
-    # (46) ###/.../#.. => #.../.#../#.#./#.#.
-    # (64) ..#/#.#/#.. => .###/#.../.#../##..
-    # (46) ###/.../#.. => #.../.#../#.#./#.#. X=2
-    # (46) ###/.../#.. => #.../.#../#.#./#.#.
-    # (99) ###/#../#.# => ..##/###./.###/..##
-
-    grid4 = rulebook.expand(grid3)
-    assert grid4.size == 12
-    assert len(grid4.pixels) == 20 + 18 + 23
-
-    # ==== Expansion # 5 ====
-    # ....
-
-    grid5 = rulebook.expand(grid4)
-    assert grid5.size == 18
-    assert len(grid5.pixels) == 190
-
-
-def grow_and_paint(fn: str, expansions_count: int) -> int:
-    rulebook = RuleBook.load(fn)
-
     grid = Grid.create_starting()
-    print("==== Initial ====")
-    print(grid)
-    print()
 
-    for expansion in range(1, expansions_count + 1):
+    log("==== Initial ====")
+    log(grid)
+    log("")
+
+    for step in range(1, steps + 1):
         grid = rulebook.expand(grid)
-        print(f"==== Expansion # {expansion} ====")
-        print(f"size: {grid.size}, pixels: {len(grid.pixels)}")
-        # print(grid)
-        print()
+        log(f"==== Expansion # {step} ====")
+        log(f"size: {grid.size}, pixels: {len(grid.pixels)}")
+        log(grid)
+        log("")
 
+    print(f"part 1: {len(grid.pixels)} pixels after {steps} steps")
     return len(grid.pixels)
+
+
+def part_2(fn: str, steps: int = 18, debug: bool = False) -> int:
+    rulebook = RuleBook.load(fn)
+    grid = Grid.create_starting()
+    pixels = count_pixels(grid, rulebook, steps, debug)
+    print(f"part 2: {pixels} pixels after {steps} steps")
+    return pixels
 
 
 if __name__ == '__main__':
     fn_ = "data/21-input.txt"
-    result1 = grow_and_paint(fn_, 5)
-    print(f"part 1: {result1} pixels after 5 expansions")  # 190
-    result2 = grow_and_paint(fn_, 18)
-    print(f"part 2: {result2} pixels after 18 expansions")  # 2_335_049
-
-
-# TODO: optimized version which recursively counts pixels
+    debug_ = False
+    part_1(fn_, debug=debug_)
+    part_2(fn_, debug=debug_)
