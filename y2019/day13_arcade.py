@@ -1,10 +1,10 @@
 from typing import Iterable
 from typing import Tuple
 
-from machine import load_tape
-from machine import Machine
 from utils import sgn
 from xy import Point
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 TILES = {
     0: '.',

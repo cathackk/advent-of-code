@@ -40,6 +40,7 @@ def intersections(wire1, wire2):
     pos2 = set(positions(wire2))
     return pos1 & pos2
 
+
 def earliest_intersection(wire1, wire2):
     e1 = earliest_positions(tpositions(wire1))
     e2 = earliest_positions(tpositions(wire2))

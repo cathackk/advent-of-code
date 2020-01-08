@@ -6,8 +6,8 @@ from typing import Tuple
 from utils import minmax
 from xy import Point
 from xy import Vector
-from y2019.machine import load_tape
-from y2019.machine import Machine
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 
 class Color(Enum):

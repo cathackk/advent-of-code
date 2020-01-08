@@ -130,7 +130,7 @@ class Machine:
     def run_output_only(self) -> Iterable[int]:
         return self.run_io().read()
 
-    def run_fixed_input(self, ins: Iterable[int]) -> Iterable[int]:
+    def run_fixed_input(self, ins: Iterable[int]) -> Generator[int, None, None]:
         ins_it = iter(ins)
         co = self.run()
         io = next(co)
@@ -169,23 +169,23 @@ class Machine:
         assert out_count is None or out_count > 0
 
         if restarting:
-            def fn(*args: int) -> Tuple[int, ...]:
+            def func(*args: int) -> Tuple[int, ...]:
                 io = self.run_io()
                 io.write(init)
                 io.write(args)
                 return tuple(io.read(max_count=out_count))
 
-            return fn
+            return func
 
         else:
             io = self.run_io()
             io.write(init)
 
-            def fn(*args: int) -> Tuple[int, ...]:
+            def func(*args: int) -> Tuple[int, ...]:
                 io.write(args)
                 return tuple(io.read(max_count=out_count))
 
-            return fn
+            return func
 
     def as_function_scalar(
             self, *,

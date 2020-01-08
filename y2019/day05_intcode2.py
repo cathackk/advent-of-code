@@ -1,5 +1,5 @@
-from machine import load_tape
-from machine import Machine
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 
 def run_diagnostic(code):

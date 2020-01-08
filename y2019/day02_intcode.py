@@ -1,8 +1,9 @@
+from typing import List
 from typing import Optional
 from typing import Tuple
 
-from machine import load_tape
-from machine import Machine
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 
 def find_noun_verb(tape, target_value) -> Optional[Tuple[int, int]]:
@@ -19,16 +20,16 @@ def find_noun_verb(tape, target_value) -> Optional[Tuple[int, int]]:
         return None
 
 
-def part_1():
-    tape = load_tape("data/02-program.txt")
+def part_1(tape: List[int]):
+    tape = list(tape)
     tape[1], tape[2] = 12, 2
     m = Machine(tape)
     assert list(m.run_output_only()) == []
     print(f"part 1: value at memory address 1 is {m.memory[0]}")
 
 
-def part_2():
-    tape = load_tape("data/02-program.txt")
+def part_2(tape: List[int]):
+    tape = list(tape)
     answer = find_noun_verb(tape, target_value=19690720)
     if answer:
         noun, verb = answer
@@ -38,5 +39,6 @@ def part_2():
 
 
 if __name__ == '__main__':
-    part_1()
-    part_2()
+    tape_ = load_tape("data/02-program.txt")
+    part_1(tape_)
+    part_2(tape_)

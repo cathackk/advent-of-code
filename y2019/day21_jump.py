@@ -1,7 +1,7 @@
 from typing import Optional
 
-from machine import load_tape
-from machine import Machine
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 
 def robot_run(*lines: str) -> Optional[int]:
@@ -47,6 +47,7 @@ def part_2():
         "RUN",
     )
     print(f"part 2: result={result}")
+
 
 if __name__ == '__main__':
     # part_1()

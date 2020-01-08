@@ -1,10 +1,10 @@
 from typing import List
 from typing import Optional
 
-from y2019.machine import IOState
-from y2019.machine import load_tape
-from y2019.machine import Machine
-from y2019.machine import MachineIO
+from y2019.intcode import IOState
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
+from y2019.intcode import MachineIO
 
 
 class Packet:

@@ -1,7 +1,7 @@
 from typing import Tuple
 
-from machine import load_tape
-from machine import Machine
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 
 scan = Machine(load_tape("data/19-program.txt")).as_function_scalar(restarting=True)

@@ -3,11 +3,11 @@ from typing import Callable
 from typing import Optional
 from typing import Tuple
 
-from machine import load_tape
-from machine import Machine
 from utils import minmax
 from xy import Point
 from xy import Vector
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 
 class Heading(Enum):
@@ -137,8 +137,8 @@ class Robot:
             else:
                 return Tile.UNKNOWN
 
-        def char_at(x: int, y: int) -> str:
-            return tile_at(Point(x, y)).char
+        def char_at(cx: int, cy: int) -> str:
+            return tile_at(Point(cx, cy)).char
 
         min_x, max_x = minmax(p.x for p in self.plan.keys())
         min_y, max_y = minmax(p.y for p in self.plan.keys())
@@ -148,7 +148,9 @@ class Robot:
 
 def map_maze():
     machine_f = Machine(load_tape("data/15-program.txt")).as_function_scalar()
-    sensor = lambda h: Tile.from_code(machine_f(h.code))
+
+    def sensor(heading: Heading) -> Tile:
+        return Tile.from_code(machine_f(heading.code))
 
     step = 0
     robot = Robot(sensor)

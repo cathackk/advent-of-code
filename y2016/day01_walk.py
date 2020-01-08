@@ -32,14 +32,13 @@ def walk(
 ) -> Iterable[Pos]:
     if isinstance(instrs, str):
         instrs = parse_instrs(instrs)
-    x, y = start
-    yield x, y
+    pos = start
+    yield pos
     for direction, distance in instrs:
         heading = turn(direction, heading)
         for _ in range(distance):
-            x += heading.dx
-            y += heading.dy
-            yield x, y
+            pos = heading.move(pos)
+            yield pos
 
 
 def distance_from_origin(pos: Pos) -> int:
@@ -48,9 +47,9 @@ def distance_from_origin(pos: Pos) -> int:
 
 
 def test_walk():
-    assert walk('R2, L3') == (2, -3)
-    assert walk('R2, R2, R2') == (0, 2)
-    assert walk('R5, L5, R5, R3') == (10, -2)
+    assert last(walk('R2, L3')) == (2, -3)
+    assert last(walk('R2, R2, R2')) == (0, 2)
+    assert last(walk('R5, L5, R5, R3')) == (10, -2)
 
 
 def test_distance():

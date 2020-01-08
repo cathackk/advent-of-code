@@ -3,8 +3,8 @@ from typing import List
 from typing import Set
 
 from utils import subsequences
-from y2019.machine import load_tape
-from y2019.machine import Machine
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 
 def generate_commands(items: List[str]) -> Generator[List[str], int, Set[str]]:

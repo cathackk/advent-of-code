@@ -1,8 +1,8 @@
 import functools
 
-from machine import load_tape
-from machine import Machine
-from machine import MachineIO
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
+from y2019.intcode import MachineIO
 
 
 def part_1():
@@ -52,8 +52,8 @@ def part_1():
     print(f"total:     {alignment:5}")
 
 
-def in_console(fn):
-    @functools.wraps(fn)
+def in_console(func):
+    @functools.wraps(func)
     def wrapped(*args, **kwargs):
         import curses
         try:
@@ -62,7 +62,7 @@ def in_console(fn):
             curses.cbreak()
 
             try:
-                result = fn(*args, **kwargs, screen=scr)
+                result = func(*args, **kwargs, screen=scr)
                 scr.getkey()
                 return result
 
@@ -72,7 +72,7 @@ def in_console(fn):
                 curses.endwin()
 
         except Exception:
-            return fn(*args, **kwargs, screen=None)
+            return func(*args, **kwargs, screen=None)
 
     return wrapped
 
@@ -144,6 +144,7 @@ def scr_test(screen):
     screen.addch(2, 2, 'Y')
     screen.addch(3, 10, 'Z')
     screen.refresh()
+
 
 if __name__ == '__main__':
     # part_1()

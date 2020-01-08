@@ -3,8 +3,8 @@ from typing import Iterable
 from typing import List
 from typing import Optional
 
-from machine import load_tape
-from machine import Machine
+from y2019.intcode import load_tape
+from y2019.intcode import Machine
 
 
 def find_best_phases(tape: Iterable[int], phases_range: range = range(5), debug=False):
@@ -36,7 +36,7 @@ def test_examples_part1():
         4, 15,
         99,
         0, 0
-    ]) == ((4,3,2,1,0), 43210)
+    ]) == ((4, 3, 2, 1, 0), 43210)
     print("passed examples_part1 no 1")
 
     assert find_best_phases([
@@ -49,7 +49,7 @@ def test_examples_part1():
         4, 23,
         99,
         0, 0
-    ]) == ((0,1,2,3,4), 54321)
+    ]) == ((0, 1, 2, 3, 4), 54321)
     print("passed examples_part1 no 2")
 
     assert find_best_phases([
@@ -64,7 +64,7 @@ def test_examples_part1():
         4, 31,
         99,
         0, 0, 0
-    ]) == ((1,0,4,3,2), 65210)
+    ]) == ((1, 0, 4, 3, 2), 65210)
     print("passed examples_part1 no 3")
 
 
@@ -106,7 +106,7 @@ def test_examples_part2():
         99,
         # [26..28]
         0, 0, 5
-    ]) == ((9,8,7,6,5), 139629729)
+    ]) == ((9, 8, 7, 6, 5), 139629729)
     print("passed examples_part2 no 1")
 
     assert find_best_phases_loop([
@@ -131,12 +131,13 @@ def test_examples_part2():
         99,                # HALT
         # [52]
         0, 0, 0, 0, 10
-    ]) == ((9,7,8,5,6), 18216)
+    ]) == ((9, 7, 8, 5, 6), 18216)
     print("passed examples_part2 no 2")
 
 
 if __name__ == '__main__':
+    tape_ = load_tape("data/07-program.txt")
     print("part 1")
-    find_best_phases(load_tape("data/07-program.txt"))
+    find_best_phases(tape_)
     print("part 2")
-    find_best_phases_loop(load_tape("data/07-program.txt"))
+    find_best_phases_loop(tape_)

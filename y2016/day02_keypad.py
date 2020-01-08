@@ -39,15 +39,13 @@ keypad_2 = create_keypad('  1  \n 234\n56789\n ABC\n  D')
 
 
 def walk_keypad(keypad: Keypad, start: str, instrs: Instructions) -> Iterable[str]:
-    x, y = next(pos for pos, c in keypad.items() if c == start)
+    pos = next(pos for pos, c in keypad.items() if c == start)
     for line in instrs:
         for h in line:
-            new_x = x + h.dx
-            new_y = y + h.dy
-            if (new_x, new_y) in keypad:
-                x = new_x
-                y = new_y
-        yield keypad[(x, y)]
+            new_pos = h.move(pos)
+            if new_pos in keypad:
+                pos = new_pos
+        yield keypad[pos]
 
 
 def test_1():
