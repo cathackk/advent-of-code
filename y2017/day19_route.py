@@ -25,17 +25,16 @@ def routes(rmap: Map) -> Generator[Route, None, None]:
     heading = Heading.SOUTH
 
     while True:
-        x, y = pos
         dist = 0
         collected: List[str] = []
 
         # follow route
         while True:
-            x, y = x + heading.dx, y + heading.dy
+            pos = heading.move(pos)
             dist += 1
-            c = rmap.get((x, y))
+            c = rmap.get(pos)
             if c is None:
-                yield pos, heading, dist-1, collected
+                yield heading.move(pos, -1), heading, dist-1, collected
                 return
             elif c == '+':
                 yield pos, heading, dist, collected
@@ -45,15 +44,14 @@ def routes(rmap: Map) -> Generator[Route, None, None]:
             elif c in ('-', '|'):
                 pass
             else:
-                raise ValueError(f"unsupported char! c={c!r}, at={(x, y)}")
+                raise ValueError(f"unsupported char! c={c!r}, at={pos}")
 
         # turn
-        pos = (x, y)
         hr, hl = heading.right(), heading.left()
-        if (x + hr.dx, y + hr.dy) in rmap:
+        if (hr.move(pos)) in rmap:
             # turn right
             heading = hr
-        elif (x + hl.dx, y + hl.dy) in rmap:
+        elif (hl.move(pos)) in rmap:
             # turn left
             heading = hl
         else:
@@ -62,14 +60,14 @@ def routes(rmap: Map) -> Generator[Route, None, None]:
 
 def test_routes():
     rs = routes(load_map("data/19-example.txt"))
-    assert next(rs) == ((5, 0), Heading.SOUTH, 5, ['A'])
-    assert next(rs) == ((5, 5), Heading.EAST, 3, ['B'])
-    assert next(rs) == ((8, 5), Heading.NORTH, 4, [])
-    assert next(rs) == ((8, 1), Heading.EAST, 3, [])
-    assert next(rs) == ((11, 1), Heading.SOUTH, 4, ['C'])
-    assert next(rs) == ((11, 5), Heading.EAST, 3, [])
-    assert next(rs) == ((14, 5), Heading.NORTH, 2, ['D'])
-    assert next(rs) == ((14, 3), Heading.WEST, 13, ['E', 'F'])
+    assert next(rs) == ((5, 5), Heading.SOUTH, 5, ['A'])
+    assert next(rs) == ((8, 5), Heading.EAST, 3, ['B'])
+    assert next(rs) == ((8, 1), Heading.NORTH, 4, [])
+    assert next(rs) == ((11, 1), Heading.EAST, 3, [])
+    assert next(rs) == ((11, 5), Heading.SOUTH, 4, ['C'])
+    assert next(rs) == ((14, 5), Heading.EAST, 3, [])
+    assert next(rs) == ((14, 3), Heading.NORTH, 2, ['D'])
+    assert next(rs) == ((1, 3), Heading.WEST, 13, ['E', 'F'])
     assert list(rs) == []
 
 

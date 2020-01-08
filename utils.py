@@ -429,3 +429,37 @@ def only_value(items: Iterable[T]) -> T:
         return distincts.pop()
     else:
         raise ValueError(f"more than one distinct value: {distincts}")
+
+
+def parse_line(line: str, *fixes: str) -> Tuple[str, ...]:
+    """
+    >>> parse_line("Dogs have four paws.", "Dogs have ", " paws.")
+    ('four',)
+    >>> parse_line("Humans have two eyes and four limbs.", "Humans have ", " eyes and ", " limbs.")
+    ('two', 'four')
+    """
+    if len(fixes) < 2:
+        raise ValueError(f"must supply at least two fixes (was {len(fixes)})")
+
+    results = []
+
+    line = line.strip()
+    for f1, f2 in slidingw(fixes, 2):
+        assert line.startswith(f1)
+        line = line[len(f1):]
+        pos2 = line.index(f2)
+        results.append(line[:pos2])
+        line = line[pos2:]
+
+    assert line == fixes[-1]
+    return tuple(results)
+
+
+def strip_line(line: str, prefix: str, suffix: str) -> str:
+    """
+    >>> strip_line("What is love?", "What is ", "?")
+    'love'
+    """
+    return parse_line(line, prefix, suffix)[0]
+
+

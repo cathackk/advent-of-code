@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Tuple
 
 
 class Heading(Enum):
@@ -35,3 +36,10 @@ class Heading(Enum):
             Heading.SOUTH: Heading.NORTH,
             Heading.WEST: Heading.EAST,
         }[self]
+
+    def move(self, pos: Tuple[int, int], distance: int = 1) -> Tuple[int, int]:
+        x, y = pos
+        return (
+            x + self.dx * distance,
+            y + self.dy * distance
+        )
