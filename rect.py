@@ -1,6 +1,8 @@
 from typing import Iterable
 from typing import Tuple
 
+from utils import minmax
+
 Pos = Tuple[int, int]
 
 
@@ -17,6 +19,21 @@ class Rect:
     @classmethod
     def at_origin(cls, width: int, height: int):
         return cls((0, 0), (width - 1, height - 1))
+
+    @classmethod
+    def with_all(cls, ps: Iterable[Pos]):
+        ps = list(ps)
+        x_min, x_max = minmax(x for x, _ in ps)
+        y_min, y_max = minmax(y for _, y in ps)
+        return cls((x_min, y_min), (x_max, y_max))
+
+    def grow_by(self, dx: int, dy: int = None):
+        if dy is None:
+            dy = dx
+        return type(self)(
+            (self.left_x - dx, self.top_y - dy),
+            (self.right_x + dx, self.bottom_y + dy)
+        )
 
     @property
     def left_x(self) -> int:
@@ -46,11 +63,34 @@ class Rect:
     def area(self) -> int:
         return self.width * self.height
 
+    @property
+    def circumference(self) -> int:
+        return 2 * self.width + 2 * self.height - 4
+
     def range_x(self) -> range:
         return range(self.left_x, self.right_x + 1)
 
     def range_y(self) -> range:
         return range(self.top_y, self.bottom_y + 1)
+
+    def border_ps(self) -> Iterable[Pos]:
+        # top (left to right)
+        for x in range(self.left_x, self.right_x + 1):
+            yield x, self.top_y
+
+        # right (top to bottom)
+        for y in range(self.top_y + 1, self.bottom_y):
+            yield self.right_x, y
+
+        # bottom (right to left)
+        if self.bottom_y > self.top_y:
+            for x in range(self.right_x, self.left_x - 1, -1):
+                yield x, self.bottom_y
+
+        # left (bottom to top)
+        if self.left_x < self.right_x:
+            for y in range(self.bottom_y - 1, self.top_y, -1):
+                yield self.left_x, y
 
     def __iter__(self) -> Iterable[Pos]:
         return ((x, y) for y in self.range_y() for x in self.range_x())

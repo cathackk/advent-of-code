@@ -2,6 +2,7 @@ import functools
 import time
 from typing import Any
 from typing import Callable
+from typing import Collection
 from typing import Dict
 from typing import Generator
 from typing import Iterable
@@ -70,6 +71,10 @@ def sgn(x) -> int:
         return 0
 
 
+def first(items: Iterable[T], default: T = None) -> Optional[T]:
+    return next(items, default)
+
+
 def last(items: Iterable[T], default: T = None) -> Optional[T]:
     last_item = default
     for item in items:
@@ -90,7 +95,6 @@ def dgroupby(
         key: Callable[[T], K],
         value: Callable[[T], V]
 ) -> Dict[K, List[V]]:
-
     d: Dict[K, List[V]] = dict()
 
     for item in items:
@@ -99,6 +103,23 @@ def dgroupby(
         if item_key not in d:
             d[item_key] = []
         d[item_key].append(item_value)
+
+    return d
+
+
+def dgroupby_set(
+        items: Iterable[T],
+        key: Callable[[T], K],
+        value: Callable[[T], V]
+) -> Dict[K, Set[V]]:
+    d: Dict[K, Set[V]] = dict()
+
+    for item in items:
+        item_key = key(item)
+        item_value = value(item)
+        if item_key not in d:
+            d[item_key] = set()
+        d[item_key].add(item_value)
 
     return d
 
@@ -423,10 +444,21 @@ def create_logger(debug: bool = False) -> Callable[[Any], None]:
         return nolog
 
 
+def single_value(items: Collection[T]) -> T:
+    if len(items) == 1:
+        return next(iter(items))
+    elif len(items) == 0:
+        raise ValueError("empty items")
+    else:
+        raise ValueError(f"more than one item ({len(items)})")
+
+
 def only_value(items: Iterable[T]) -> T:
     distincts = set(items)
     if len(distincts) == 1:
         return distincts.pop()
+    elif len(distincts) == 0:
+        raise ValueError("empty items")
     else:
         raise ValueError(f"more than one distinct value: {distincts}")
 
@@ -437,13 +469,14 @@ def parse_line(line: str, *fixes: str) -> Tuple[str, ...]:
     ('four',)
     >>> parse_line("Humans have two eyes and four limbs.", "Humans have ", " eyes and ", " limbs.")
     ('two', 'four')
+    >>> parse_line("1,2:3x4\\n", '', ',', ':', 'x', '\\n')
+    ('1', '2', '3', '4')
     """
     if len(fixes) < 2:
         raise ValueError(f"must supply at least two fixes (was {len(fixes)})")
 
     results = []
 
-    line = line.strip()
     for f1, f2 in slidingw(fixes, 2):
         assert line.startswith(f1)
         line = line[len(f1):]

@@ -41,25 +41,27 @@ def load(fn: str) -> Tuple[str, int, Dict[RuleKey, Rule]]:
             state_line = f.readline()
             if not state_line:
                 return
-            current_state = strip_line(state_line, "In state ", ":")
+            current_state = strip_line(state_line.strip(), "In state ", ":")
             for _ in range(2):
                 yield Rule(
                     current_state=current_state,
                     # 'If the current value is 0:'
-                    current_value=int(strip_line(f.readline(), "If the current value is ", ":")),
+                    current_value=int(
+                        strip_line(f.readline().strip(), "If the current value is ", ":")
+                    ),
                     # '- Write the value 1.'
-                    next_value=int(strip_line(f.readline(), "- Write the value ", ".")),
+                    next_value=int(strip_line(f.readline().strip(), "- Write the value ", ".")),
                     # '- Move one slot to the right.'
-                    jump=jd[strip_line(f.readline(), "- Move one slot to the ", ".")],
+                    jump=jd[strip_line(f.readline().strip(), "- Move one slot to the ", ".")],
                     # '- Continue with state B.'
-                    next_state=strip_line(f.readline(), "- Continue with state ", "."),
+                    next_state=strip_line(f.readline().strip(), "- Continue with state ", "."),
                 )
 
     return (
         # 'Begin in state A.'
-        strip_line(f.readline(), "Begin in state ", "."),
+        strip_line(f.readline().strip(), "Begin in state ", "."),
         # 'Perform a diagnostic checksum after 12919244 steps.'
-        int(strip_line(f.readline(), "Perform a diagnostic checksum after ", " steps.")),
+        int(strip_line(f.readline().strip(), "Perform a diagnostic checksum after ", " steps.")),
         # (rules)
         {r.key: r for r in load_rules()}
     )
