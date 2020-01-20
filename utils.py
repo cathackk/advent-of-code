@@ -496,3 +496,17 @@ def strip_line(line: str, prefix: str, suffix: str) -> str:
     return parse_line(line, prefix, suffix)[0]
 
 
+def memoized(func):
+    func._memoized_cache = dict()
+
+    @functools.wraps(func)
+    def wrapped(*args, **kwargs):
+        key = tuple(args), tuple(sorted(kwargs.items()))
+        if key in func._memoized_cache:
+            return func._memoized_cache[key]
+        else:
+            result = func(*args, **kwargs)
+            func._memoized_cache[key] = result
+            return result
+
+    return wrapped
