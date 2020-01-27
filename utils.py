@@ -510,3 +510,9 @@ def memoized(func):
             return result
 
     return wrapped
+
+
+# reading order -> y matters more than x
+def ro(pos: Tuple[int, int]) -> Tuple[int, int]:
+    x, y = pos
+    return y, x

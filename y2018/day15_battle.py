@@ -7,15 +7,10 @@ from typing import Optional
 from typing import Set
 from typing import Tuple
 
+from utils import ro
 
 Pos = Tuple[int, int]
 Path = List[Pos]
-
-
-# reading order -> y matters more than x
-def ro(pos: Pos) -> Tuple[int, int]:
-    x, y = pos
-    return y, x
 
 
 class Team:
