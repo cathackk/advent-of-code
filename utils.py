@@ -10,6 +10,7 @@ from typing import Iterator
 from typing import List
 from typing import Optional
 from typing import Set
+from typing import Sized
 from typing import Tuple
 from typing import TypeVar
 
@@ -72,7 +73,7 @@ def sgn(x) -> int:
 
 
 def first(items: Iterable[T], default: T = None) -> Optional[T]:
-    return next(items, default)
+    return next(iter(items), default)
 
 
 def last(items: Iterable[T], default: T = None) -> Optional[T]:
@@ -122,6 +123,64 @@ def dgroupby_set(
         d[item_key].add(item_value)
 
     return d
+
+
+def count(items: Iterable) -> int:
+    return sum(1 for _ in items)
+
+
+def single(items: Iterable[T]) -> T:
+    """
+    Return the first element of an iterable if it has exactly one element:
+
+        >>> single(['cat'])
+        'cat'
+        >>> single((x for x in range(10) if x % 7 == 5))
+        5
+        >>> single({'x': 4}.items())
+        ('x', 4)
+
+    If the iterable has more than one element, error is raised:
+
+        >>> single(['cat', 'dog'])
+        Traceback (most recent call last):
+        ...
+        ValueError: items contains 2 elements (expected 1)
+        >>> single((x for x in range(10) if x % 7 == 1))
+        Traceback (most recent call last):
+        ...
+        ValueError: items contains more than one element
+
+    If it has no elements, error is also raised:
+
+        >>> single([])
+        Traceback (most recent call last):
+        ...
+        ValueError: items contains 0 elements (expected 1)
+        >>> single((x for x in range(10) if x % 13 == 12))
+        Traceback (most recent call last):
+        ...
+        ValueError: items contains no elements
+    """
+    if isinstance(items, Sized):
+        if len(items) != 1:
+            raise ValueError(f"items contains {len(items)} elements (expected 1)")
+        return next(iter(items))
+
+    else:
+        iterator = iter(items)
+        try:
+            element1 = next(iterator)
+        except StopIteration:
+            raise ValueError("items contains no elements")
+
+        try:
+            next(iterator)
+        except StopIteration:
+            # that's ok! we didn't actually expect another element
+            return element1
+        else:
+            raise ValueError("items contains more than one element")
 
 
 def nextn(g: Iterator[T], n: int) -> Iterable[T]:
