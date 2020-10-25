@@ -40,7 +40,7 @@ def claim(points: Set[Pos]) -> int:
         )
     }
     # determine boundaries
-    bounds = Rect.with_all(points).grow_by(+3)
+    bounds = Rect.with_all(points).grow_by(+3, +3)
     # pos -> claimant
     claims: Dict[Pos, str] = dict(names)
     layer: Dict[Pos, str] = dict(claims)

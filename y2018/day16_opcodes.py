@@ -44,7 +44,7 @@ class Sample(NamedTuple):
     @classmethod
     def load(cls, fn: str) -> Iterable['Sample']:
         with open(fn) as f:
-            while f:
+            while True:
                 before = four_ints(
                     v for v in strip_line(f.readline().rstrip(), 'Before: [', ']').split(', ')
                 )

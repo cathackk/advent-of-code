@@ -83,52 +83,6 @@ def last(items: Iterable[T], default: T = None) -> Optional[T]:
     return last_item
 
 
-def exhaust(g: Generator[Any, Any, T]) -> T:
-    try:
-        while True:
-            next(g)
-    except StopIteration as exc:
-        return exc.value
-
-
-def dgroupby(
-        items: Iterable[T],
-        key: Callable[[T], K],
-        value: Callable[[T], V]
-) -> Dict[K, List[V]]:
-    d: Dict[K, List[V]] = dict()
-
-    for item in items:
-        item_key = key(item)
-        item_value = value(item)
-        if item_key not in d:
-            d[item_key] = []
-        d[item_key].append(item_value)
-
-    return d
-
-
-def dgroupby_set(
-        items: Iterable[T],
-        key: Callable[[T], K],
-        value: Callable[[T], V]
-) -> Dict[K, Set[V]]:
-    d: Dict[K, Set[V]] = dict()
-
-    for item in items:
-        item_key = key(item)
-        item_value = value(item)
-        if item_key not in d:
-            d[item_key] = set()
-        d[item_key].add(item_value)
-
-    return d
-
-
-def count(items: Iterable) -> int:
-    return sum(1 for _ in items)
-
-
 def single(items: Iterable[T]) -> T:
     """
     Return the first element of an iterable if it has exactly one element:
@@ -181,6 +135,52 @@ def single(items: Iterable[T]) -> T:
             return element1
         else:
             raise ValueError("items contains more than one element")
+
+
+def exhaust(g: Generator[Any, Any, T]) -> T:
+    try:
+        while True:
+            next(g)
+    except StopIteration as exc:
+        return exc.value
+
+
+def dgroupby(
+        items: Iterable[T],
+        key: Callable[[T], K],
+        value: Callable[[T], V]
+) -> Dict[K, List[V]]:
+    d: Dict[K, List[V]] = dict()
+
+    for item in items:
+        item_key = key(item)
+        item_value = value(item)
+        if item_key not in d:
+            d[item_key] = []
+        d[item_key].append(item_value)
+
+    return d
+
+
+def dgroupby_set(
+        items: Iterable[T],
+        key: Callable[[T], K],
+        value: Callable[[T], V]
+) -> Dict[K, Set[V]]:
+    d: Dict[K, Set[V]] = dict()
+
+    for item in items:
+        item_key = key(item)
+        item_value = value(item)
+        if item_key not in d:
+            d[item_key] = set()
+        d[item_key].add(item_value)
+
+    return d
+
+
+def count(items: Iterable) -> int:
+    return sum(1 for _ in items)
 
 
 def nextn(g: Iterator[T], n: int) -> Iterable[T]:

@@ -1,3 +1,4 @@
+from itertools import chain
 from typing import Iterable
 from typing import Tuple
 
@@ -27,13 +28,17 @@ class Rect:
         y_min, y_max = minmax(y for _, y in ps)
         return cls((x_min, y_min), (x_max, y_max))
 
-    def grow_by(self, dx: int, dy: int = None):
-        if dy is None:
-            dy = dx
+    def grow_by(self, dx: int = 0, dy: int = 0):
         return type(self)(
             (self.left_x - dx, self.top_y - dy),
             (self.right_x + dx, self.bottom_y + dy)
         )
+
+    def grow_to_fit(self, ps: Iterable[Pos]):
+        return type(self).with_all(chain(
+            [self.top_left, self.bottom_right],
+            ps
+        ))
 
     @property
     def left_x(self) -> int:
