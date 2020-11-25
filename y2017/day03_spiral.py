@@ -19,7 +19,7 @@ def reverse_triangle(s: int) -> int:
     >>> reverse_triangle(11)
     5
     >>> reverse_triangle(34)
-    5
+    8
     >>> reverse_triangle(100)
     14
     """

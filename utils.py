@@ -2,7 +2,6 @@ import functools
 import time
 from typing import Any
 from typing import Callable
-from typing import Collection
 from typing import Dict
 from typing import Generator
 from typing import Iterable
@@ -83,35 +82,35 @@ def last(items: Iterable[T], default: T = None) -> Optional[T]:
     return last_item
 
 
-def single(items: Iterable[T]) -> T:
+def single_value(items: Iterable[T]) -> T:
     """
     Return the first element of an iterable if it has exactly one element:
 
-        >>> single(['cat'])
+        >>> single_value(['cat'])
         'cat'
-        >>> single((x for x in range(10) if x % 7 == 5))
+        >>> single_value((x for x in range(10) if x % 7 == 5))
         5
-        >>> single({'x': 4}.items())
+        >>> single_value({'x': 4}.items())
         ('x', 4)
 
     If the iterable has more than one element, error is raised:
 
-        >>> single(['cat', 'dog'])
+        >>> single_value(['cat', 'dog'])
         Traceback (most recent call last):
         ...
         ValueError: items contains 2 elements (expected 1)
-        >>> single((x for x in range(10) if x % 7 == 1))
+        >>> single_value((x for x in range(10) if x % 7 == 1))
         Traceback (most recent call last):
         ...
         ValueError: items contains more than one element
 
     If it has no elements, error is also raised:
 
-        >>> single([])
+        >>> single_value([])
         Traceback (most recent call last):
         ...
         ValueError: items contains 0 elements (expected 1)
-        >>> single((x for x in range(10) if x % 13 == 12))
+        >>> single_value((x for x in range(10) if x % 13 == 12))
         Traceback (most recent call last):
         ...
         ValueError: items contains no elements
@@ -264,7 +263,7 @@ def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[Tupl
             del buffer[0]
 
 
-def minmax(items: Iterable[T], key: Callable[[T], K] = None) -> Tuple[T, T]:
+def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> Tuple[T, T]:
     """
     >>> minmax([1,4,8,10,4,-4,15,-2])
     (-4, 15)
@@ -281,25 +280,25 @@ def minmax(items: Iterable[T], key: Callable[[T], K] = None) -> Tuple[T, T]:
     ...
     ValueError: minmax() arg is an empty sequence
     """
-    min_item, max_item = None, None
-    min_value, max_value = None, None
-    any_item = False
+    min_k, max_k = None, None
+    min_v, max_v = None, None
+    any_value = False
 
-    for item in items:
-        value = key(item) if key is not None else item
-        if min_value is None or value < min_value:
-            min_item, min_value = item, value
-        if max_value is None or value > max_value:
-            max_item, max_value = item, value
-        any_item = True
+    for value in values:
+        k = key(value) if key is not None else value
+        if min_k is None or k < min_k:
+            min_k, min_v = k, value
+        if max_k is None or k > max_k:
+            max_k, max_v = k, value
+        any_value = True
 
-    if any_item:
-        return min_item, max_item
+    if any_value:
+        return min_v, max_v
     else:
         raise ValueError("minmax() arg is an empty sequence")
 
 
-def maxk(items: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
+def maxk(values: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
     """
     >>> maxk(["dog", "cat", "monkey"], key=len)
     ('monkey', 6)
@@ -310,23 +309,23 @@ def maxk(items: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
     ...
     ValueError: maxk() arg is an empty sequence
     """
-    max_item = None
-    max_value = None
-    any_item = False
+    max_k = None
+    max_v = None
+    any_value = False
 
-    for item in items:
-        value = key(item)
-        if max_value is None or value > max_value:
-            max_item, max_value = item, value
-        any_item = True
+    for value in values:
+        k = key(value)
+        if max_k is None or k > max_k:
+            max_k, max_v = k, value
+        any_value = True
 
-    if any_item:
-        return max_item, max_value
+    if any_value:
+        return max_v, max_k
     else:
         raise ValueError("maxk() arg is an empty sequence")
 
 
-def mink(items: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
+def mink(values: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
     """
     >>> mink(["dog", "zebra", "monkey"], key=len)
     ('dog', 3)
@@ -337,23 +336,23 @@ def mink(items: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
     ...
     ValueError: mink() arg is an empty sequence
     """
-    min_item = None
-    min_value = None
-    any_item = False
+    min_k = None
+    min_v = None
+    any_value = False
 
-    for item in items:
-        value = key(item)
-        if min_value is None or value < min_value:
-            min_item, min_value = item, value
-        any_item = True
+    for value in values:
+        k = key(value)
+        if min_k is None or k < min_k:
+            min_k, min_v = k, value
+        any_value = True
 
-    if any_item:
-        return min_item, min_value
+    if any_value:
+        return min_v, min_k
     else:
         raise ValueError("mink() arg is an empty sequence")
 
 
-def min_all(items: Iterable[T], key: Callable[[T], V] = None) -> List[T]:
+def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> List[T]:
     """
     >>> min_all([1,2,3,1,2,3,1,2,3])
     [1, 1, 1]
@@ -370,19 +369,19 @@ def min_all(items: Iterable[T], key: Callable[[T], V] = None) -> List[T]:
     ...
     ValueError: min_all() arg is an empty sequence
     """
-    min_value = None
-    min_items = None
+    min_k = None
+    min_vs = None
 
-    for item in items:
-        value = key(item) if key else item
-        if min_value is None or value < min_value:
-            min_value = value
-            min_items = [item]
-        elif value == min_value:
-            min_items.append(item)
+    for value in values:
+        k = key(value) if key else value
+        if min_k is None or k < min_k:
+            min_k = k
+            min_vs = [value]
+        elif k == min_k:
+            min_vs.append(value)
 
-    if min_items is not None:
-        return min_items
+    if min_vs is not None:
+        return min_vs
     else:
         raise ValueError("min_all() arg is an empty sequence")
 
@@ -501,25 +500,6 @@ def create_logger(debug: bool = False) -> Callable[[Any], None]:
         def nolog(o):
             pass
         return nolog
-
-
-def single_value(items: Collection[T]) -> T:
-    if len(items) == 1:
-        return next(iter(items))
-    elif len(items) == 0:
-        raise ValueError("empty items")
-    else:
-        raise ValueError(f"more than one item ({len(items)})")
-
-
-def only_value(items: Iterable[T]) -> T:
-    distincts = set(items)
-    if len(distincts) == 1:
-        return distincts.pop()
-    elif len(distincts) == 0:
-        raise ValueError("empty items")
-    else:
-        raise ValueError(f"more than one distinct value: {distincts}")
 
 
 def parse_line(line: str, *fixes: str) -> Tuple[str, ...]:

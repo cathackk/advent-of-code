@@ -6,11 +6,15 @@ from typing import Optional
 from typing import Tuple
 
 from rect import Rect
-from utils import single
+from utils import single_value
 
 
 Pos = Tuple[int, int]
 Board = Dict[Pos, str]
+
+SPACE = '.'
+TREES = '|'
+LUMBER = '#'
 
 
 class State:
@@ -32,7 +36,7 @@ class State:
 
         height = len(lines)
         assert height > 0
-        width = single(set(len(line) for line in lines))
+        width = single_value(set(len(line) for line in lines))
 
         board = {
             (x, y): c
@@ -41,51 +45,6 @@ class State:
         }
 
         return cls(board, Rect.at_origin(width, height))
-
-    def step(self):
-        self.minute += 1
-
-        if self.current_hash in self.next_hash:
-            self.current_hash = self.next_hash[self.current_hash]
-            self.board = self.hash_to_board[self.current_hash]
-            return True
-
-        def new_acre(current_acre: str, neighbors: Iterable[str]) -> str:
-            nc = Counter(neighbors)
-
-            # An open acre will become filled with trees if  three or more adjacent acres
-            # contained trees. Otherwise, nothing happens.
-            if current_acre == '.':
-                return '|' if nc['|'] >= 3 else '.'
-
-            # An acre filled with trees will become a lumberyard if three or more adjacent acres
-            # were lumberyards. Otherwise, nothing happens.
-            elif current_acre == '|':
-                return '#' if nc['#'] >= 3 else '|'
-
-            # An acre containing a lumberyard will remain a lumberyard if it was adjacent to at
-            # least one other lumberyard and at least one acre containing trees. Otherwise, it
-            # becomes open.
-            elif current_acre == '#':
-                return '#' if nc['#'] >= 1 and nc['|'] >= 1 else '.'
-
-        self.board = {
-            (x, y): new_acre(
-                current_acre=self.board[(x, y)],
-                neighbors=(
-                    self.board[(x+dx, y+dy)]
-                    for dx in (-1, 0, +1)
-                    for dy in (-1, 0, +1)
-                    if not (dx == dy == 0)
-                    if (x+dx, y+dy) in self.board
-                )
-            )
-            for x in self.bounds.range_x()
-            for y in self.bounds.range_y()
-        }
-
-        self._capture_history()
-        return False
 
     def _capture_history(self):
         previous_hash = self.current_hash
@@ -113,7 +72,7 @@ class State:
         gives the total resource value.
         """
         c = Counter(self.board.values())
-        return c['|'] * c['#']
+        return c[TREES] * c[LUMBER]
 
     def current_description(self) -> str:
         if self.minute == 0:
@@ -123,15 +82,53 @@ class State:
         else:
             return f"After {self.minute} minutes"
 
-    def draw(self):
-        print(f"{self.current_description()}:")
-        for y in self.bounds.range_y():
-            print(''.join(self.board[(x, y)] for x in self.bounds.range_x()))
-        print()
-        return self
+    def step(self):
+        self.minute += 1
+
+        if self.current_hash in self.next_hash:
+            self.current_hash = self.next_hash[self.current_hash]
+            self.board = self.hash_to_board[self.current_hash]
+            return True
+
+        def new_acre(current_acre: str, neighbors: Iterable[str]) -> str:
+            nc = Counter(neighbors)
+
+            # An open acre will become filled with trees if  three or more adjacent acres
+            # contained trees. Otherwise, nothing happens.
+            if current_acre == SPACE:
+                return TREES if nc[TREES] >= 3 else SPACE
+
+            # An acre filled with trees will become a lumberyard if three or more adjacent acres
+            # were lumberyards. Otherwise, nothing happens.
+            elif current_acre == TREES:
+                return LUMBER if nc[LUMBER] >= 3 else TREES
+
+            # An acre containing a lumberyard will remain a lumberyard if it was adjacent to at
+            # least one other lumberyard and at least one acre containing trees. Otherwise, it
+            # becomes open.
+            elif current_acre == LUMBER:
+                return LUMBER if nc[LUMBER] >= 1 and nc[TREES] >= 1 else SPACE
+
+        self.board = {
+            (x, y): new_acre(
+                current_acre=self.board[(x, y)],
+                neighbors=(
+                    self.board[(x+dx, y+dy)]
+                    for dx in (-1, 0, +1)
+                    for dy in (-1, 0, +1)
+                    if not (dx == dy == 0)
+                    if (x+dx, y+dy) in self.board
+                )
+            )
+            for x in self.bounds.range_x()
+            for y in self.bounds.range_y()
+        }
+
+        self._capture_history()
+        return False
 
     def run(self, minutes: int, draw_each: int = 0, detect_cycles: bool = True):
-        for _ in range(minutes):
+        while self.minute < minutes:
             cycling = self.step()
             if draw_each > 0 and self.minute % draw_each == 0:
                 self.draw()
@@ -146,6 +143,13 @@ class State:
                 self.minute = minutes
                 break
 
+        return self
+
+    def draw(self):
+        print(f"{self.current_description()}:")
+        for y in self.bounds.range_y():
+            print(''.join(self.board[(x, y)] for x in self.bounds.range_x()))
+        print()
         return self
 
 

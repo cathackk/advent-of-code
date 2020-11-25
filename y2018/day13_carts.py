@@ -184,7 +184,7 @@ def test_last_remaining():
     m = Map.load('data/13-example-2.txt')
     ticks = exhaust(m.run())
     assert ticks == 4
-    last_cart = single_value(list(m.carts.values()))
+    last_cart = single_value(m.carts.values())
     assert last_cart.pos == (6, 4)
     assert last_cart.heading == Heading.NORTH
 
@@ -199,7 +199,7 @@ def part_1(fn: str) -> Pos:
 def part_2(fn: str) -> Pos:
     m = Map.load(fn)
     ticks = exhaust(m.run())
-    last_cart = single_value(list(m.carts.values()))
+    last_cart = single_value(m.carts.values())
     print(f"part 2: last cart after {ticks} ticks is at {last_cart.pos}")
     return last_cart.pos
 

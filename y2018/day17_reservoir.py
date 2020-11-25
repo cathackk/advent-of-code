@@ -10,6 +10,13 @@ from utils import parse_line
 Pos = Tuple[int, int]
 Board = Dict[Pos, str]
 
+WALL = '#'
+STILL = '='
+FALLING = '|'
+RUNNING = '~'
+SOURCE = '+'
+SPACE = ' '
+
 
 def load_walls(fn: str) -> Iterable[Pos]:
     for line in open(fn):
@@ -31,7 +38,7 @@ class State:
     @classmethod
     def load(cls, fn: str, sources=((500, 0),)):
         return cls(
-            board={pos: '#' for pos in load_walls(fn)},
+            board={pos: WALL for pos in load_walls(fn)},
             sources=sources
         )
 
@@ -66,7 +73,7 @@ class State:
 
         #   ...+...   ->   ...|...
         if floor is None:
-            return {pos: '|'}, []
+            return {pos: FALLING}, []
 
         (tile_left, x_left), (tile_right, x_right) = floor
         px, py = pos
@@ -81,8 +88,8 @@ class State:
 
         #   #  +           #  |
         #   #-----|   ->   #-----|
-        if '|' in (tile_left, tile_right):
-            return {pos: '|'}, []
+        if FALLING in (tile_left, tile_right):
+            return {pos: FALLING}, []
 
         #   #  +  #        #~~~~~#
         #   #######   ->   #######
@@ -102,7 +109,7 @@ class State:
         if tile_right == '.':
             overflows.append((x_right, py))
 
-        water_tile = '-' if overflows else '~'
+        water_tile = RUNNING if overflows else STILL
         return {(x, py): water_tile for x in range(x_left+1, x_right)}, overflows
 
     def _scan_floor(self, pos: Pos) -> Optional[Tuple[Tuple[str, int], Tuple[str, int]]]:
@@ -113,22 +120,22 @@ class State:
         def walk(dx) -> Tuple[str, int]:
             for x in count(px, dx):
                 tile_current = self.board.get((x, py))
-                if tile_current == '#':
+                if tile_current == WALL:
                     # wall on current level
-                    return '#', x
+                    return WALL, x
                 tile_below = self.board.get((x, py+1))
                 if tile_below is None:
                     # empty space below
                     return '.', x
-                elif tile_below in ('|', '-'):
+                elif tile_below in (FALLING, RUNNING):
                     # falling or running water below
-                    return '|', x
+                    return FALLING, x
                 # otherwise continue ...
 
         return walk(-1), walk(+1)
 
     def water_score(self, include_running=True):
-        scored_tiles = ('~', '|', '-') if include_running else ('~',)
+        scored_tiles = (STILL, FALLING, RUNNING) if include_running else (STILL,)
         return sum(
             1
             for (x, y), tile in self.board.items()
@@ -140,11 +147,11 @@ class State:
 
         def c(pos):
             if pos in self.sources:
-                return '+'
+                return SOURCE
             elif pos in self.board:
                 return self.board[pos]
             else:
-                return ' '
+                return SPACE
 
         for y in self.drawing_bounds.range_y():
             print(''.join(c((x, y)) for x in self.drawing_bounds.range_x()))

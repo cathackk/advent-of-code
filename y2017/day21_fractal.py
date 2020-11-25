@@ -7,7 +7,7 @@ from typing import List
 from typing import Tuple
 
 from utils import create_logger
-from utils import only_value
+from utils import single_value
 
 Pos = Tuple[int, int]
 Transformation = Callable[[int, int], Pos]
@@ -121,7 +121,7 @@ class Grid:
     def join(cls, subgrids: Iterable[Tuple[Pos, 'Grid']]) -> 'Grid':
         subgrids = dict(subgrids)
 
-        sub_size = only_value(sg.size for sg in subgrids.values())
+        sub_size = single_value(set(sg.size for sg in subgrids.values()))
         max_x = max(x for x, _ in subgrids.keys())
         max_y = max(y for _, y in subgrids.keys())
         assert max_x % sub_size == 0

@@ -5,7 +5,7 @@ from typing import Set
 from typing import Tuple
 
 from utils import count
-from utils import single
+from utils import single_value
 from utils import strip_line
 
 all_ops = {
@@ -86,7 +86,11 @@ def map_opnums_to_opcodes(samples: Iterable[Sample]) -> Iterable[Tuple[int, str]
         possible_n2c[sample.opnum].intersection_update(sample.possible_opcodes())
 
     while possible_n2c:
-        opnum, opcode = next((n, single(cs)) for n, cs in possible_n2c.items() if len(cs) == 1)
+        opnum, opcode = next(
+            (n, single_value(cs))
+            for n, cs in possible_n2c.items()
+            if len(cs) == 1
+        )
         yield opnum, opcode
         del possible_n2c[opnum]
         for opcodes in possible_n2c.values():
