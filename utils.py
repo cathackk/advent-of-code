@@ -555,3 +555,43 @@ def memoized(func):
 def ro(pos: Tuple[int, int]) -> Tuple[int, int]:
     x, y = pos
     return y, x
+
+
+def join_english(items: Iterable[Any], conj=" and "):
+    """
+    >>> join_english([1, 2, 3])
+    '1, 2 and 3'
+    >>> join_english(['John', 'Paul', 'George', 'Ringo'])
+    'John, Paul, George and Ringo'
+    >>> join_english(('Zelda', 'Zoe'))
+    'Zelda and Zoe'
+    >>> join_english(['Bob'])
+    'Bob'
+    >>> join_english([])
+    ''
+    """
+    items_list = list(items)
+    if len(items_list) > 1:
+        return ", ".join(str(v) for v in items_list[:-1]) + conj + str(items_list[-1])
+    else:
+        return ", ".join(str(v) for v in items_list)
+
+
+def join_and(items: Iterable[Any], oxford_comma=False) -> str:
+    """
+    >>> join_and(["spam", "spam", "spam", "bacon", "eggs"])
+    'spam, spam, spam, bacon and eggs'
+    >>> join_and(["Michael", "Franklin", "Trevor"], oxford_comma=True)
+    'Michael, Franklin, and Trevor'
+    """
+    return join_english(items, conj=", and " if oxford_comma else " and ")
+
+
+def join_or(items: Iterable[Any], oxford_comma=False) -> str:
+    """
+    >>> join_or([1, True, "cheddar"])
+    '1, True or cheddar'
+    >>> join_or(["Eric", "Stan", "Kyle"], oxford_comma=True)
+    'Eric, Stan, or Kyle'
+    """
+    return join_english(items, conj=", or " if oxford_comma else " or ")
