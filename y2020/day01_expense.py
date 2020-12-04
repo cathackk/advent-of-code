@@ -28,9 +28,9 @@ def part_1(numbers: List[int]) -> int:
     In this list, the two entries that sum to 2020 are 1721 and 299. Multiplying them together
     produces 1721 * 299 = 514579, so the correct answer is 514579.
 
-    >>> part_1([1721, 979, 366, 299, 675, 1456])
-    part 1: 1721 + 299 = 2020; 1721 * 299 = 514579
-    514579
+        >>> part_1([1721, 979, 366, 299, 675, 1456])
+        part 1: 1721 + 299 = 2020; 1721 * 299 = 514579
+        514579
 
     Of course, your expense report is much larger. Find the two entries that sum to 2020;
     what do you get if you multiply them together?
@@ -48,9 +48,9 @@ def part_2(numbers: List[int]) -> int:
     Using the above example again, the three entries that sum to 2020 are 979, 366, and 675.
     Multiplying them together produces the answer, 241861950.
 
-    >>> part_2([1721, 979, 366, 299, 675, 1456])
-    part 2: 979 + 366 + 675 = 2020; 979 * 366 * 675 = 241861950
-    241861950
+        >>> part_2([1721, 979, 366, 299, 675, 1456])
+        part 2: 979 + 366 + 675 = 2020; 979 * 366 * 675 = 241861950
+        241861950
 
     In your expense report, what is the product of the three entries that sum to 2020?
     """
