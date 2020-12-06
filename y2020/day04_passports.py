@@ -9,6 +9,8 @@ from typing import Iterable
 from typing import List
 from typing import Tuple
 
+from utils import line_groups
+
 
 def part_1(passports: List['Passport']) -> int:
     """
@@ -178,29 +180,16 @@ def passports_from_lines(lines: Iterable[str]) -> Iterable[Passport]:
     newlines. Passports are separated by blank lines.
     """
 
-    passport = dict()
-
     def entry_from_text(text: str) -> Tuple[str, str]:
         k, v = text.split(':')
         return k, v
 
-    for line in lines:
-        line = line.strip()
-
-        if line:
-            passport.update(
-                entry_from_text(part)
-                for part in line.split(' ')
-            )
-
-        elif passport:
-            # flush on empty line
-            yield passport
-            passport = dict()
-
-    # flush the rest at the end of input
-    if passport:
-        yield passport
+    for lines_group in line_groups(lines):
+        yield dict(
+            entry_from_text(part)
+            for line in lines_group
+            for part in line.split(' ')
+        )
 
 
 def has_required_fields(passport: Passport) -> bool:

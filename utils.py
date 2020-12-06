@@ -595,3 +595,32 @@ def join_or(items: Iterable[Any], oxford_comma=False) -> str:
     'Eric, Stan, or Kyle'
     """
     return join_english(items, conj=", or " if oxford_comma else " or ")
+
+
+def line_groups(lines: Iterable[str]) -> Iterable[List[str]]:
+    r"""
+    Separate stream of lines into groups of whitespace-stripped lines.
+    Empty line (containing only whitespace) serves as separator.
+
+        >>> list(line_groups(["aaa\n", "bbb\n", "\n", "ccc\n", "ddd"]))
+        [['aaa', 'bbb'], ['ccc', 'ddd']]
+        >>> list(line_groups(["aaa"]))
+        [['aaa']]
+        >>> list(line_groups(["aaa\n"]))
+        [['aaa']]
+        >>> list(line_groups(["aaa\n", "\n", "\n", "bbb\n"]))
+        [['aaa'], [], ['bbb']]
+        >>> list(line_groups(["\n"]))
+        [[]]
+    """
+    buffer = []
+
+    for line in lines:
+        if line.strip():
+            buffer.append(line.strip())
+        else:
+            yield buffer
+            buffer = []
+
+    if buffer:
+        yield buffer
