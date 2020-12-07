@@ -502,17 +502,24 @@ def create_logger(debug: bool = False) -> Callable[[Any], None]:
         return nolog
 
 
-def parse_line(line: str, *fixes: str) -> Tuple[str, ...]:
-    """
-    >>> parse_line("Dogs have four paws.", "Dogs have ", " paws.")
+def parse_line(line: str, pattern: str) -> Tuple[str, ...]:
+    r"""
+    >>> parse_line("Dogs have four paws.", "Dogs have $ paws.")
     ('four',)
-    >>> parse_line("Humans have two eyes and four limbs.", "Humans have ", " eyes and ", " limbs.")
+    >>> parse_line("Humans have two eyes and four limbs.", "Humans have $ eyes and $ limbs.")
     ('two', 'four')
-    >>> parse_line("1,2:3x4\\n", '', ',', ':', 'x', '\\n')
+    >>> parse_line("1,2:3x4\n", "$,$:$x$\n")
     ('1', '2', '3', '4')
     """
-    if len(fixes) < 2:
-        raise ValueError(f"must supply at least two fixes (was {len(fixes)})")
+    fixes = pattern.split('$')
+    if len(fixes) >= 2:
+        return _parse_line_fixes(line, *fixes)
+    else:
+        return tuple()
+
+
+def _parse_line_fixes(line: str, *fixes: str) -> Tuple[str, ...]:
+    assert len(fixes) >= 2
 
     results = []
 
@@ -532,7 +539,7 @@ def strip_line(line: str, prefix: str, suffix: str) -> str:
     >>> strip_line("What is love?", "What is ", "?")
     'love'
     """
-    return parse_line(line, prefix, suffix)[0]
+    return single_value(_parse_line_fixes(line, prefix, suffix))
 
 
 def memoized(func):

@@ -25,7 +25,7 @@ def load_events(fn: str) -> Iterable[Event]:
 
     for line in sorted(open(fn)):
         # [1518-03-06 23:47] Guard #1009 begins shift
-        dt, what = parse_line(line, '[', '] ', '\n')
+        dt, what = parse_line(line, '[$] $\n')
         minute = int(dt.split(':')[1])
 
         if what.startswith("Guard #"):

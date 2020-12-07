@@ -154,7 +154,7 @@ def load_data(fn: str) -> Iterable[Tuple[PasswordRule, str]]:
     with open(fn) as f:
         for line in f:
             # 1-3 b: cdefg
-            min_count, max_count, character, password = parse_line(line, "", "-", " ", ": ", "\n")
+            min_count, max_count, character, password = parse_line(line, "$-$ $: $\n")
             yield PasswordRule(int(min_count), int(max_count), character), password
 
 

@@ -22,12 +22,12 @@ def load_walls(fn: str) -> Iterable[Pos]:
     for line in open(fn):
         if line.startswith('x='):
             # x=651, y=334..355
-            x, y1, y2 = (int(v) for v in parse_line(line, 'x=', ', y=', '..', '\n'))
+            x, y1, y2 = (int(v) for v in parse_line(line, 'x=$, y=$..$\n'))
             assert y1 <= y2
             yield from ((x, y) for y in range(y1, y2 + 1))
         elif line.startswith('y='):
             # y=1708, x=505..523
-            y, x1, x2 = (int(v) for v in parse_line(line, 'y=', ', x=', '..', '\n'))
+            y, x1, x2 = (int(v) for v in parse_line(line, 'y=$, x=$..$\n'))
             assert x1 <= x2
             yield from ((x, y) for x in range(x1, x2 + 1))
         else:

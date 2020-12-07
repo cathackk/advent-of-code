@@ -10,7 +10,7 @@ Claim = Tuple[int, Rect]
 
 def load_claims(fn: str) -> Iterable[Claim]:
     for line in open(fn):
-        cid, x, y, w, h = parse_line(line, '#', ' @ ', ',', ': ', 'x', '\n')
+        cid, x, y, w, h = parse_line(line, '#$ @ $,$: $x$\n')
         x1, y1 = int(x), int(y)
         x2, y2 = x1 + int(w) - 1, y1 + int(h) - 1
         yield int(cid), Rect((x1, y1), (x2, y2))

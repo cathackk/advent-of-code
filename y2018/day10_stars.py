@@ -14,7 +14,7 @@ Star = Tuple[Point, Vector]
 def load_stars(fn: str) -> Iterable[Star]:
     # position=< 54660, -43357> velocity=< 5,  4>
     for line in open(fn):
-        px, py, vx, vy = parse_line(line, "position=<", ", ", "> velocity=<", ", ", ">\n")
+        px, py, vx, vy = parse_line(line, "position=<$, $> velocity=<$, $>\n")
         yield Point(int(px), int(py)), Vector(int(vx), int(vy))
 
 

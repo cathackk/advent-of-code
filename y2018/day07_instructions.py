@@ -16,7 +16,7 @@ Dependency = Tuple[str, str]
 def load_dependencies(fn: str) -> Iterable[Dependency]:
     # Step Y must be finished before step M can begin.
     for line in open(fn):
-        yield parse_line(line, "Step ", " must be finished before step ", " can begin.\n")
+        yield parse_line(line, "Step $ must be finished before step $ can begin.\n")
 
 
 def step_length(step: str) -> int:
