@@ -152,8 +152,7 @@ def dgroupby(
     d: Dict[K, List[V]] = dict()
 
     for item in items:
-        item_key = key(item)
-        item_value = value(item)
+        item_key, item_value = key(item), value(item)
         if item_key not in d:
             d[item_key] = []
         d[item_key].append(item_value)
@@ -169,8 +168,29 @@ def dgroupby_set(
     d: Dict[K, Set[V]] = dict()
 
     for item in items:
-        item_key = key(item)
-        item_value = value(item)
+        item_key, item_value = key(item), value(item)
+        if item_key not in d:
+            d[item_key] = set()
+        d[item_key].add(item_value)
+
+    return d
+
+
+def dgroupby_pairs(items: Iterable[Tuple[K, V]]) -> Dict[K, List[V]]:
+    d: Dict[K, List[V]] = dict()
+
+    for item_key, item_value in items:
+        if item_key not in d:
+            d[item_key] = []
+        d[item_key].append(item_value)
+
+    return d
+
+
+def dgroupby_pairs_set(items: Iterable[Tuple[K, V]]) -> Dict[K, Set[V]]:
+    d: Dict[K, Set[V]] = dict()
+
+    for item_key, item_value in items:
         if item_key not in d:
             d[item_key] = set()
         d[item_key].add(item_value)
