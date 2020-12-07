@@ -4,6 +4,8 @@ Day 4: Passport Processing
 https://adventofcode.com/2020/day/4
 """
 
+import re
+from functools import partial
 from typing import Dict
 from typing import Iterable
 from typing import List
@@ -101,7 +103,60 @@ def part_2(passports: List['Passport']) -> int:
     Better add some data validation! You can continue to ignore the `cid` field, but each other
     field has strict rules about what values are valid for automatic validation.
 
-    (Rules are listed with examples in `is_valid_entry` function.)
+        - `byr` (Birth Year) - four digits; at least 1920 and at most 2002.
+        - `iyr` (Issue Year) - four digits; at least 2010 and at most 2020.
+        - `eyr` (Expiration Year) - four digits; at least 2020 and at most 2030.
+
+            >>> is_valid_entry('byr', '2002')
+            True
+            >>> is_valid_entry('byr', '2003')
+            False
+            >>> is_valid_entry('iyr', '2009')
+            False
+            >>> is_valid_entry('eyr', 'unknown')
+            False
+
+        - `hgt` (Height) - a number followed by either `cm` or `in`:
+            - If `cm`, the number must be at least 150 and at most 193.
+            - If `in`, the number must be at least 59 and at most 76.
+
+            >>> is_valid_entry('hgt', '60in')
+            True
+            >>> is_valid_entry('hgt', '190cm')
+            True
+            >>> is_valid_entry('hgt', '190in')
+            False
+            >>> is_valid_entry('hgt', '6ft')
+            False
+            >>> is_valid_entry('hgt', '190')
+            False
+            >>> is_valid_entry('hgt', 'big')
+            False
+
+        - `hcl` (Hair Color) - a `#` followed by exactly six characters `0-9` or `a-f`.
+
+            >>> is_valid_entry('hcl', '#123abc')
+            True
+            >>> is_valid_entry('hcl', '#123abz')
+            False
+            >>> is_valid_entry('hcl', '123abc')
+            False
+
+        - `ecl` (Eye Color) - exactly one of: `amb` `blu` `brn` `gry` `grn` `hzl` `oth`.
+
+            >>> is_valid_entry('ecl', 'brn')
+            True
+            >>> is_valid_entry('ecl', 'wat')
+            False
+
+        - `pid` (Passport ID) - a nine-digit number, including leading zeroes.
+
+            >>> is_valid_entry('pid', '000000001')
+            True
+            >>> is_valid_entry('pid', '0123456789')
+            False
+
+        - `cid` (Country ID) - ignored, missing or not.
 
     Your job is to count the passports where *all required fields are both present and valid*
     according to the above rules.
@@ -192,123 +247,59 @@ def passports_from_lines(lines: Iterable[str]) -> Iterable[Passport]:
         )
 
 
+def validate_range(min_value: int, max_value: int, value: str) -> bool:
+    try:
+        return min_value <= int(value) <= max_value
+    except ValueError:
+        # failed to convert value to int
+        return False
+
+
+def validate_height(ranges: Dict[str, Tuple[int, int]], value: str) -> bool:
+    for unit, (min_value, max_value) in ranges.items():
+        if value.endswith(unit):
+            return validate_range(min_value, max_value, value.removesuffix(unit))
+    else:
+        # unit not found
+        return False
+
+
+def validate_re(pattern: re.Pattern, value: str) -> bool:
+    return bool(pattern.fullmatch(value))
+
+
+validators = {
+    'byr': partial(validate_range, 1920, 2002),
+    'iyr': partial(validate_range, 2010, 2020),
+    'eyr': partial(validate_range, 2020, 2030),
+    'hgt': partial(validate_height, {'cm': (150, 193), 'in': (59, 76)}),
+    'hcl': partial(validate_re, re.compile(r'#[0-9a-f]{6}')),
+    'ecl': partial(validate_re, re.compile(r'(amb|blu|brn|gry|grn|hzl|oth)')),
+    'pid': partial(validate_re, re.compile(r'[0-9]{9}')),
+    'cid': None  # ignored
+}
+
+
 def has_required_fields(passport: Passport) -> bool:
-    required_fields = {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}
+    # fields with a defined validator are required
+    required_fields = set(
+        field
+        for field, validator in validators.items()
+        if validator
+    )
     return set(passport.keys()).issuperset(required_fields)
 
 
-def is_valid_entry(key: str, value: str) -> bool:
-    """
-    - `byr` (Birth Year) - four digits; at least `1920` and at most `2002`.
-
-        >>> is_valid_entry('byr', '2002')
-        True
-        >>> is_valid_entry('byr', '2003')
-        False
-        >>> is_valid_entry('byr', '20XY')
-        False
-
-    - `iyr` (Issue Year) - four digits; at least `2010` and at most `2020`.
-
-        >>> is_valid_entry('iyr', '2010')
-        True
-        >>> is_valid_entry('iyr', '2000')
-        False
-        >>> is_valid_entry('iyr', ':)')
-        False
-
-    - `eyr` (Expiration Year) - four digits; at least `2020` and at most `2030`.
-
-        >>> is_valid_entry('eyr', '2030')
-        True
-        >>> is_valid_entry('eyr', '2031')
-        False
-        >>> is_valid_entry('eyr', '????')
-        False
-
-    - `hgt` (Height) - a number followed by either `cm` or `in`:
-        - If `cm`, the number must be at least `150` and at most `193`.
-        - If `in`, the number must be at least `59` and at most `76`.
-
-        >>> is_valid_entry('hgt', '60in')
-        True
-        >>> is_valid_entry('hgt', '190cm')
-        True
-        >>> is_valid_entry('hgt', '190in')
-        False
-        >>> is_valid_entry('hgt', '190')
-        False
-        >>> is_valid_entry('hgt', 'xxcm')
-        False
-
-    - `hcl` (Hair Color) - a `#` followed by exactly six characters `0-9` or `a-f`.
-
-        >>> is_valid_entry('hcl', '#123abc')
-        True
-        >>> is_valid_entry('hcl', '#123abz')
-        False
-        >>> is_valid_entry('hcl', '123abc')
-        False
-
-    - `ecl` (Eye Color) - exactly one of: `amb` `blu` `brn` `gry` `grn` `hzl` `oth`.
-
-        >>> is_valid_entry('ecl', 'brn')
-        True
-        >>> is_valid_entry('ecl', 'wat')
-        False
-
-    - `pid` (Passport ID) - a nine-digit number, including leading zeroes.
-
-        >>> is_valid_entry('pid', '000000001')
-        True
-        >>> is_valid_entry('pid', '0123456789')
-        False
-        >>> is_valid_entry('pid', '01234567x')
-        False
-
-    - `cid` (Country ID) - ignored, missing or not.
-    """
-
-    try:
-        if key == 'byr':
-            return 1920 <= int(value) <= 2002
-
-        elif key == 'iyr':
-            return 2010 <= int(value) <= 2020
-
-        elif key == 'eyr':
-            return 2020 <= int(value) <= 2030
-
-        elif key == 'hgt':
-            if value.endswith('cm'):
-                return 150 <= int(value[:-2]) <= 193
-            elif value.endswith('in'):
-                return 59 <= int(value[:-2]) <= 76
-            else:
-                return False
-
-        elif key == 'hcl':
-            return len(value) == 7 \
-                   and value[0] == '#' \
-                   and all(c in '0123456789abcdef' for c in value[1:])
-
-        elif key == 'ecl':
-            return value in {'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'}
-
-        elif key == 'pid':
-            return len(value) == 9 \
-                   and all(c in '0123456789' for c in value)
-
-        elif key == 'cid':
-            return True
-
-        else:
-            # unsupported key
-            return False
-
-    except ValueError:
-        # failed to parse an int
+def is_valid_entry(field: str, value: str) -> bool:
+    if field not in validators:
+        # unsupported field
         return False
+
+    if validators[field] is None:
+        # ignored field: always valid
+        return True
+
+    return validators[field](value)
 
 
 def is_valid_passport(passport: Passport) -> bool:
