@@ -13,6 +13,13 @@ class Heading(Enum):
         self.dx = dx
         self.dy = dy
 
+    @classmethod
+    def from_letter(cls, letter: str) -> 'Heading':
+        try:
+            return next(h for h in cls if h.letter == letter)
+        except StopIteration:
+            raise KeyError(letter)
+
     def right(self) -> 'Heading':
         return {
             Heading.NORTH: Heading.EAST,
