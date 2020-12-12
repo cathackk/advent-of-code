@@ -243,6 +243,10 @@ def zip1(items: Iterable[T], wrap: bool = False) -> Iterable[Tuple[T, T]]:
         yield last_item, first_item
 
 
+def diffs(items: Iterable[T]) -> Iterable[T]:
+    return (b - a for a, b in zip1(items))
+
+
 def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[Tuple[T, ...]]:
     """
     >>> list(slidingw([1,2,3,4], 2))
