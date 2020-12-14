@@ -1,5 +1,7 @@
 import functools
 import time
+from itertools import chain
+from itertools import combinations
 from typing import Any
 from typing import Callable
 from typing import Dict
@@ -459,6 +461,17 @@ def subsequences(items: T) -> Iterable[T]:
         yield items
 
 
+def powerset(items: Iterable[T]) -> Iterable[Tuple[T, ...]]:
+    """
+    >>> list(powerset([1, 2, 3]))
+    [(), (1,), (2,), (3,), (1, 2), (1, 3), (2, 3), (1, 2, 3)]
+    """
+    s = list(items)
+    return chain.from_iterable(
+        combinations(s, r)
+        for r in range(len(s) + 1)
+    )
+
 def ilog(
         items: Iterable[T],
         format: Callable[[int, T], str] = None,
@@ -532,7 +545,7 @@ def parse_line(line: str, pattern: str) -> Tuple[str, ...]:
     ('four',)
     >>> parse_line("Humans have two eyes and four limbs.", "Humans have $ eyes and $ limbs.")
     ('two', 'four')
-    >>> parse_line("1,2:3x4\n", "$,$:$x$\n")
+    >>> parse_line("1,2:3x4", "$,$:$x$")
     ('1', '2', '3', '4')
     """
     fixes = pattern.split('$')
@@ -550,11 +563,15 @@ def _parse_line_fixes(line: str, *fixes: str) -> Tuple[str, ...]:
     for f1, f2 in slidingw(fixes, 2):
         assert line.startswith(f1)
         line = line[len(f1):]
-        pos2 = line.index(f2)
-        results.append(line[:pos2])
-        line = line[pos2:]
+        if f2:
+            pos2 = line.index(f2)
+            results.append(line[:pos2])
+            line = line[pos2:]
+        else:
+            results.append(line)
+            line = ''
 
-    assert line == fixes[-1]
+    assert line == fixes[-1], f"{line!r} != {fixes[-1]!r}"
     return tuple(results)
 
 
