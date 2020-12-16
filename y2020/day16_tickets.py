@@ -297,14 +297,13 @@ class RuleList:
         return [field_order[ix] for ix in range(fields_count)]
 
     def describe_ticket(self, ticket: Ticket, other_tickets: List[Ticket]):
-        field_order = {
-            field: index
-            for index, field in enumerate(
-                self.determine_field_order([ticket] + other_tickets)
-            )
-        }
+        # find out which column (index) is which field
+        fields_ordered = self.determine_field_order([ticket] + other_tickets)
+        # zip values from `ticket` with newly determined field names
+        ticket_described = dict(zip(fields_ordered, ticket))
+        # reorder the dict into rule order
         return {
-            rule.field: ticket[field_order[rule.field]]
+            rule.field: ticket_described[rule.field]
             for rule in self
         }
 
