@@ -3,6 +3,7 @@ from typing import Iterable
 from typing import Tuple
 
 from utils import minmax
+from utils import product
 
 Pos = Tuple[int, int]
 
@@ -123,4 +124,122 @@ class Rect:
             return (
                 x in self.range_x()
                 and y in self.range_y()
+            )
+
+
+HyperPos = Tuple[int, ...]
+
+
+def _assert_dimensions_aligned(dim1: int, dim2: int):
+    if dim1 != dim2:
+        raise ValueError(f"dimensions mismatch: {dim1} vs {dim2}")
+
+
+class HyperCuboid:
+    def __init__(self, corner1: HyperPos, corner2: HyperPos):
+        _assert_dimensions_aligned(len(corner1), len(corner2))
+        self.corner_min = tuple(min(a, b) for a, b in zip(corner1, corner2))
+        self.corner_max = tuple(max(a, b) for a, b in zip(corner1, corner2))
+
+    def __repr__(self):
+        return f'{type(self).__name__}({self.corner_min!r}, {self.corner_max!r})'
+
+    @classmethod
+    def at_origin(cls, corner: HyperPos):
+        origin = tuple(0 for _ in range(len(corner)))
+        return cls(origin, corner)
+
+    @classmethod
+    def with_all(cls, ps: Iterable[HyperPos]):
+        ps = iter(ps)
+
+        try:
+            first_pos = next(ps)
+        except StopIteration:
+            raise ValueError("with_all() arg is an empty sequence")
+
+        min_values, max_values = list(first_pos), list(first_pos)
+
+        for pos in ps:
+            _assert_dimensions_aligned(len(first_pos), len(pos))
+            for ix, value in enumerate(pos):
+                if value < min_values[ix]:
+                    min_values[ix] = value
+                if value > max_values[ix]:
+                    max_values[ix] = value
+
+        return cls(tuple(min_values), tuple(max_values))
+
+    def grow_to_fit(self, ps: Iterable[HyperPos]):
+        return type(self).with_all(chain([self.corner_min, self.corner_max], ps))
+
+    @property
+    def dimensions(self) -> int:
+        return len(self.corner_min)
+
+    @property
+    def range_dim(self) -> range:
+        return range(self.dimensions)
+
+    @property
+    def shape(self) -> Tuple[int, ...]:
+        return tuple(self.length(d) for d in self.range_dim)
+
+    def length(self, dim: int) -> int:
+        return self.corner_max[dim] - self.corner_min[dim]
+
+    @property
+    def volume(self) -> int:
+        return product(self.length(d) for d in self.range_dim)
+
+    def range(self, dim: int) -> range:
+        return range(self.corner_min[dim], self.corner_max[dim] + 1)
+
+    def slice(self, removed_dimensions: Iterable[int]) -> 'HyperCuboid':
+        rds = set(removed_dimensions)
+        for dim in rds:
+            if not 0 <= dim < self.dimensions:
+                raise ValueError(f"dimension out of range: {dim}")
+
+        return type(self)(
+            tuple(v for d, v in enumerate(self.corner_min) if d not in rds),
+            tuple(v for d, v in enumerate(self.corner_max) if d not in rds)
+        )
+
+    def _positions(self, dims: int) -> Iterable[HyperPos]:
+        if dims > 0:
+            return (
+                previous + (pos,)
+                for previous in self._positions(dims - 1)
+                for pos in self.range(dims - 1)
+            )
+        else:
+            return (),
+
+    def __iter__(self) -> Iterable[HyperPos]:
+        return self._positions(self.dimensions)
+
+    def __hash__(self) -> int:
+        return hash((self.corner_min, self.corner_max))
+
+    def __eq__(self, other) -> bool:
+        return (
+            isinstance(other, type(self))
+            and self.corner_min == other.corner_min
+            and self.corner_max == other.corner_max
+        )
+
+    def __contains__(self, item) -> bool:
+        if isinstance(item, type(self)):
+            _assert_dimensions_aligned(self.dimensions, item.dimensions)
+            return all(
+                item.corner_min[d] in self.range(d)
+                and item.corner_max[d] in self.range(d)
+                for d in item.range_dim
+            )
+        else:
+            _assert_dimensions_aligned(self.dimensions, len(item))
+            return all(
+                v in self.range(d)
+                for d, v in enumerate(item)
             )
