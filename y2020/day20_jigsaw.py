@@ -3,17 +3,18 @@ Advent of Code 2020
 Day 20: Jurassic Jigsaw
 https://adventofcode.com/2020/day/20
 """
-import math
+
 import re
 import itertools
+from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Optional
+from typing import Set
 from typing import Tuple
 
-from utils import eprint
+from rect import Rect
 from utils import parse_line
-from utils import picking
 from utils import product
 from utils import single_value
 from utils import string_builder
@@ -41,17 +42,18 @@ def part_1(tiles: List['Tile']) -> Tuple[int, 'Image']:
     For example, suppose you have the following nine tiles:
 
         >>> example_tiles = tiles_from_text('''
+        ...
         ...     Tile 2311:  Tile 1951:  Tile 1171:  Tile 1427:  Tile 1489:
-        ...     ..##.#..#.  #.##...##.  ####...##.  ###.##.#..  ##.#.#....
-        ...     ##..#.....  #.####...#  #..##.#..#  .#..#.##..  ..##...#..
-        ...     #...##..#.  .....#..##  ##.#..#.#.  .#.##.#..#  .##..##...
-        ...     ####.#...#  #...######  .###.####.  #.#.#.##.#  ..#...#...
-        ...     ##.##.###.  .##.#....#  ..###.####  ....#...##  #####...#.
-        ...     ##...#.###  .###.#####  .##....##.  ...##..##.  #..#.#.#.#
-        ...     .#.#.#..##  ###.##.##.  .#...####.  ...#.#####  ...#.#.#..
-        ...     ..#....#..  .###....#.  #.##.####.  .#.####.#.  ##.#...##.
-        ...     ###...#.#.  ..#.#..#.#  ####..#...  ..#..###.#  ..##.##.##
-        ...     ..###..###  #...##.#..  .....##...  ..##.#..#.  ###.##.#..
+        ...     ..###..###  #.##...##.  ####...##.  ###.##.#..  ##.#.#....
+        ...     ###...#.#.  #.####...#  #..##.#..#  .#..#.##..  ..##...#..
+        ...     ..#....#..  .....#..##  ##.#..#.#.  .#.##.#..#  .##..##...
+        ...     .#.#.#..##  #...######  .###.####.  #.#.#.##.#  ..#...#...
+        ...     ##...#.###  .##.#....#  ..###.####  ....#...##  #####...#.
+        ...     ##.##.###.  .###.#####  .##....##.  ...##..##.  #..#.#.#.#
+        ...     ####.#...#  ###.##.##.  .#...####.  ...#.#####  ...#.#.#..
+        ...     #...##..#.  .###....#.  #.##.####.  .#.####.#.  ##.#...##.
+        ...     ##..#.....  ..#.#..#.#  ####..#...  ..#..###.#  ..##.##.##
+        ...     ..##.#..#.  #...##.#..  .....##...  ..##.#..#.  ###.##.#..
         ...
         ...     Tile 2473:  Tile 2971:  Tile 2729:  Tile 3079:
         ...     #....####.  ..#.#....#  ...#.#.#.#  #.#.#####.
@@ -64,15 +66,16 @@ def part_1(tiles: List['Tile']) -> Tuple[int, 'Image']:
         ...     ########.#  ..####.###  ##.####...  ..#.###...
         ...     ##...##.#.  ..#.#.###.  ##..#.##..  ..#.......
         ...     ..###.#.#.  ...#.#.#.#  #.##...##.  ..#.###...
+        ...
         ... ''')
         >>> len(example_tiles)
         9
 
-    Tiles have ID, have square size, and four border:
+    Tiles have ID, square size, and four borders:
 
         >>> tile_0 = example_tiles[0]
         >>> tile_0.tile_id, tile_0.size, tile_0.borders
-        (2311, 10, ('..##.#..#.', '...#.##..#', '..###..###', '.#####..#.'))
+        (2311, 10, ('..###..###', '#..##.#...', '..##.#..#.', '.#..#####.'))
         >>> tile_8 = example_tiles[-1]
         >>> tile_8.tile_id, tile_8.size, tile_8.borders
         (3079, 10, ('#.#.#####.', '.#....#...', '..#.###...', '#..##.#...'))
@@ -80,46 +83,46 @@ def part_1(tiles: List['Tile']) -> Tuple[int, 'Image']:
     Tiles can be rotated and flipped:
 
         >>> print(tile_0)
-        ..##.#..#.
-        ##..#.....
-        #...##..#.
-        ####.#...#
-        ##.##.###.
-        ##...#.###
-        .#.#.#..##
-        ..#....#..
-        ###...#.#.
         ..###..###
+        ###...#.#.
+        ..#....#..
+        .#.#.#..##
+        ##...#.###
+        ##.##.###.
+        ####.#...#
+        #...##..#.
+        ##..#.....
+        ..##.#..#.
         >>> print(tile_0.rotated_cw())
-        .#..#####.
+        .#####..#.
         .#.####.#.
-        ###...#..#
-        #..#.##..#
-        #....#.##.
-        ...##.##.#
-        .#...#....
-        #.#.##....
-        ##.###.#.#
-        #..##.#...
+        #..#...###
+        #..##.#..#
+        .##.#....#
+        #.##.##...
+        ....#...#.
+        ....##.#.#
+        #.#.###.##
+        ...#.##..#
         >>> print(tile_0.flipped_x())
-        ..###..###
-        ###...#.#.
-        ..#....#..
-        .#.#.#..##
-        ##...#.###
-        ##.##.###.
-        ####.#...#
-        #...##..#.
-        ##..#.....
         ..##.#..#.
+        ##..#.....
+        #...##..#.
+        ####.#...#
+        ##.##.###.
+        ##...#.###
+        .#.#.#..##
+        ..#....#..
+        ###...#.#.
+        ..###..###
 
     By rotating, flipping, and rearranging them, you can find a square arrangement that causes all
     adjacent borders to line up:
 
-        >>> image = Image.assemble(example_tiles)
-        >>> image.width, image.height, image.tiles_size
+        >>> img = Image.assemble(example_tiles)
+        >>> img.width, img.height, img.tiles_size
         (3, 3, 10)
-        >>> print(image.draw())
+        >>> print(img.draw())
         #...##.#.. ..###..### #.#.#####.
         ..#.#..#.# ###...#.#. .#..######
         .###....#. ..#....#.. ..#.......
@@ -152,7 +155,7 @@ def part_1(tiles: List['Tile']) -> Tuple[int, 'Image']:
         #.#.###... .##..##... .####.##.#
         #...###... ..##...#.. ...#..####
         ..#.#....# ##.#.#.... ...##.....
-        >>> print("\n".join("  ".join(str(t.tile_id) for t in row) for row in image.tile_rows))
+        >>> print("\n".join("  ".join(str(t.tile_id) for t in row) for row in img.tile_rows))
         1951  2311  3079
         2729  1427  2473
         2971  1489  1171
@@ -160,7 +163,7 @@ def part_1(tiles: List['Tile']) -> Tuple[int, 'Image']:
     To check that you've assembled the image correctly, multiply the IDs of the four corner tiles
     together.
 
-        >>> corner_ids = [t.tile_id for t in image.corner_tiles]
+        >>> corner_ids = [t.tile_id for t in img.corner_tiles]
         >>> corner_ids
         [1951, 3079, 2971, 1171]
         >>> product(corner_ids)
@@ -169,9 +172,9 @@ def part_1(tiles: List['Tile']) -> Tuple[int, 'Image']:
     Assemble the tiles into an image. *What do you get if you multiply together the IDs of the four
     corner tiles?*
 
-        >>> result, image = part_1(example_tiles)
+        >>> res, _ = part_1(example_tiles)
         part 1: assembled image has corner tiles 1951 * 3079 * 2971 * 1171 = 20899048083289
-        >>> result
+        >>> res
         20899048083289
     """
 
@@ -194,16 +197,16 @@ def part_2(image: 'Image', pattern: 'Pattern') -> int:
 
         >>> example_tiles = tiles_from_text('''
         ...     Tile 2311:  Tile 1951:  Tile 1171:  Tile 1427:  Tile 1489:
-        ...     ..##.#..#.  #.##...##.  ####...##.  ###.##.#..  ##.#.#....
-        ...     ##..#.....  #.####...#  #..##.#..#  .#..#.##..  ..##...#..
-        ...     #...##..#.  .....#..##  ##.#..#.#.  .#.##.#..#  .##..##...
-        ...     ####.#...#  #...######  .###.####.  #.#.#.##.#  ..#...#...
-        ...     ##.##.###.  .##.#....#  ..###.####  ....#...##  #####...#.
-        ...     ##...#.###  .###.#####  .##....##.  ...##..##.  #..#.#.#.#
-        ...     .#.#.#..##  ###.##.##.  .#...####.  ...#.#####  ...#.#.#..
-        ...     ..#....#..  .###....#.  #.##.####.  .#.####.#.  ##.#...##.
-        ...     ###...#.#.  ..#.#..#.#  ####..#...  ..#..###.#  ..##.##.##
-        ...     ..###..###  #...##.#..  .....##...  ..##.#..#.  ###.##.#..
+        ...     ..###..###  #.##...##.  ####...##.  ###.##.#..  ##.#.#....
+        ...     ###...#.#.  #.####...#  #..##.#..#  .#..#.##..  ..##...#..
+        ...     ..#....#..  .....#..##  ##.#..#.#.  .#.##.#..#  .##..##...
+        ...     .#.#.#..##  #...######  .###.####.  #.#.#.##.#  ..#...#...
+        ...     ##...#.###  .##.#....#  ..###.####  ....#...##  #####...#.
+        ...     ##.##.###.  .###.#####  .##....##.  ...##..##.  #..#.#.#.#
+        ...     ####.#...#  ###.##.##.  .#...####.  ...#.#####  ...#.#.#..
+        ...     #...##..#.  .###....#.  #.##.####.  .#.####.#.  ##.#...##.
+        ...     ##..#.....  ..#.#..#.#  ####..#...  ..#..###.#  ..##.##.##
+        ...     ..##.#..#.  #...##.#..  .....##...  ..##.#..#.  ###.##.#..
         ...
         ...     Tile 2473:  Tile 2971:  Tile 2729:  Tile 3079:
         ...     #....####.  ..#.#....#  ...#.#.#.#  #.#.#####.
@@ -339,12 +342,12 @@ def part_2(image: 'Image', pattern: 'Pattern') -> int:
         273
     """
 
-    for image_oriented in image.orientations():
-        image_drawn = image_oriented.draw(borders=False, gaps=False)
-        matches = list(pattern.find_in(image_drawn))
+    for oriented in image.orientations():
+        drawn = oriented.draw(borders=False, gaps=False)
+        matches = list(pattern.find_in(drawn))
         if matches:
-            image_highlighted = pattern.highlight(image_drawn, matches)
-            result = sum(1 for c in image_highlighted if c == '#')
+            highlighted = pattern.highlight(drawn, matches)
+            result = sum(1 for c in highlighted if c == '#')
             print(f"part 2: monster was spotted {len(matches)} times; "
                   f"there are {result} water tiles without monster")
             # print(image_highlighted)
@@ -365,35 +368,14 @@ class Tile:
         self.size = width
         assert self.size >= 2
 
-        self.borders = (
-            # top row: left-to-right
-            self.pixel_rows[0],
-            # right column: top-to-bottom
-            ''.join(self.pixel_rows[y][-1] for y in range(self.size)),
-            # bottom row: left-to_right
-            self.pixel_rows[-1],
-            # left column: top-to-bottom
-            ''.join(self.pixel_rows[y][0] for y in range(self.size))
-        )
+        self.border_top = self.pixel_rows[0]
+        self.border_right = ''.join(self.pixel_rows[y][-1] for y in range(self.size))
+        self.border_bottom = self.pixel_rows[-1]
+        self.border_left = ''.join(self.pixel_rows[y][0] for y in range(self.size))
+        self.borders = (self.border_top, self.border_right, self.border_bottom, self.border_left)
 
     def __str__(self):
         return "\n".join(self.pixel_rows)
-
-    @property
-    def border_top(self) -> str:
-        return self.borders[0]
-
-    @property
-    def border_right(self) -> str:
-        return self.borders[1]
-
-    @property
-    def border_bottom(self) -> str:
-        return self.borders[2]
-
-    @property
-    def border_left(self) -> str:
-        return self.borders[3]
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]):
@@ -468,10 +450,18 @@ class Image:
     def __init__(self, tile_rows: Iterable[Iterable[Tile]]):
         self.tile_rows = [list(row) for row in tile_rows]
         self.height = len(self.tile_rows)
+        self.width = single_value(set(
+            len(row)
+            for row in self.tile_rows
+        ))
         assert self.height >= 1
-        self.width = single_value(set(len(row) for row in self.tile_rows))
         assert self.width >= 1
-        self.tiles_size = single_value(set(tile.size for row in self.tile_rows for tile in row))
+
+        self.tiles_size = single_value(set(
+            tile.size
+            for row in self.tile_rows
+            for tile in row
+        ))
 
     def __str__(self):
         return self.draw()
@@ -490,6 +480,15 @@ class Image:
                     tile.pixel_rows[pixel_y][slice_x]
                     for tile in tile_row
                 )
+
+    @property
+    def corner_tiles(self) -> List[Tile]:
+        row_indexes = [0, self.height - 1] if self.height > 1 else [0]
+        col_indexes = [0, self.width - 1] if self.width > 1 else [0]
+        return [
+            self.tile_rows[row][col]
+            for row, col in itertools.product(row_indexes, col_indexes)
+        ]
 
     def flipped_x(self) -> 'Image':
         return type(self)(
@@ -522,86 +521,75 @@ class Image:
             yield image.flipped_x()
             image = image.rotated_cw()
 
-
     @classmethod
     def assemble(cls, tiles: Iterable[Tile]) -> Optional['Image']:
         tiles = list(tiles)
 
-        side_length = int(math.sqrt(len(tiles)))
-        if side_length * side_length != len(tiles):
-            raise ValueError(f"can only assemble square images; "
-                             f"given non-square number of tiles: {len(tiles)}")
+        # matrix of continuously placed tiles; bordering ones must match
+        placed: Dict[Pos, Tile] = dict()
+        # pool of unplaced tiles -> needs to be emptied by the end of the algorithm
+        unplaced_tiles: Dict[int, Tile] = {tile.tile_id: tile for tile in tiles}
+        # empty positions bordering any placed tiles -> needs to be updated continuously
+        # start with a single position where the first tile will be placed immediately
+        bordering_positions: Set[Pos] = {(0, 0)}
 
-        # go through tiles, try to use each as top-left corner in all of its orientations
-        for tile_ix, (starting_tile, remaining_tiles) in enumerate(picking(tiles)):
-            for orientation_ix, top_left_tile in enumerate(starting_tile.orientations()):
-                eprint(f"tile={tile_ix+1}/{len(tiles)}, orn={orientation_ix+1}/8")
-                solution = cls.solve(top_left_tile, remaining_tiles, side_length)
-                if solution:
-                    return solution
+        # any further tiles will have to be checked for match with their neighbors
+        def is_matching(tile: Tile, pos: Pos) -> bool:
+            assert pos not in placed
+            top, right, bottom, left = neighbors(pos)
+            return (top not in placed or tile.border_top == placed[top].border_bottom) \
+                and (right not in placed or tile.border_right == placed[right].border_left) \
+                and (bottom not in placed or tile.border_bottom == placed[bottom].border_top) \
+                and (left not in placed or tile.border_left == placed[left].border_right)
 
-        return None
-
-    @classmethod
-    def solve(
-            cls,
-            top_left_tile: Tile,
-            tiles: Iterable[Tile],
-            side_length: int
-    ) -> Optional['Image']:
-        # given top-left-corner, tiles pool and side size (image being square)
-        # try building the first row from left-to-right,
-        # then adding more rows below
-        # if this all goes well, we are done!
-
-        tiles_pool = {tile.tile_id: tile for tile in tiles}
-        rows: List[List[Tile]] = [[top_left_tile]]
-
-        def matches_rows(tile: Tile):
-            current_row = rows[-1]
-            prev_row = rows[-2] if len(rows) >= 2 else None
+        # four adjacent positions
+        def neighbors(pos: Pos) -> Tuple[Pos, Pos, Pos, Pos]:
+            x, y = pos
             return (
-                # if there are any tiles in the current row,
-                # -> right border of the rightmost one must match the left border of the given tile
-                (not current_row or current_row[-1].border_right == tile.border_left)
-                # if there is a row top of this one,
-                # -> bottom border of the tile above the current position must match the top border
-                #    of the given tile
-                and (not prev_row or prev_row[len(current_row)].border_bottom == tile.border_top)
+                (x, y - 1),  # top
+                (x + 1, y),  # right
+                (x, y + 1),  # bottom
+                (x - 1, y)   # left
             )
 
-        while tiles_pool:
-            if len(rows[-1]) == side_length:
-                rows.append([])
-
-            matching_tiles = set(
-                tile_oriented
-                for tile in tiles_pool.values()
-                for tile_oriented in tile.orientations()
-                if matches_rows(tile_oriented)
-            )
-
-            if not matching_tiles:
-                # no solution for given top-left corner found
+        # as long as there are any tiles unplaced ...
+        while unplaced_tiles:
+            try:
+                # ... try placing one of them into any empty bordering position
+                matching_tile, placed_pos = next(
+                    (candidate_orientation, bordering_pos)
+                    for candidate_tile in unplaced_tiles.values()
+                    for candidate_orientation in candidate_tile.orientations()
+                    for bordering_pos in bordering_positions
+                    if is_matching(candidate_orientation, bordering_pos)
+                )
+            except StopIteration:
+                # no matching tile found
                 return None
 
-            # only supporting single solutions
-            matching_tile = single_value(matching_tiles)
-            del tiles_pool[matching_tile.tile_id]
-            rows[-1].append(matching_tile)
+            # found a matching tile!
+            placed[placed_pos] = matching_tile
+            del unplaced_tiles[matching_tile.tile_id]
 
-        assert len(rows) == side_length
-        assert all(len(row) == side_length for row in rows)
-        return cls(rows)
+            # update bordering positions
+            bordering_positions.remove(placed_pos)
+            bordering_positions.update(
+                npos
+                for npos in neighbors(placed_pos)
+                if npos not in placed
+            )
 
-    @property
-    def corner_tiles(self) -> List[Tile]:
-        row_indexes = [0, self.height - 1] if self.height > 1 else [0]
-        col_indexes = [0, self.width - 1] if self.width > 1 else [0]
-        return [
-            self.tile_rows[row][col]
-            for row, col in itertools.product(row_indexes, col_indexes)
-        ]
+        # everything placed!
+        # make sure all tiles fit into a full rectangle without any gaps
+        bounds = Rect.with_all(placed.keys())
+        if bounds.area != len(tiles):
+            raise ValueError("tiles placed into non-rectangular area")
+
+        # return the assembled rectangle as Image
+        return cls(
+            [placed[(x, y)] for x in bounds.range_x()]
+            for y in bounds.range_y()
+        )
 
 
 Pos = Tuple[int, int]
@@ -670,5 +658,7 @@ class Pattern:
 
 if __name__ == '__main__':
     tiles_ = tiles_from_file("data/20-input.txt")
-    result_1, image_ = part_1(tiles_)
+    assert len(tiles_) == 144
+
+    _, image_ = part_1(tiles_)
     part_2(image_, Pattern.monster())
