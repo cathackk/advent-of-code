@@ -1,4 +1,5 @@
 import functools
+import sys
 import time
 from itertools import chain
 from itertools import combinations
@@ -605,6 +606,29 @@ def ro(pos: Tuple[int, int]) -> Tuple[int, int]:
     return y, x
 
 
+def string_builder(delimiter: str = "\n"):
+    """
+    >>> @string_builder(" + ")
+    ... def the_beatles():
+    ...     yield "John"
+    ...     yield "Paul"
+    ...     yield "George"
+    ...     for _ in range(3):
+    ...         yield "Ringo"
+    >>> the_beatles()
+    'John + Paul + George + Ringo + Ringo + Ringo'
+    """
+
+    def decorator(fn):
+        @functools.wraps(fn)
+        def wrapped(*args, **kwargs) -> str:
+            return delimiter.join(fn(*args, **kwargs))
+
+        return wrapped
+
+    return decorator
+
+
 def join_english(items: Iterable[Any], conj=" and "):
     """
     >>> join_english([1, 2, 3])
@@ -672,3 +696,7 @@ def line_groups(lines: Iterable[str]) -> Iterable[List[str]]:
 
     if buffer:
         yield buffer
+
+
+def eprint(*args, **kwargs):
+    print(*args, **kwargs, file=sys.stderr)
