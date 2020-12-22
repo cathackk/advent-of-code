@@ -244,17 +244,7 @@ class HyperCuboid:
             )
 
     def __iter__(self) -> Iterable[HyperPos]:
-        return self._positions(len(self))
-
-    def _positions(self, dims: int) -> Iterable[HyperPos]:
-        if dims > 0:
-            return (
-                previous + (pos,)
-                for previous in self._positions(dims - 1)
-                for pos in self[dims - 1]
-            )
-        else:
-            return (),
+        return itertools.product(*(self[d] for d in self.range_dim))
 
     def __hash__(self) -> int:
         return hash((self.corner_min, self.corner_max))

@@ -5,6 +5,7 @@ https://adventofcode.com/2020/day/17
 """
 
 from collections import Counter
+from itertools import product
 from typing import Iterable
 from typing import Set
 from typing import Tuple
@@ -378,19 +379,9 @@ def simulate(state: Set[Pos], cycles: int, print_progress: bool = False):
 
 
 def neighbors(pos: Pos) -> Iterable[Pos]:
-    def deltas(dimensions: int) -> Iterable[Tuple[int, ...]]:
-        if dimensions > 0:
-            return (
-                subdelta + (delta,)
-                for subdelta in deltas(dimensions - 1)
-                for delta in (-1, 0, +1)
-            )
-        else:
-            return (),
-
     return (
         tuple(p + d for p, d in zip(pos, delta))
-        for delta in deltas(dimensions=len(pos))
+        for delta in product((-1, 0, +1), repeat=len(pos))
         if any(d != 0 for d in delta)
     )
 
