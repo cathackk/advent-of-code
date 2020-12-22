@@ -14,6 +14,7 @@ from typing import Set
 from typing import Tuple
 
 from rect import Rect
+from utils import eprint
 from utils import parse_line
 from utils import product
 from utils import single_value
@@ -531,7 +532,7 @@ class Image:
         unplaced_tiles: Dict[int, Tile] = {tile.tile_id: tile for tile in tiles}
         # empty positions bordering any placed tiles -> needs to be updated continuously
         # start with a single position where the first tile will be placed immediately
-        bordering_positions: Set[Pos] = {(0, 0)}
+        fringe_positions: Set[Pos] = {(0, 0)}
 
         # any further tiles will have to be checked for match with their neighbors
         def is_matching(tile: Tile, pos: Pos) -> bool:
@@ -557,11 +558,11 @@ class Image:
             try:
                 # ... try placing one of them into any empty bordering position
                 matching_tile, placed_pos = next(
-                    (candidate_orientation, bordering_pos)
+                    (candidate_orientation, fringe_pos)
                     for candidate_tile in unplaced_tiles.values()
                     for candidate_orientation in candidate_tile.orientations()
-                    for bordering_pos in bordering_positions
-                    if is_matching(candidate_orientation, bordering_pos)
+                    for fringe_pos in fringe_positions
+                    if is_matching(candidate_orientation, fringe_pos)
                 )
             except StopIteration:
                 # no matching tile found
@@ -572,12 +573,30 @@ class Image:
             del unplaced_tiles[matching_tile.tile_id]
 
             # update bordering positions
-            bordering_positions.remove(placed_pos)
-            bordering_positions.update(
+            fringe_positions.remove(placed_pos)
+            fringe_positions.update(
                 npos
                 for npos in neighbors(placed_pos)
                 if npos not in placed
             )
+
+            # draw
+            # bounds = Rect.with_all(set(placed.keys()) | (fringe_positions))
+            # def chr(pos):
+            #     if pos == placed_pos:
+            #         return "+"
+            #     elif pos in fringe_positions:
+            #         return "."
+            #     elif pos in placed:
+            #         return "O" if pos == (0, 0) else "#"
+            #     else:
+            #         return " "
+            # eprint(f"{len(placed)}/{len(tiles)}")
+            # eprint("\n".join(
+            #     "".join(chr((x, y)) for x in bounds.range_x())
+            #     for y in bounds.range_y()
+            # ))
+            # eprint()
 
         # everything placed!
         # make sure all tiles fit into a full rectangle without any gaps

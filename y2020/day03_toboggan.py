@@ -101,12 +101,15 @@ def part_1(trees: 'TreesMap'):
 
     In this example, traversing the map using this slope would cause you to encounter *7 trees*.
 
-        >>> part_1(tmap)
-        part 1: encountered 7 tree(s)
+        >>> tmap.encounter_count(slope=(3, 1))
         7
 
     Starting at the top-left corner of your map and following a slope of *right 3 and down 1*,
-    how many trees would you encounter?
+    *how many trees would you encounter?*
+
+        >>> part_1(tmap)
+        part 1: encountered 7 tree(s)
+        7
     """
 
     result = trees.encounter_count(slope=(3, 1))
@@ -139,14 +142,17 @@ def part_2(trees: 'TreesMap'):
         >>> tmap.encounter_count((1, 2))
         2
 
-    Multiplied together, these produce the answer *336*.
+    Multiplied together, these produce the answer:
+
+        >>> 2 * 7 * 3 * 4 * 2
+        336
+
+    *What do you get if you multiply together the number of trees encountered on each of the listed
+    slopes?*
 
         >>> part_2(tmap)
         part 2: encountered 2, 7, 3, 4, and 2 tree(s); product is 336
         336
-
-    What do you get if you multiply together the number of trees encountered on each of the listed
-    slopes?
     """
 
     slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]

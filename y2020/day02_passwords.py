@@ -15,9 +15,15 @@ def part_1(rules_passwords: List[Tuple['PasswordRule', str]]) -> int:
     """
     Suppose you have the following list:
 
-        1-3 a: abcde
-        1-3 b: cdefg
-        2-9 c: ccccccccc
+        >>> data = data_from_text('''
+        ...
+        ...     1-3 a: abcde
+        ...     1-3 b: cdefg
+        ...     2-9 c: ccccccccc
+        ...
+        ... ''')
+        >>> len(data)
+        3
 
     Each line gives the password policy and then the password. The password policy indicates
     the lowest and highest number of times a given letter must appear for the password to be valid.
@@ -27,24 +33,27 @@ def part_1(rules_passwords: List[Tuple['PasswordRule', str]]) -> int:
     In the above example, 2 passwords are valid. The middle password, `cdefg`, is not;
     it contains no instances of `b`, but needs at least 1.
 
+        >>> data[1]
+        (PasswordRule(1, 3, 'b'), 'cdefg')
         >>> PasswordRule(1, 3, 'b').is_valid_1('cdefg')
         False
 
     The first and third passwords are valid: they contain one `a` or nine `c`, both within
     the limits of their respective policies.
 
+        >>> data[0]
+        (PasswordRule(1, 3, 'a'), 'abcde')
         >>> PasswordRule(1, 3, 'a').is_valid_1('abcde')
         True
+
+        >>> data[2]
+        (PasswordRule(2, 9, 'c'), 'ccccccccc')
         >>> PasswordRule(2, 9, 'c').is_valid_1('ccccccccc')
         True
 
-    How many passwords are valid according to their policies?
+    *How many passwords are valid according to their policies?*
 
-        >>> part_1([
-        ...     (PasswordRule(1, 3, 'a'), 'abcde'),
-        ...     (PasswordRule(1, 3, 'b'), 'cdefg'),
-        ...     (PasswordRule(2, 9, 'c'), 'ccccccccc')
-        ... ])
+        >>> part_1(data)
         part 1: 2/3 passwords are valid
         2
     """
@@ -77,7 +86,7 @@ def part_2(rules_passwords: List[Tuple['PasswordRule', str]]) -> int:
         >>> PasswordRule(2, 9, 'c').is_valid_2('ccccccccc')
         False
 
-    How many passwords are valid according to the new interpretation of the policies?
+    *How many passwords are valid according to the new interpretation of the policies?*
 
         >>> part_2([
         ...     (PasswordRule(1, 3, 'a'), 'abcde'),
@@ -150,17 +159,24 @@ class PasswordRule:
         return f"{self.min_count}-{self.max_count} {self.character}"
 
 
-def load_data(fn: str) -> Iterable[Tuple[PasswordRule, str]]:
-    with open(fn) as f:
-        for line in f:
-            # 1-3 b: cdefg
-            min_count, max_count, character, password = parse_line(line, "$-$ $: $\n")
-            yield PasswordRule(int(min_count), int(max_count), character), password
+def data_from_file(fn: str) -> List[Tuple[PasswordRule, str]]:
+    return list(data_from_lines(open(fn)))
+
+
+def data_from_text(text: str) -> List[Tuple[PasswordRule, str]]:
+    return list(data_from_lines(text.strip().split("\n")))
+
+
+def data_from_lines(lines: Iterable[str]) -> Iterable[Tuple[PasswordRule, str]]:
+    for line in lines:
+        # 1-3 b: cdefg
+        min_count, max_count, character, password = parse_line(line.strip(), "$-$ $: $")
+        yield PasswordRule(int(min_count), int(max_count), character), password
 
 
 if __name__ == '__main__':
-    data = list(load_data('data/02-input.txt'))
-    assert len(data) == 1000
+    data_ = data_from_file("data/02-input.txt")
+    assert len(data_) == 1000
 
-    part_1(data)
-    part_2(data)
+    part_1(data_)
+    part_2(data_)
