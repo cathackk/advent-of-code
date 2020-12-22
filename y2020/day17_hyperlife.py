@@ -434,18 +434,16 @@ def print_state(state: Set[Pos], cycle: int):
 
     # find the min/max corner of the multi-dimensional space to be printed
     bounds = HyperCuboid.with_all(state)
-    assert 2 <= bounds.dimensions <= 8
+    assert 2 <= len(bounds) <= 8
 
     # iterate over 3rd and higher dimensions
-    # TODO: bounds[2:]
-    for hyperpos in bounds.slice(range(2)):
+    for hyperpos in bounds[2:]:
         # the remaining two dimensions (x, y) form a printable 2D plane
         plane_lines = []
-        for y in bounds.range(1):
+        for y in bounds[1]:
             plane_lines.append(''.join(
                 '#' if (x, y) + hyperpos in state else '.'
-                # TODO: for x in bounds[0]
-                for x in bounds.range(0)
+                for x in bounds[0]
             ))
 
         # print the plane only if it contains any active position

@@ -1,3 +1,5 @@
+import itertools
+import math
 from itertools import chain
 from typing import Iterable
 from typing import Tuple
@@ -130,24 +132,25 @@ class Rect:
 HyperPos = Tuple[int, ...]
 
 
-def _assert_dimensions_aligned(dim1: int, dim2: int):
-    if dim1 != dim2:
-        raise ValueError(f"dimensions mismatch: {dim1} vs {dim2}")
-
-
 class HyperCuboid:
+    # TODO: use exclusive corner_max
     def __init__(self, corner1: HyperPos, corner2: HyperPos):
-        _assert_dimensions_aligned(len(corner1), len(corner2))
+        HyperCuboid._assert_dimensions_aligned(len(corner1), len(corner2))
         self.corner_min = tuple(min(a, b) for a, b in zip(corner1, corner2))
         self.corner_max = tuple(max(a, b) for a, b in zip(corner1, corner2))
 
-    def __repr__(self):
-        return f'{type(self).__name__}({self.corner_min!r}, {self.corner_max!r})'
+    @classmethod
+    def unit(cls, dimensions: int):
+        origin = tuple(0 for _ in range(dimensions))
+        return cls(origin, origin)
 
     @classmethod
-    def at_origin(cls, corner: HyperPos):
-        origin = tuple(0 for _ in range(len(corner)))
-        return cls(origin, corner)
+    def at_origin(cls, lengths: HyperPos):
+        # TODO: negative length
+        return cls(
+            corner1=tuple(0 for _ in range(len(lengths))),
+            corner2=tuple(v - 1 for v in lengths)
+        )
 
     @classmethod
     def with_all(cls, ps: Iterable[HyperPos]):
@@ -161,7 +164,7 @@ class HyperCuboid:
         min_values, max_values = list(first_pos), list(first_pos)
 
         for pos in ps:
-            _assert_dimensions_aligned(len(first_pos), len(pos))
+            HyperCuboid._assert_dimensions_aligned(len(first_pos), len(pos))
             for ix, value in enumerate(pos):
                 if value < min_values[ix]:
                     min_values[ix] = value
@@ -173,51 +176,85 @@ class HyperCuboid:
     def grow_to_fit(self, ps: Iterable[HyperPos]):
         return type(self).with_all(chain([self.corner_min, self.corner_max], ps))
 
-    @property
-    def dimensions(self) -> int:
+    def __len__(self):
         return len(self.corner_min)
 
     @property
     def range_dim(self) -> range:
-        return range(self.dimensions)
+        return range(len(self))
+
+    def length(self, dim: int) -> int:
+        self._assert_dimension_in_range(dim)
+        return self.corner_max[dim] - self.corner_min[dim] + 1
 
     @property
     def shape(self) -> Tuple[int, ...]:
         return tuple(self.length(d) for d in self.range_dim)
 
-    def length(self, dim: int) -> int:
-        return self.corner_max[dim] - self.corner_min[dim]
-
     @property
     def volume(self) -> int:
         return product(self.length(d) for d in self.range_dim)
 
-    def range(self, dim: int) -> range:
-        return range(self.corner_min[dim], self.corner_max[dim] + 1)
+    @property
+    def surface(self) -> int:
+        inner_volume = product(max(0, self.length(d) - 2) for d in self.range_dim)
+        return self.volume - inner_volume
 
-    def slice(self, removed_dimensions: Iterable[int]) -> 'HyperCuboid':
-        rds = set(removed_dimensions)
-        for dim in rds:
-            if not 0 <= dim < self.dimensions:
-                raise ValueError(f"dimension out of range: {dim}")
+    def corners(self) -> Iterable[HyperPos]:
+        # TODO: remove duplicates when any length is 1
+        return itertools.product(*zip(self.corner_min, self.corner_max))
 
-        return type(self)(
-            tuple(v for d, v in enumerate(self.corner_min) if d not in rds),
-            tuple(v for d, v in enumerate(self.corner_max) if d not in rds)
-        )
+    @property
+    def corners_count(self) -> int:
+        return self.elements_count(0)
+
+    @property
+    def edges_count(self) -> int:
+        return self.elements_count(1)
+
+    @property
+    def faces_count(self) -> int:
+        return self.elements_count(2)
+
+    @property
+    def cells_count(self) -> int:
+        return self.elements_count(3)
+
+    def elements_count(self, dimensions: int):
+        if dimensions <= len(self):
+            return (2 ** (len(self) - dimensions)) * math.comb(len(self), dimensions)
+        else:
+            return 0
+
+    def __getitem__(self, dim):
+        if isinstance(dim, int):
+            # self[0] -> range(x)
+            # self[1] -> range(y)
+            self._assert_dimension_in_range(dim)
+            return range(
+                self.corner_min[dim],
+                self.corner_max[dim] + 1
+            )
+
+        elif isinstance(dim, slice):
+            # self[:2] -> range(x) × range(y)
+            return type(self)(
+                corner1=self.corner_min[dim],
+                corner2=self.corner_max[dim]
+            )
+
+    def __iter__(self) -> Iterable[HyperPos]:
+        return self._positions(len(self))
 
     def _positions(self, dims: int) -> Iterable[HyperPos]:
         if dims > 0:
             return (
                 previous + (pos,)
                 for previous in self._positions(dims - 1)
-                for pos in self.range(dims - 1)
+                for pos in self[dims - 1]
             )
         else:
             return (),
-
-    def __iter__(self) -> Iterable[HyperPos]:
-        return self._positions(self.dimensions)
 
     def __hash__(self) -> int:
         return hash((self.corner_min, self.corner_max))
@@ -231,15 +268,40 @@ class HyperCuboid:
 
     def __contains__(self, item) -> bool:
         if isinstance(item, type(self)):
-            _assert_dimensions_aligned(self.dimensions, item.dimensions)
+            self._assert_has_dimensions(len(item))
             return all(
-                item.corner_min[d] in self.range(d)
-                and item.corner_max[d] in self.range(d)
+                item.corner_min[d] in self[d]
+                and item.corner_max[d] in self[d]
                 for d in item.range_dim
             )
-        else:
-            _assert_dimensions_aligned(self.dimensions, len(item))
+        elif hasattr(item, '__len__'):
+            self._assert_has_dimensions(len(item))
             return all(
-                v in self.range(d)
+                v in self[d]
                 for d, v in enumerate(item)
             )
+        else:
+            self._assert_has_dimensions(1)
+            return item in self[0]
+
+    def __repr__(self):
+        if all(v == 0 for v in self.corner_min):
+            if all(self.length(d) == 1 for d in self.range_dim):
+                return f'{type(self).__name__}.unit({len(self)})'
+            else:
+                return f'{type(self).__name__}.at_origin({self.shape!r})'
+        else:
+            return f'{type(self).__name__}({self.corner_min!r}, {self.corner_max!r})'
+
+    @staticmethod
+    def _assert_dimensions_aligned(dims1: int, dims2: int):
+        if dims1 != dims2:
+            raise ValueError(f"dimensions mismatch: {dims1} vs {dims2}")
+
+    def _assert_has_dimensions(self, dims: int):
+        if len(self) != dims:
+            raise ValueError(f"dimensions mismatch: {dims} (expected {len(self)})")
+
+    def _assert_dimension_in_range(self, dim: int):
+        if not 0 <= dim < len(self):
+            raise IndexError(f"dimension out of range: {dim} (expected between 0 and {len(self)})")
