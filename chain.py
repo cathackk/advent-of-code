@@ -38,9 +38,9 @@ class Link:
 
     def disconnect(self) -> 'Link':
         if self.prev_link is not None:
-            self.prev_link.connect_to(next_link=self.next_link)
+            self.prev_link.next_link = self.next_link
         elif self.next_link is not None:
-            self.next_link.connect_to(prev_link=None)
+            self.next_link.prev_link = self.prev_link
         self.prev_link = self.next_link = None
         return self
 
@@ -81,6 +81,9 @@ class Link:
 
     def __str__(self):
         return str(self.value)
+
+    def __hash__(self):
+        return hash(self.value)
 
 
 class Circle:
