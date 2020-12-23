@@ -14,12 +14,20 @@ class Link:
         self.next_link = next_link
 
     @classmethod
-    def build_chain(cls, items: Iterable[Any]) -> Tuple['Link', 'Link']:
+    def build_chain(cls, items: Iterable[Any]) -> Tuple['Link', 'Link', int]:
         items = iter(items)
-        first_link = last_link = cls(next(items))
+
+        try:
+            first_link = last_link = cls(next(items))
+            count = 1
+        except StopIteration:
+            raise ValueError("build_chain() arg is an empty sequence")
+
         for item in items:
             last_link = cls(item).connect_to(prev_link=last_link)
-        return first_link, last_link
+            count += 1
+
+        return first_link, last_link, count
 
     def connect_to(self, prev_link: 'Link' = None, next_link: 'Link' = None) -> 'Link':
         if prev_link is not None:
@@ -85,11 +93,19 @@ class Link:
     def __hash__(self):
         return hash(self.value)
 
+    def __iter__(self):
+        head = self
+        while True:
+            yield head.value
+            head = head.next_link
+            if head is self or head is None:
+                return
+
 
 class Circle:
     def __init__(self, items: List[Any]):
         assert len(items) > 0
-        self._current_link, last_link = Link.build_chain(items)
+        self._current_link, last_link, _ = Link.build_chain(items)
         self._current_link.connect_to(prev_link=last_link)
         self._length = len(items)
 

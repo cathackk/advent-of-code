@@ -417,13 +417,12 @@ def part_2(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
 
 # TODO: extract to reusable class Chain?
 class Deck:
-    def __init__(self, cards: Iterable[int], length: int = None):
-        self.top_card, self.bottom_card = Link.build_chain(cards)
-        self.length = length or self.top_card.forward_count() + 1
+    def __init__(self, cards: Iterable[int]):
+        self.top_card, self.bottom_card, self.length = Link.build_chain(cards)
 
     def __repr__(self):
         cards_repr = ", ".join(str(c) for c in self)
-        return f"Deck([{cards_repr}])"
+        return f"{type(self).__name__}([{cards_repr}])"
 
     def __str__(self):
         if self:
