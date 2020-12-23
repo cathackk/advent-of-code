@@ -5,15 +5,13 @@ https://adventofcode.com/2020/day/23
 """
 
 from itertools import chain
+from typing import Dict
 from typing import Iterable
-from typing import List
-from typing import Optional
 
-from tqdm import tqdm
-
-from chain import Link
+from utils import timeit
 
 
+@timeit
 def part_1(cups: 'Cups', moves: int = 100) -> str:
     """
     The small crab challenges *you* to a game! The crab is going to mix up some cups, and you have
@@ -124,6 +122,7 @@ def part_1(cups: 'Cups', moves: int = 100) -> str:
     return result
 
 
+@timeit
 def part_2(cups: 'Cups', moves=10_000_000) -> int:
     """
     Due to what you can only assume is a mistranslation (you're not exactly fluent in Crab), you
@@ -140,13 +139,12 @@ def part_2(cups: 'Cups', moves=10_000_000) -> int:
         >>> cups = Cups.from_line('54321').grown_to(1_000_000)
         >>> len(cups)
         1000000
-        >>> cups.find(1)
-        Link(1, prev_link=Link(2, ...), next_link=Link(6, ...))
-        >>> cups.find(10)
-        Link(10, prev_link=Link(9, ...), next_link=Link(11, ...))
-        >>> cups.find(1_000_000)
-        Link(1000000, prev_link=Link(999999, ...), next_link=Link(5, ...))
-
+        >>> cups.next[1]
+        6
+        >>> cups.next[10]
+        11
+        >>> cups.next[1_000_000]
+        5
 
     After discovering where you made the mistake in translating Crab Numbers, you realize the small
     crab isn't going to do merely 100 moves; the crab is going to do *ten million* (`10_000_000`)
@@ -161,9 +159,11 @@ def part_2(cups: 'Cups', moves=10_000_000) -> int:
         >>> cups = Cups.from_line('389125467').grown_to(1_000_000)
         >>> len(cups)
         1000000
-        >>> cup_1 = cups.play(moves=10_000_000).find(label=1)
-        >>> (cup_1.next_link.value, cup_1.next_link.next_link.value)
-        (934001, 159792)
+        >>> _ = cups.play(moves=10_000_000)
+        >>> cups.next[1]
+        934001
+        >>> cups.next[934001]
+        159792
 
     Multiplying these together produces:
 
@@ -178,9 +178,9 @@ def part_2(cups: 'Cups', moves=10_000_000) -> int:
         149245887792
     """
 
-    cup_1 = cups.grown_to(1_000_000).play(moves).find(label=1)
-    value_a = cup_1.next_link.value
-    value_b = cup_1.next_link.next_link.value
+    cups = cups.grown_to(1_000_000).play(moves)
+    value_a = cups.next[1]
+    value_b = cups.next[value_a]
     result = value_a * value_b
 
     print(f"part 2: after {moves} moves, two cups after `1` are {value_a}, {value_b} -> {result}")
@@ -189,9 +189,14 @@ def part_2(cups: 'Cups', moves=10_000_000) -> int:
 
 class Cups:
     def __init__(self, labels: Iterable[int]):
-        self.current, last, length = Link.build_chain(labels)
-        self.current.connect_to(prev_link=last)
-        self.index = Cups._build_index(self.current, length)
+        self.next: Dict[int, int] = dict()
+        labels = iter(labels)
+        self.current = prev = next(labels)
+        for label in labels:
+            self.next[prev] = label
+            prev = label
+        # loop
+        self.next[prev] = self.current
 
     @classmethod
     def from_line(cls, line: str):
@@ -201,106 +206,78 @@ class Cups:
     def from_file(cls, fn: str):
         return cls.from_line(next(open(fn)))
 
-    @staticmethod
-    def _build_index(current: Link, length: int) -> List[Link]:
-        index: List[Optional[Link]] = [None] * length
-        head = current
-        while True:
-            assert 1 <= head.value <= length, head
-            index[head.value - 1] = head
-            head = head.next_link
-            if head is current:
-                break
-
-        assert all(link is not None for link in index)
-        return index
-
-    def grown_to(self, count: int) -> 'Cups':
+    def grown_to(self, count: int):
         return type(self)(chain(
             self,
             range(len(self) + 1, count + 1)
         ))
 
-    def play(self, moves: int, print_progress: bool = False) -> 'Cups':
-        for move in tqdm(range(moves)):
+    def play(self, moves: int, print_progress: bool = False):
+        for move in range(moves):
+            # pick three
+            picked_1 = self.next[self.current]
+            picked_2 = self.next[picked_1]
+            picked_3 = self.next[picked_2]
             if print_progress:
-                self._print_cups(move)
+                self._print_state(move)
+                print(f"pick up: {picked_1}, {picked_2}, {picked_3}")
 
-            # pick three cups
-            picked_cups = self.pick_up(3)
-            if print_progress:
-                picked_up_text = ", ".join(str(v) for v in picked_cups)
-                print(f"pick up: {picked_up_text}")
-
-            # determine destination label
-            destination_label = self.wrap_label(self.current.value - 1)
-            while destination_label in picked_cups:
-                destination_label = self.wrap_label(destination_label - 1)
-
-            # find the destination cup
-            destination = self.find(label=destination_label)
-            assert destination is not None
+            # determine destination
+            destination = self.current - 1 if self.current > 1 else len(self)
+            while destination in (picked_1, picked_2, picked_3):
+                destination = destination - 1 if destination > 1 else len(self)
             if print_progress:
                 print(f"destination: {destination}")
 
-            # insert the picked cups
-            after_destination = destination.next_link
-            first_picked = picked_cups
-            first_picked.connect_to(prev_link=destination)
-            last_picked = first_picked.follow(steps=2)
-            last_picked.connect_to(next_link=after_destination)
+            # move picked
+            self.next[self.current] = self.next[picked_3]
+            self.next[picked_3] = self.next[destination]
+            self.next[destination] = picked_1
 
-            # shift the current cup
-            self.current = self.current.next_link
+            # shift
+            self.current = self.next[self.current]
 
         # game over
         if print_progress:
-            self._print_cups(moves, final=True)
+            self._print_state(moves, final=True)
+
         return self
 
-    def _print_cups(self, move: int, final: bool = False):
+    def _print_state(self, move: int, final: bool = False):
         if not final:
             print(f"-- move {move + 1} --")
         else:
             print(f"-- final --")
 
-        first = self.current.follow(-(move % len(self)))
-
+        first = self.follow(start=self.current, steps=-move)
         cups_text = "".join(
-            f"({v})" if v == self.current.value else f" {v} "
-            for v in first
+            f"({v})" if v == self.current else f" {v} "
+            for v in self.iterate(first)
         ).rstrip()
-
         print(f"cups: {cups_text}")
 
-    def wrap_label(self, label: int) -> int:
-        wrapped = label % len(self)
-        return wrapped if wrapped > 0 else len(self)
-
-    def pick_up(self, count: int) -> Link:
-        first_picked = self.current.next_link
-        last_picked = first_picked.follow(count - 1)
-        before_first = first_picked.prev_link
-        after_last = last_picked.next_link
-
-        first_picked.prev_link = None
-        last_picked.next_link = None
-        before_first.next_link = after_last
-        after_last.prev_link = before_first
-
-        return first_picked
-
-    def find(self, label: int) -> Optional[Link]:
-        return self.index[label - 1]
+    def follow(self, start: int, steps: int) -> int:
+        head = start
+        for _ in range(steps % len(self)):
+            head = self.next[head]
+        return head
 
     def collect(self, after: int = 1) -> str:
-        return ''.join(str(v) for v in list(self.find(label=after))[1:])
+        return "".join(str(v) for v in list(self.iterate(after))[1:])
 
-    def __len__(self):
-        return len(self.index)
+    def iterate(self, start: int) -> Iterable[int]:
+        head = start
+        while True:
+            yield head
+            head = self.next[head]
+            if head == start:
+                return
 
     def __iter__(self):
-        return iter(self.current)
+        return self.iterate(self.current)
+
+    def __len__(self):
+        return len(self.next)
 
     def __repr__(self):
         return f'{type(self).__name__}({list(self)!r})'

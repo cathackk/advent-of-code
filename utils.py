@@ -216,7 +216,7 @@ def timeit(func):
         start = time.perf_counter()
         result = func(*args, **kwargs)
         end = time.perf_counter()
-        print(f"{func.__name__} took {round(end-start, 4)} seconds")
+        eprint(f"{func.__name__} took {round(end-start, 4)} seconds")
         return result
     return wrapper
 
