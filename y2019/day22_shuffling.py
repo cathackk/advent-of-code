@@ -1,19 +1,9 @@
 from typing import Iterable
 from typing import Tuple
 
+from utils import modular_inverse
+
 Instr = Tuple[str, int]
-
-
-def inverse(x, m):
-    t, newt = 0, 1
-    r, newr = m, x % m
-    while newr != 0:
-        quotient = r // newr
-        t, newt = newt, t - quotient * newt
-        r, newr = newr, r - quotient * newr
-    if r > 1:
-        return None
-    return t % m
 
 
 def gsm(a, n, m):
@@ -103,10 +93,10 @@ class SPN:
             return self
         elif power > 1:
             ap = pow(self.a, power, self.m)
-            bp = self.b * (1 - ap) * inverse(1 - self.a, self.m)
+            bp = self.b * (1 - ap) * modular_inverse(1 - self.a, self.m)
             return type(self)(ap, bp, self.m)
         elif power == -1:
-            a_inv = inverse(self.a, self.m)
+            a_inv = modular_inverse(self.a, self.m)
             return type(self)(a_inv, -a_inv * self.b, self.m)
         elif power < -1:
             return (self ** abs(power)) ** -1
@@ -144,7 +134,7 @@ def load_instrs(fn: str) -> Iterable[Instr]:
 def spn_from_instr(instr: Instr, modulo: int) -> SPN:
     c, n = instr
     if c == 'dwi':
-        return SPN(inverse(n, modulo), 0, modulo)
+        return SPN(modular_inverse(n, modulo), 0, modulo)
     elif c == 'cut':
         return SPN(1, n, modulo)
     elif c == 'reverse':

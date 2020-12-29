@@ -8,6 +8,8 @@ from typing import Dict
 from typing import Iterable
 from typing import Tuple
 
+from utils import modular_inverse
+
 
 def part_1(start: int, bus_ids: Iterable[int]) -> int:
     """
@@ -294,21 +296,7 @@ def find_divrem(divrems: Iterable[Tuple[int, int]]) -> int:
 
 
 def divide(x, y, base) -> int:
-    return (x * inverse(y, base)) % base
-
-
-def inverse(x, base):
-    """ Find such y that (x * y) % base == 1 """
-
-    t, newt = 0, 1
-    r, newr = base, x % base
-    while newr != 0:
-        quotient = r // newr
-        t, newt = newt, t - quotient * newt
-        r, newr = newr, r - quotient * newr
-    if r > 1:
-        return None
-    return t % base
+    return (x * modular_inverse(y, base)) % base
 
 
 if __name__ == '__main__':

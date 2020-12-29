@@ -55,6 +55,18 @@ def lcm(*xs: int) -> Optional[int]:
     return result
 
 
+def modular_inverse(x, m):
+    t, newt = 0, 1
+    r, newr = m, x % m
+    while newr != 0:
+        quotient = r // newr
+        t, newt = newt, t - quotient * newt
+        r, newr = newr, r - quotient * newr
+    if r > 1:
+        return None
+    return t % m
+
+
 def sgn(x) -> int:
     """
     >>> sgn(-15)
