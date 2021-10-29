@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import Union
 
 from heading import Heading
 from utils import last
@@ -25,7 +24,7 @@ def parse_instrs(s: str) -> Iterable[Instr]:
 
 
 def walk(
-        instrs: Union[str, Iterable[Instr]],
+        instrs: str | Iterable[Instr],
         start: Pos = (0, 0),
         heading: Heading = Heading.NORTH
 ) -> Iterable[Pos]:

@@ -6,7 +6,6 @@ https://adventofcode.com/2020/day/14
 
 from typing import Iterable
 from typing import Optional
-from typing import Union
 
 from utils import parse_line
 
@@ -237,10 +236,7 @@ class BitMask:
             yield submask.apply(value)
 
 
-Instruction = Union[
-    tuple[str, BitMask],
-    tuple[str, int, int]
-]
+Instruction = tuple[str, BitMask] | tuple[str, int, int]
 
 
 class Program:

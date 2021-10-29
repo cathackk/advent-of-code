@@ -2,9 +2,8 @@ from collections import defaultdict
 from typing import Generator
 from typing import Iterable
 from typing import Optional
-from typing import Union
 
-StrInt = Union[str, int]
+StrInt = str | int
 Command = tuple[str, StrInt, StrInt]
 Tape = list[Command]
 

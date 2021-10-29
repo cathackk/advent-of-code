@@ -3,7 +3,6 @@ from typing import Callable
 from typing import Generator
 from typing import Iterable
 from typing import Optional
-from typing import Union
 
 
 class OperationCode(Enum):
@@ -390,7 +389,7 @@ class MachineIO:
         else:
             raise ValueError("wrong state")
 
-    def write(self, values: Union[str, Iterable[int]]):
+    def write(self, values: str | Iterable[int]):
         for value in MachineIO._ints(values):
             self.write_single(value)
 
@@ -421,7 +420,7 @@ class MachineIO:
         return output
 
     @staticmethod
-    def _ints(values: Union[str, Iterable[int]]) -> Iterable[int]:
+    def _ints(values: str | Iterable[int]) -> Iterable[int]:
         if isinstance(values, str):
             return (ord(c) for c in values)
         else:
