@@ -1,6 +1,5 @@
 from collections import defaultdict
 from enum import Enum
-from typing import Dict
 
 from utils import minmax
 from xy import Point
@@ -55,7 +54,7 @@ class Heading(Enum):
         }[self]
 
 
-Grid = Dict[Point, Color]
+Grid = dict[Point, Color]
 
 
 class Robot:

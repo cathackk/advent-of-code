@@ -6,7 +6,6 @@ https://adventofcode.com/2020/day/4
 
 import re
 from functools import partial
-from typing import Dict
 from typing import Iterable
 
 from utils import line_groups
@@ -221,7 +220,7 @@ def part_2(passports: list['Passport']) -> int:
     return result
 
 
-Passport = Dict[str, str]
+Passport = dict[str, str]
 
 
 def passports_from_file(fn: str) -> list[Passport]:
@@ -259,7 +258,7 @@ def validate_range(min_value: int, max_value: int, value: str) -> bool:
         return False
 
 
-def validate_height(ranges: Dict[str, tuple[int, int]], value: str) -> bool:
+def validate_height(ranges: dict[str, tuple[int, int]], value: str) -> bool:
     for unit, (min_value, max_value) in ranges.items():
         if value.endswith(unit):
             return validate_range(min_value, max_value, value.removesuffix(unit))

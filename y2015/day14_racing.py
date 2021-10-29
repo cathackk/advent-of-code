@@ -1,4 +1,3 @@
-from typing import Dict
 from typing import Iterable
 
 
@@ -75,7 +74,7 @@ def race(reindeers: list[Reindeer], seconds: int) -> tuple[Reindeer, int]:
 
 
 def points_race(reindeers: list[Reindeer], seconds: int) -> tuple[Reindeer, int]:
-    points: Dict[Reindeer, int] = {r: 0 for r in reindeers}
+    points: dict[Reindeer, int] = {r: 0 for r in reindeers}
     for tick in range(1, seconds+1):
         max_distance = max(r.distance(tick) for r in reindeers)
         winning_reindeers = (r for r in reindeers if r.distance(tick) == max_distance)

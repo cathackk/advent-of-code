@@ -1,7 +1,6 @@
 from collections import defaultdict
 from itertools import zip_longest
 from typing import Callable
-from typing import Dict
 from typing import Iterable
 
 from utils import create_logger
@@ -103,7 +102,7 @@ class Grid:
             yield (0, 0), self
             return
 
-        subpixels: Dict[Pos, list[Pos]] = defaultdict(list)
+        subpixels: dict[Pos, list[Pos]] = defaultdict(list)
         for x, y in self.pixels:
             # top-left corner of the subgrid
             cx, cy = ((x // subsize) * subsize), ((y // subsize) * subsize)
@@ -188,7 +187,7 @@ def load_rules(fn: str) -> Iterable[Rule]:
 
 class RuleBook:
     def __init__(self, rules: Iterable[Rule]):
-        self.rdict: Dict[int, Rule] = {
+        self.rdict: dict[int, Rule] = {
             hash(rule.grid_from.normalized()): rule
             for rule in rules
         }
@@ -233,11 +232,11 @@ def count_pixels(grid: Grid, rulebook: RuleBook, steps: int, debug: bool = False
     assert steps % 3 == 0
 
     # dictionary of grids by their codes
-    code_to_grid: Dict[int, Grid] = {int(grid): grid}
+    code_to_grid: dict[int, Grid] = {int(grid): grid}
     # code of 3x3 grid -> 9 subresult codes (nine 3x3 subresults after three-steps expansion)
-    expand_cache: Dict[int, list[int]] = dict()
+    expand_cache: dict[int, list[int]] = dict()
     # (code, steps) -> pixels_count
-    pixels_count_cache: Dict[tuple[int, int], int] = {(int(grid), 0): len(grid.pixels)}
+    pixels_count_cache: dict[tuple[int, int], int] = {(int(grid), 0): len(grid.pixels)}
     log(f">>> pxl: {int(grid)} -> {len(grid.pixels)}")
 
     def _expand_to_nine_subgrids(grid3: Grid) -> list[Grid]:

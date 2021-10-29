@@ -1,5 +1,4 @@
 from collections import defaultdict
-from typing import Dict
 from typing import Iterable
 from typing import NamedTuple
 
@@ -28,7 +27,7 @@ class Rule(NamedTuple):
         return f"{self.key} -> {self.value}"
 
 
-def load(fn: str) -> tuple[str, int, Dict[RuleKey, Rule]]:
+def load(fn: str) -> tuple[str, int, dict[RuleKey, Rule]]:
     jd = {"left": -1, "right": +1}
 
     f = open(fn)
@@ -68,7 +67,7 @@ def load(fn: str) -> tuple[str, int, Dict[RuleKey, Rule]]:
 
 def run(fn: str) -> int:
     state, ticks, rules = load(fn)
-    tape: Dict[int, int] = defaultdict(int)
+    tape: dict[int, int] = defaultdict(int)
     head = 0
     for tick in range(ticks):
         value = tape[head]

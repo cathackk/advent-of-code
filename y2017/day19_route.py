@@ -1,11 +1,10 @@
-from typing import Dict
 from typing import Generator
 
 from heading import Heading
 
 
 Pos = tuple[int, int]
-Map = Dict[Pos, str]
+Map = dict[Pos, str]
 Route = tuple[Pos, Heading, int, list[str]]
 
 

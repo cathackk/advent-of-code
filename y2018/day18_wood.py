@@ -1,6 +1,5 @@
 from collections import Counter
 from itertools import count
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -9,7 +8,7 @@ from utils import single_value
 
 
 Pos = tuple[int, int]
-Board = Dict[Pos, str]
+Board = dict[Pos, str]
 
 SPACE = '.'
 TREES = '|'
@@ -24,8 +23,8 @@ class State:
 
         self.minute = 0
 
-        self.hash_to_board: Dict[int, Board] = dict()
-        self.next_hash: Dict[int, int] = dict()
+        self.hash_to_board: dict[int, Board] = dict()
+        self.next_hash: dict[int, int] = dict()
         self.current_hash = None
         self._capture_history()
 

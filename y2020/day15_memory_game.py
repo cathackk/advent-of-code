@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/15
 """
 
 from itertools import count
-from typing import Dict
 from typing import Iterator
 
 from tqdm import tqdm
@@ -143,7 +142,7 @@ def part_2(numbers: list[int]) -> int:
 
 
 def memory_game_it(starting_numbers: list[int]) -> Iterator[int]:
-    last_seen_on: Dict[int, int] = dict()
+    last_seen_on: dict[int, int] = dict()
     age = 0
     for turn in count(0):
         num = starting_numbers[turn] if turn < len(starting_numbers) else age

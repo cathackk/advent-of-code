@@ -1,12 +1,11 @@
 from collections import defaultdict
-from typing import Dict
 from typing import Generator
 from typing import Iterable
 
 from multibuffer import MultiBuffer
 from utils import last
 
-Rules = Dict[str, list[str]]
+Rules = dict[str, list[str]]
 
 
 def load(fn: str) -> tuple[str, Rules]:
@@ -36,7 +35,7 @@ def replaces(molecule: str, rules: Rules) -> Iterable[str]:
 
 def creates(start: str, rules: Rules, target: str) -> Generator[tuple[str, int], None, int]:
     buffer = MultiBuffer(scoring=lambda ms: len(ms[0]), items=[(start, 0)])
-    known: Dict[str, int] = {start: 0}
+    known: dict[str, int] = {start: 0}
 
     while buffer:
         molecule, steps = buffer.pop_min()

@@ -1,5 +1,4 @@
 from collections import defaultdict
-from typing import Dict
 from typing import Iterable
 
 from rect import Pos
@@ -9,7 +8,7 @@ from rect import Rect
 class LightsPanel:
     def __init__(self, width: int, height: int):
         self.bounds = Rect.at_origin(width, height)
-        self.brightness: Dict[Pos, int] = defaultdict(int)
+        self.brightness: dict[Pos, int] = defaultdict(int)
         self.min_brightness = 0
 
     @property

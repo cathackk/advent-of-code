@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/7
 """
 
 from functools import lru_cache
-from typing import Dict
 from typing import Iterable
 
 from utils import dgroupby_pairs_set
@@ -166,10 +165,10 @@ Rule = tuple[str, list[CountColor]]
 class RuleSet:
     def __init__(self, rules: Iterable[Rule]):
         # color -> contents
-        self.contains: Dict[str, list[CountColor]] = dict(rules)
+        self.contains: dict[str, list[CountColor]] = dict(rules)
 
         # color -> outer colors
-        self.contained_in: Dict[str, set[str]] = dgroupby_pairs_set(
+        self.contained_in: dict[str, set[str]] = dgroupby_pairs_set(
             (inner_color, outer_color)
             for outer_color, contents in self.contains.items()
             for _, inner_color in contents

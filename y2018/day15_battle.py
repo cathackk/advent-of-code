@@ -1,6 +1,5 @@
 from collections import Counter
 from itertools import count
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -82,9 +81,9 @@ class Game:
 
         self.width = width
         self.height = height
-        self.teams: Dict[str, Team] = {team.code: team for team in teams}
+        self.teams: dict[str, Team] = {team.code: team for team in teams}
         self.floors: set[Pos] = set(floors)
-        self.units_by_pos: Dict[Pos, Unit] = {unit.pos: unit for unit in units}
+        self.units_by_pos: dict[Pos, Unit] = {unit.pos: unit for unit in units}
 
         self.round = 0
         self.full_rounds_completed = 0
@@ -189,7 +188,7 @@ class Game:
         )
 
     def path_to_closest_enemy(self, unit: Unit) -> Optional[Path]:
-        path_to: Dict[Pos, Path] = {unit.pos: []}
+        path_to: dict[Pos, Path] = {unit.pos: []}
         layer: list[Pos] = [unit.pos]
         seen: set[Pos] = {unit.pos}
 
@@ -279,8 +278,8 @@ class Game:
 
     @classmethod
     def load(cls, fn: str, teams: Iterable[Team]) -> 'Game':
-        teams: Dict[str, Team] = {team.code: team for team in teams}
-        team_unit_count: Dict[str, int] = {c: 0 for c in teams}
+        teams: dict[str, Team] = {team.code: team for team in teams}
+        team_unit_count: dict[str, int] = {c: 0 for c in teams}
         floors: list[Pos] = []
         units: list[Unit] = []
 

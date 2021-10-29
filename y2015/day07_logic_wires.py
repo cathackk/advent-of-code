@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -51,10 +50,10 @@ class Instruction:
         if self.arg2 is not None and not self.arg2.isnumeric():
             yield self.arg2
 
-    def evaluate(self, values: Dict[str, int]) -> tuple[str, int]:
+    def evaluate(self, values: dict[str, int]) -> tuple[str, int]:
         return self.target, self._eval_value(values)
 
-    def _eval_value(self, values: Dict[str, int]) -> int:
+    def _eval_value(self, values: dict[str, int]) -> int:
         v1 = int(self.arg1) if self.arg1.isnumeric() else values[self.arg1]
 
         if self.command == Command.VALUE:
@@ -98,10 +97,10 @@ class Instruction:
             return cls(Command[parts[1]], parts[0], parts[2], target)
 
 
-def evaluate(instructions: Iterable[Instruction]) -> Dict[str, int]:
+def evaluate(instructions: Iterable[Instruction]) -> dict[str, int]:
     unprocessed_instructions = list(instructions)
 
-    values: Dict[str, int] = dict()
+    values: dict[str, int] = dict()
 
     while unprocessed_instructions:
         known_variables = set(values.keys())

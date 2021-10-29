@@ -1,6 +1,5 @@
 from collections import defaultdict
 from typing import Callable
-from typing import Dict
 from typing import Iterable
 from typing import Iterator
 from typing import Optional
@@ -95,7 +94,7 @@ def load_links(fn: str) -> Iterable[Link]:
 
 def preprocessed_links(links: Iterable[Link]) -> set[Link]:
     links: set[Link] = set(links)
-    port_to_links: Dict[int, set[Link]] = defaultdict(set)
+    port_to_links: dict[int, set[Link]] = defaultdict(set)
     for link in links:
         for port in set(link.outer_ports()):
             port_to_links[port].add(link)

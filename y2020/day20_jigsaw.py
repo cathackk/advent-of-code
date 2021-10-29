@@ -6,7 +6,6 @@ https://adventofcode.com/2020/day/20
 
 import re
 import itertools
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -523,9 +522,9 @@ class Image:
         tiles = list(tiles)
 
         # matrix of continuously placed tiles; bordering ones must match
-        placed: Dict[Pos, Tile] = dict()
+        placed: dict[Pos, Tile] = dict()
         # pool of unplaced tiles -> needs to be emptied by the end of the algorithm
-        unplaced_tiles: Dict[int, Tile] = {tile.tile_id: tile for tile in tiles}
+        unplaced_tiles: dict[int, Tile] = {tile.tile_id: tile for tile in tiles}
         # empty positions bordering any placed tiles -> needs to be updated continuously
         # start with a single position where the first tile will be placed immediately
         fringe_positions: set[Pos] = {(0, 0)}

@@ -1,5 +1,4 @@
 from collections import Counter
-from typing import Dict
 from typing import Generator
 from typing import Iterable
 from typing import Optional
@@ -96,8 +95,8 @@ class Mobile:
 
 
 def load_mobile(fn: str) -> Mobile:
-    protos: Dict[str, tuple[int, list[str]]] = dict()
-    depends_on: Dict[str, str] = dict()
+    protos: dict[str, tuple[int, list[str]]] = dict()
+    depends_on: dict[str, str] = dict()
 
     for line in open(fn):
         line = line.strip()
@@ -112,7 +111,7 @@ def load_mobile(fn: str) -> Mobile:
     return create_mobile(find_root(depends_on), protos)
 
 
-def create_mobile(name: str, protos: Dict[str, tuple[int, list[str]]]) -> Mobile:
+def create_mobile(name: str, protos: dict[str, tuple[int, list[str]]]) -> Mobile:
     weight, children_names = protos[name]
     return Mobile(
         name=name,
@@ -121,7 +120,7 @@ def create_mobile(name: str, protos: Dict[str, tuple[int, list[str]]]) -> Mobile
     )
 
 
-def find_root(depends_on: Dict[str, str]) -> str:
+def find_root(depends_on: dict[str, str]) -> str:
     key = next(iter(depends_on.keys()))
     while key in depends_on:
         key = depends_on[key]

@@ -4,7 +4,6 @@ Day 13: Shuttle Search
 https://adventofcode.com/2020/day/13
 """
 
-from typing import Dict
 from typing import Iterable
 
 from utils import modular_inverse
@@ -108,7 +107,7 @@ def part_1(start: int, bus_ids: Iterable[int]) -> int:
     return result
 
 
-def part_2(bus_offsets: Dict[int, int]) -> int:
+def part_2(bus_offsets: dict[int, int]) -> int:
     """
     The shuttle company is running a contest: one gold coin for anyone that can find the earliest
     timestamp such that the first bus ID departs at that time and each subsequent listed bus ID
@@ -203,15 +202,15 @@ def part_2(bus_offsets: Dict[int, int]) -> int:
     return result
 
 
-def data_from_text(text: str) -> tuple[int, Dict[int, int]]:
+def data_from_text(text: str) -> tuple[int, dict[int, int]]:
     return data_from_lines(text.strip().split("\n"))
 
 
-def data_from_file(fn: str) -> tuple[int, Dict[int, int]]:
+def data_from_file(fn: str) -> tuple[int, dict[int, int]]:
     return data_from_lines(open(fn))
 
 
-def data_from_lines(lines: Iterable[str]) -> tuple[int, Dict[int, int]]:
+def data_from_lines(lines: Iterable[str]) -> tuple[int, dict[int, int]]:
     lines = list(lines)
     assert len(lines) == 2
 
@@ -221,7 +220,7 @@ def data_from_lines(lines: Iterable[str]) -> tuple[int, Dict[int, int]]:
     return start, buses
 
 
-def bus_offsets_from_line(line: str) -> Dict[int, int]:
+def bus_offsets_from_line(line: str) -> dict[int, int]:
     return {
         int(bus_id): offset
         for offset, bus_id in enumerate(line.split(","))
@@ -266,7 +265,7 @@ def earliest_departure(start: int, bus_ids: Iterable[int]) -> tuple[int, int]:
     )
 
 
-def earliest_offset_departures(bus_offsets: Dict[int, int]) -> int:
+def earliest_offset_departures(bus_offsets: dict[int, int]) -> int:
     return find_divrem(
         (bus_id, -offset % bus_id)
         for bus_id, offset in bus_offsets.items()

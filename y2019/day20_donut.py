@@ -1,5 +1,4 @@
 import string
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -33,8 +32,8 @@ class Maze:
 
         # portals
         self.portals = list(portals)
-        self.portal_names: Dict[Pos, str] = dict()
-        self.portal_paths: Dict[Pos, PosD] = dict()
+        self.portal_names: dict[Pos, str] = dict()
+        self.portal_paths: dict[Pos, PosD] = dict()
 
         def is_outer(pos: Pos) -> bool:
             x, y = pos
@@ -97,7 +96,7 @@ class Maze:
         floors: list[Pos] = []
         start: Optional[Pos] = None
         end: Optional[Pos] = None
-        unfinished_portals: Dict[str, Pos] = dict()
+        unfinished_portals: dict[str, Pos] = dict()
         finished_portals: list[Portal] = []
 
         for y, line in enumerate(lines):

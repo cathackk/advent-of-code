@@ -1,4 +1,3 @@
-from typing import Dict
 from typing import Iterable
 
 from heading import Heading
@@ -6,7 +5,7 @@ from heading import Heading
 
 Pos = tuple[int, int]
 Instructions = Iterable[list[Heading]]
-Keypad = Dict[Pos, str]
+Keypad = dict[Pos, str]
 
 
 def heading_from_code(code: str) -> Heading:

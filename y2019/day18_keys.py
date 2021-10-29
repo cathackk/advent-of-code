@@ -1,6 +1,5 @@
 import string
 from collections import defaultdict
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -9,9 +8,9 @@ from utils import timeit
 Pos = tuple[int, int]
 Tile = tuple[Pos, str]
 Solution = tuple[int, list[str]]
-SolutionCache = Dict[tuple[str, str], Solution]
+SolutionCache = dict[tuple[str, str], Solution]
 Path = tuple[tuple[str, str], int, list[str]]
-PathsCache = Dict[str, Dict[str, tuple[int, set[str]]]]
+PathsCache = dict[str, dict[str, tuple[int, set[str]]]]
 Layer = list[tuple[Pos, list[str]]]
 
 SPACE = '.'

@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/16
 """
 
 from typing import Callable
-from typing import Dict
 from typing import Iterable
 
 from utils import line_groups
@@ -266,7 +265,7 @@ class RuleList:
         assert fields_count == len(self)
 
         # gather all possible indexes
-        possible_rule_indexes: Dict[Rule, set[int]] = {
+        possible_rule_indexes: dict[Rule, set[int]] = {
             rule: set(
                 index
                 for index in range(fields_count)
@@ -279,7 +278,7 @@ class RuleList:
         }
 
         # find the only possible permutation
-        field_order: Dict[int, str] = dict()
+        field_order: dict[int, str] = dict()
         while possible_rule_indexes:
             rule, index = next(
                 (r, single_value(ixs))

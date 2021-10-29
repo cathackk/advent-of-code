@@ -5,7 +5,6 @@ from itertools import chain
 from itertools import combinations
 from typing import Any
 from typing import Callable
-from typing import Dict
 from typing import Generator
 from typing import Iterable
 from typing import Iterator
@@ -160,8 +159,8 @@ def dgroupby(
         items: Iterable[T],
         key: Callable[[T], K],
         value: Callable[[T], V]
-) -> Dict[K, list[V]]:
-    d: Dict[K, list[V]] = dict()
+) -> dict[K, list[V]]:
+    d: dict[K, list[V]] = dict()
 
     for item in items:
         item_key, item_value = key(item), value(item)
@@ -176,8 +175,8 @@ def dgroupby_set(
         items: Iterable[T],
         key: Callable[[T], K],
         value: Callable[[T], V]
-) -> Dict[K, set[V]]:
-    d: Dict[K, set[V]] = dict()
+) -> dict[K, set[V]]:
+    d: dict[K, set[V]] = dict()
 
     for item in items:
         item_key, item_value = key(item), value(item)
@@ -188,8 +187,8 @@ def dgroupby_set(
     return d
 
 
-def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> Dict[K, list[V]]:
-    d: Dict[K, list[V]] = dict()
+def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> dict[K, list[V]]:
+    d: dict[K, list[V]] = dict()
 
     for item_key, item_value in items:
         if item_key not in d:
@@ -199,8 +198,8 @@ def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> Dict[K, list[V]]:
     return d
 
 
-def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> Dict[K, set[V]]:
-    d: Dict[K, set[V]] = dict()
+def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> dict[K, set[V]]:
+    d: dict[K, set[V]] = dict()
 
     for item_key, item_value in items:
         if item_key not in d:

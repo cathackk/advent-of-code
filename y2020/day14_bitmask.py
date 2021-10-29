@@ -4,7 +4,6 @@ Day 14: Docking Data
 https://adventofcode.com/2020/day/14
 """
 
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 from typing import Union
@@ -281,11 +280,11 @@ class Program:
     def __getitem__(self, index):
         return self.instructions[index]
 
-    def run(self, chip_version: int = 1) -> Dict[int, int]:
+    def run(self, chip_version: int = 1) -> dict[int, int]:
         assert chip_version in (1, 2)
 
         current_mask: Optional[BitMask] = None
-        memory: Dict[int, int] = dict()
+        memory: dict[int, int] = dict()
 
         for instruction in self:
             match instruction:

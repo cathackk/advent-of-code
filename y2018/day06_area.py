@@ -1,6 +1,5 @@
 import string
 from collections import Counter
-from typing import Dict
 from typing import Iterable
 
 from rect import Pos
@@ -31,7 +30,7 @@ def load_points(fn: str) -> Iterable[Pos]:
 
 def claim(points: set[Pos]) -> int:
     # name the original points for easier debugging
-    names: Dict[Pos, str] = {
+    names: dict[Pos, str] = {
         pos: name
         for pos, name in zip(
             sorted(points),
@@ -41,13 +40,13 @@ def claim(points: set[Pos]) -> int:
     # determine boundaries
     bounds = Rect.with_all(points).grow_by(+3, +3)
     # pos -> claimant
-    claims: Dict[Pos, str] = dict(names)
-    layer: Dict[Pos, str] = dict(claims)
+    claims: dict[Pos, str] = dict(names)
+    layer: dict[Pos, str] = dict(claims)
 
     while layer:
         # (1) collect all new claims
         # pos -> claimants
-        new_claims: Dict[Pos, set[str]] = dgroupby_set(
+        new_claims: dict[Pos, set[str]] = dgroupby_set(
             (
                 (n, o)
                 for p, o in layer.items()
@@ -82,7 +81,7 @@ def claim(points: set[Pos]) -> int:
     return areas.most_common(1)[0][1]
 
 
-def draw_claims(points: set[Pos], claims: Dict[Pos, str], bounds: Rect):
+def draw_claims(points: set[Pos], claims: dict[Pos, str], bounds: Rect):
     def t(tx: int, ty: int) -> str:
         return '#' if (tx, ty) in points else claims.get((tx, ty), ' ')
     for y in bounds.range_y():

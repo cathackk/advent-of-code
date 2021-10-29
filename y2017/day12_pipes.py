@@ -1,4 +1,3 @@
-from typing import Dict
 from typing import Iterable
 
 
@@ -13,8 +12,8 @@ def load_links(fn: str) -> Iterable[Link]:
         yield int(source), [int(v) for v in targets.split(', ')]
 
 
-def create_groups(links: Iterable[Link]) -> Dict[int, Group]:
-    groups: Dict[int, Group] = dict()
+def create_groups(links: Iterable[Link]) -> dict[int, Group]:
+    groups: dict[int, Group] = dict()
 
     for source, targets in links:
         for target in targets:

@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/23
 """
 
 from itertools import chain
-from typing import Dict
 from typing import Iterable
 
 from utils import timeit
@@ -189,7 +188,7 @@ def part_2(cups: 'Cups', moves=10_000_000) -> int:
 
 class Cups:
     def __init__(self, labels: Iterable[int]):
-        self.next: Dict[int, int] = dict()
+        self.next: dict[int, int] = dict()
         labels = iter(labels)
         self.current = prev = next(labels)
         for label in labels:

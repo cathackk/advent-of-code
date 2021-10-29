@@ -1,5 +1,4 @@
 from itertools import permutations
-from typing import Dict
 from typing import Iterable
 
 from utils import mink
@@ -59,7 +58,7 @@ class Maze:
             if (x+dx, y+dy) in self.floors
         )
 
-    def calculate_distances(self) -> Dict[tuple[str, str], int]:
+    def calculate_distances(self) -> dict[tuple[str, str], int]:
         return dict(
             ccd
             for t1 in self.targets.items()

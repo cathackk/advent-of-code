@@ -1,5 +1,4 @@
 from itertools import count
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -7,7 +6,7 @@ from rect import Rect
 from utils import parse_line
 
 Pos = tuple[int, int]
-Board = Dict[Pos, str]
+Board = dict[Pos, str]
 
 WALL = '#'
 STILL = '='

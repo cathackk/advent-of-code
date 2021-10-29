@@ -1,7 +1,6 @@
 from abc import ABC
 from abc import abstractmethod
 from copy import copy
-from typing import Dict
 from typing import Iterable
 
 from typing import NamedTuple
@@ -171,7 +170,7 @@ class Battle:
             player_mana: int,
             boss_hp: int,
             boss_damage: int,
-            active_spells: Dict[Spell, int] = None,
+            active_spells: dict[Spell, int] = None,
             hard: bool = False,
             logging: bool = False
     ):

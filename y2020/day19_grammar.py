@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/19
 from abc import ABC
 from abc import abstractmethod
 from functools import cached_property
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -16,7 +15,7 @@ from utils import parse_line
 from utils import single_value
 
 
-def part_1(rules: Dict[int, 'Rule'], messages: list[str]) -> int:
+def part_1(rules: dict[int, 'Rule'], messages: list[str]) -> int:
     """
     ... many of the messages sent back from the satellite have been corrupted.
 
@@ -193,7 +192,7 @@ def part_1(rules: Dict[int, 'Rule'], messages: list[str]) -> int:
     return result
 
 
-def part_2(rules: Dict[int, 'Rule'], messages: list[str]) -> int:
+def part_2(rules: dict[int, 'Rule'], messages: list[str]) -> int:
     r"""
     As you look over the list of messages, you realize your matching rules aren't quite right.
     To fix them, completely replace rules `8: 42` and `11: 42 31` with the following:
@@ -480,7 +479,7 @@ class Rule0(Rule):
         return matches_42 + matches_31 >= len(text_parts) and matches_42 > matches_31 > 0
 
     @classmethod
-    def patch(cls, rules: Dict[int, Rule]) -> Dict[int, Rule]:
+    def patch(cls, rules: dict[int, Rule]) -> dict[int, Rule]:
         # 0: 8 11
         rule_0 = rules[0]
         assert rule_0.number == 0
@@ -519,13 +518,13 @@ class Rule0(Rule):
         return patched_rules
 
 
-def rules_from_text(text: str) -> Dict[int, Rule]:
+def rules_from_text(text: str) -> dict[int, Rule]:
     return rules_from_lines(text.strip().split("\n"))
 
 
-def rules_from_lines(lines: Iterable[str]) -> Dict[int, Rule]:
-    rules: Dict[int, Rule] = dict()
-    rule_refs: Dict[int, list[list[int]]] = dict()
+def rules_from_lines(lines: Iterable[str]) -> dict[int, Rule]:
+    rules: dict[int, Rule] = dict()
+    rule_refs: dict[int, list[list[int]]] = dict()
 
     for line in lines:
         if '"' in line:
@@ -565,15 +564,15 @@ def rules_from_lines(lines: Iterable[str]) -> Dict[int, Rule]:
     return rules
 
 
-def input_from_file(fn: str) -> tuple[Dict[int, Rule], list[str]]:
+def input_from_file(fn: str) -> tuple[dict[int, Rule], list[str]]:
     return input_from_lines(open(fn))
 
 
-def input_from_text(text: str) -> tuple[Dict[int, Rule], list[str]]:
+def input_from_text(text: str) -> tuple[dict[int, Rule], list[str]]:
     return input_from_lines(text.strip().split("\n"))
 
 
-def input_from_lines(lines: Iterable[str]) -> tuple[Dict[int, Rule], list[str]]:
+def input_from_lines(lines: Iterable[str]) -> tuple[dict[int, Rule], list[str]]:
     rule_lines, messages = line_groups(lines)
     rules = rules_from_lines(rule_lines)
     return rules, messages

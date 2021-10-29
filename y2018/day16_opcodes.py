@@ -1,4 +1,3 @@
-from typing import Dict
 from typing import Iterable
 from typing import NamedTuple
 
@@ -75,7 +74,7 @@ class Sample(NamedTuple):
 
 
 def map_opnums_to_opcodes(samples: Iterable[Sample]) -> Iterable[tuple[int, str]]:
-    possible_n2c: Dict[int, set[str]] = {
+    possible_n2c: dict[int, set[str]] = {
         opnum: set(all_ops.keys())
         for opnum in range(len(all_ops))
     }

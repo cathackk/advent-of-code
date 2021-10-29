@@ -8,7 +8,6 @@ from collections import Counter
 from collections import defaultdict
 from functools import cached_property
 from typing import Counter as TCounter
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -406,7 +405,7 @@ class SeatsMap:
         return sum(1 for t in self.tiles.values() if t == tile)
 
     @cached_property
-    def adjacents(self) -> Dict[Pos, set[Pos]]:
+    def adjacents(self) -> dict[Pos, set[Pos]]:
         """ Precompute adjacent seats pairs. """
         adjacents = defaultdict(set)
 
@@ -420,7 +419,7 @@ class SeatsMap:
         return dict(adjacents)
 
     @cached_property
-    def visibles(self) -> Dict[Pos, set[Pos]]:
+    def visibles(self) -> dict[Pos, set[Pos]]:
         """ Precompute visible seat pairs. """
 
         def visible_from(pos0: Pos, vector: tuple[int, int]) -> Optional[Pos]:
@@ -444,7 +443,7 @@ class SeatsMap:
 
         return dict(visibles)
 
-    def occupied_neighbors_count(self, neighbors: Dict[Pos, set[Pos]]) -> TCounter[Pos]:
+    def occupied_neighbors_count(self, neighbors: dict[Pos, set[Pos]]) -> TCounter[Pos]:
         """
         Count the number occupied neighboring seats.
         Definition of "neighboring" is passed in `neighbors` arg.

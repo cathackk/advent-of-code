@@ -1,6 +1,5 @@
 from collections import defaultdict
 from itertools import count
-from typing import Dict
 from typing import Generator
 from typing import Iterable
 
@@ -26,7 +25,7 @@ def build(
         workers_count: int,
         debug: bool = False
 ) -> Generator[str, None, int]:
-    requirements: Dict[str, set[str]] = dgroupby_set(
+    requirements: dict[str, set[str]] = dgroupby_set(
         dependencies,
         key=lambda ab: ab[1],
         value=lambda ab: ab[0]
@@ -34,7 +33,7 @@ def build(
 
     steps_unprocessed: set[str] = set(s for d in dependencies for s in d)
     steps_count = len(steps_unprocessed)
-    steps_in_progress: Dict[int, set[str]] = defaultdict(set)
+    steps_in_progress: dict[int, set[str]] = defaultdict(set)
     steps_finished: set[str] = set()
 
     def log(msg: str = ""):

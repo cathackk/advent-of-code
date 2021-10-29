@@ -1,5 +1,4 @@
 from itertools import combinations
-from typing import Dict
 from typing import Iterable
 from typing import Optional
 
@@ -13,7 +12,7 @@ class State:
 
         self.floors = floors
         self.elevator_at = elevator_at
-        self.items_by_floor: Dict[int, list[str]] = {floor: [] for floor in range(1, floors+1)}
+        self.items_by_floor: dict[int, list[str]] = {floor: [] for floor in range(1, floors+1)}
         for item, floor in items:
             self.items_by_floor[floor].append(item)
         self._key: Optional[str] = None
@@ -39,13 +38,13 @@ class State:
         # self.items_by_floor = {1: ['GB'], 2: ['MA'], 3: ['MB', 'GA']}
         # self.items = [('GB', 1), ('MA', 2), ('MB', 3), ('GA', 3)]
         # g1 = {'A': [('M': 2), ('G', 3)], 'B': [('G', 1), ('M', 3)]}
-        g1: Dict[str, list[tuple[str, int]]] = dgroupby(
+        g1: dict[str, list[tuple[str, int]]] = dgroupby(
             self.ifs(),
             key=lambda if_: if_[0][1],  # code
             value=lambda if_: (if_[0][0], if_[1])  # (type, floor)
         )
         # g2 = {'A': (3, 2), 'B': (1, 3)}  # (G, M)
-        g2: Dict[str, tuple[int, int]] = {
+        g2: dict[str, tuple[int, int]] = {
             code: tuple(f for t, f in sorted(tfs))
             for code, tfs in g1.items()
         }

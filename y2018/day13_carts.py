@@ -1,6 +1,5 @@
 from enum import Enum
 from itertools import count
-from typing import Dict
 from typing import Generator
 from typing import Iterable
 from typing import NamedTuple
@@ -61,14 +60,14 @@ class Cart(NamedTuple):
 
 
 class Map:
-    def __init__(self, tracks: Dict[Pos, str], carts: Iterable[Cart]):
+    def __init__(self, tracks: dict[Pos, str], carts: Iterable[Cart]):
         self.tracks = dict(tracks)
         self.carts, collisions = Map._place_carts(carts)
         assert not collisions
 
     @staticmethod
-    def _place_carts(carts: Iterable[Cart]) -> tuple[Dict[Pos, Cart], set[Pos]]:
-        by_pos: Dict[Pos, Cart] = dict()
+    def _place_carts(carts: Iterable[Cart]) -> tuple[dict[Pos, Cart], set[Pos]]:
+        by_pos: dict[Pos, Cart] = dict()
         collisions: set[Pos] = set()
 
         for cart in carts:
@@ -151,7 +150,7 @@ class Map:
 
     @classmethod
     def load(cls, fn: str):
-        tracks: Dict[Pos, str] = dict()
+        tracks: dict[Pos, str] = dict()
         carts: list[Cart] = list()
 
         for y, line in enumerate(open(fn)):
