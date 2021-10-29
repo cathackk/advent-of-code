@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/3
 """
 
 from typing import Iterable
-from typing import Set
 
 from rect import Rect
 from utils import join_and
@@ -169,7 +168,7 @@ class TreesMap:
     TREE_CHAR = '#'
     OPEN_CHAR = '.'
 
-    def __init__(self, trees: Set[Pos], bounds: Rect):
+    def __init__(self, trees: set[Pos], bounds: Rect):
         self.trees = trees
         self.bounds = bounds
 

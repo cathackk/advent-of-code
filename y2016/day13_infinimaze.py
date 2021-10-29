@@ -1,6 +1,5 @@
 from itertools import count
 from typing import Iterable
-from typing import Set
 
 
 Pos = tuple[int, int]
@@ -24,8 +23,8 @@ def neighbors(pos: Pos) -> Iterable[Pos]:
 
 
 def find_path(seed: int, start: Pos, end: Pos) -> int:
-    visited: Set[Pos] = set()
-    to_visit: Set[Pos] = {start}
+    visited: set[Pos] = set()
+    to_visit: set[Pos] = {start}
 
     for distance in count(0):
         if end in to_visit:
@@ -40,8 +39,8 @@ def find_path(seed: int, start: Pos, end: Pos) -> int:
 
 
 def flood(seed: int, start: Pos, max_distance: int) -> int:
-    visited: Set[Pos] = set()
-    to_visit: Set[Pos] = {start}
+    visited: set[Pos] = set()
+    to_visit: set[Pos] = {start}
 
     for distance in range(max_distance+1):
         visited.update(to_visit)

@@ -2,7 +2,6 @@ import string
 from collections import Counter
 from typing import Dict
 from typing import Iterable
-from typing import Set
 
 from rect import Pos
 from rect import Rect
@@ -30,7 +29,7 @@ def load_points(fn: str) -> Iterable[Pos]:
         yield int(x), int(y)
 
 
-def claim(points: Set[Pos]) -> int:
+def claim(points: set[Pos]) -> int:
     # name the original points for easier debugging
     names: Dict[Pos, str] = {
         pos: name
@@ -48,7 +47,7 @@ def claim(points: Set[Pos]) -> int:
     while layer:
         # (1) collect all new claims
         # pos -> claimants
-        new_claims: Dict[Pos, Set[str]] = dgroupby_set(
+        new_claims: Dict[Pos, set[str]] = dgroupby_set(
             (
                 (n, o)
                 for p, o in layer.items()
@@ -83,7 +82,7 @@ def claim(points: Set[Pos]) -> int:
     return areas.most_common(1)[0][1]
 
 
-def draw_claims(points: Set[Pos], claims: Dict[Pos, str], bounds: Rect):
+def draw_claims(points: set[Pos], claims: Dict[Pos, str], bounds: Rect):
     def t(tx: int, ty: int) -> str:
         return '#' if (tx, ty) in points else claims.get((tx, ty), ' ')
     for y in bounds.range_y():
@@ -91,7 +90,7 @@ def draw_claims(points: Set[Pos], claims: Dict[Pos, str], bounds: Rect):
     print()
 
 
-def closest(points: Set[Pos], limit: int) -> int:
+def closest(points: set[Pos], limit: int) -> int:
     bounds = Rect.with_all(points)
     dists = {
         (x, y): sum(md((x, y), p) for p in points)
@@ -102,13 +101,13 @@ def closest(points: Set[Pos], limit: int) -> int:
     return sum(1 for d in dists.values() if d < limit)
 
 
-def part_1(points: Set[Pos]) -> int:
+def part_1(points: set[Pos]) -> int:
     result = claim(points)
     print(f"part 1: largest finite area has size {result}")
     return result
 
 
-def part_2(points: Set[Pos], limit: int = 10_000) -> int:
+def part_2(points: set[Pos], limit: int = 10_000) -> int:
     result = closest(points, limit)
     print(f"part 2: area closer than {limit} to every point has size {result}")
     return result

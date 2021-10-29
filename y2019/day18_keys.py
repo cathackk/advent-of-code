@@ -3,7 +3,6 @@ from collections import defaultdict
 from typing import Dict
 from typing import Iterable
 from typing import Optional
-from typing import Set
 
 from utils import timeit
 
@@ -12,7 +11,7 @@ Tile = tuple[Pos, str]
 Solution = tuple[int, list[str]]
 SolutionCache = Dict[tuple[str, str], Solution]
 Path = tuple[tuple[str, str], int, list[str]]
-PathsCache = Dict[str, Dict[str, tuple[int, Set[str]]]]
+PathsCache = Dict[str, Dict[str, tuple[int, set[str]]]]
 Layer = list[tuple[Pos, list[str]]]
 
 SPACE = '.'
@@ -305,7 +304,7 @@ def _multi_solution(
     return solution
 
 
-def is_passable(items: Set[str], remaining_keys: list[str]):
+def is_passable(items: set[str], remaining_keys: list[str]):
     return not any((key in items) for key in remaining_keys)
 
 

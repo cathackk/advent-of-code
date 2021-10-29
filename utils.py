@@ -10,7 +10,6 @@ from typing import Generator
 from typing import Iterable
 from typing import Iterator
 from typing import Optional
-from typing import Set
 from typing import Sized
 from typing import TypeVar
 
@@ -177,8 +176,8 @@ def dgroupby_set(
         items: Iterable[T],
         key: Callable[[T], K],
         value: Callable[[T], V]
-) -> Dict[K, Set[V]]:
-    d: Dict[K, Set[V]] = dict()
+) -> Dict[K, set[V]]:
+    d: Dict[K, set[V]] = dict()
 
     for item in items:
         item_key, item_value = key(item), value(item)
@@ -200,8 +199,8 @@ def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> Dict[K, list[V]]:
     return d
 
 
-def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> Dict[K, Set[V]]:
-    d: Dict[K, Set[V]] = dict()
+def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> Dict[K, set[V]]:
+    d: Dict[K, set[V]] = dict()
 
     for item_key, item_value in items:
         if item_key not in d:
@@ -526,7 +525,7 @@ def constrained(value, min_value, max_value):
 
 
 def until_repeat(g: Generator[T, None, None]) -> Generator[T, None, T]:
-    seen: Set[T] = set()
+    seen: set[T] = set()
     for state in g:
         if state not in seen:
             seen.add(state)

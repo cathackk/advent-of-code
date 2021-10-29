@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/7
 from functools import lru_cache
 from typing import Dict
 from typing import Iterable
-from typing import Set
 
 from utils import dgroupby_pairs_set
 from utils import parse_line
@@ -170,7 +169,7 @@ class RuleSet:
         self.contains: Dict[str, list[CountColor]] = dict(rules)
 
         # color -> outer colors
-        self.contained_in: Dict[str, Set[str]] = dgroupby_pairs_set(
+        self.contained_in: Dict[str, set[str]] = dgroupby_pairs_set(
             (inner_color, outer_color)
             for outer_color, contents in self.contains.items()
             for _, inner_color in contents
@@ -203,7 +202,7 @@ class RuleSet:
         )
 
     @lru_cache(maxsize=1024)
-    def colors_outside_of(self, inner_color: str, recursive: bool = True) -> Set[str]:
+    def colors_outside_of(self, inner_color: str, recursive: bool = True) -> set[str]:
         immediate_colors = self.contained_in[inner_color]
         if not recursive:
             return immediate_colors

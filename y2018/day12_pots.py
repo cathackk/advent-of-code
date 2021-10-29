@@ -1,13 +1,12 @@
 from itertools import count
 from typing import Iterable
 from typing import Iterator
-from typing import Set
 
 from utils import minmax
 from utils import strip_line
 
 Rule = tuple[int, bool]
-Rules = Set[int]
+Rules = set[int]
 
 
 class State:

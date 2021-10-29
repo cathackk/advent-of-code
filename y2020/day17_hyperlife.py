@@ -7,13 +7,12 @@ https://adventofcode.com/2020/day/17
 from collections import Counter
 from itertools import product
 from typing import Iterable
-from typing import Set
 
 from rect import HyperCuboid
 from utils import single_value
 
 
-def part_1(initial_state: Set['Pos'], cycles: int = 6) -> int:
+def part_1(initial_state: set['Pos'], cycles: int = 6) -> int:
     """
     The pocket dimension contains an infinite 3-dimensional grid. At every integer 3-dimensional
     coordinate (`x,y,z`), there exists a single cube which is either *active* or *inactive*.
@@ -185,7 +184,7 @@ def part_1(initial_state: Set['Pos'], cycles: int = 6) -> int:
     return result
 
 
-def part_2(initial_state: Set['Pos'], cycles: int = 6) -> int:
+def part_2(initial_state: set['Pos'], cycles: int = 6) -> int:
     """
     For some reason, your simulated results don't match what the experimental energy source
     engineers expected. Apparently, the pocket dimension actually has *four spatial dimensions*,
@@ -355,7 +354,7 @@ def life_rule(active: bool, active_neighbors_count: int) -> bool:
 Pos = tuple[int, ...]
 
 
-def simulate(state: Set[Pos], cycles: int, print_progress: bool = False):
+def simulate(state: set[Pos], cycles: int, print_progress: bool = False):
     if print_progress:
         print_state(state, 0)
 
@@ -385,15 +384,15 @@ def neighbors(pos: Pos) -> Iterable[Pos]:
     )
 
 
-def state_dimensions(state: Set[Pos]) -> int:
+def state_dimensions(state: set[Pos]) -> int:
     return single_value(set(len(pos) for pos in state))
 
 
-def state_from_text(dimensions: int, text: str) -> Set[Pos]:
+def state_from_text(dimensions: int, text: str) -> set[Pos]:
     return set(active_positions_from_lines(dimensions, text.strip().split("\n")))
 
 
-def state_from_file(dimensions: int, fn: str) -> Set[Pos]:
+def state_from_file(dimensions: int, fn: str) -> set[Pos]:
     return set(active_positions_from_lines(dimensions, open(fn)))
 
 
@@ -408,7 +407,7 @@ def active_positions_from_lines(dimensions: int, lines: Iterable[str]) -> Iterab
     )
 
 
-def print_state(state: Set[Pos], cycle: int):
+def print_state(state: set[Pos], cycle: int):
     pad_1 = " " * 4
     pad_2 = " " * 8
 

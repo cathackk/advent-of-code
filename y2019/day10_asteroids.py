@@ -1,6 +1,5 @@
 import math
 from typing import Iterable
-from typing import Set
 
 from xy import Point
 from xy import Vector
@@ -34,11 +33,11 @@ def gen_seen(base: Point, asteroids: Iterable[Point]) -> Iterable[Point]:
     )
 
 
-def can_be_seen(base: Point, target: Point, asteroids: Set[Point]) -> bool:
+def can_be_seen(base: Point, target: Point, asteroids: set[Point]) -> bool:
     return not any(obstacles(base, target, asteroids))
 
 
-def obstacles(base: Point, target: Point, asteroids: Set[Point]) -> Iterable[Point]:
+def obstacles(base: Point, target: Point, asteroids: set[Point]) -> Iterable[Point]:
     n = (target - base).normalize()
     c = base + n
     while True:

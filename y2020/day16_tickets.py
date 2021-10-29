@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/16
 from typing import Callable
 from typing import Dict
 from typing import Iterable
-from typing import Set
 
 from utils import line_groups
 from utils import parse_line
@@ -267,7 +266,7 @@ class RuleList:
         assert fields_count == len(self)
 
         # gather all possible indexes
-        possible_rule_indexes: Dict[Rule, Set[int]] = {
+        possible_rule_indexes: Dict[Rule, set[int]] = {
             rule: set(
                 index
                 for index in range(fields_count)

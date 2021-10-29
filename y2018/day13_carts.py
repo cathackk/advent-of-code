@@ -4,7 +4,6 @@ from typing import Dict
 from typing import Generator
 from typing import Iterable
 from typing import NamedTuple
-from typing import Set
 
 from heading import Heading
 from rect import Rect
@@ -68,9 +67,9 @@ class Map:
         assert not collisions
 
     @staticmethod
-    def _place_carts(carts: Iterable[Cart]) -> tuple[Dict[Pos, Cart], Set[Pos]]:
+    def _place_carts(carts: Iterable[Cart]) -> tuple[Dict[Pos, Cart], set[Pos]]:
         by_pos: Dict[Pos, Cart] = dict()
-        collisions: Set[Pos] = set()
+        collisions: set[Pos] = set()
 
         for cart in carts:
             pos = cart.pos
@@ -134,7 +133,7 @@ class Map:
         else:
             raise ValueError(track)
 
-    def draw(self, collisions: Set[Pos] = None):
+    def draw(self, collisions: set[Pos] = None):
         def t(pos: Pos) -> str:
             if pos in self.carts:
                 return str(self.carts[pos])

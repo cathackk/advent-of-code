@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import Set
 
 
 Pos = tuple[int, int]
@@ -9,7 +8,7 @@ class Display:
     def __init__(self, width: int, height: int, active: Iterable[Pos] = None):
         self.width = width
         self.height = height
-        self.active: Set[Pos] = set(active) if active else set()
+        self.active: set[Pos] = set(active) if active else set()
 
     def __len__(self):
         return len(self.active)

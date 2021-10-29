@@ -1,10 +1,9 @@
 from typing import Dict
 from typing import Iterable
-from typing import Set
 
 
 Link = tuple[int, list[int]]
-Group = Set[int]
+Group = set[int]
 
 
 def load_links(fn: str) -> Iterable[Link]:

@@ -3,7 +3,6 @@ from itertools import count
 from typing import Dict
 from typing import Generator
 from typing import Iterable
-from typing import Set
 
 from utils import dgroupby_set
 from utils import exhaust
@@ -27,16 +26,16 @@ def build(
         workers_count: int,
         debug: bool = False
 ) -> Generator[str, None, int]:
-    requirements: Dict[str, Set[str]] = dgroupby_set(
+    requirements: Dict[str, set[str]] = dgroupby_set(
         dependencies,
         key=lambda ab: ab[1],
         value=lambda ab: ab[0]
     )
 
-    steps_unprocessed: Set[str] = set(s for d in dependencies for s in d)
+    steps_unprocessed: set[str] = set(s for d in dependencies for s in d)
     steps_count = len(steps_unprocessed)
-    steps_in_progress: Dict[int, Set[str]] = defaultdict(set)
-    steps_finished: Set[str] = set()
+    steps_in_progress: Dict[int, set[str]] = defaultdict(set)
+    steps_finished: set[str] = set()
 
     def log(msg: str = ""):
         if debug:
@@ -71,13 +70,13 @@ def build(
             steps_unprocessed.difference_update(selected_steps)
 
 
-def part_1(dependencies: Set[Dependency], debug=False) -> str:
+def part_1(dependencies: set[Dependency], debug=False) -> str:
     steps = ''.join(build(dependencies, workers_count=1, debug=debug))
     print(f"part 1: sequence is {steps}")
     return steps
 
 
-def part_2(dependencies: Set[Dependency], debug=False) -> int:
+def part_2(dependencies: set[Dependency], debug=False) -> int:
     seconds = exhaust(build(dependencies, workers_count=5, debug=debug))
     print(f"part 2: it takes {seconds} seconds to finish all the steps")
     return seconds

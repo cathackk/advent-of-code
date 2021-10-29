@@ -1,7 +1,6 @@
 from itertools import permutations
 from typing import Dict
 from typing import Iterable
-from typing import Set
 
 from utils import mink
 from utils import slidingw
@@ -70,13 +69,13 @@ class Maze:
     def _calculate_distances_from(self, target: Target) -> Iterable[tuple[tuple[str, str], int]]:
         pos1, code1 = target
 
-        visited: Set[Pos] = {pos1}
-        current_layer: Set[Pos] = {pos1}
+        visited: set[Pos] = {pos1}
+        current_layer: set[Pos] = {pos1}
         current_distance: int = 0
-        codes_left: Set[str] = set(self.targets.values()) - {code1}
+        codes_left: set[str] = set(self.targets.values()) - {code1}
 
         while current_layer and codes_left:
-            next_layer: Set[Pos] = set()
+            next_layer: set[Pos] = set()
 
             for pos in current_layer:
                 for npos in self.neighbors(pos):

@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import Set
 
 from heading import Heading
 from utils import mink
@@ -34,13 +33,13 @@ def follow(wire: Wire, origin: Pos = (0, 0)) -> Iterable[Pos]:
             yield pos
 
 
-def intersections(wire1: Wire, wire2: Wire) -> Set[Pos]:
+def intersections(wire1: Wire, wire2: Wire) -> set[Pos]:
     pos1 = set(follow(wire1))
     pos2 = set(follow(wire2))
     return pos1 & pos2
 
 
-def timed_intersections(wire1: Wire, wire2: Wire) -> Set[PosTime]:
+def timed_intersections(wire1: Wire, wire2: Wire) -> set[PosTime]:
     t1 = {pos: t+1 for t, pos in enumerate(follow(wire1))}
     t2 = {pos: t+1 for t, pos in enumerate(follow(wire2))}
     return {(x, t1[x] + t2[x]) for x in t1.keys() & t2.keys()}

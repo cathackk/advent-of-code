@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import Set
 
 from utils import count_ones
 from y2017.day10_knots import knot_hash
@@ -21,7 +20,7 @@ def neighbors(pos: Pos) -> Iterable[Pos]:
 
 
 def count_regions(seed: str) -> int:
-    ones: Set[Pos] = {
+    ones: set[Pos] = {
         (b*8+x, y)
         for y, row in enumerate(disk_rows(seed))
         for b, byte in enumerate(row)

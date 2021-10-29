@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/6
 """
 
 from typing import Iterable
-from typing import Set
 
 from utils import line_groups
 from utils import single_value
@@ -157,7 +156,7 @@ def part_2(groups: list['Group']) -> int:
     return result
 
 
-Person = Set[str]
+Person = set[str]
 Group = list[Person]
 
 

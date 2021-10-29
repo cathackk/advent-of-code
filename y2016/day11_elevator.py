@@ -2,7 +2,6 @@ from itertools import combinations
 from typing import Dict
 from typing import Iterable
 from typing import Optional
-from typing import Set
 
 from utils import dgroupby
 
@@ -111,7 +110,7 @@ class State:
         )
 
 
-def following_states(state: State, previous_keys: Set[str] = None) -> Iterable[State]:
+def following_states(state: State, previous_keys: set[str] = None) -> Iterable[State]:
     if previous_keys is None:
         previous_keys = set()
 

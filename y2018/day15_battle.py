@@ -3,7 +3,6 @@ from itertools import count
 from typing import Dict
 from typing import Iterable
 from typing import Optional
-from typing import Set
 
 from utils import ro
 
@@ -84,7 +83,7 @@ class Game:
         self.width = width
         self.height = height
         self.teams: Dict[str, Team] = {team.code: team for team in teams}
-        self.floors: Set[Pos] = set(floors)
+        self.floors: set[Pos] = set(floors)
         self.units_by_pos: Dict[Pos, Unit] = {unit.pos: unit for unit in units}
 
         self.round = 0
@@ -192,10 +191,10 @@ class Game:
     def path_to_closest_enemy(self, unit: Unit) -> Optional[Path]:
         path_to: Dict[Pos, Path] = {unit.pos: []}
         layer: list[Pos] = [unit.pos]
-        seen: Set[Pos] = {unit.pos}
+        seen: set[Pos] = {unit.pos}
 
         while layer:
-            next_layer: Set[Pos] = set()
+            next_layer: set[Pos] = set()
             for pos in layer:
                 for npos in self.neighbors(pos, include_units=True):
                     if npos in seen:

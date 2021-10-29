@@ -6,7 +6,6 @@ https://adventofcode.com/2020/day/21
 
 from typing import Dict
 from typing import Iterable
-from typing import Set
 
 from utils import parse_line
 from utils import single_value
@@ -144,7 +143,7 @@ class Food:
 
 def match_allergens(foods: list[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
     # initialize unmatched allergens and their possible ingredients
-    unmatched_a2is: Dict[Allergen, Set[Ingredient]] = dict()
+    unmatched_a2is: Dict[Allergen, set[Ingredient]] = dict()
     for food in foods:
         for allergen in food.allergens:
             if allergen not in unmatched_a2is:

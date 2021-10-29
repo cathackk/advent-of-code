@@ -9,7 +9,6 @@ import itertools
 from typing import Dict
 from typing import Iterable
 from typing import Optional
-from typing import Set
 
 from rect import Rect
 from utils import parse_line
@@ -529,7 +528,7 @@ class Image:
         unplaced_tiles: Dict[int, Tile] = {tile.tile_id: tile for tile in tiles}
         # empty positions bordering any placed tiles -> needs to be updated continuously
         # start with a single position where the first tile will be placed immediately
-        fringe_positions: Set[Pos] = {(0, 0)}
+        fringe_positions: set[Pos] = {(0, 0)}
 
         # any further tiles will have to be checked for match with their neighbors
         def is_matching(tile: Tile, pos: Pos) -> bool:

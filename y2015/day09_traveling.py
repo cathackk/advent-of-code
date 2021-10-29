@@ -1,7 +1,6 @@
 from itertools import permutations
 from typing import Dict
 from typing import Iterable
-from typing import Set
 
 from utils import minmax
 from utils import zip1
@@ -30,7 +29,7 @@ def create_distances(roads: Iterable[Road]) -> Dict[tuple[str, str], int]:
 if __name__ == '__main__':
     roads = list(load_roads("data/09-input.txt"))
     distances = create_distances(roads)
-    places: Set[str] = set(p for r in roads for p in r[1:])
+    places: set[str] = set(p for r in roads for p in r[1:])
 
     def route_length(route: Route) -> int:
         return sum(distances[(p1, p2)] for p1, p2 in zip1(route))

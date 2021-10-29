@@ -4,7 +4,6 @@ from typing import Dict
 from typing import Iterable
 from typing import Iterator
 from typing import Optional
-from typing import Set
 
 from utils import timeit
 
@@ -94,9 +93,9 @@ def load_links(fn: str) -> Iterable[Link]:
         yield Link(a, b)
 
 
-def preprocessed_links(links: Iterable[Link]) -> Set[Link]:
-    links: Set[Link] = set(links)
-    port_to_links: Dict[int, Set[Link]] = defaultdict(set)
+def preprocessed_links(links: Iterable[Link]) -> set[Link]:
+    links: set[Link] = set(links)
+    port_to_links: Dict[int, set[Link]] = defaultdict(set)
     for link in links:
         for port in set(link.outer_ports()):
             port_to_links[port].add(link)
@@ -145,7 +144,7 @@ def preprocessed_links(links: Iterable[Link]) -> Set[Link]:
 
 def max_bridge(
         from_port: int,
-        links: Set[Link],
+        links: set[Link],
         key: Callable[[Link], int]
 ) -> Optional[Link]:
     return max((
@@ -160,7 +159,7 @@ def max_bridge(
 
 
 @timeit
-def part_1(links: Set[Link]) -> int:
+def part_1(links: set[Link]) -> int:
     strongest_bridge = max_bridge(0, links, key=lambda b: b.strength)
     print(
         f"part 1: strength of the strongest bridge is {strongest_bridge.strength} "
@@ -170,7 +169,7 @@ def part_1(links: Set[Link]) -> int:
 
 
 @timeit
-def part_2(links: Set[Link]) -> int:
+def part_2(links: set[Link]) -> int:
     longest_bridge = max_bridge(0, links, key=lambda b: len(b))
     print(
         f"part 2: strength of longest bridge is {longest_bridge.strength} "

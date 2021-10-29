@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/22
 from dataclasses import dataclass
 from typing import Iterable
 from typing import Optional
-from typing import Set
 
 from chain import Link
 from utils import line_groups
@@ -583,7 +582,7 @@ class Game:
             log(f"=== Game {self.game_number} ===")
 
         remaining_rounds = rounds
-        seen_states: Set[tuple[int, int]] = set()
+        seen_states: set[tuple[int, int]] = set()
 
         while remaining_rounds != 0 and self.victory is None:
             self.round_number += 1

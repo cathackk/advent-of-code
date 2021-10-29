@@ -1,13 +1,12 @@
 from typing import Generator
-from typing import Set
 
 from utils import subsequences
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 
 
-def generate_commands(items: list[str]) -> Generator[list[str], int, Set[str]]:
-    combs_left: list[Set[str]] = sorted((set(ss) for ss in subsequences(items)), key=len)
+def generate_commands(items: list[str]) -> Generator[list[str], int, set[str]]:
+    combs_left: list[set[str]] = sorted((set(ss) for ss in subsequences(items)), key=len)
     current_items = set(items)
 
     while combs_left:
