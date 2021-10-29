@@ -280,27 +280,30 @@ class Expr:
         op = Operator.ADD
 
         for symbol in symbols:
-            if symbol == '(':
-                subexpr = cls.from_symbols(symbols)
-                if op is None:
+            match op, symbol:
+                case None, '(':
                     raise ValueError("missing operator before subexpression")
-                parts.append((op, subexpr))
-                op = None
 
-            elif symbol == ')':
-                return cls(parts)
+                case _, '(':
+                    subexpr = cls.from_symbols(symbols)
+                    parts.append((op, subexpr))
+                    op = None
 
-            elif symbol in ('+', '*'):
-                op = Operator(symbol)
+                case _, ')':
+                    return cls(parts)
 
-            elif symbol.isdigit():
-                if op is None:
+                case _, '+' | '*':
+                    op = Operator(symbol)
+
+                case None, _ if symbol.isdigit():
                     raise ValueError(f"missing operator before int")
-                parts.append((op, int(symbol)))
-                op = None
 
-            else:
-                raise ValueError(f"unknown symbol {symbol!r}")
+                case _, _ if symbol.isdigit():
+                    parts.append((op, int(symbol)))
+                    op = None
+
+                case _:
+                    raise ValueError(f"unknown symbol {symbol!r}")
 
         return cls(parts)
 

@@ -413,15 +413,16 @@ def print_state(state: Set[Pos], cycle: int):
     pad_1 = " " * 4
     pad_2 = " " * 8
 
-    if cycle is None:
-        pad_1 = ""
-        pad_2 = " " * 4
-    elif cycle == 0:
-        print("Before any cycles:")
-    elif cycle == 1:
-        print("After 1 cycle:")
-    else:
-        print(f"After {cycle} cycles:")
+    match cycle:
+        case None:
+            pad_1 = ""
+            pad_2 = " " * 4
+        case 0:
+            print("Before any cycles:")
+        case 1:
+            print("After 1 cycle:")
+        case _:
+            print(f"After {cycle} cycles:")
 
     # find the min/max corner of the multi-dimensional space to be printed
     bounds = HyperCuboid.with_all(state)

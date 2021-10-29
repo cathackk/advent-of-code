@@ -289,22 +289,18 @@ class Program:
         memory: Dict[int, int] = dict()
 
         for instruction in self:
-            action, *args = instruction
-
-            if action == 'mask':
-                (current_mask,) = args
-
-            elif action == 'mem':
-                assert current_mask, "mask not initialized"
-                base_address, value = args
-                if chip_version == 1:
-                    memory[base_address] = current_mask.apply(value)
-                else:
-                    for address in current_mask.apply_floating(base_address):
-                        memory[address] = value
-
-            else:
-                raise KeyError(action)
+            match instruction:
+                case 'mask', mask:
+                    current_mask = mask
+                case 'mem', base_address, value:
+                    assert current_mask, "mask not initialized"
+                    if chip_version == 1:
+                        memory[base_address] = current_mask.apply(value)
+                    else:
+                        for address in current_mask.apply_floating(base_address):
+                            memory[address] = value
+                case _:
+                    raise ValueError(f"unsupported instruction {instruction}")
 
         return memory
 

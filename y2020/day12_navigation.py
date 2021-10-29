@@ -204,37 +204,38 @@ class Ship:
             return f'{type(self).__name__}(pos={self.pos}, waypoint={self.waypoint})'
 
     def step(self, instruction: Instruction) -> 'Ship':
-        action, value = instruction
+        match instruction:
+            case ('N' | 'E' | 'S' | 'W' as heading), value:
+                absolute_heading = Heading.from_letter(heading)
+                if self.waypoint:
+                    self.waypoint = absolute_heading.move(self.waypoint, distance=value)
+                else:
+                    self.pos = absolute_heading.move(self.pos, distance=value)
 
-        if action in ('N', 'E', 'S', 'W'):
-            absolute_heading = Heading.from_letter(action)
-            if self.waypoint:
-                self.waypoint = absolute_heading.move(self.waypoint, distance=value)
-            else:
-                self.pos = absolute_heading.move(self.pos, distance=value)
+            case 'F', value:
+                if self.waypoint:
+                    x, y = self.pos
+                    dx, dy = self.waypoint
+                    self.pos = (x + value * dx, y + value * dy)
+                else:
+                    self.pos = self.heading.move(self.pos, distance=value)
 
-        elif action == 'F':
-            if self.waypoint:
-                x, y = self.pos
-                dx, dy = self.waypoint
-                self.pos = (x + value * dx, y + value * dy)
-            else:
-                self.pos = self.heading.move(self.pos, distance=value)
+            case ('L' | 'R' as action), (90 | 180 | 270 as angle):
+                right_turns = (angle if action == 'R' else (-angle % 360)) // 90
 
-        elif action in ('L', 'R'):
-            assert value in (90, 180, 270), f"unsupported turn value: {value}"
-            right_turns = (value if action == 'R' else (-value % 360)) // 90
+                if self.waypoint:
+                    for _ in range(right_turns):
+                        wpx, wpy = self.waypoint
+                        self.waypoint = (-wpy, wpx)
+                else:
+                    for _ in range(right_turns):
+                        self.heading = self.heading.right()
 
-            if self.waypoint:
-                for _ in range(right_turns):
-                    wpx, wpy = self.waypoint
-                    self.waypoint = (-wpy, wpx)
-            else:
-                for _ in range(right_turns):
-                    self.heading = self.heading.right()
+            case ('L' | 'R'), angle:
+                raise ValueError(f"unsupported turn value: {angle}")
 
-        else:
-            raise KeyError(f"unsupported action: {instruction}")
+            case action, value:
+                raise ValueError(f"unsupported action: {action}, {value}")
 
         return self
 

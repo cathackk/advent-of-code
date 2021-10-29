@@ -286,17 +286,18 @@ class Program:
 
             # evaluate current instruction
             op, arg = self[ip]
-            if op == 'acc':
-                acc_new = acc + arg
-                ip_new = ip + 1
-            elif op == 'jmp':
-                acc_new = acc
-                ip_new = ip + arg
-            elif op == 'nop':
-                acc_new = acc
-                ip_new = ip + 1
-            else:
-                raise ValueError(f"unsupported operation {op!r}")
+            match op:
+                case 'acc':
+                    acc_new = acc + arg
+                    ip_new = ip + 1
+                case 'jmp':
+                    acc_new = acc
+                    ip_new = ip + arg
+                case 'nop':
+                    acc_new = acc
+                    ip_new = ip + 1
+                case _:
+                    raise ValueError(f"unsupported operaetion {op!r}")
 
             # report state
             yield self.State(
