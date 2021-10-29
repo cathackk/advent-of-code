@@ -1,12 +1,11 @@
 from collections import Counter
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from utils import minmax
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 class Grid:
@@ -103,7 +102,7 @@ def part_1() -> int:
     return result
 
 
-Pos3 = Tuple[int, int, int]
+Pos3 = tuple[int, int, int]
 
 
 class HyperGrid:

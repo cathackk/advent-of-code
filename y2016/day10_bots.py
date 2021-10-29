@@ -1,16 +1,15 @@
 from collections import defaultdict
 from typing import Dict
 from typing import List
-from typing import Tuple
 
 from utils import product
 
-Target = Tuple[str, int]
+Target = tuple[str, int]
 Values = Dict[Target, List[int]]
-Instructions = Dict[int, Tuple[Target, Target]]
+Instructions = Dict[int, tuple[Target, Target]]
 
 
-def load(fn: str) -> Tuple[Values, Instructions]:
+def load(fn: str) -> tuple[Values, Instructions]:
     initials: Values = defaultdict(list)
     instructions: Instructions = dict()
 

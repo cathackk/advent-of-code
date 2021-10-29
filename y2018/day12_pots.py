@@ -2,12 +2,11 @@ from itertools import count
 from typing import Iterable
 from typing import Iterator
 from typing import Set
-from typing import Tuple
 
 from utils import minmax
 from utils import strip_line
 
-Rule = Tuple[int, bool]
+Rule = tuple[int, bool]
 Rules = Set[int]
 
 
@@ -29,7 +28,7 @@ class State:
         xmin, xmax = minmax(self.alive)
         return range(xmin-3, xmax+4)
 
-    def __iter__(self) -> Iterator[Tuple[int, bool]]:
+    def __iter__(self) -> Iterator[tuple[int, bool]]:
         return (
             (x, x in self.alive)
             for x in self._xrange()
@@ -42,7 +41,7 @@ class State:
         return ''.join('#' if a else '.' for _, a in self)
 
     def next_generation(self, rules: Rules):
-        def neighborhood() -> Iterator[Tuple[int, int]]:
+        def neighborhood() -> Iterator[tuple[int, int]]:
             n = 0
             for x, a in self:
                 n = (n*2 + int(a)) % 32
@@ -51,7 +50,7 @@ class State:
         return State(x for x, n in neighborhood() if n in rules)
 
 
-def load(fn: str) -> Tuple[State, Rules]:
+def load(fn: str) -> tuple[State, Rules]:
     f = open(fn)
     initial_state = State.from_line(strip_line(next(f), "initial state: ", "\n"))
     assert next(f) == "\n"
@@ -78,7 +77,7 @@ def run_until_constant_score_delta(
         state: State,
         rules: Rules,
         const_length: int = 10
-) -> Tuple[int, int, int]:
+) -> tuple[int, int, int]:
     deltas = []
     for gen in count(1):
         new_state = state.next_generation(rules)

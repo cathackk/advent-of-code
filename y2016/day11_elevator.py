@@ -4,13 +4,12 @@ from typing import Iterable
 from typing import List
 from typing import Optional
 from typing import Set
-from typing import Tuple
 
 from utils import dgroupby
 
 
 class State:
-    def __init__(self, floors: int, elevator_at: int, items: Iterable[Tuple[str, int]]):
+    def __init__(self, floors: int, elevator_at: int, items: Iterable[tuple[str, int]]):
         assert floors > 1
         assert 1 <= elevator_at <= floors
 
@@ -26,7 +25,7 @@ class State:
             assert len(item) == 2
             assert item[0] in {'G', 'M'}  # generator or microchip
 
-    def ifs(self) -> Iterable[Tuple[str, int]]:
+    def ifs(self) -> Iterable[tuple[str, int]]:
         return (
             (item, floor)
             for floor, fitems in self.items_by_floor.items()
@@ -42,13 +41,13 @@ class State:
         # self.items_by_floor = {1: ['GB'], 2: ['MA'], 3: ['MB', 'GA']}
         # self.items = [('GB', 1), ('MA', 2), ('MB', 3), ('GA', 3)]
         # g1 = {'A': [('M': 2), ('G', 3)], 'B': [('G', 1), ('M', 3)]}
-        g1: Dict[str, List[Tuple[str, int]]] = dgroupby(
+        g1: Dict[str, List[tuple[str, int]]] = dgroupby(
             self.ifs(),
             key=lambda if_: if_[0][1],  # code
             value=lambda if_: (if_[0][0], if_[1])  # (type, floor)
         )
         # g2 = {'A': (3, 2), 'B': (1, 3)}  # (G, M)
-        g2: Dict[str, Tuple[int, int]] = {
+        g2: Dict[str, tuple[int, int]] = {
             code: tuple(f for t, f in sorted(tfs))
             for code, tfs in g1.items()
         }
@@ -80,7 +79,7 @@ class State:
                 print(item if item in self.items_by_floor[floor] else ". ", end=" ")
             print()
 
-    def fried_chips(self) -> Iterable[Tuple[str, int]]:
+    def fried_chips(self) -> Iterable[tuple[str, int]]:
         for floor, fitems in self.items_by_floor.items():
             any_generator_on_floor = any(item[0] == 'G' for item in fitems)
             items_by_code = dgroupby(fitems, key=lambda item: item[1], value=lambda item: item[0])
@@ -119,7 +118,7 @@ def following_states(state: State, previous_keys: Set[str] = None) -> Iterable[S
 
     current_items = state.items_by_floor[state.elevator_at]
 
-    def items_combinations() -> Iterable[Tuple[str, ...]]:
+    def items_combinations() -> Iterable[tuple[str, ...]]:
         yield from combinations(current_items, 1)
         yield from combinations(current_items, 2)
 
@@ -155,7 +154,7 @@ def search(start: State, end: State = None, debug: bool = False) -> int:
     if end is None:
         end = end_state(start)
 
-    buffer: List[Tuple[State, int]] = [(start, 0)]
+    buffer: List[tuple[State, int]] = [(start, 0)]
     known_keys = set(start.key())
     tick = 0
 

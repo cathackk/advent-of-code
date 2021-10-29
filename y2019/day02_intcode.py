@@ -1,12 +1,11 @@
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 
 
-def find_noun_verb(tape, target_value) -> Optional[Tuple[int, int]]:
+def find_noun_verb(tape, target_value) -> Optional[tuple[int, int]]:
     for noun in range(len(tape)):
         tape[1] = noun
         for verb in range(len(tape)):

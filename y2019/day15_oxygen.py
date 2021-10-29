@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Callable
 from typing import Optional
-from typing import Tuple
 
 from utils import minmax
 from xy import Point
@@ -84,7 +83,7 @@ class Robot:
     def current_tile(self) -> Tile:
         return self.plan[self.pos]
 
-    def step(self) -> Tuple[Heading, Tile, int]:
+    def step(self) -> tuple[Heading, Tile, int]:
         heading = self.choose_heading()
         tile = self.move(heading)
         discovered = self.look_around()

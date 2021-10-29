@@ -6,7 +6,6 @@ https://adventofcode.com/2020/day/13
 
 from typing import Dict
 from typing import Iterable
-from typing import Tuple
 
 from utils import modular_inverse
 
@@ -204,15 +203,15 @@ def part_2(bus_offsets: Dict[int, int]) -> int:
     return result
 
 
-def data_from_text(text: str) -> Tuple[int, Dict[int, int]]:
+def data_from_text(text: str) -> tuple[int, Dict[int, int]]:
     return data_from_lines(text.strip().split("\n"))
 
 
-def data_from_file(fn: str) -> Tuple[int, Dict[int, int]]:
+def data_from_file(fn: str) -> tuple[int, Dict[int, int]]:
     return data_from_lines(open(fn))
 
 
-def data_from_lines(lines: Iterable[str]) -> Tuple[int, Dict[int, int]]:
+def data_from_lines(lines: Iterable[str]) -> tuple[int, Dict[int, int]]:
     lines = list(lines)
     assert len(lines) == 2
 
@@ -260,7 +259,7 @@ def print_timetable(start: int, bus_ids: Iterable[int], context: int, end: int =
         print("  ".join([time_text] + departure_texts).rstrip())
 
 
-def earliest_departure(start: int, bus_ids: Iterable[int]) -> Tuple[int, int]:
+def earliest_departure(start: int, bus_ids: Iterable[int]) -> tuple[int, int]:
     return min(
         (start + (-start % bus_id), bus_id)
         for bus_id in bus_ids
@@ -274,7 +273,7 @@ def earliest_offset_departures(bus_offsets: Dict[int, int]) -> int:
     )
 
 
-def find_divrem(divrems: Iterable[Tuple[int, int]]) -> int:
+def find_divrem(divrems: Iterable[tuple[int, int]]) -> int:
     # lowest number L which follows each rule so far
     # rule := (L % div == rem)
     # after dividing L by `div`, you get remainder `rem`

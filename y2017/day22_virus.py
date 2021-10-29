@@ -3,7 +3,6 @@ from itertools import count
 from typing import Generator
 from typing import Iterable
 from typing import Iterator
-from typing import Tuple
 
 from heading import Heading
 from utils import exhaust
@@ -35,8 +34,8 @@ class NodeState(Enum):
         return NodeState.from_code(self.code + int(other))
 
 
-Pos = Tuple[int, int]
-Node = Tuple[Pos, NodeState]
+Pos = tuple[int, int]
+Node = tuple[Pos, NodeState]
 
 
 class Grid:

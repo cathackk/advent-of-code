@@ -3,7 +3,6 @@ from typing import Dict
 from typing import Generator
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from multibuffer import MultiBuffer
 from utils import last
@@ -11,7 +10,7 @@ from utils import last
 Rules = Dict[str, List[str]]
 
 
-def load(fn: str) -> Tuple[str, Rules]:
+def load(fn: str) -> tuple[str, Rules]:
     rules = defaultdict(list)
     f = open(fn)
     for line in f:
@@ -36,7 +35,7 @@ def replaces(molecule: str, rules: Rules) -> Iterable[str]:
         )
 
 
-def creates(start: str, rules: Rules, target: str) -> Generator[Tuple[str, int], None, int]:
+def creates(start: str, rules: Rules, target: str) -> Generator[tuple[str, int], None, int]:
     buffer = MultiBuffer(scoring=lambda ms: len(ms[0]), items=[(start, 0)])
     known: Dict[str, int] = {start: 0}
 

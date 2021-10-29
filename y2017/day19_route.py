@@ -1,14 +1,13 @@
 from typing import Dict
 from typing import Generator
 from typing import List
-from typing import Tuple
 
 from heading import Heading
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 Map = Dict[Pos, str]
-Route = Tuple[Pos, Heading, int, List[str]]
+Route = tuple[Pos, Heading, int, List[str]]
 
 
 def load_map(fn: str) -> Map:

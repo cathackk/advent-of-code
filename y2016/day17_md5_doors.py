@@ -2,14 +2,13 @@ from typing import Generator
 from typing import Iterable
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 from md5 import md5
 from rect import Pos
 from rect import Rect
 from utils import last
 
-Path = Tuple[Pos, str]
+Path = tuple[Pos, str]
 
 
 def neighbors(path: Path, bounds: Rect, password: str) -> Iterable[Path]:

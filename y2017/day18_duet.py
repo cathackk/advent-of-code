@@ -3,11 +3,10 @@ from typing import Generator
 from typing import Iterable
 from typing import List
 from typing import Optional
-from typing import Tuple
 from typing import Union
 
 StrInt = Union[str, int]
-Command = Tuple[str, StrInt, StrInt]
+Command = tuple[str, StrInt, StrInt]
 Tape = List[Command]
 
 
@@ -88,7 +87,7 @@ def run_single_program(tape: Tape) -> Optional[int]:
             return last_sig
 
 
-def run_dual_program(tape: Tape) -> Tuple[int, int]:
+def run_dual_program(tape: Tape) -> tuple[int, int]:
     p0 = run_program(0, tape)
     p1 = run_program(1, tape)
 

@@ -1,9 +1,8 @@
 from typing import Generator
-from typing import Tuple
 
 from utils import exhaust
 
-Group = Tuple[int, int, int]
+Group = tuple[int, int, int]
 
 
 def find_groups(text: str) -> Generator[Group, None, int]:

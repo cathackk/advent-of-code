@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/8
 from dataclasses import dataclass
 from typing import Generator
 from typing import Iterable
-from typing import Tuple
 
 
 def part_1(program: 'Program') -> int:
@@ -186,7 +185,7 @@ def part_2(program: 'Program') -> int:
     return final_acc
 
 
-Instruction = Tuple[str, int]
+Instruction = tuple[str, int]
 
 
 class Program:
@@ -310,7 +309,7 @@ class Program:
 
             ip, acc = ip_new, acc_new
 
-    def run_safe(self, *, debug: bool = False) -> Tuple[int, bool]:
+    def run_safe(self, *, debug: bool = False) -> tuple[int, bool]:
         """
         Runs the program until loop is detected or program terminates.
 
@@ -367,7 +366,7 @@ class Program:
         else:
             return False
 
-    def repair(self) -> Tuple[int, int]:
+    def repair(self) -> tuple[int, int]:
         """
         Tries to "repair" to program by finding a single instruction which when flipped
         (`jmp`->`nop` and vice versa) causes the program to terminate.

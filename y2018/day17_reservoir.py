@@ -2,12 +2,11 @@ from itertools import count
 from typing import Dict
 from typing import Iterable
 from typing import Optional
-from typing import Tuple
 
 from rect import Rect
 from utils import parse_line
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 Board = Dict[Pos, str]
 
 WALL = '#'
@@ -68,7 +67,7 @@ class State:
 
         return self
 
-    def _pour(self, pos: Pos) -> Tuple[Board, Iterable[Pos]]:
+    def _pour(self, pos: Pos) -> tuple[Board, Iterable[Pos]]:
         floor = self._scan_floor(pos)
 
         #   ...+...   ->   ...|...
@@ -112,12 +111,12 @@ class State:
         water_tile = RUNNING if overflows else STILL
         return {(x, py): water_tile for x in range(x_left+1, x_right)}, overflows
 
-    def _scan_floor(self, pos: Pos) -> Optional[Tuple[Tuple[str, int], Tuple[str, int]]]:
+    def _scan_floor(self, pos: Pos) -> Optional[tuple[tuple[str, int], tuple[str, int]]]:
         px, py = pos
         if py >= self.drawing_bounds.bottom_y:
             return None
 
-        def walk(dx) -> Tuple[str, int]:
+        def walk(dx) -> tuple[str, int]:
             for x in count(px, dx):
                 tile_current = self.board.get((x, py))
                 if tile_current == WALL:
@@ -159,7 +158,7 @@ class State:
         print()
 
 
-def both_parts(fn: str) -> Tuple[int, int]:
+def both_parts(fn: str) -> tuple[int, int]:
     s = State.load(fn).run()
     s.draw()
 

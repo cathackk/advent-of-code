@@ -6,7 +6,6 @@ https://adventofcode.com/2020/day/3
 
 from typing import Iterable
 from typing import Set
-from typing import Tuple
 
 from rect import Rect
 from utils import join_and
@@ -162,8 +161,8 @@ def part_2(trees: 'TreesMap'):
     return result
 
 
-Pos = Tuple[int, int]
-Vector = Tuple[int, int]
+Pos = tuple[int, int]
+Vector = tuple[int, int]
 
 
 class TreesMap:

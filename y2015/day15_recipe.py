@@ -1,7 +1,6 @@
 from typing import Iterable
 from typing import List
 from typing import NamedTuple
-from typing import Tuple
 
 from utils import maxk
 
@@ -28,7 +27,7 @@ def load_ingredients(fn: str) -> Iterable[Ingredient]:
         yield Ingredient(name, *data_values)
 
 
-def recipe_score(amounts: List[Tuple[Ingredient, int]], required_calories: int = None) -> int:
+def recipe_score(amounts: List[tuple[Ingredient, int]], required_calories: int = None) -> int:
     amounts = dict(amounts)
     capacity =   max(sum(i.capacity   * amount for i, amount in amounts.items()), 0)
     durability = max(sum(i.durability * amount for i, amount in amounts.items()), 0)
@@ -47,7 +46,7 @@ def recipe_score(amounts: List[Tuple[Ingredient, int]], required_calories: int =
 def generate_recipes(
         ingredients: List[Ingredient],
         limit: int
-) -> Iterable[List[Tuple[Ingredient, int]]]:
+) -> Iterable[List[tuple[Ingredient, int]]]:
     if len(ingredients) == 1:
         yield [(ingredients[0], limit)]
         return

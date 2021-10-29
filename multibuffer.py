@@ -2,7 +2,6 @@ from typing import Callable
 from typing import Dict
 from typing import Iterable
 from typing import List
-from typing import Tuple
 from typing import TypeVar
 
 
@@ -23,7 +22,7 @@ class MultiBuffer:
     def __bool__(self):
         return self._items_count > 0
 
-    def __iter__(self) -> Iterable[Tuple[int, T]]:
+    def __iter__(self) -> Iterable[tuple[int, T]]:
         return (
             (score, item)
             for score, items in self._buffers.items()

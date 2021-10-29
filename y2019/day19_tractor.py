@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 
@@ -18,10 +16,10 @@ def part_1():
 
 def find_square(
         y_start: int = 20,
-        x_start: Tuple[int, int] = (14, 16),
+        x_start: tuple[int, int] = (14, 16),
         square_size: int = 100,
         debug: bool = False
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     y = y_start
     x_min, x_max = x_start
     assert not scan(x_min-1, y)

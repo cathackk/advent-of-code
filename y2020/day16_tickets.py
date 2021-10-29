@@ -9,7 +9,6 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Set
-from typing import Tuple
 
 from utils import line_groups
 from utils import parse_line
@@ -199,7 +198,7 @@ Ticket = List[int]
 
 
 class Rule:
-    def __init__(self, field: str, *ranges: Tuple[int, int]):
+    def __init__(self, field: str, *ranges: tuple[int, int]):
         assert len(ranges) > 0
         self.field = field
         self.ranges = ranges
@@ -308,15 +307,15 @@ class RuleList:
         }
 
 
-def data_from_text(text: str) -> Tuple[RuleList, Ticket, List[Ticket]]:
+def data_from_text(text: str) -> tuple[RuleList, Ticket, List[Ticket]]:
     return data_from_lines(text.strip().split("\n"))
 
 
-def data_from_file(fn: str) -> Tuple[RuleList, Ticket, List[Ticket]]:
+def data_from_file(fn: str) -> tuple[RuleList, Ticket, List[Ticket]]:
     return data_from_lines(open(fn))
 
 
-def data_from_lines(lines: Iterable[str]) -> Tuple[RuleList, Ticket, List[Ticket]]:
+def data_from_lines(lines: Iterable[str]) -> tuple[RuleList, Ticket, List[Ticket]]:
     rule_lines, my_ticket_lines, nearby_ticket_lines = line_groups(lines)
 
     rules = RuleList.from_lines(rule_lines)

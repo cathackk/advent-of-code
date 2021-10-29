@@ -1,10 +1,9 @@
 from collections import Counter
 from typing import Iterable
-from typing import Tuple
 
 
 ord_a = ord('a')
-Room = Tuple[str, int, str]
+Room = tuple[str, int, str]
 
 
 def load_rooms(fn: str) -> Iterable[Room]:

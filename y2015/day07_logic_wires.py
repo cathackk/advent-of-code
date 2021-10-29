@@ -3,7 +3,6 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 
 class Command(Enum):
@@ -53,7 +52,7 @@ class Instruction:
         if self.arg2 is not None and not self.arg2.isnumeric():
             yield self.arg2
 
-    def evaluate(self, values: Dict[str, int]) -> Tuple[str, int]:
+    def evaluate(self, values: Dict[str, int]) -> tuple[str, int]:
         return self.target, self._eval_value(values)
 
     def _eval_value(self, values: Dict[str, int]) -> int:

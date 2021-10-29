@@ -9,7 +9,6 @@ from functools import partial
 from typing import Dict
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from utils import line_groups
 
@@ -241,7 +240,7 @@ def passports_from_lines(lines: Iterable[str]) -> Iterable[Passport]:
     newlines. Passports are separated by blank lines.
     """
 
-    def entry_from_text(text: str) -> Tuple[str, str]:
+    def entry_from_text(text: str) -> tuple[str, str]:
         k, v = text.split(':')
         return k, v
 
@@ -261,7 +260,7 @@ def validate_range(min_value: int, max_value: int, value: str) -> bool:
         return False
 
 
-def validate_height(ranges: Dict[str, Tuple[int, int]], value: str) -> bool:
+def validate_height(ranges: Dict[str, tuple[int, int]], value: str) -> bool:
     for unit, (min_value, max_value) in ranges.items():
         if value.endswith(unit):
             return validate_range(min_value, max_value, value.removesuffix(unit))

@@ -3,13 +3,12 @@ from itertools import count
 from typing import Dict
 from typing import Iterable
 from typing import Optional
-from typing import Tuple
 
 from rect import Rect
 from utils import single_value
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 Board = Dict[Pos, str]
 
 SPACE = '.'

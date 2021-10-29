@@ -1,5 +1,4 @@
 from typing import Callable
-from typing import Tuple
 
 from utils import maxk
 from utils import memoized
@@ -71,7 +70,7 @@ def max_square(
         serial: int,
         square_size: range = range(3, 4),
         grid_size: int = 300
-) -> Tuple[Tuple[int, int, int], int]:
+) -> tuple[tuple[int, int, int], int]:
     """
     >>> max_square(18)
     ((33, 45, 3), 29)
@@ -88,14 +87,14 @@ def max_square(
     ), key=lambda xys: square_sum(xys[0], xys[1], xys[2], power))
 
 
-def part_1(serial: int) -> Tuple[int, int]:
+def part_1(serial: int) -> tuple[int, int]:
     (x, y, s), total_power = max_square(serial)
     assert s == 3
     print(f"part 1: square at {(x, y)} with total power {total_power}")
     return x, y
 
 
-def part_2(serial: int) -> Tuple[int, int, int]:
+def part_2(serial: int) -> tuple[int, int, int]:
     (x, y, s), total_power = max_square(serial=serial, square_size=range(1, 30))
     print(f"part 2: square at {(x, y)} of size {s} with total power {total_power}")
     return x, y, s

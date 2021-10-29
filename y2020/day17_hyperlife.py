@@ -8,7 +8,6 @@ from collections import Counter
 from itertools import product
 from typing import Iterable
 from typing import Set
-from typing import Tuple
 
 from rect import HyperCuboid
 from utils import single_value
@@ -353,7 +352,7 @@ def life_rule(active: bool, active_neighbors_count: int) -> bool:
 
 
 # position with arbitrary number of dimensions
-Pos = Tuple[int, ...]
+Pos = tuple[int, ...]
 
 
 def simulate(state: Set[Pos], cycles: int, print_progress: bool = False):

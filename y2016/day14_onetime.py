@@ -1,7 +1,6 @@
 from itertools import count
 from typing import Generator
 from typing import Optional
-from typing import Tuple
 
 from md5 import rmd5
 from utils import ilog
@@ -9,7 +8,7 @@ from utils import last
 from utils import nextn
 
 
-def find_repeating(s: str, length: int) -> Optional[Tuple[int, str]]:
+def find_repeating(s: str, length: int) -> Optional[tuple[int, str]]:
     """
     >>> find_repeating('ahoooj', 3)
     (2, 'ooo')
@@ -27,7 +26,7 @@ def find_repeating(s: str, length: int) -> Optional[Tuple[int, str]]:
     ), None)
 
 
-def generate_keys(salt: str, repeats: int = 1) -> Generator[Tuple[int, str], None, None]:
+def generate_keys(salt: str, repeats: int = 1) -> Generator[tuple[int, str], None, None]:
     """
     >>> g = generate_keys('abc')
     >>> next(g)

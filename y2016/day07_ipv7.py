@@ -1,6 +1,5 @@
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 
 def find_abba(s: str) -> Iterable[str]:
@@ -55,7 +54,7 @@ def find_aba(s: str) -> Iterable[str]:
             yield s[k:k+3]
 
 
-def split_ipv7(ip: str) -> Tuple[str, ...]:
+def split_ipv7(ip: str) -> tuple[str, ...]:
     """
     >>> split_ipv7('abc[def]ghi')
     ('abc', 'def', 'ghi')

@@ -1,11 +1,10 @@
 from typing import Iterable
-from typing import Tuple
 
 from rect import Rect
 from utils import dgroupby
 from utils import parse_line
 
-Claim = Tuple[int, Rect]
+Claim = tuple[int, Rect]
 
 
 def load_claims(fn: str) -> Iterable[Claim]:

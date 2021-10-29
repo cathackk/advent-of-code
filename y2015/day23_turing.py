@@ -1,9 +1,8 @@
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 
-Command = Tuple[str, str, Optional[str]]
+Command = tuple[str, str, Optional[str]]
 Tape = List[Command]
 
 

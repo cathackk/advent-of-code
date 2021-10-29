@@ -2,12 +2,11 @@ import itertools
 import math
 from itertools import chain
 from typing import Iterable
-from typing import Tuple
 
 from utils import minmax
 from utils import product
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 class Rect:
@@ -129,7 +128,7 @@ class Rect:
             )
 
 
-HyperPos = Tuple[int, ...]
+HyperPos = tuple[int, ...]
 
 
 class HyperCuboid:
@@ -188,7 +187,7 @@ class HyperCuboid:
         return self.corner_max[dim] - self.corner_min[dim] + 1
 
     @property
-    def shape(self) -> Tuple[int, ...]:
+    def shape(self) -> tuple[int, ...]:
         return tuple(self.length(d) for d in self.range_dim)
 
     @property

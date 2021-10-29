@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import Tuple
 from typing import Union
 
 from heading import Heading
@@ -15,8 +14,8 @@ def turn(direction: str, heading: Heading):
         raise ValueError(direction)
 
 
-Instr = Tuple[str, int]
-Pos = Tuple[int, int]
+Instr = tuple[str, int]
+Pos = tuple[int, int]
 
 
 def parse_instrs(s: str) -> Iterable[Instr]:

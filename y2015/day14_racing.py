@@ -1,7 +1,6 @@
 from typing import Dict
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 
 class Reindeer:
@@ -70,13 +69,13 @@ def load_reindeers(fn: str) -> Iterable[Reindeer]:
         )
 
 
-def race(reindeers: List[Reindeer], seconds: int) -> Tuple[Reindeer, int]:
+def race(reindeers: List[Reindeer], seconds: int) -> tuple[Reindeer, int]:
     winning_reindeer = max(reindeers, key=lambda r: r.distance(seconds))
     winning_distance = winning_reindeer.distance(seconds)
     return winning_reindeer, winning_distance
 
 
-def points_race(reindeers: List[Reindeer], seconds: int) -> Tuple[Reindeer, int]:
+def points_race(reindeers: List[Reindeer], seconds: int) -> tuple[Reindeer, int]:
     points: Dict[Reindeer, int] = {r: 0 for r in reindeers}
     for tick in range(1, seconds+1):
         max_distance = max(r.distance(tick) for r in reindeers)

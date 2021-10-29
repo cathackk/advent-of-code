@@ -4,7 +4,6 @@ from typing import Generator
 from typing import Iterable
 from typing import List
 from typing import Optional
-from typing import Tuple
 from typing import Union
 
 
@@ -165,11 +164,11 @@ class Machine:
             out_count: int = None,
             init: Iterable[int] = (),
             restarting: bool = False
-    ) -> Callable[..., Tuple[int, ...]]:
+    ) -> Callable[..., tuple[int, ...]]:
         assert out_count is None or out_count > 0
 
         if restarting:
-            def func(*args: int) -> Tuple[int, ...]:
+            def func(*args: int) -> tuple[int, ...]:
                 io = self.run_io()
                 io.write(init)
                 io.write(args)
@@ -181,7 +180,7 @@ class Machine:
             io = self.run_io()
             io.write(init)
 
-            def func(*args: int) -> Tuple[int, ...]:
+            def func(*args: int) -> tuple[int, ...]:
                 io.write(args)
                 return tuple(io.read(max_count=out_count))
 
@@ -365,7 +364,7 @@ class MachineIO:
         self.co = coroutine
         self.last_signal, self._stop = self._send()
 
-    def _send(self, sent_value: int = None) -> Tuple[Optional[int], Optional[StopIteration]]:
+    def _send(self, sent_value: int = None) -> tuple[Optional[int], Optional[StopIteration]]:
         try:
             yielded = self.co.send(sent_value)
             return yielded, None

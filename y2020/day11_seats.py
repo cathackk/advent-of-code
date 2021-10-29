@@ -12,7 +12,6 @@ from typing import Dict
 from typing import Iterable
 from typing import Optional
 from typing import Set
-from typing import Tuple
 
 from rect import Rect
 
@@ -358,7 +357,7 @@ def part_2(seats_map: 'SeatsMap') -> int:
     return occupied_count
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 class SeatsMap:
@@ -366,7 +365,7 @@ class SeatsMap:
     EMPTY_SEAT = 'L'
     OCCUPIED_SEAT = '#'
 
-    def __init__(self, tiles: Iterable[Tuple[Pos, str]]):
+    def __init__(self, tiles: Iterable[tuple[Pos, str]]):
         self.tiles = {
             pos: ch
             for pos, ch in tiles
@@ -425,7 +424,7 @@ class SeatsMap:
     def visibles(self) -> Dict[Pos, Set[Pos]]:
         """ Precompute visible seat pairs. """
 
-        def visible_from(pos0: Pos, vector: Tuple[int, int]) -> Optional[Pos]:
+        def visible_from(pos0: Pos, vector: tuple[int, int]) -> Optional[Pos]:
             dx, dy = vector
             x0, y0 = pos0
             x, y = x0 + dx, y0 + dy

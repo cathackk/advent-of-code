@@ -1,10 +1,9 @@
 from typing import Dict
 from typing import Iterable
-from typing import Tuple
 
 Data = Dict[str, int]
-Aunt = Tuple[int, Data]
-Knowns = Dict[str, Tuple[str, int]]
+Aunt = tuple[int, Data]
+Knowns = Dict[str, tuple[str, int]]
 
 def load_aunts(fn: str) -> Iterable[Aunt]:
     for line in open(fn):

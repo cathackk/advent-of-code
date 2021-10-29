@@ -2,7 +2,6 @@ import itertools
 from typing import Generator
 from typing import Iterable
 from typing import Optional
-from typing import Tuple
 
 from utils import exhaust
 from utils import last
@@ -49,7 +48,7 @@ class Body:
         return Body(Point3(0, 0, self.pos.z), Vector3(0, 0, self.vel.z))
 
 
-SimState = Tuple[Tuple[Point3, Vector3], ...]
+SimState = tuple[tuple[Point3, Vector3], ...]
 
 
 def simulate(

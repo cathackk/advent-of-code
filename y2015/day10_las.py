@@ -1,8 +1,7 @@
 from typing import Iterable
-from typing import Tuple
 
 
-def group(seq: Iterable[int]) -> Iterable[Tuple[int, int]]:
+def group(seq: Iterable[int]) -> Iterable[tuple[int, int]]:
     value, count = None, 0
     for n in seq:
         if value is None:

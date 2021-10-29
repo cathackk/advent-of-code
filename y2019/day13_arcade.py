@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import Tuple
 
 from utils import sgn
 from xy import Point
@@ -20,7 +19,7 @@ SCREEN_WIDTH = 40
 SCREEN_HEIGHT = 24
 
 
-def draw_screen(contents: Iterable[Tuple[Point, int]]) -> None:
+def draw_screen(contents: Iterable[tuple[Point, int]]) -> None:
     screen = dict(contents)
     if not screen:
         print("no screen signal")

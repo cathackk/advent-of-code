@@ -13,7 +13,6 @@ from typing import List
 from typing import Optional
 from typing import Set
 from typing import Sized
-from typing import Tuple
 from typing import TypeVar
 
 
@@ -191,7 +190,7 @@ def dgroupby_set(
     return d
 
 
-def dgroupby_pairs(items: Iterable[Tuple[K, V]]) -> Dict[K, List[V]]:
+def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> Dict[K, List[V]]:
     d: Dict[K, List[V]] = dict()
 
     for item_key, item_value in items:
@@ -202,7 +201,7 @@ def dgroupby_pairs(items: Iterable[Tuple[K, V]]) -> Dict[K, List[V]]:
     return d
 
 
-def dgroupby_pairs_set(items: Iterable[Tuple[K, V]]) -> Dict[K, Set[V]]:
+def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> Dict[K, Set[V]]:
     d: Dict[K, Set[V]] = dict()
 
     for item_key, item_value in items:
@@ -233,7 +232,7 @@ def timeit(func):
     return wrapper
 
 
-def zip1(items: Iterable[T], wrap: bool = False) -> Iterable[Tuple[T, T]]:
+def zip1(items: Iterable[T], wrap: bool = False) -> Iterable[tuple[T, T]]:
     """
     >>> list(zip1([1,2,3,4]))
     [(1, 2), (2, 3), (3, 4)]
@@ -262,7 +261,7 @@ def diffs(items: Iterable[T]) -> Iterable[T]:
     return (b - a for a, b in zip1(items))
 
 
-def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[Tuple[T, ...]]:
+def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[tuple[T, ...]]:
     """
     >>> list(slidingw([1,2,3,4], 2))
     [(1, 2), (2, 3), (3, 4)]
@@ -302,7 +301,7 @@ def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[Tupl
             del buffer[0]
 
 
-def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> Tuple[T, T]:
+def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> tuple[T, T]:
     """
     >>> minmax([1,4,8,10,4,-4,15,-2])
     (-4, 15)
@@ -337,7 +336,7 @@ def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> Tuple[T, T]:
         raise ValueError("minmax() arg is an empty sequence")
 
 
-def maxk(values: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
+def maxk(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
     """
     >>> maxk(["dog", "cat", "monkey"], key=len)
     ('monkey', 6)
@@ -364,7 +363,7 @@ def maxk(values: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
         raise ValueError("maxk() arg is an empty sequence")
 
 
-def mink(values: Iterable[T], key: Callable[[T], V]) -> Tuple[T, V]:
+def mink(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
     """
     >>> mink(["dog", "zebra", "monkey"], key=len)
     ('dog', 3)
@@ -425,7 +424,7 @@ def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> List[T]:
         raise ValueError("min_all() arg is an empty sequence")
 
 
-def picking(items: Iterable[T]) -> Iterable[Tuple[T, List[T]]]:
+def picking(items: Iterable[T]) -> Iterable[tuple[T, List[T]]]:
     """
     >>> list(picking('ABC'))
     [('A', ['B', 'C']), ('B', ['A', 'C']), ('C', ['A', 'B'])]
@@ -441,7 +440,7 @@ def picking(items: Iterable[T]) -> Iterable[Tuple[T, List[T]]]:
         yield items[k], items[:k]+items[k+1:]
 
 
-def following(items: Iterable[T]) -> Iterable[Tuple[T, List[T]]]:
+def following(items: Iterable[T]) -> Iterable[tuple[T, List[T]]]:
     """
     >>> list(following('ABC'))
     [('A', ['B', 'C']), ('B', ['C']), ('C', [])]
@@ -474,7 +473,7 @@ def subsequences(items: T) -> Iterable[T]:
         yield items
 
 
-def powerset(items: Iterable[T]) -> Iterable[Tuple[T, ...]]:
+def powerset(items: Iterable[T]) -> Iterable[tuple[T, ...]]:
     """
     >>> list(powerset([1, 2, 3]))
     [(), (1,), (2,), (3,), (1, 2), (1, 3), (2, 3), (1, 2, 3)]
@@ -552,7 +551,7 @@ def create_logger(debug: bool = False) -> Callable[[Any], None]:
         return nolog
 
 
-def parse_line(line: str, pattern: str) -> Tuple[str, ...]:
+def parse_line(line: str, pattern: str) -> tuple[str, ...]:
     r"""
     >>> parse_line("Dogs have four paws.", "Dogs have $ paws.")
     ('four',)
@@ -568,7 +567,7 @@ def parse_line(line: str, pattern: str) -> Tuple[str, ...]:
         return tuple()
 
 
-def _parse_line_fixes(line: str, *fixes: str) -> Tuple[str, ...]:
+def _parse_line_fixes(line: str, *fixes: str) -> tuple[str, ...]:
     assert len(fixes) >= 2
 
     results = []
@@ -613,7 +612,7 @@ def memoized(func):
 
 
 # reading order -> y matters more than x
-def ro(pos: Tuple[int, int]) -> Tuple[int, int]:
+def ro(pos: tuple[int, int]) -> tuple[int, int]:
     x, y = pos
     return y, x
 

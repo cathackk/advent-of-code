@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/14
 from typing import Dict
 from typing import Iterable
 from typing import Optional
-from typing import Tuple
 from typing import Union
 
 from utils import parse_line
@@ -240,8 +239,8 @@ class BitMask:
 
 
 Instruction = Union[
-    Tuple[str, BitMask],
-    Tuple[str, int, int]
+    tuple[str, BitMask],
+    tuple[str, int, int]
 ]
 
 

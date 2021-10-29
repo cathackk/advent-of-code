@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/25
 """
 
 from typing import Iterable
-from typing import Tuple
 from utils import eprint
 
 
@@ -114,11 +113,11 @@ def crack_loop_size(
         value = (value * subject_number) % modulo
 
 
-def public_keys_from_file(fn: str) -> Tuple[int, int]:
+def public_keys_from_file(fn: str) -> tuple[int, int]:
     return public_keys_from_lines(open(fn))
 
 
-def public_keys_from_lines(lines: Iterable[str]) -> Tuple[int, int]:
+def public_keys_from_lines(lines: Iterable[str]) -> tuple[int, int]:
     card_key_line, door_key_line = tuple(lines)
     return int(card_key_line), int(door_key_line)
 

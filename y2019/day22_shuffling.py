@@ -1,9 +1,8 @@
 from typing import Iterable
-from typing import Tuple
 
 from utils import modular_inverse
 
-Instr = Tuple[str, int]
+Instr = tuple[str, int]
 
 
 def gsm(a, n, m):

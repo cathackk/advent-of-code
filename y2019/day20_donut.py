@@ -3,13 +3,12 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 from utils import timeit
 
-Pos = Tuple[int, int]
-PosD = Tuple[Pos, int]
-Portal = Tuple[str, Pos, Pos]
+Pos = tuple[int, int]
+PosD = tuple[Pos, int]
+Portal = tuple[str, Pos, Pos]
 
 START = '<'
 END = '>'

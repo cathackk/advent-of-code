@@ -2,12 +2,11 @@ from collections import defaultdict
 from typing import Dict
 from typing import Iterable
 from typing import NamedTuple
-from typing import Tuple
 
 from utils import strip_line
 
 
-RuleKey = Tuple[str, int]
+RuleKey = tuple[str, int]
 
 
 class Rule(NamedTuple):
@@ -22,14 +21,14 @@ class Rule(NamedTuple):
         return self.current_state, self.current_value
 
     @property
-    def value(self) -> Tuple[str, int, int]:
+    def value(self) -> tuple[str, int, int]:
         return self.next_state, self.next_value, self.jump
 
     def __str__(self):
         return f"{self.key} -> {self.value}"
 
 
-def load(fn: str) -> Tuple[str, int, Dict[RuleKey, Rule]]:
+def load(fn: str) -> tuple[str, int, Dict[RuleKey, Rule]]:
     jd = {"left": -1, "right": +1}
 
     f = open(fn)

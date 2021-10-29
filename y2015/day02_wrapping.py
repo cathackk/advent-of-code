@@ -1,8 +1,7 @@
 from typing import Iterable
-from typing import Tuple
 
 
-def load_dimensions(fn: str = "data/02-input.txt") -> Iterable[Tuple[int, int, int]]:
+def load_dimensions(fn: str = "data/02-input.txt") -> Iterable[tuple[int, int, int]]:
     with open(fn) as f:
         for line in f:
             yield tuple(int(v) for v in line.strip().split('x'))

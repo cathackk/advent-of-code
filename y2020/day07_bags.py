@@ -9,7 +9,6 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Set
-from typing import Tuple
 
 from utils import dgroupby_pairs_set
 from utils import parse_line
@@ -162,8 +161,8 @@ def part_2(rule_set: 'RuleSet', my_bag_color: str = 'shiny gold') -> int:
     return result
 
 
-CountColor = Tuple[int, str]
-Rule = Tuple[str, List[CountColor]]
+CountColor = tuple[int, str]
+Rule = tuple[str, List[CountColor]]
 
 
 class RuleSet:
@@ -226,7 +225,7 @@ class RuleSet:
         return id(self)
 
 
-def parse_count_color(text: str) -> Tuple[int, str]:
+def parse_count_color(text: str) -> tuple[int, str]:
     """
     >>> parse_count_color("1 bright white bag")
     (1, 'bright white')

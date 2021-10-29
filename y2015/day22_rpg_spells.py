@@ -7,7 +7,6 @@ from typing import List
 
 from typing import NamedTuple
 from typing import Optional
-from typing import Tuple
 
 from utils import ilog
 
@@ -295,7 +294,7 @@ def interactive(battle: Battle):
         battle.turn(spell)
 
 
-def victory_sequence(battle: Battle) -> Tuple[int, List[Spell]]:
+def victory_sequence(battle: Battle) -> tuple[int, List[Spell]]:
     for spell in battle.possible_spells():
         battle_c = copy(battle)
         try:

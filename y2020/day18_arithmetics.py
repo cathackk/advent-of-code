@@ -8,7 +8,6 @@ from enum import Enum
 from typing import Iterable
 from typing import Iterator
 from typing import List
-from typing import Tuple
 from typing import Union
 
 
@@ -166,7 +165,7 @@ class Operator(Enum):
 
 
 Value = Union[int, 'Expr']
-ExprPart = Tuple[Operator, Value]
+ExprPart = tuple[Operator, Value]
 
 
 class Expr:

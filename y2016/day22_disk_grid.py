@@ -1,9 +1,8 @@
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 class Disk:

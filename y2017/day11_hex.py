@@ -27,11 +27,10 @@
 #
 from functools import reduce
 from typing import Iterable
-from typing import Tuple
 
 from utils import maxk
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 def step(pos: Pos, direction: str) -> Pos:

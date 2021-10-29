@@ -1,8 +1,7 @@
 from typing import Iterable
-from typing import Tuple
 
 
-Triangle = Tuple[int, int, int]
+Triangle = tuple[int, int, int]
 
 
 def load_triangles(fn: str) -> Iterable[Triangle]:

@@ -1,11 +1,10 @@
 from typing import Any
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 
 Dancers = str
-Move = Tuple[str, Any, Any]
+Move = tuple[str, Any, Any]
 Dance = Iterable[Move]
 Permutation = List[int]
 

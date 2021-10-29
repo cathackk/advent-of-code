@@ -8,7 +8,6 @@ from typing import Collection
 from typing import Iterator
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 
 def part_1(numbers: List[int], preamble_length: int = 25) -> int:
@@ -149,7 +148,7 @@ def part_2(target: int, numbers: List[int]) -> int:
     return result
 
 
-def validate_xmas(nums: List[int], preamble_length: int = 25) -> Iterator[Tuple[int, bool]]:
+def validate_xmas(nums: List[int], preamble_length: int = 25) -> Iterator[tuple[int, bool]]:
     """
     Yields every number from `nums` after first `preamble_length` values, with its validity info:
     the number is considered valid if two distinct numbers among previous `preamble_length` values
@@ -172,7 +171,7 @@ def validate_xmas(nums: List[int], preamble_length: int = 25) -> Iterator[Tuple[
         pool.add(num)
 
 
-def find_sum2(target_sum: int, numbers: Collection[int]) -> Optional[Tuple[int, int]]:
+def find_sum2(target_sum: int, numbers: Collection[int]) -> Optional[tuple[int, int]]:
     """ Find two values among `numbers` that add up to `target_sum`. """
 
     for a in numbers:

@@ -6,7 +6,6 @@ from typing import Iterable
 from typing import List
 from typing import NamedTuple
 from typing import Set
-from typing import Tuple
 
 from heading import Heading
 from rect import Rect
@@ -44,7 +43,7 @@ class Turn(Enum):
             raise KeyError(self)
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 class Cart(NamedTuple):
@@ -70,7 +69,7 @@ class Map:
         assert not collisions
 
     @staticmethod
-    def _place_carts(carts: Iterable[Cart]) -> Tuple[Dict[Pos, Cart], Set[Pos]]:
+    def _place_carts(carts: Iterable[Cart]) -> tuple[Dict[Pos, Cart], Set[Pos]]:
         by_pos: Dict[Pos, Cart] = dict()
         collisions: Set[Pos] = set()
 
@@ -88,7 +87,7 @@ class Map:
 
         return by_pos, collisions
 
-    def run(self, min_carts: int = 2,) -> Generator[Tuple[int, Pos], None, int]:
+    def run(self, min_carts: int = 2,) -> Generator[tuple[int, Pos], None, int]:
         for tick in count(1):
             if len(self.carts) < min_carts:
                 return tick

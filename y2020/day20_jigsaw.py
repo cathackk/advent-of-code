@@ -11,17 +11,15 @@ from typing import Iterable
 from typing import List
 from typing import Optional
 from typing import Set
-from typing import Tuple
 
 from rect import Rect
-from utils import eprint
 from utils import parse_line
 from utils import product
 from utils import single_value
 from utils import string_builder
 
 
-def part_1(tiles: List['Tile']) -> Tuple[int, 'Image']:
+def part_1(tiles: List['Tile']) -> tuple[int, 'Image']:
     r"""
     After decoding the satellite messages, you discover that the data actually contains many small
     images created by the satellite's *camera array*. The camera array consists of many cameras;
@@ -544,7 +542,7 @@ class Image:
                 and (left not in placed or tile.border_left == placed[left].border_right)
 
         # four adjacent positions
-        def neighbors(pos: Pos) -> Tuple[Pos, Pos, Pos, Pos]:
+        def neighbors(pos: Pos) -> tuple[Pos, Pos, Pos, Pos]:
             x, y = pos
             return (
                 (x, y - 1),  # top
@@ -611,7 +609,7 @@ class Image:
         )
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 class Pattern:

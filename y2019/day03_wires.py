@@ -1,14 +1,13 @@
 from typing import Iterable
 from typing import List
 from typing import Set
-from typing import Tuple
 
 from heading import Heading
 from utils import mink
 
-Pos = Tuple[int, int]
-PosTime = Tuple[Pos, int]
-Move = Tuple[Heading, int]
+Pos = tuple[int, int]
+PosTime = tuple[Pos, int]
+Move = tuple[Heading, int]
 Wire = List[Move]
 
 

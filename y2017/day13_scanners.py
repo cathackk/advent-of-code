@@ -1,9 +1,8 @@
 from itertools import count
 from typing import Iterable
-from typing import Tuple
 
 
-Layer = Tuple[int, int]
+Layer = tuple[int, int]
 
 
 def load_layers(fn: str) -> Iterable[Layer]:

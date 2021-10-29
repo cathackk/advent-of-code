@@ -8,7 +8,6 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Set
-from typing import Tuple
 
 from utils import parse_line
 from utils import single_value
@@ -144,7 +143,7 @@ class Food:
         return cls(ingredients.split(" "), allergens.split(", "))
 
 
-def match_allergens(foods: List[Food]) -> Iterable[Tuple[Ingredient, Allergen]]:
+def match_allergens(foods: List[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
     # initialize unmatched allergens and their possible ingredients
     unmatched_a2is: Dict[Allergen, Set[Ingredient]] = dict()
     for food in foods:

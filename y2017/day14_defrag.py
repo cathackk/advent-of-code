@@ -1,13 +1,12 @@
 from typing import Iterable
 from typing import List
 from typing import Set
-from typing import Tuple
 
 from utils import count_ones
 from y2017.day10_knots import knot_hash
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 def disk_rows(seed: str, rows_count: int = 128) -> Iterable[bytes]:

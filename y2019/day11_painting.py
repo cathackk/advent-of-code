@@ -1,7 +1,6 @@
 from collections import defaultdict
 from enum import Enum
 from typing import Dict
-from typing import Tuple
 
 from utils import minmax
 from xy import Point
@@ -70,7 +69,7 @@ class Robot:
         if self.debug:
             print(message)
 
-    def evaluate_tile(self, color_seen: Color) -> Tuple[Color, Direction]:
+    def evaluate_tile(self, color_seen: Color) -> tuple[Color, Direction]:
         color_to_paint, direction_to_turn = self.brain(color_seen.value)
         return Color(color_to_paint), Direction(direction_to_turn)
 

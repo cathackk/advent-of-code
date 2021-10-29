@@ -1,12 +1,10 @@
 from typing import Generator
-from typing import Iterable
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 from utils import exhaust
 
-Command = Tuple[str, str, Optional[str]]
+Command = tuple[str, str, Optional[str]]
 Tape = List[Command]
 
 
@@ -82,7 +80,7 @@ class Machine:
 
         return self
 
-    def eval(self, tape: Tape, head: int) -> Tuple[Optional[int], Optional[int]]:
+    def eval(self, tape: Tape, head: int) -> tuple[Optional[int], Optional[int]]:
         instr, arg1, arg2 = tape[head]
 
         if instr == 'cpy':

@@ -2,7 +2,6 @@ from typing import Any
 from typing import Iterable
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 
 class Link:
@@ -14,7 +13,7 @@ class Link:
         self.next_link = next_link
 
     @classmethod
-    def build_chain(cls, items: Iterable[Any]) -> Tuple['Link', 'Link', int]:
+    def build_chain(cls, items: Iterable[Any]) -> tuple['Link', 'Link', int]:
         items = iter(items)
 
         try:

@@ -1,7 +1,6 @@
 from itertools import combinations
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 Rows = Iterable[List[int]]
 
@@ -18,7 +17,7 @@ def checksum(rows: Rows) -> int:
     )
 
 
-def divisibles(rows: Rows) -> Iterable[Tuple[int, int]]:
+def divisibles(rows: Rows) -> Iterable[tuple[int, int]]:
     return (
         next(
             (a, b)

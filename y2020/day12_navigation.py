@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/12
 """
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from heading import Heading
 
@@ -166,7 +165,7 @@ def part_2(instructions: List['Instruction']) -> int:
     return result
 
 
-Instruction = Tuple[str, int]
+Instruction = tuple[str, int]
 
 
 def instructions_from_text(text: str) -> List[Instruction]:
@@ -185,7 +184,7 @@ def instructions_from_lines(lines: Iterable[str]) -> Iterable[Instruction]:
     )
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 class Ship:

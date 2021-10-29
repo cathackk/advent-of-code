@@ -3,13 +3,12 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Set
-from typing import Tuple
 
 from utils import mink
 from utils import slidingw
 
-Pos = Tuple[int, int]
-Target = Tuple[Pos, str]
+Pos = tuple[int, int]
+Target = tuple[Pos, str]
 
 
 class Maze:
@@ -40,14 +39,14 @@ class Maze:
             for path in permutations(other_codes)
         )
 
-    def shortest_path(self, start_code: str = '0') -> Tuple[str, int]:
+    def shortest_path(self, start_code: str = '0') -> tuple[str, int]:
         distances = self.calculate_distances()
         return mink(
             self.paths(start_code),
             key=lambda path: sum(distances[(a, b)] for a, b in slidingw(path, 2))
         )
 
-    def shortest_closed_path(self, start_code: str = '0') -> Tuple[str, int]:
+    def shortest_closed_path(self, start_code: str = '0') -> tuple[str, int]:
         distances = self.calculate_distances()
         return mink(
             self.closed_paths(start_code),
@@ -62,14 +61,14 @@ class Maze:
             if (x+dx, y+dy) in self.floors
         )
 
-    def calculate_distances(self) -> Dict[Tuple[str, str], int]:
+    def calculate_distances(self) -> Dict[tuple[str, str], int]:
         return dict(
             ccd
             for t1 in self.targets.items()
             for ccd in self._calculate_distances_from(t1)
         )
 
-    def _calculate_distances_from(self, target: Target) -> Iterable[Tuple[Tuple[str, str], int]]:
+    def _calculate_distances_from(self, target: Target) -> Iterable[tuple[tuple[str, str], int]]:
         pos1, code1 = target
 
         visited: Set[Pos] = {pos1}

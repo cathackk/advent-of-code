@@ -4,13 +4,12 @@ from typing import Dict
 from typing import Generator
 from typing import Iterable
 from typing import Set
-from typing import Tuple
 
 from utils import dgroupby_set
 from utils import exhaust
 from utils import parse_line
 
-Dependency = Tuple[str, str]
+Dependency = tuple[str, str]
 
 
 def load_dependencies(fn: str) -> Iterable[Dependency]:

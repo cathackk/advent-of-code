@@ -1,7 +1,6 @@
 from collections import Counter
 from itertools import count
 from typing import Iterable
-from typing import Tuple
 
 from utils import create_logger
 from utils import min_all
@@ -53,7 +52,7 @@ def md(pos: Point3) -> int:
     return sum(abs(d) for d in pos)
 
 
-def pos_closest_to_origin(particle: Particle) -> Tuple[Point3, int]:
+def pos_closest_to_origin(particle: Particle) -> tuple[Point3, int]:
     pos = particle.pos
     vel = particle.vel
     min_pos = pos

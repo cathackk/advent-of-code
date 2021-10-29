@@ -1,11 +1,10 @@
 from typing import Generator
 from typing import Iterable
-from typing import Tuple
 
 from utils import until_repeat
 
 
-def realloc(nums: Iterable[int]) -> Generator[Tuple[int, ...], None, None]:
+def realloc(nums: Iterable[int]) -> Generator[tuple[int, ...], None, None]:
     nums = list(nums)
     assert len(nums) > 0
 

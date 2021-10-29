@@ -1,8 +1,7 @@
 from typing import Iterable
-from typing import Tuple
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 DELTAS = {
     '^': (0, -1),

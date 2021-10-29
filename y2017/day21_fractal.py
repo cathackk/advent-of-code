@@ -4,12 +4,11 @@ from typing import Callable
 from typing import Dict
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from utils import create_logger
 from utils import single_value
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 Transformation = Callable[[int, int], Pos]
 
 
@@ -90,7 +89,7 @@ class Grid:
     def normalized(self) -> 'Grid':
         return min(self.variants(), key=lambda g: int(g))
 
-    def split(self) -> Iterable[Tuple[Pos, 'Grid']]:
+    def split(self) -> Iterable[tuple[Pos, 'Grid']]:
         if self.size % 2 == 0:
             return self.subgrids(2)
         elif self.size % 3 == 0:
@@ -98,7 +97,7 @@ class Grid:
         else:
             raise ValueError(f"grid size {self.size} not divisible by 2 or 3")
 
-    def subgrids(self, subsize: int) -> Iterable[Tuple[Pos, 'Grid']]:
+    def subgrids(self, subsize: int) -> Iterable[tuple[Pos, 'Grid']]:
         assert self.size % subsize == 0
 
         if self.size == subsize:
@@ -118,7 +117,7 @@ class Grid:
                 yield (cx, cy), Grid(subsize, subpixels[(cx, cy)])
 
     @classmethod
-    def join(cls, subgrids: Iterable[Tuple[Pos, 'Grid']]) -> 'Grid':
+    def join(cls, subgrids: Iterable[tuple[Pos, 'Grid']]) -> 'Grid':
         subgrids = dict(subgrids)
 
         sub_size = single_value(set(sg.size for sg in subgrids.values()))
@@ -207,7 +206,7 @@ class RuleBook:
     def expand(self, grid: Grid) -> Grid:
         return grid.join(self._expanded_subgrids(grid))
 
-    def _expanded_subgrids(self, grid: Grid) -> Iterable[Tuple[Pos, Grid]]:
+    def _expanded_subgrids(self, grid: Grid) -> Iterable[tuple[Pos, Grid]]:
         for (cx, cy), subgrid in grid.split():
             matching_rule = self.matching_rule(subgrid)
             expanded_subgrid = matching_rule.grid_to
@@ -239,7 +238,7 @@ def count_pixels(grid: Grid, rulebook: RuleBook, steps: int, debug: bool = False
     # code of 3x3 grid -> 9 subresult codes (nine 3x3 subresults after three-steps expansion)
     expand_cache: Dict[int, List[int]] = dict()
     # (code, steps) -> pixels_count
-    pixels_count_cache: Dict[Tuple[int, int], int] = {(int(grid), 0): len(grid.pixels)}
+    pixels_count_cache: Dict[tuple[int, int], int] = {(int(grid), 0): len(grid.pixels)}
     log(f">>> pxl: {int(grid)} -> {len(grid.pixels)}")
 
     def _expand_to_nine_subgrids(grid3: Grid) -> List[Grid]:

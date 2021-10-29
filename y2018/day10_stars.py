@@ -1,6 +1,5 @@
 from itertools import count
 from typing import Iterable
-from typing import Tuple
 
 from rect import Rect
 from utils import parse_line
@@ -8,7 +7,7 @@ from xy import Point
 from xy import Vector
 
 
-Star = Tuple[Point, Vector]
+Star = tuple[Point, Vector]
 
 
 def load_stars(fn: str) -> Iterable[Star]:

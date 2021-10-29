@@ -5,17 +5,16 @@ from typing import Iterable
 from typing import List
 from typing import Optional
 from typing import Set
-from typing import Tuple
 
 from utils import timeit
 
-Pos = Tuple[int, int]
-Tile = Tuple[Pos, str]
-Solution = Tuple[int, List[str]]
-SolutionCache = Dict[Tuple[str, str], Solution]
-Path = Tuple[Tuple[str, str], int, List[str]]
-PathsCache = Dict[str, Dict[str, Tuple[int, Set[str]]]]
-Layer = List[Tuple[Pos, List[str]]]
+Pos = tuple[int, int]
+Tile = tuple[Pos, str]
+Solution = tuple[int, List[str]]
+SolutionCache = Dict[tuple[str, str], Solution]
+Path = tuple[tuple[str, str], int, List[str]]
+PathsCache = Dict[str, Dict[str, tuple[int, Set[str]]]]
+Layer = List[tuple[Pos, List[str]]]
 
 SPACE = '.'
 WALL = '#'
@@ -106,7 +105,7 @@ class Maze:
             cache=dict()
         )
 
-    def split_into_four(self) -> Tuple['Maze', 'Maze', 'Maze', 'Maze']:
+    def split_into_four(self) -> tuple['Maze', 'Maze', 'Maze', 'Maze']:
         cx, cy = self.pos
         tiles = dict(self.tiles)
         assert all(

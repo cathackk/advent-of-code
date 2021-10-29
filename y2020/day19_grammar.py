@@ -11,7 +11,6 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Optional
-from typing import Tuple
 
 from utils import line_groups
 from utils import parse_line
@@ -567,15 +566,15 @@ def rules_from_lines(lines: Iterable[str]) -> Dict[int, Rule]:
     return rules
 
 
-def input_from_file(fn: str) -> Tuple[Dict[int, Rule], List[str]]:
+def input_from_file(fn: str) -> tuple[Dict[int, Rule], List[str]]:
     return input_from_lines(open(fn))
 
 
-def input_from_text(text: str) -> Tuple[Dict[int, Rule], List[str]]:
+def input_from_text(text: str) -> tuple[Dict[int, Rule], List[str]]:
     return input_from_lines(text.strip().split("\n"))
 
 
-def input_from_lines(lines: Iterable[str]) -> Tuple[Dict[int, Rule], List[str]]:
+def input_from_lines(lines: Iterable[str]) -> tuple[Dict[int, Rule], List[str]]:
     rule_lines, messages = line_groups(lines)
     rules = rules_from_lines(rule_lines)
     return rules, messages

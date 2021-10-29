@@ -1,6 +1,5 @@
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from utils import following
 from utils import ilog
@@ -36,7 +35,7 @@ def first_container(weights: List[int], containers_count: int) -> Iterable[List[
             yield container1
 
 
-def best_ps_balance(weights: List[int], containers_count: int) -> Tuple[List[int], int]:
+def best_ps_balance(weights: List[int], containers_count: int) -> tuple[List[int], int]:
     weights = sorted(weights, reverse=True)
     ps, (l, qe) = mink(
         ilog(first_container(weights, containers_count), every=1000),

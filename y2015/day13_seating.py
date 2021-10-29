@@ -1,11 +1,10 @@
 from itertools import permutations
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from utils import zip1
 
-Rule = Tuple[str, str, int]
+Rule = tuple[str, str, int]
 
 
 def load_rules(fn: str) -> Iterable[Rule]:
@@ -29,7 +28,7 @@ def load_rules(fn: str) -> Iterable[Rule]:
         yield name1, name2, value
 
 
-def find_best_seating(rules: List[Rule]) -> Tuple[List[str], int]:
+def find_best_seating(rules: List[Rule]) -> tuple[List[str], int]:
     people = sorted(set(person for rule in rules for person in rule[:2]))
     table = {(p1, p2): h for p1, p2, h in rules}
 

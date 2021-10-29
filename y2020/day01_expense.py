@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/1
 from itertools import combinations
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from utils import single_value
 
@@ -84,7 +83,7 @@ def part_2(numbers: List[int]) -> int:
     return result
 
 
-def find_summation(numbers: List[int], *, total: int, count: int) -> Tuple[int, ...]:
+def find_summation(numbers: List[int], *, total: int, count: int) -> tuple[int, ...]:
     return single_value(
         comb
         for comb in combinations(numbers, count)

@@ -5,11 +5,10 @@ from typing import Iterable
 from typing import List
 from typing import Optional
 from typing import Set
-from typing import Tuple
 
 from utils import ro
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 Path = List[Pos]
 
 

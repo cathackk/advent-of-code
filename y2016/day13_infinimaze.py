@@ -1,10 +1,9 @@
 from itertools import count
 from typing import Iterable
 from typing import Set
-from typing import Tuple
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 def is_wall(seed: int, pos: Pos):

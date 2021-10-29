@@ -9,12 +9,11 @@ from enum import Enum
 from functools import cached_property
 from typing import Iterable
 from typing import List
-from typing import Tuple
 
 from rect import Rect
 
 
-def part_1(walks: Iterable['Walk']) -> Tuple[int, 'HexGrid']:
+def part_1(walks: Iterable['Walk']) -> tuple[int, 'HexGrid']:
     r"""
     Your raft makes it to the tropical island; it turns out that the small crab was an excellent
     navigator. You make your way to the resort. As you enter the lobby, you discover a small
@@ -130,7 +129,7 @@ def part_1(walks: Iterable['Walk']) -> Tuple[int, 'HexGrid']:
     return result, hex_grid
 
 
-def part_2(hex_grid: 'HexGrid', days: int = 100) -> Tuple[int, 'HexGrid']:
+def part_2(hex_grid: 'HexGrid', days: int = 100) -> tuple[int, 'HexGrid']:
     r"""
     The tile floor in the lobby is meant to be a living art exhibit. Every day, the tiles are all
     flipped according to the following rules:
@@ -250,7 +249,7 @@ class Step(Enum):
             head += len(step.name)
 
 
-Pos = Tuple[int, int]
+Pos = tuple[int, int]
 
 
 class Walk:

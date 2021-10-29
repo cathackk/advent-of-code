@@ -2,10 +2,9 @@ from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import Set
-from typing import Tuple
 
 
-Link = Tuple[int, List[int]]
+Link = tuple[int, List[int]]
 Group = Set[int]
 
 

@@ -1,6 +1,5 @@
 from typing import Iterable
 from typing import Optional
-from typing import Tuple
 
 
 def decompress(s: str, recursive: bool = False) -> str:
@@ -47,7 +46,7 @@ def _decompress_parts(s: str) -> Iterable[str]:
             return
 
 
-def _find_group(s: str, pos: int = 0) -> Optional[Tuple[int, int, int, int]]:
+def _find_group(s: str, pos: int = 0) -> Optional[tuple[int, int, int, int]]:
     """
     >>> _find_group('ADVENT') is None
     True

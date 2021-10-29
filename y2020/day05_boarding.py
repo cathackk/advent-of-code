@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/5
 """
 
 from typing import Iterable
-from typing import Tuple
 
 from utils import maxk
 from utils import single_value
@@ -126,7 +125,7 @@ def column_number(column_code: str) -> int:
     return int(column_code.replace('L', '0').replace('R', '1'), 2)
 
 
-def seat_coordinates(seat_code: str) -> Tuple[int, int]:
+def seat_coordinates(seat_code: str) -> tuple[int, int]:
     assert len(seat_code) == 10
     return row_number(seat_code[:7]), column_number(seat_code[7:])
 
