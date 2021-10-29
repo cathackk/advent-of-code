@@ -4,12 +4,11 @@ Day 12: Rain Risk
 https://adventofcode.com/2020/day/12
 """
 from typing import Iterable
-from typing import List
 
 from heading import Heading
 
 
-def part_1(instructions: List['Instruction']) -> int:
+def part_1(instructions: list['Instruction']) -> int:
     """
     The navigation instructions (your puzzle input) consists of a sequence of single-character
     actions paired with integer input values. After staring at them for a few minutes, you work out
@@ -95,7 +94,7 @@ def part_1(instructions: List['Instruction']) -> int:
     return result
 
 
-def part_2(instructions: List['Instruction']) -> int:
+def part_2(instructions: list['Instruction']) -> int:
     """
     Before you can give the destination to the captain, you realize that the actual action meanings
     were printed on the back of the instructions the whole time.
@@ -168,11 +167,11 @@ def part_2(instructions: List['Instruction']) -> int:
 Instruction = tuple[str, int]
 
 
-def instructions_from_text(text: str) -> List[Instruction]:
+def instructions_from_text(text: str) -> list[Instruction]:
     return list(instructions_from_lines(text.strip().split("\n")))
 
 
-def instructions_from_file(fn: str) -> List[Instruction]:
+def instructions_from_file(fn: str) -> list[Instruction]:
     return list(instructions_from_lines(open(fn)))
 
 

@@ -6,11 +6,10 @@ https://adventofcode.com/2020/day/9
 
 from typing import Collection
 from typing import Iterator
-from typing import List
 from typing import Optional
 
 
-def part_1(numbers: List[int], preamble_length: int = 25) -> int:
+def part_1(numbers: list[int], preamble_length: int = 25) -> int:
     """
     The data appears to be encrypted with the eXchange-Masking Addition System (XMAS) which,
     conveniently for you, is an old cypher with an important weakness.
@@ -111,7 +110,7 @@ def part_1(numbers: List[int], preamble_length: int = 25) -> int:
     return result
 
 
-def part_2(target: int, numbers: List[int]) -> int:
+def part_2(target: int, numbers: list[int]) -> int:
     """
     The final step in breaking the XMAS encryption relies on the invalid number you just found:
     you must *find a contiguous set of at least two numbers* in your list which sum to the invalid
@@ -148,7 +147,7 @@ def part_2(target: int, numbers: List[int]) -> int:
     return result
 
 
-def validate_xmas(nums: List[int], preamble_length: int = 25) -> Iterator[tuple[int, bool]]:
+def validate_xmas(nums: list[int], preamble_length: int = 25) -> Iterator[tuple[int, bool]]:
     """
     Yields every number from `nums` after first `preamble_length` values, with its validity info:
     the number is considered valid if two distinct numbers among previous `preamble_length` values
@@ -185,9 +184,9 @@ def find_sum2(target_sum: int, numbers: Collection[int]) -> Optional[tuple[int, 
 
 def find_sum_subseq(
         target_sum: int,
-        numbers: List[int],
+        numbers: list[int],
         min_length: int = 2
-) -> Optional[List[int]]:
+) -> Optional[list[int]]:
     """
     Find subsequence of `numbers` with at least `min_length` values that sum to `target_sum`.
     """
@@ -240,7 +239,7 @@ def find_sum_subseq(
         return None
 
 
-def load_nums(fn: str) -> List[int]:
+def load_nums(fn: str) -> list[int]:
     """ Load numbers from file, one per line. """
     return [
         int(line_stripped)

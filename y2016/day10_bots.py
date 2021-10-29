@@ -1,11 +1,10 @@
 from collections import defaultdict
 from typing import Dict
-from typing import List
 
 from utils import product
 
 Target = tuple[str, int]
-Values = Dict[Target, List[int]]
+Values = Dict[Target, list[int]]
 Instructions = Dict[int, tuple[Target, Target]]
 
 
@@ -48,7 +47,7 @@ class Factory:
             for (tt, tn), tvs in sorted(self.values.items())
         )
 
-    def values_in_output(self, n: int) -> List[int]:
+    def values_in_output(self, n: int) -> list[int]:
         return self.values[('output', n)]
 
     def single_value_in_output(self, n: int) -> int:

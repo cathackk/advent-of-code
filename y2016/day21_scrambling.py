@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 
 
 def swap_positions(s: str, a: int, b: int) -> str:
@@ -236,7 +235,7 @@ class Command:
             raise ValueError(line)
 
     @classmethod
-    def load(cls, fn: str) -> List['Command']:
+    def load(cls, fn: str) -> list['Command']:
         return [cls.parse(line) for line in open(fn)]
 
 

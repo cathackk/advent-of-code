@@ -1,4 +1,3 @@
-from typing import List
 from typing import Optional
 
 from y2019.intcode import IOState
@@ -36,10 +35,10 @@ def run_network() -> int:
         io.write_single(-1)
         return io
 
-    network: List[MachineIO] = [create_network_io(address) for address in range(50)]
-    queue: List[Packet] = []
+    network: list[MachineIO] = [create_network_io(address) for address in range(50)]
+    queue: list[Packet] = []
     nat_packet: Optional[Packet] = None
-    nat_sent_history: List[Packet] = []
+    nat_sent_history: list[Packet] = []
 
     # initialize queue
     for address, io in enumerate(network):

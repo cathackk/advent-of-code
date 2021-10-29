@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Optional
 
 
@@ -146,14 +145,14 @@ def test_example():
     }
 
 
-def part_1(instructions: List[Instruction]) -> int:
+def part_1(instructions: list[Instruction]) -> int:
     result = evaluate(instructions)
     a = result['a']
     print(f"part 1: a={a}")
     return a
 
 
-def part_2(instructions: List[Instruction], b_override: int) -> int:
+def part_2(instructions: list[Instruction], b_override: int) -> int:
     # first override the ?? -> b instruction
     b_instr = next(
         instr for instr in instructions

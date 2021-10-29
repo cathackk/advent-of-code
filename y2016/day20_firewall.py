@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 
 
 class Range:
@@ -161,7 +160,7 @@ class RangeSet:
         self.ranges = RangeSet._simplify(ranges)
 
     @staticmethod
-    def _simplify(ranges: Iterable[Range]) -> List[Range]:
+    def _simplify(ranges: Iterable[Range]) -> list[Range]:
         xrs = []
         for r in ranges:
             while True:

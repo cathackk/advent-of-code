@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Callable
 from typing import Generator
 from typing import Iterable
-from typing import List
 from typing import Optional
 from typing import Union
 
@@ -88,7 +87,7 @@ class Machine:
             debug: bool = False
     ):
         self.tape = list(tape)
-        self.memory = []  # type: List[int]
+        self.memory: list[int] = []
         self.rbase = 0
         self.head = -1
         self.tick = -1
@@ -343,7 +342,7 @@ class Machine:
             raise ValueError(f"Unsupported operation {op}")
 
 
-def load_tape(fn) -> List[int]:
+def load_tape(fn) -> list[int]:
     with open(fn) as f:
         return [
             int(v)

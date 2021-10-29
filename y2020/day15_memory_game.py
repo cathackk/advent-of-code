@@ -7,12 +7,11 @@ https://adventofcode.com/2020/day/15
 from itertools import count
 from typing import Dict
 from typing import Iterator
-from typing import List
 
 from tqdm import tqdm
 
 
-def part_1(numbers: List[int]) -> int:
+def part_1(numbers: list[int]) -> int:
     """
     In this game, the players take turns saying *numbers*. They begin by taking turns reading from
     a list of *starting numbers* (your puzzle input). Then, each turn consists of considering the
@@ -110,7 +109,7 @@ def part_1(numbers: List[int]) -> int:
     return result
 
 
-def part_2(numbers: List[int]) -> int:
+def part_2(numbers: list[int]) -> int:
     """
     Impressed, the Elves issue you a challenge: determine the *30_000_000th* number spoken.
 
@@ -143,7 +142,7 @@ def part_2(numbers: List[int]) -> int:
     return result
 
 
-def memory_game_it(starting_numbers: List[int]) -> Iterator[int]:
+def memory_game_it(starting_numbers: list[int]) -> Iterator[int]:
     last_seen_on: Dict[int, int] = dict()
     age = 0
     for turn in count(0):
@@ -153,7 +152,7 @@ def memory_game_it(starting_numbers: List[int]) -> Iterator[int]:
         last_seen_on[num] = turn
 
 
-def memory_game(numbers: List[int], turns: int) -> int:
+def memory_game(numbers: list[int], turns: int) -> int:
     game = memory_game_it(numbers)
 
     last_number = None
@@ -163,7 +162,7 @@ def memory_game(numbers: List[int], turns: int) -> int:
     return last_number
 
 
-def load_numbers(fn: str) -> List[int]:
+def load_numbers(fn: str) -> list[int]:
     return [
         int(v)
         for line in open(fn)

@@ -6,12 +6,11 @@ https://adventofcode.com/2020/day/1
 
 from itertools import combinations
 from typing import Iterable
-from typing import List
 
 from utils import single_value
 
 
-def part_1(numbers: List[int]) -> int:
+def part_1(numbers: list[int]) -> int:
     """
     ... they need you to find the two entries that sum to 2020 and then multiply those
     two numbers together.
@@ -54,7 +53,7 @@ def part_1(numbers: List[int]) -> int:
     return result
 
 
-def part_2(numbers: List[int]) -> int:
+def part_2(numbers: list[int]) -> int:
     """
     ... find *three* numbers in your expense report that meet the same criteria.
 
@@ -83,7 +82,7 @@ def part_2(numbers: List[int]) -> int:
     return result
 
 
-def find_summation(numbers: List[int], *, total: int, count: int) -> tuple[int, ...]:
+def find_summation(numbers: list[int], *, total: int, count: int) -> tuple[int, ...]:
     return single_value(
         comb
         for comb in combinations(numbers, count)
@@ -91,11 +90,11 @@ def find_summation(numbers: List[int], *, total: int, count: int) -> tuple[int, 
     )
 
 
-def values_from_file(fn: str) -> List[int]:
+def values_from_file(fn: str) -> list[int]:
     return list(values_from_lines(open(fn)))
 
 
-def values_from_text(text: str) -> List[int]:
+def values_from_text(text: str) -> list[int]:
     return list(values_from_lines(text.strip().split("\n")))
 
 

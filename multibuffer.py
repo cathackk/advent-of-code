@@ -1,7 +1,6 @@
 from typing import Callable
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import TypeVar
 
 
@@ -11,7 +10,7 @@ T = TypeVar('T')
 class MultiBuffer:
     def __init__(self, scoring: Callable[[T], int], items: Iterable[T] = None):
         self._scoring = scoring
-        self._buffers: Dict[int, List[T]] = dict()
+        self._buffers: Dict[int, list[T]] = dict()
         self._items_count = 0
         if items is not None:
             self.extend(items)

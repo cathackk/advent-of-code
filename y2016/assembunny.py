@@ -1,14 +1,13 @@
 from typing import Generator
-from typing import List
 from typing import Optional
 
 from utils import exhaust
 
 Command = tuple[str, str, Optional[str]]
-Tape = List[Command]
+Tape = list[Command]
 
 
-def load_tape(fn: str) -> List[Command]:
+def load_tape(fn: str) -> list[Command]:
     tape = []
     for line in open(fn):
         line = line.strip()

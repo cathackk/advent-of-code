@@ -1,6 +1,5 @@
 from itertools import permutations
 from typing import Iterable
-from typing import List
 
 from utils import zip1
 
@@ -28,11 +27,11 @@ def load_rules(fn: str) -> Iterable[Rule]:
         yield name1, name2, value
 
 
-def find_best_seating(rules: List[Rule]) -> tuple[List[str], int]:
+def find_best_seating(rules: list[Rule]) -> tuple[list[str], int]:
     people = sorted(set(person for rule in rules for person in rule[:2]))
     table = {(p1, p2): h for p1, p2, h in rules}
 
-    def happiness(seating: List[str]) -> int:
+    def happiness(seating: list[str]) -> int:
         return sum(
             table.get((p1,p2), 0) + table.get((p2,p1), 0)
             for p1, p2 in zip1(seating, wrap=True)
@@ -48,13 +47,13 @@ def find_best_seating(rules: List[Rule]) -> tuple[List[str], int]:
     return best_seating, best_happiness
 
 
-def part_1(rules: List[Rule]) -> int:
+def part_1(rules: list[Rule]) -> int:
     seating, happiness = find_best_seating(rules)
     print(f"part 1: best happiness: {happiness} ({'-'.join(seating)})")
     return happiness
 
 
-def part_2(rules: List[Rule]) -> int:
+def part_2(rules: list[Rule]) -> int:
     rules = rules + [('myself', 'myself', 0)]
     seating, happiness = find_best_seating(rules)
     print(f"part 2: best happiness: {happiness} ({'-'.join(seating)})")

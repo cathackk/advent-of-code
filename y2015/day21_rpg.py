@@ -1,6 +1,5 @@
 from itertools import combinations
 from typing import Iterable
-from typing import List
 from typing import NamedTuple
 
 from utils import maxk
@@ -41,7 +40,7 @@ rings = [
 ]
 
 
-def generate_inventories() -> Iterable[List[Item]]:
+def generate_inventories() -> Iterable[list[Item]]:
     for weapon in weapons:
         yield [weapon]
         yield from ([weapon, ring] for ring in rings)
@@ -74,7 +73,7 @@ def battle(player: Character, boss: Character) -> bool:
             return False
 
 
-def is_beating_boss(items: List[Item], boss: Character):
+def is_beating_boss(items: list[Item], boss: Character):
     return battle(
         player=Character(
             hit_points=100,

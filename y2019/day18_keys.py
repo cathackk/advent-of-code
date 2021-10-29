@@ -2,7 +2,6 @@ import string
 from collections import defaultdict
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Optional
 from typing import Set
 
@@ -10,11 +9,11 @@ from utils import timeit
 
 Pos = tuple[int, int]
 Tile = tuple[Pos, str]
-Solution = tuple[int, List[str]]
+Solution = tuple[int, list[str]]
 SolutionCache = Dict[tuple[str, str], Solution]
-Path = tuple[tuple[str, str], int, List[str]]
+Path = tuple[tuple[str, str], int, list[str]]
 PathsCache = Dict[str, Dict[str, tuple[int, Set[str]]]]
-Layer = List[tuple[Pos, List[str]]]
+Layer = list[tuple[Pos, list[str]]]
 
 SPACE = '.'
 WALL = '#'
@@ -235,7 +234,7 @@ class Maze:
 
 def _solution(
         current_key: str,
-        remaining_keys: List[str],
+        remaining_keys: list[str],
         paths: PathsCache,
         cache: SolutionCache
 ) -> Solution:
@@ -265,8 +264,8 @@ def _solution(
 
 
 def _multi_solution(
-        current_keys: List[str],
-        remaining_keys: List[str],
+        current_keys: list[str],
+        remaining_keys: list[str],
         paths: PathsCache,
         cache: SolutionCache
 ) -> Solution:
@@ -306,7 +305,7 @@ def _multi_solution(
     return solution
 
 
-def is_passable(items: Set[str], remaining_keys: List[str]):
+def is_passable(items: Set[str], remaining_keys: list[str]):
     return not any((key in items) for key in remaining_keys)
 
 

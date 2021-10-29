@@ -5,12 +5,11 @@ https://adventofcode.com/2020/day/2
 """
 
 from typing import Iterable
-from typing import List
 
 from utils import parse_line
 
 
-def part_1(rules_passwords: List[tuple['PasswordRule', str]]) -> int:
+def part_1(rules_passwords: list[tuple['PasswordRule', str]]) -> int:
     """
     Suppose you have the following list:
 
@@ -61,7 +60,7 @@ def part_1(rules_passwords: List[tuple['PasswordRule', str]]) -> int:
     return result
 
 
-def part_2(rules_passwords: List[tuple['PasswordRule', str]]) -> int:
+def part_2(rules_passwords: list[tuple['PasswordRule', str]]) -> int:
     """
     Each policy actually describes two positions in the password, where 1 means the first
     character, 2 means the second character, and so on. *Exactly one* of these positions must
@@ -158,11 +157,11 @@ class PasswordRule:
         return f"{self.min_count}-{self.max_count} {self.character}"
 
 
-def data_from_file(fn: str) -> List[tuple[PasswordRule, str]]:
+def data_from_file(fn: str) -> list[tuple[PasswordRule, str]]:
     return list(data_from_lines(open(fn)))
 
 
-def data_from_text(text: str) -> List[tuple[PasswordRule, str]]:
+def data_from_text(text: str) -> list[tuple[PasswordRule, str]]:
     return list(data_from_lines(text.strip().split("\n")))
 
 

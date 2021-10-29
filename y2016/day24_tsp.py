@@ -1,7 +1,6 @@
 from itertools import permutations
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Set
 
 from utils import mink
@@ -108,8 +107,8 @@ class Maze:
 
     @classmethod
     def load(cls, fn: str) -> 'Maze':
-        floors: List[Pos] = []
-        targets: List[Target] = []
+        floors: list[Pos] = []
+        targets: list[Target] = []
         for y, line in enumerate(open(fn)):
             for x, c in enumerate(line.strip()):
                 if c != '#':

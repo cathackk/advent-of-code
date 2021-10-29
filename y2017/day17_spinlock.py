@@ -1,7 +1,4 @@
-from typing import List
-
-
-def spin(count: int, steps: int) -> tuple[int, List[int]]:
+def spin(count: int, steps: int) -> tuple[int, list[int]]:
     """
     >>> spin(0, 3)
     (0, [0])

@@ -1,7 +1,6 @@
 import random
 import time
 from typing import Iterable
-from typing import List
 
 
 def fft(number: str, phases: int = 100) -> str:
@@ -12,7 +11,7 @@ def fft(number: str, phases: int = 100) -> str:
     return ''.join(str(n) for n in ns)
 
 
-def fft_digit(p: int, ns: List[int]):
+def fft_digit(p: int, ns: list[int]):
     """
                    1111111111222
          01234567890123456789012

@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 from typing import Set
 
 from utils import count_ones
@@ -32,7 +31,7 @@ def count_regions(seed: str) -> int:
 
     regions_count = 0
     while ones:
-        buffer: List[Pos] = [ones.pop()]
+        buffer: list[Pos] = [ones.pop()]
 
         while buffer:
             pos = buffer.pop()

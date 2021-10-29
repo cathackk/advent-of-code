@@ -8,7 +8,6 @@ import re
 import itertools
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Optional
 from typing import Set
 
@@ -19,7 +18,7 @@ from utils import single_value
 from utils import string_builder
 
 
-def part_1(tiles: List['Tile']) -> tuple[int, 'Image']:
+def part_1(tiles: list['Tile']) -> tuple[int, 'Image']:
     r"""
     After decoding the satellite messages, you discover that the data actually contains many small
     images created by the satellite's *camera array*. The camera array consists of many cameras;
@@ -410,16 +409,16 @@ class Tile:
             tile = tile.rotated_cw()
 
 
-def tiles_from_file(fn: str) -> List[Tile]:
+def tiles_from_file(fn: str) -> list[Tile]:
     return list(tiles_from_lines(open(fn)))
 
 
-def tiles_from_text(text: str) -> List[Tile]:
+def tiles_from_text(text: str) -> list[Tile]:
     return list(tiles_from_lines(text.strip().split("\n")))
 
 
 def tiles_from_lines(lines: Iterable[str]) -> Iterable[Tile]:
-    buffers: List[List[str]] = []
+    buffers: list[list[str]] = []
 
     # trailing empty line to force flush the last part
     lines = itertools.chain(lines, [""])
@@ -481,7 +480,7 @@ class Image:
                 )
 
     @property
-    def corner_tiles(self) -> List[Tile]:
+    def corner_tiles(self) -> list[Tile]:
         row_indexes = [0, self.height - 1] if self.height > 1 else [0]
         col_indexes = [0, self.width - 1] if self.width > 1 else [0]
         return [

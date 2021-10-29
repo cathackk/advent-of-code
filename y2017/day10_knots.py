@@ -1,10 +1,9 @@
 import operator
 from functools import reduce
 from typing import Iterable
-from typing import List
 
 
-def pinched(rope_length: int, lengths: Iterable[int], rounds: int = 1) -> List[int]:
+def pinched(rope_length: int, lengths: Iterable[int], rounds: int = 1) -> list[int]:
     """
     >>> pinched(5, [3])
     [2, 1, 0, 3, 4]

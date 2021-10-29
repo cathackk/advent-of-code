@@ -1,6 +1,5 @@
 from typing import Any
 from typing import Iterable
-from typing import List
 from typing import Optional
 
 
@@ -102,7 +101,7 @@ class Link:
 
 
 class Circle:
-    def __init__(self, items: List[Any]):
+    def __init__(self, items: list[Any]):
         assert len(items) > 0
         self._current_link, last_link, _ = Link.build_chain(items)
         self._current_link.connect_to(prev_link=last_link)

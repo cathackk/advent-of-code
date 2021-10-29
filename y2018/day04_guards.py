@@ -1,6 +1,5 @@
 from collections import Counter
 from typing import Iterable
-from typing import List
 from typing import NamedTuple
 from typing import Optional
 
@@ -43,7 +42,7 @@ def load_events(fn: str) -> Iterable[Event]:
             raise KeyError(what)
 
 
-def part_1(events: List[Event]) -> int:
+def part_1(events: list[Event]) -> int:
     sleep_durations = dgroupby(events, key=lambda e: e.guard_no, value=lambda e: e.duration)
     sleepy_guard_no, total_asleep = maxk(
         sleep_durations.keys(),
@@ -65,7 +64,7 @@ def part_1(events: List[Event]) -> int:
     return result
 
 
-def part_2(events: List[Event]) -> int:
+def part_2(events: list[Event]) -> int:
     (sleepy_guard_no, sleepy_minute), minute_count = Counter(
         (e.guard_no, minute)
         for e in events

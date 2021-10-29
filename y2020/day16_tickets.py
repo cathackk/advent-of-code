@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/16
 from typing import Callable
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Set
 
 from utils import line_groups
@@ -16,7 +15,7 @@ from utils import product
 from utils import single_value
 
 
-def part_1(rules: 'RuleList', nearby_tickets: List['Ticket']) -> int:
+def part_1(rules: 'RuleList', nearby_tickets: list['Ticket']) -> int:
     """
     Unfortunately, you can't actually *read* the words on the ticket. You can, however, read the
     numbers, and so you figure out *the fields these tickets must have* and *the valid ranges* for
@@ -123,7 +122,7 @@ def part_1(rules: 'RuleList', nearby_tickets: List['Ticket']) -> int:
 def part_2(
         rules: 'RuleList',
         my_ticket: 'Ticket',
-        nearby_tickets: List['Ticket'],
+        nearby_tickets: list['Ticket'],
         consider_field: Callable[[str], bool] = lambda f: True
 ) -> int:
     """
@@ -194,7 +193,7 @@ def part_2(
     return result
 
 
-Ticket = List[int]
+Ticket = list[int]
 
 
 class Rule:
@@ -260,7 +259,7 @@ class RuleList:
             if not any(rule.is_valid(value) for rule in self)
         )
 
-    def determine_field_order(self, tickets: Iterable[Ticket]) -> List[str]:
+    def determine_field_order(self, tickets: Iterable[Ticket]) -> list[str]:
         valid_tickets = [ticket for ticket in tickets if self.is_valid_ticket(ticket)]
         assert len(valid_tickets) > 0
 
@@ -295,7 +294,7 @@ class RuleList:
 
         return [field_order[ix] for ix in range(fields_count)]
 
-    def describe_ticket(self, ticket: Ticket, other_tickets: List[Ticket]):
+    def describe_ticket(self, ticket: Ticket, other_tickets: list[Ticket]):
         # find out which column (index) is which field
         fields_ordered = self.determine_field_order([ticket] + other_tickets)
         # zip values from `ticket` with newly determined field names
@@ -307,15 +306,15 @@ class RuleList:
         }
 
 
-def data_from_text(text: str) -> tuple[RuleList, Ticket, List[Ticket]]:
+def data_from_text(text: str) -> tuple[RuleList, Ticket, list[Ticket]]:
     return data_from_lines(text.strip().split("\n"))
 
 
-def data_from_file(fn: str) -> tuple[RuleList, Ticket, List[Ticket]]:
+def data_from_file(fn: str) -> tuple[RuleList, Ticket, list[Ticket]]:
     return data_from_lines(open(fn))
 
 
-def data_from_lines(lines: Iterable[str]) -> tuple[RuleList, Ticket, List[Ticket]]:
+def data_from_lines(lines: Iterable[str]) -> tuple[RuleList, Ticket, list[Ticket]]:
     rule_lines, my_ticket_lines, nearby_ticket_lines = line_groups(lines)
 
     rules = RuleList.from_lines(rule_lines)

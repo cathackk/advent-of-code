@@ -1,18 +1,17 @@
 from typing import Iterable
-from typing import List
 
 
 def load_data(fn: str) -> Iterable[int]:
     return (int(line) for line in open(fn))
 
 
-def part_1(fqs: List[int]) -> int:
+def part_1(fqs: list[int]) -> int:
     result = sum(fqs)
     print(f"part 1: {result} total")
     return result
 
 
-def part_2(fqs: List[int]) -> int:
+def part_2(fqs: list[int]) -> int:
     total = 0
     seen = {total}
     while True:

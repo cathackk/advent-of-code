@@ -8,12 +8,11 @@ import re
 from functools import partial
 from typing import Dict
 from typing import Iterable
-from typing import List
 
 from utils import line_groups
 
 
-def part_1(passports: List['Passport']) -> int:
+def part_1(passports: list['Passport']) -> int:
     """
     The automatic passport scanners are detecting which passports have all required fields.
     The expected fields are as follows:
@@ -99,7 +98,7 @@ def part_1(passports: List['Passport']) -> int:
     return result
 
 
-def part_2(passports: List['Passport']) -> int:
+def part_2(passports: list['Passport']) -> int:
     """
     Better add some data validation! You can continue to ignore the `cid` field, but each other
     field has strict rules about what values are valid for automatic validation.
@@ -225,12 +224,12 @@ def part_2(passports: List['Passport']) -> int:
 Passport = Dict[str, str]
 
 
-def passports_from_file(fn: str) -> List[Passport]:
+def passports_from_file(fn: str) -> list[Passport]:
     with open(fn) as f:
         return list(passports_from_lines(f))
 
 
-def passports_from_text(text: str) -> List[Passport]:
+def passports_from_text(text: str) -> list[Passport]:
     return list(passports_from_lines(text.strip().split('\n')))
 
 

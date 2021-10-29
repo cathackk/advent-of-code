@@ -1,13 +1,12 @@
 import math
 from typing import Iterable
-from typing import List
 from typing import Set
 
 from xy import Point
 from xy import Vector
 
 
-def load_points(fn) -> List[Point]:
+def load_points(fn) -> list[Point]:
     with open(fn) as f:
         return sorted(
             Point(x, y)
@@ -17,11 +16,11 @@ def load_points(fn) -> List[Point]:
         )
 
 
-def best_base(asteroids: List[Point]) -> Point:
+def best_base(asteroids: list[Point]) -> Point:
     return max(asteroids, key=lambda c: seen_count(c, asteroids))
 
 
-def seen_count(base: Point, asteroids: List[Point]) -> int:
+def seen_count(base: Point, asteroids: list[Point]) -> int:
     return sum(1 for _ in gen_seen(base, asteroids))
 
 

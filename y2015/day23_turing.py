@@ -1,9 +1,8 @@
-from typing import List
 from typing import Optional
 
 
 Command = tuple[str, str, Optional[str]]
-Tape = List[Command]
+Tape = list[Command]
 
 
 class Machine:

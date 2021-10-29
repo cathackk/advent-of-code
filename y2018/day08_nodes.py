@@ -1,6 +1,5 @@
 from typing import Iterable
 from typing import Iterator
-from typing import List
 
 
 def load_data(fn: str) -> Iterable[int]:
@@ -35,13 +34,13 @@ def read_value(data: Iterator[int]) -> int:
         )
 
 
-def part_1(data: List[int]) -> int:
+def part_1(data: list[int]) -> int:
     result = sum(read_metadata(iter(data)))
     print(f"part 1: sum of metadatas is {result}")
     return result
 
 
-def part_2(data: List[int]) -> int:
+def part_2(data: list[int]) -> int:
     result = read_value(iter(data))
     print(f"part 2: value of the root node is {result}")
     return result

@@ -1,7 +1,6 @@
 import string
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Optional
 
 from utils import timeit
@@ -95,11 +94,11 @@ class Maze:
         with open(fn) as f:
             lines = [line.strip() for line in f]
 
-        floors: List[Pos] = []
+        floors: list[Pos] = []
         start: Optional[Pos] = None
         end: Optional[Pos] = None
         unfinished_portals: Dict[str, Pos] = dict()
-        finished_portals: List[Portal] = []
+        finished_portals: list[Portal] = []
 
         for y, line in enumerate(lines):
             for x, c in enumerate(line):
@@ -132,7 +131,7 @@ class Maze:
         )
 
     def solve(self) -> Optional[int]:
-        layer: List[Pos] = [self.start]
+        layer: list[Pos] = [self.start]
         distance = 0
 
         unprocessed = set(self.floors)
@@ -177,7 +176,7 @@ class Maze:
         start3 = self.start, 0
         end3 = self.end, 0
 
-        layer: List[PosD] = [start3]
+        layer: list[PosD] = [start3]
         distance = 0
 
         max_depth = len(self.portals)

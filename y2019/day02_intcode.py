@@ -1,4 +1,3 @@
-from typing import List
 from typing import Optional
 
 from y2019.intcode import load_tape
@@ -19,7 +18,7 @@ def find_noun_verb(tape, target_value) -> Optional[tuple[int, int]]:
         return None
 
 
-def part_1(tape: List[int]):
+def part_1(tape: list[int]):
     tape = list(tape)
     tape[1], tape[2] = 12, 2
     m = Machine(tape)
@@ -27,7 +26,7 @@ def part_1(tape: List[int]):
     print(f"part 1: value at memory address 1 is {m.memory[0]}")
 
 
-def part_2(tape: List[int]):
+def part_2(tape: list[int]):
     tape = list(tape)
     answer = find_noun_verb(tape, target_value=19690720)
     if answer:

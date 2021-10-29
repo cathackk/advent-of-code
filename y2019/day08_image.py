@@ -1,9 +1,8 @@
 from typing import Callable
 from typing import Iterable
-from typing import List
 
 
-Layer = List[List[int]]
+Layer = list[list[int]]
 
 
 BLACK = 0
@@ -11,7 +10,7 @@ WHITE = 1
 TRANSPARENT = 2
 
 
-def load_data(fn="data/08-image.txt") -> List[int]:
+def load_data(fn="data/08-image.txt") -> list[int]:
     with open(fn) as f:
         return [int(v) for line in f for v in line.strip()]
 

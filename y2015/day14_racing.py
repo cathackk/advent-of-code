@@ -1,6 +1,5 @@
 from typing import Dict
 from typing import Iterable
-from typing import List
 
 
 class Reindeer:
@@ -69,13 +68,13 @@ def load_reindeers(fn: str) -> Iterable[Reindeer]:
         )
 
 
-def race(reindeers: List[Reindeer], seconds: int) -> tuple[Reindeer, int]:
+def race(reindeers: list[Reindeer], seconds: int) -> tuple[Reindeer, int]:
     winning_reindeer = max(reindeers, key=lambda r: r.distance(seconds))
     winning_distance = winning_reindeer.distance(seconds)
     return winning_reindeer, winning_distance
 
 
-def points_race(reindeers: List[Reindeer], seconds: int) -> tuple[Reindeer, int]:
+def points_race(reindeers: list[Reindeer], seconds: int) -> tuple[Reindeer, int]:
     points: Dict[Reindeer, int] = {r: 0 for r in reindeers}
     for tick in range(1, seconds+1):
         max_distance = max(r.distance(tick) for r in reindeers)
@@ -88,13 +87,13 @@ def points_race(reindeers: List[Reindeer], seconds: int) -> tuple[Reindeer, int]
     return winning_reindeer, winning_points
 
 
-def part_1(reindeers: List[Reindeer], seconds=2503) -> int:
+def part_1(reindeers: list[Reindeer], seconds=2503) -> int:
     winner, distance = race(reindeers, seconds)
     print(f"part 1: after {seconds} seconds, {winner.name} run {distance} km")
     return distance
 
 
-def part_2(reindeers: List[Reindeer], seconds=2503) -> int:
+def part_2(reindeers: list[Reindeer], seconds=2503) -> int:
     winner, points = points_race(reindeers, seconds)
     print(f"part 2: after {seconds} seconds, {winner.name} has {points} points")
     return points

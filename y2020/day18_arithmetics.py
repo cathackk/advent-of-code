@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/18
 from enum import Enum
 from typing import Iterable
 from typing import Iterator
-from typing import List
 from typing import Union
 
 
@@ -274,7 +273,7 @@ class Expr:
 
     @classmethod
     def from_symbols(cls, symbols: Iterator[str]):
-        parts: List[ExprPart] = []
+        parts: list[ExprPart] = []
 
         op = Operator.ADD
 
@@ -307,11 +306,11 @@ class Expr:
         return cls(parts)
 
     @classmethod
-    def load_from_file(cls, fn: str) -> List['Expr']:
+    def load_from_file(cls, fn: str) -> list['Expr']:
         return list(cls.load_from_lines(open(fn)))
 
     @classmethod
-    def load_from_text(cls, text: str) -> List['Expr']:
+    def load_from_text(cls, text: str) -> list['Expr']:
         return list(cls.load_from_lines(text.strip().split("\n")))
 
     @classmethod

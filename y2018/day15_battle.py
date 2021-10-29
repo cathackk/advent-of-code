@@ -2,14 +2,13 @@ from collections import Counter
 from itertools import count
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Optional
 from typing import Set
 
 from utils import ro
 
 Pos = tuple[int, int]
-Path = List[Pos]
+Path = list[Pos]
 
 
 class Team:
@@ -34,7 +33,7 @@ class Team:
         )
 
 
-def default_teams(elves_attack: int = 3) -> List[Team]:
+def default_teams(elves_attack: int = 3) -> list[Team]:
     return [
         Team("Elves", attack=elves_attack, hp=200),
         Team("Goblins", attack=3, hp=200)
@@ -192,7 +191,7 @@ class Game:
 
     def path_to_closest_enemy(self, unit: Unit) -> Optional[Path]:
         path_to: Dict[Pos, Path] = {unit.pos: []}
-        layer: List[Pos] = [unit.pos]
+        layer: list[Pos] = [unit.pos]
         seen: Set[Pos] = {unit.pos}
 
         while layer:
@@ -283,8 +282,8 @@ class Game:
     def load(cls, fn: str, teams: Iterable[Team]) -> 'Game':
         teams: Dict[str, Team] = {team.code: team for team in teams}
         team_unit_count: Dict[str, int] = {c: 0 for c in teams}
-        floors: List[Pos] = []
-        units: List[Unit] = []
+        floors: list[Pos] = []
+        units: list[Unit] = []
 
         for y, line in enumerate(open(fn)):
             for x, c in enumerate(line.strip()):

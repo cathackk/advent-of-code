@@ -6,14 +6,13 @@ https://adventofcode.com/2020/day/21
 
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Set
 
 from utils import parse_line
 from utils import single_value
 
 
-def part_1(food_list: List['Food']) -> int:
+def part_1(food_list: list['Food']) -> int:
     """
     You need a few days' worth of food for your journey. You don't speak the local language, so you
     can't read any ingredients lists. However, sometimes, allergens are listed in a language you do
@@ -88,7 +87,7 @@ def part_1(food_list: List['Food']) -> int:
     return result
 
 
-def part_2(food_list: List['Food']) -> str:
+def part_2(food_list: list['Food']) -> str:
     r"""
     Now that you've isolated the inert ingredients, you should have enough information to figure
     out which ingredient contains which allergen.
@@ -143,7 +142,7 @@ class Food:
         return cls(ingredients.split(" "), allergens.split(", "))
 
 
-def match_allergens(foods: List[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
+def match_allergens(foods: list[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
     # initialize unmatched allergens and their possible ingredients
     unmatched_a2is: Dict[Allergen, Set[Ingredient]] = dict()
     for food in foods:
@@ -169,11 +168,11 @@ def match_allergens(foods: List[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
             ingredients.discard(m_ingredient)
 
 
-def foods_from_file(fn: str) -> List[Food]:
+def foods_from_file(fn: str) -> list[Food]:
     return list(foods_from_lines(open(fn)))
 
 
-def foods_from_text(text: str) -> List[Food]:
+def foods_from_text(text: str) -> list[Food]:
     return list(foods_from_lines(text.strip().split("\n")))
 
 

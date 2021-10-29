@@ -3,7 +3,6 @@ from itertools import count
 from typing import Dict
 from typing import Generator
 from typing import Iterable
-from typing import List
 from typing import NamedTuple
 from typing import Set
 
@@ -154,7 +153,7 @@ class Map:
     @classmethod
     def load(cls, fn: str):
         tracks: Dict[Pos, str] = dict()
-        carts: List[Cart] = list()
+        carts: list[Cart] = list()
 
         for y, line in enumerate(open(fn)):
             for x, c in enumerate(line.rstrip()):

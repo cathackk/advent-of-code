@@ -3,7 +3,6 @@ from itertools import zip_longest
 from typing import Callable
 from typing import Dict
 from typing import Iterable
-from typing import List
 
 from utils import create_logger
 from utils import single_value
@@ -104,7 +103,7 @@ class Grid:
             yield (0, 0), self
             return
 
-        subpixels: Dict[Pos, List[Pos]] = defaultdict(list)
+        subpixels: Dict[Pos, list[Pos]] = defaultdict(list)
         for x, y in self.pixels:
             # top-left corner of the subgrid
             cx, cy = ((x // subsize) * subsize), ((y // subsize) * subsize)
@@ -236,12 +235,12 @@ def count_pixels(grid: Grid, rulebook: RuleBook, steps: int, debug: bool = False
     # dictionary of grids by their codes
     code_to_grid: Dict[int, Grid] = {int(grid): grid}
     # code of 3x3 grid -> 9 subresult codes (nine 3x3 subresults after three-steps expansion)
-    expand_cache: Dict[int, List[int]] = dict()
+    expand_cache: Dict[int, list[int]] = dict()
     # (code, steps) -> pixels_count
     pixels_count_cache: Dict[tuple[int, int], int] = {(int(grid), 0): len(grid.pixels)}
     log(f">>> pxl: {int(grid)} -> {len(grid.pixels)}")
 
-    def _expand_to_nine_subgrids(grid3: Grid) -> List[Grid]:
+    def _expand_to_nine_subgrids(grid3: Grid) -> list[Grid]:
         key = int(grid3)
         if key not in expand_cache:
             # expand in three steps from 3x3 -> 9x9

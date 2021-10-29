@@ -1,8 +1,7 @@
 from itertools import combinations
 from typing import Iterable
-from typing import List
 
-Rows = Iterable[List[int]]
+Rows = Iterable[list[int]]
 
 
 def load_rows(fn: str) -> Rows:

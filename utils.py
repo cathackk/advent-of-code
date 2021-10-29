@@ -9,7 +9,6 @@ from typing import Dict
 from typing import Generator
 from typing import Iterable
 from typing import Iterator
-from typing import List
 from typing import Optional
 from typing import Set
 from typing import Sized
@@ -162,8 +161,8 @@ def dgroupby(
         items: Iterable[T],
         key: Callable[[T], K],
         value: Callable[[T], V]
-) -> Dict[K, List[V]]:
-    d: Dict[K, List[V]] = dict()
+) -> Dict[K, list[V]]:
+    d: Dict[K, list[V]] = dict()
 
     for item in items:
         item_key, item_value = key(item), value(item)
@@ -190,8 +189,8 @@ def dgroupby_set(
     return d
 
 
-def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> Dict[K, List[V]]:
-    d: Dict[K, List[V]] = dict()
+def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> Dict[K, list[V]]:
+    d: Dict[K, list[V]] = dict()
 
     for item_key, item_value in items:
         if item_key not in d:
@@ -390,7 +389,7 @@ def mink(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
         raise ValueError("mink() arg is an empty sequence")
 
 
-def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> List[T]:
+def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
     """
     >>> min_all([1,2,3,1,2,3,1,2,3])
     [1, 1, 1]
@@ -424,7 +423,7 @@ def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> List[T]:
         raise ValueError("min_all() arg is an empty sequence")
 
 
-def picking(items: Iterable[T]) -> Iterable[tuple[T, List[T]]]:
+def picking(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     """
     >>> list(picking('ABC'))
     [('A', ['B', 'C']), ('B', ['A', 'C']), ('C', ['A', 'B'])]
@@ -440,7 +439,7 @@ def picking(items: Iterable[T]) -> Iterable[tuple[T, List[T]]]:
         yield items[k], items[:k]+items[k+1:]
 
 
-def following(items: Iterable[T]) -> Iterable[tuple[T, List[T]]]:
+def following(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     """
     >>> list(following('ABC'))
     [('A', ['B', 'C']), ('B', ['C']), ('C', [])]
@@ -680,7 +679,7 @@ def join_or(items: Iterable[Any], oxford_comma=False) -> str:
     return join_english(items, conj=", or " if oxford_comma else " or ")
 
 
-def line_groups(lines: Iterable[str]) -> Iterable[List[str]]:
+def line_groups(lines: Iterable[str]) -> Iterable[list[str]]:
     r"""
     Separate stream of lines into groups of whitespace-stripped lines.
     Empty line (containing only whitespace) serves as separator.

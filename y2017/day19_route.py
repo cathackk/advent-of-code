@@ -1,13 +1,12 @@
 from typing import Dict
 from typing import Generator
-from typing import List
 
 from heading import Heading
 
 
 Pos = tuple[int, int]
 Map = Dict[Pos, str]
-Route = tuple[Pos, Heading, int, List[str]]
+Route = tuple[Pos, Heading, int, list[str]]
 
 
 def load_map(fn: str) -> Map:
@@ -25,7 +24,7 @@ def routes(rmap: Map) -> Generator[Route, None, None]:
 
     while True:
         dist = 0
-        collected: List[str] = []
+        collected: list[str] = []
 
         # follow route
         while True:

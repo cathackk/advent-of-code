@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 
 
 Pos = tuple[int, int]
@@ -54,7 +53,7 @@ def load_disks(fn: str) -> Iterable[Disk]:
         )
 
 
-def part_1(disks: List[Disk]) -> int:
+def part_1(disks: list[Disk]) -> int:
     disks = list(disks)
     viable_pair_count = sum(
         1
@@ -66,7 +65,7 @@ def part_1(disks: List[Disk]) -> int:
     return viable_pair_count
 
 
-def part_2(disks: List[Disk]):
+def part_2(disks: list[Disk]):
     tx = max(d.x for d in disks if d.y == 0)
     empty_disk = next(d for d in disks if d.used == 0)
     ex, ey = empty_disk.pos

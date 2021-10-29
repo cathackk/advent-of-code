@@ -5,14 +5,13 @@ https://adventofcode.com/2020/day/6
 """
 
 from typing import Iterable
-from typing import List
 from typing import Set
 
 from utils import line_groups
 from utils import single_value
 
 
-def part_1(groups: List['Group']) -> int:
+def part_1(groups: list['Group']) -> int:
     """
     The form asks a series of 26 yes-or-no questions marked `a` through `z`. All you need to do is
     identify the questions for which *anyone in your group* answers "yes". For each of the people
@@ -102,7 +101,7 @@ def part_1(groups: List['Group']) -> int:
     return result
 
 
-def part_2(groups: List['Group']) -> int:
+def part_2(groups: list['Group']) -> int:
     """
     Actually you don't need to identify the questions to which *anyone* answered "yes";
     you need to identify the questions to which *everyone* answered "yes"!
@@ -159,18 +158,18 @@ def part_2(groups: List['Group']) -> int:
 
 
 Person = Set[str]
-Group = List[Person]
+Group = list[Person]
 
 
 def group_from_text(text: str) -> Group:
     return single_value(groups_from_text(text))
 
 
-def groups_from_text(text: str) -> List[Group]:
+def groups_from_text(text: str) -> list[Group]:
     return list(groups_from_lines(text.strip().split('\n')))
 
 
-def groups_from_file(fn: str) -> List[Group]:
+def groups_from_file(fn: str) -> list[Group]:
     with open(fn) as f:
         return list(groups_from_lines(f))
 
@@ -182,11 +181,11 @@ def groups_from_lines(lines: Iterable[str]) -> Iterable[Group]:
     )
 
 
-def answers_anyone(group: Group) -> List[str]:
+def answers_anyone(group: Group) -> list[str]:
     return sorted(set.union(*group))
 
 
-def answers_everyone(group: Group) -> List[str]:
+def answers_everyone(group: Group) -> list[str]:
     return sorted(set.intersection(*group))
 
 

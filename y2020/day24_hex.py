@@ -8,7 +8,6 @@ from collections import Counter
 from enum import Enum
 from functools import cached_property
 from typing import Iterable
-from typing import List
 
 from rect import Rect
 
@@ -257,11 +256,11 @@ class Walk:
         self.steps = list(steps)
 
     @classmethod
-    def parse_file(cls, fn: str) -> List['Walk']:
+    def parse_file(cls, fn: str) -> list['Walk']:
         return list(cls.parse_lines(open(fn)))
 
     @classmethod
-    def parse_text(cls, text: str) -> List['Walk']:
+    def parse_text(cls, text: str) -> list['Walk']:
         return list(cls.parse_lines(text.strip().split("\n")))
 
     @classmethod
@@ -319,7 +318,7 @@ class HexGrid:
         }
         return len(self.active_tiles)
 
-    def simulate(self, days: int) -> List[int]:
+    def simulate(self, days: int) -> list[int]:
         return [
             self.simulate_single_day()
             for _ in range(days)

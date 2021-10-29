@@ -2,12 +2,11 @@ from collections import defaultdict
 from typing import Dict
 from typing import Generator
 from typing import Iterable
-from typing import List
 
 from multibuffer import MultiBuffer
 from utils import last
 
-Rules = Dict[str, List[str]]
+Rules = Dict[str, list[str]]
 
 
 def load(fn: str) -> tuple[str, Rules]:

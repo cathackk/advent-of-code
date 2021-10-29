@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 
 from utils import following
 from utils import ilog
@@ -7,7 +6,7 @@ from utils import mink
 from utils import product
 
 
-def subsqs(tsum: int, values: List[int]) -> Iterable[List[int]]:
+def subsqs(tsum: int, values: list[int]) -> Iterable[list[int]]:
     if tsum == 0:
         yield []
         return
@@ -18,7 +17,7 @@ def subsqs(tsum: int, values: List[int]) -> Iterable[List[int]]:
                 yield [value] + ss
 
 
-def first_container(weights: List[int], containers_count: int) -> Iterable[List[int]]:
+def first_container(weights: list[int], containers_count: int) -> Iterable[list[int]]:
     total_weights = sum(weights)
     assert total_weights % containers_count == 0
     container_weight = total_weights // containers_count
@@ -35,7 +34,7 @@ def first_container(weights: List[int], containers_count: int) -> Iterable[List[
             yield container1
 
 
-def best_ps_balance(weights: List[int], containers_count: int) -> tuple[List[int], int]:
+def best_ps_balance(weights: list[int], containers_count: int) -> tuple[list[int], int]:
     weights = sorted(weights, reverse=True)
     ps, (l, qe) = mink(
         ilog(first_container(weights, containers_count), every=1000),
@@ -44,13 +43,13 @@ def best_ps_balance(weights: List[int], containers_count: int) -> tuple[List[int
     return ps, qe
 
 
-def part_1(weights: List[int]) -> int:
+def part_1(weights: list[int]) -> int:
     ps, qe = best_ps_balance(weights, 3)
     print(f"part 1: best balancing has QE={qe} ({ps})")
     return qe
 
 
-def part_2(weights: List[int]) -> int:
+def part_2(weights: list[int]) -> int:
     ps, qe = best_ps_balance(weights, 4)
     print(f"part 2: best balancing has QE={qe} ({ps})")
     return qe

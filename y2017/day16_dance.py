@@ -1,12 +1,11 @@
 from typing import Any
 from typing import Iterable
-from typing import List
 
 
 Dancers = str
 Move = tuple[str, Any, Any]
 Dance = Iterable[Move]
-Permutation = List[int]
+Permutation = list[int]
 
 
 def spin(ds: Dancers, distance: int) -> Dancers:
@@ -81,7 +80,7 @@ def do_dance(dancers: Dancers, dance: Dance) -> Dancers:
 
 
 def do_dance_repeated(dancers: Dancers, dance: Dance, repeats: int) -> Dancers:
-    history: List[Dancers] = [dancers]
+    history: list[Dancers] = [dancers]
     while len(history) < repeats:
         dancers = do_dance(dancers, dance)
         if dancers == history[0]:

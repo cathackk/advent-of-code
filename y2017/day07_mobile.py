@@ -2,7 +2,6 @@ from collections import Counter
 from typing import Dict
 from typing import Generator
 from typing import Iterable
-from typing import List
 from typing import Optional
 
 
@@ -23,7 +22,7 @@ class Mobile:
         else:
             return True
 
-    def find_disbalanced(self) -> Optional[tuple['Mobile', List['Mobile']]]:
+    def find_disbalanced(self) -> Optional[tuple['Mobile', list['Mobile']]]:
         if len(self.children) < 2:
             # 0 or 1 children -> no disbalanced
             return None
@@ -97,7 +96,7 @@ class Mobile:
 
 
 def load_mobile(fn: str) -> Mobile:
-    protos: Dict[str, tuple[int, List[str]]] = dict()
+    protos: Dict[str, tuple[int, list[str]]] = dict()
     depends_on: Dict[str, str] = dict()
 
     for line in open(fn):
@@ -113,7 +112,7 @@ def load_mobile(fn: str) -> Mobile:
     return create_mobile(find_root(depends_on), protos)
 
 
-def create_mobile(name: str, protos: Dict[str, tuple[int, List[str]]]) -> Mobile:
+def create_mobile(name: str, protos: Dict[str, tuple[int, list[str]]]) -> Mobile:
     weight, children_names = protos[name]
     return Mobile(
         name=name,

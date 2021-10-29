@@ -1,12 +1,11 @@
 from collections import Counter
-from typing import List
 
 
-def load_lines(fn: str) -> List[str]:
+def load_lines(fn: str) -> list[str]:
     return [line.strip() for line in open(fn)]
 
 
-def repcode(codes: List[str], most_common: bool) -> str:
+def repcode(codes: list[str], most_common: bool) -> str:
     codes = list(codes)
     assert len(codes) > 0
     length = len(codes[0])
@@ -25,13 +24,13 @@ def test_repcode():
     assert repcode(lines, most_common=False) == "advent"
 
 
-def part_1(lines: List[str]) -> str:
+def part_1(lines: list[str]) -> str:
     message = repcode(lines, most_common=True)
     print(f"part 1: message is {message!r}")
     return message
 
 
-def part_2(lines: List[str]) -> str:
+def part_2(lines: list[str]) -> str:
     message = repcode(lines, most_common=False)
     print(f"part 2: message is {message!r}")
     return message

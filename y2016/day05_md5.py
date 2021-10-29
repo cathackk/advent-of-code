@@ -1,6 +1,5 @@
 from itertools import count
 from typing import Iterable
-from typing import List
 from typing import Optional
 
 from md5 import md5
@@ -11,7 +10,7 @@ def create_password(door_id: str, version: int, length: int = 8) -> str:
         return ''.join(generate_digits_v1(door_id, length))
 
     elif version == 2:
-        digits: List[Optional[str]] = ['_'] * length
+        digits: list[Optional[str]] = ['_'] * length
         remaining = length
         for pos, digit in generate_digits_v2(door_id, length):
             if digits[pos] == '_':

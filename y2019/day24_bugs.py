@@ -1,6 +1,5 @@
 from collections import Counter
 from typing import Iterable
-from typing import List
 
 from utils import minmax
 
@@ -221,7 +220,7 @@ class HyperGrid:
     def load(cls, fn: str):
         width = None
         height = 0
-        bugs: List[Pos3] = []
+        bugs: list[Pos3] = []
 
         for y, line in enumerate(open(fn)):
             line = line.strip()

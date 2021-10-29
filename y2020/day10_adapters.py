@@ -6,12 +6,11 @@ https://adventofcode.com/2020/day/10
 
 from collections import Counter
 from collections import defaultdict
-from typing import List
 
 from utils import diffs
 
 
-def part_1(adapters: List[int]) -> int:
+def part_1(adapters: list[int]) -> int:
     """
     The charging outlet near your seat produces the wrong number of *jolts*. Always prepared, you
     make a list of all of the joltage adapters in your bag.
@@ -87,7 +86,7 @@ def part_1(adapters: List[int]) -> int:
     return result
 
 
-def part_2(adapters: List[int]) -> int:
+def part_2(adapters: list[int]) -> int:
     """
     To completely determine whether you have enough adapters, you'll need to figure out how many
     different ways they can be arranged. Every arrangement needs to connect the charging outlet to
@@ -135,11 +134,11 @@ def part_2(adapters: List[int]) -> int:
     return result
 
 
-def increases(adapters: List[int]) -> List[int]:
+def increases(adapters: list[int]) -> list[int]:
     return list(diffs([0] + sorted(adapters))) + [3]
 
 
-def arrangements_count(adapters: List[int]) -> int:
+def arrangements_count(adapters: list[int]) -> int:
     adapter_joltage = max(adapters) + 3
     joltages = [0] + sorted(adapters) + [adapter_joltage]
     # how many paths lead to this joltage?
@@ -152,7 +151,7 @@ def arrangements_count(adapters: List[int]) -> int:
     return paths_to[adapter_joltage]
 
 
-def load_data(fn: str) -> List[int]:
+def load_data(fn: str) -> list[int]:
     return [
         int(line_stripped)
         for line in open(fn)

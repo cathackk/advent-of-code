@@ -1,12 +1,11 @@
 from typing import Dict
 from typing import Iterable
-from typing import List
 
 from heading import Heading
 
 
 Pos = tuple[int, int]
-Instructions = Iterable[List[Heading]]
+Instructions = Iterable[list[Heading]]
 Keypad = Dict[Pos, str]
 
 

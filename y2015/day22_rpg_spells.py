@@ -3,7 +3,6 @@ from abc import abstractmethod
 from copy import copy
 from typing import Dict
 from typing import Iterable
-from typing import List
 
 from typing import NamedTuple
 from typing import Optional
@@ -127,7 +126,7 @@ spell_drain = SpellDrain()
 spell_shield = SpellShield()
 spell_poison = SpellPoison()
 spell_recharge = SpellRecharge()
-spell_book: List[Spell] = [spell_missile, spell_drain, spell_shield, spell_poison, spell_recharge]
+spell_book: list[Spell] = [spell_missile, spell_drain, spell_shield, spell_poison, spell_recharge]
 
 
 class BattleEnd(Exception):
@@ -294,7 +293,7 @@ def interactive(battle: Battle):
         battle.turn(spell)
 
 
-def victory_sequence(battle: Battle) -> tuple[int, List[Spell]]:
+def victory_sequence(battle: Battle) -> tuple[int, list[Spell]]:
     for spell in battle.possible_spells():
         battle_c = copy(battle)
         try:

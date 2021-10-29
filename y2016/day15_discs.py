@@ -1,12 +1,11 @@
 from itertools import count
-from typing import List
 from typing import Optional
 
 
 Disc = tuple[int, int]
 
 
-def fall(discs: List[Disc], time: int) -> Optional[tuple[int, Disc]]:
+def fall(discs: list[Disc], time: int) -> Optional[tuple[int, Disc]]:
     for index, (dpos0, dsize) in enumerate(discs):
         dpos = (dpos0 + time + index + 1) % dsize
         if dpos != 0:

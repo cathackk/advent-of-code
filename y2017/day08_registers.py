@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 
 
 class Condition:

@@ -1,6 +1,5 @@
 from itertools import permutations
 from typing import Iterable
-from typing import List
 from typing import Optional
 
 from y2019.intcode import load_tape
@@ -74,7 +73,7 @@ def find_best_phases_loop(tape: Iterable[int], phases_range: range = range(5, 10
         for n in range(len(phases_range))
     ]
 
-    def run_amps_loop(phases: List[int]) -> Optional[int]:
+    def run_amps_loop(phases: list[int]) -> Optional[int]:
         amp_fs = [amp.as_function_scalar(init=[phase]) for amp, phase in zip(amps, phases)]
         signal = 0
         final_signal = None

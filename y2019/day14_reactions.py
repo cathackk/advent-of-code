@@ -2,7 +2,6 @@ import math
 from collections import Counter
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import NamedTuple
 
 from bsrange import BSRange
@@ -71,7 +70,7 @@ class Recipe:
 
 def create_costs(
         recipes: Iterable[Recipe]
-) -> Dict[str, tuple[int, List[IngrAmount], List[IngrAmount]]]:
+) -> Dict[str, tuple[int, list[IngrAmount], list[IngrAmount]]]:
     return dgroupby(
         recipes,
         key=lambda r: r.out.code,

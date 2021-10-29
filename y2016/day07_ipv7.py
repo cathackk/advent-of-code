@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 
 
 def find_abba(s: str) -> Iterable[str]:
@@ -111,17 +110,17 @@ def supports_ssl(ip: str) -> bool:
     return bool(super_abs & hyper_abs)
 
 
-def load_ips(fn: str) -> List[str]:
+def load_ips(fn: str) -> list[str]:
     return [line.strip() for line in open(fn)]
 
 
-def part_1(ips: List[str]) -> int:
+def part_1(ips: list[str]) -> int:
     count = sum(1 for ip in ips if supports_tls(ip))
     print(f"part 1: {count} IPs support TLS")
     return count
 
 
-def part_2(ips: List[str]) -> int:
+def part_2(ips: list[str]) -> int:
     count = sum(1 for ip in ips if supports_ssl(ip))
     print(f"part 2: {count} IPs support SSL")
     return count

@@ -1,9 +1,8 @@
 from collections import Counter
 from itertools import combinations
-from typing import List
 
 
-def part_1(tags: List[str]) -> int:
+def part_1(tags: list[str]) -> int:
     tags2 = [tag for tag in tags if 2 in Counter(tag).values()]
     tags3 = [tag for tag in tags if 3 in Counter(tag).values()]
     checksum = len(tags2) * len(tags3)
@@ -11,7 +10,7 @@ def part_1(tags: List[str]) -> int:
     return checksum
 
 
-def part_2(tags: List[str]) -> str:
+def part_2(tags: list[str]) -> str:
     pairs = [
         (tag1, tag2)
         for tag1, tag2 in combinations(tags, 2)

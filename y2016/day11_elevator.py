@@ -1,7 +1,6 @@
 from itertools import combinations
 from typing import Dict
 from typing import Iterable
-from typing import List
 from typing import Optional
 from typing import Set
 
@@ -15,7 +14,7 @@ class State:
 
         self.floors = floors
         self.elevator_at = elevator_at
-        self.items_by_floor: Dict[int, List[str]] = {floor: [] for floor in range(1, floors+1)}
+        self.items_by_floor: Dict[int, list[str]] = {floor: [] for floor in range(1, floors+1)}
         for item, floor in items:
             self.items_by_floor[floor].append(item)
         self._key: Optional[str] = None
@@ -41,7 +40,7 @@ class State:
         # self.items_by_floor = {1: ['GB'], 2: ['MA'], 3: ['MB', 'GA']}
         # self.items = [('GB', 1), ('MA', 2), ('MB', 3), ('GA', 3)]
         # g1 = {'A': [('M': 2), ('G', 3)], 'B': [('G', 1), ('M', 3)]}
-        g1: Dict[str, List[tuple[str, int]]] = dgroupby(
+        g1: Dict[str, list[tuple[str, int]]] = dgroupby(
             self.ifs(),
             key=lambda if_: if_[0][1],  # code
             value=lambda if_: (if_[0][0], if_[1])  # (type, floor)
@@ -154,7 +153,7 @@ def search(start: State, end: State = None, debug: bool = False) -> int:
     if end is None:
         end = end_state(start)
 
-    buffer: List[tuple[State, int]] = [(start, 0)]
+    buffer: list[tuple[State, int]] = [(start, 0)]
     known_keys = set(start.key())
     tick = 0
 

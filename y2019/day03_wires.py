@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 from typing import Set
 
 from heading import Heading
@@ -8,7 +7,7 @@ from utils import mink
 Pos = tuple[int, int]
 PosTime = tuple[Pos, int]
 Move = tuple[Heading, int]
-Wire = List[Move]
+Wire = list[Move]
 
 
 hs = {

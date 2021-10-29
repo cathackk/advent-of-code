@@ -1,5 +1,4 @@
 from typing import Iterable
-from typing import List
 from typing import NamedTuple
 
 from utils import maxk
@@ -27,7 +26,7 @@ def load_ingredients(fn: str) -> Iterable[Ingredient]:
         yield Ingredient(name, *data_values)
 
 
-def recipe_score(amounts: List[tuple[Ingredient, int]], required_calories: int = None) -> int:
+def recipe_score(amounts: list[tuple[Ingredient, int]], required_calories: int = None) -> int:
     amounts = dict(amounts)
     capacity =   max(sum(i.capacity   * amount for i, amount in amounts.items()), 0)
     durability = max(sum(i.durability * amount for i, amount in amounts.items()), 0)
@@ -44,9 +43,9 @@ def recipe_score(amounts: List[tuple[Ingredient, int]], required_calories: int =
 
 
 def generate_recipes(
-        ingredients: List[Ingredient],
+        ingredients: list[Ingredient],
         limit: int
-) -> Iterable[List[tuple[Ingredient, int]]]:
+) -> Iterable[list[tuple[Ingredient, int]]]:
     if len(ingredients) == 1:
         yield [(ingredients[0], limit)]
         return
@@ -58,20 +57,21 @@ def generate_recipes(
 
 
 
-def part_1(ingredients: List[Ingredient]) -> int:
+def part_1(ingredients: list[Ingredient]) -> int:
     best_recipe, score = maxk(generate_recipes(ingredients, 100), key=recipe_score)
     best_recipe_d = {ingr.name: amount for ingr, amount in best_recipe}
     print(f"part 1: best recipe {best_recipe_d}, score {score}")
     return score
 
 
-def part_2(ingredients: List[Ingredient]) -> int:
+def part_2(ingredients: list[Ingredient]) -> int:
     best_recipe, score = maxk(
         generate_recipes(ingredients, 100),
         key=lambda r: recipe_score(r, required_calories=500)
     )
     best_recipe_d = {ingr.name: amount for ingr, amount in best_recipe}
     print(f"part 2: best recipe {best_recipe_d}, score {score}")
+    return score
 
 
 if __name__ == '__main__':

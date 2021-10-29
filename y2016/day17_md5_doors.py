@@ -1,6 +1,5 @@
 from typing import Generator
 from typing import Iterable
-from typing import List
 from typing import Optional
 
 from md5 import md5
@@ -39,7 +38,7 @@ def find_paths(
     assert start in bounds
     assert end in bounds
 
-    to_visit: List[Path] = [(start, '')]
+    to_visit: list[Path] = [(start, '')]
 
     while to_visit:
         visiting = to_visit
