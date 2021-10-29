@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/11
 from collections import Counter
 from collections import defaultdict
 from functools import cached_property
-from typing import Counter as TCounter
 from typing import Iterable
 from typing import Optional
 
@@ -443,7 +442,7 @@ class SeatsMap:
 
         return dict(visibles)
 
-    def occupied_neighbors_count(self, neighbors: dict[Pos, set[Pos]]) -> TCounter[Pos]:
+    def occupied_neighbors_count(self, neighbors: dict[Pos, set[Pos]]) -> Counter[Pos]:
         """
         Count the number occupied neighboring seats.
         Definition of "neighboring" is passed in `neighbors` arg.
@@ -455,13 +454,13 @@ class SeatsMap:
             for npos in neighbors[pos]
         )
 
-    def occupied_adjacents(self) -> TCounter[Pos]:
+    def occupied_adjacents(self) -> Counter[Pos]:
         return self.occupied_neighbors_count(self.adjacents)
 
-    def occupied_visibles(self) -> TCounter[Pos]:
+    def occupied_visibles(self) -> Counter[Pos]:
         return self.occupied_neighbors_count(self.visibles)
 
-    def advance(self, occupied_neighbors_count: TCounter[Pos], max_neighbors_to_stay: int) -> bool:
+    def advance(self, occupied_neighbors_count: Counter[Pos], max_neighbors_to_stay: int) -> bool:
 
         def next_tile(tile: str, occ_ns_count: int) -> str:
             if tile == self.EMPTY_SEAT and occ_ns_count == 0:
