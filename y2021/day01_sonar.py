@@ -80,8 +80,8 @@ def count_increases(values: Iterable[int]) -> int:
     return sum(v1 > v0 for v0, v1 in slidingw(values, 2))
 
 
-def values_from_file(fn: str) -> Iterable[int]:
-    return (int(line.strip()) for line in open(fn))
+def values_from_file(fn: str) -> list[int]:
+    return [int(line.strip()) for line in open(fn)]
 
 
 if __name__ == '__main__':
