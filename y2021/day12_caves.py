@@ -4,7 +4,6 @@ Day X: title
 https://adventofcode.com/2021/day/X
 """
 
-from collections import Counter
 from typing import Iterable
 
 
@@ -158,7 +157,7 @@ def part_2(caves: 'Graph') -> int:
 
     Now, the `36` possible paths through the first example above are:
 
-        >>> print_paths(g.paths(single_small_revisit=True))
+        >>> print_paths(g.paths(small_revisits_remaining=1))
         start,A,b,A,b,A,c,A,end
         start,A,b,A,b,A,end
         start,A,b,A,b,end
@@ -200,10 +199,10 @@ def part_2(caves: 'Graph') -> int:
     now has `3509` paths through it:
 
         >>> g2 = Graph.from_file('data/12-example-slightly-larger.txt')
-        >>> sum(1 for _ in g2.paths(single_small_revisit=True))
+        >>> sum(1 for _ in g2.paths(small_revisits_remaining=1))
         103
         >>> g3 = Graph.from_file('data/12-example-even-larger.txt')
-        >>> sum(1 for _ in g3.paths(single_small_revisit=True))
+        >>> sum(1 for _ in g3.paths(small_revisits_remaining=1))
         3509
 
     Given these new rules, **how many paths through this cave system are there?**
@@ -213,7 +212,7 @@ def part_2(caves: 'Graph') -> int:
         3509
     """
 
-    result = sum(1 for _ in caves.paths(single_small_revisit=True))
+    result = sum(1 for _ in caves.paths(small_revisits_remaining=1))
 
     print(f"part 2: there are {result} paths")
     return result
@@ -284,22 +283,20 @@ class Graph:
     def paths(
         self,
         prefix: Path = ('start',),
-        single_small_revisit: bool = False
+        small_revisits_remaining: int = 0
     ) -> Iterable[Path]:
+        assert len(prefix) > 0
+        assert small_revisits_remaining >= 0
+
         current = prefix[-1]
         if current == 'end':
             return [prefix]
 
-        revisit_still_possible = (
-            single_small_revisit
-            and 2 not in Counter(c for c in prefix if c.islower()).values()
-        )
-
         return (
             longer_path
             for dest in self.cave_links[current]
-            if dest.isupper() or dest not in prefix or revisit_still_possible
-            for longer_path in self.paths(prefix + (dest,), single_small_revisit)
+            if not (revisiting := dest.islower() and dest in prefix) or small_revisits_remaining > 0
+            for longer_path in self.paths(prefix + (dest,), small_revisits_remaining - revisiting)
         )
 
 
