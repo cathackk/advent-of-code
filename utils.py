@@ -158,7 +158,7 @@ def exhaust(g: Generator[Any, Any, T]) -> T:
 def dgroupby(
         items: Iterable[T],
         key: Callable[[T], K],
-        value: Callable[[T], V]
+        value: Callable[[T], V] = lambda t: t
 ) -> dict[K, list[V]]:
     d: dict[K, list[V]] = dict()
 
@@ -174,7 +174,7 @@ def dgroupby(
 def dgroupby_set(
         items: Iterable[T],
         key: Callable[[T], K],
-        value: Callable[[T], V]
+        value: Callable[[T], V] = lambda t: t
 ) -> dict[K, set[V]]:
     d: dict[K, set[V]] = dict()
 
