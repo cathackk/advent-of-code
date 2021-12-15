@@ -67,6 +67,10 @@ class Rect:
         return self.bottom_y - self.top_y + 1
 
     @property
+    def shape(self) -> tuple[int, int]:
+        return self.width, self.height
+
+    @property
     def area(self) -> int:
         return self.width * self.height
 
