@@ -1,7 +1,7 @@
 """
 Advent of Code 2021
-Day X: title
-https://adventofcode.com/2021/day/X
+Day 12: Passage Pathing
+https://adventofcode.com/2021/day/12
 """
 
 from typing import Iterable
