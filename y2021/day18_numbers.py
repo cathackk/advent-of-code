@@ -3,12 +3,12 @@ Advent of Code 2021
 Day 18: Snailfish
 https://adventofcode.com/2021/day/18
 """
-from abc import ABC
-from abc import abstractmethod
+
+from itertools import chain
 from typing import Iterable
 from typing import Optional
 
-from utils import eprint
+from utils import zip1
 
 
 def part_1(numbers: list['Number']) -> int:
@@ -35,7 +35,7 @@ def part_1(numbers: list['Number']) -> int:
         [1,2]
         >>> print(ns1[1])
         [[1,2],3]
-        >>> print(ns1[-1])
+        >>> print(ns1[6])
         [[[[1,3],[5,3]],[[1,3],[8,7]]],[[[4,9],[6,9]],[[8,2],[7,3]]]]
 
     # Addition
@@ -101,11 +101,11 @@ def part_1(numbers: list['Number']) -> int:
     the regular number divided by two and rounded **down**, while the right element of the pair
     should be the regular number divided by two and rounded **up**.
 
-        >>> print(RegularNumber(10).splitted())
+        >>> print(Number.singular_from_int(10).split())
         [5,5]
-        >>> print(RegularNumber(11).splitted())
+        >>> print(Number.singular_from_int(11).split())
         [5,6]
-        >>> print(RegularNumber(12).splitted())
+        >>> print(Number.singular_from_int(12).split())
         [6,6]
 
     ## Reduction continued
@@ -114,7 +114,8 @@ def part_1(numbers: list['Number']) -> int:
 
         >>> a = Number.from_str('[[[[4,3],4],4],[7,[[8,4],9]]]')
         >>> b = Number.from_str('[1,1]')
-        >>> c = Number.add(a, b, explain=True)
+        >>> with Explain('reduction'):
+        ...     c = a + b
         after addition: [[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]
         after explode:  [[[[0,7],4],[7,[[8,4],9]]],[1,1]]
         after explode:  [[[[0,7],4],[15,[0,13]]],[1,1]]
@@ -182,26 +183,44 @@ def part_1(numbers: list['Number']) -> int:
 
     The final sum is found after adding up the above snailfish numbers:
 
-        >>> ns3_sum = Number.sum(ns3, explain=True)
+        >>> with Explain('addition'):
+        ...     ns3_sum = sum(ns3)
           [[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]
         + [7,[[[3,7],[4,3]],[[6,3],[8,8]]]]
         = [[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]
+        <BLANKLINE>
+          [[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]
         + [[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]
         = [[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]
+        <BLANKLINE>
+          [[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]
         + [[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]
         = [[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]
+        <BLANKLINE>
+          [[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]
         + [7,[5,[[3,8],[1,4]]]]
         = [[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]
+        <BLANKLINE>
+          [[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]
         + [[2,[2,2]],[8,[8,1]]]
         = [[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]
+        <BLANKLINE>
+          [[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]
         + [2,9]
         = [[[[6,6],[7,7]],[[0,7],[7,7]]],[[[5,5],[5,6]],9]]
+        <BLANKLINE>
+          [[[[6,6],[7,7]],[[0,7],[7,7]]],[[[5,5],[5,6]],9]]
         + [1,[[[9,3],9],[[9,0],[0,7]]]]
         = [[[[7,8],[6,7]],[[6,8],[0,8]]],[[[7,7],[5,0]],[[5,5],[5,6]]]]
+        <BLANKLINE>
+          [[[[7,8],[6,7]],[[6,8],[0,8]]],[[[7,7],[5,0]],[[5,5],[5,6]]]]
         + [[[5,[7,4]],7],1]
         = [[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]
+        <BLANKLINE>
+          [[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]
         + [[[[4,2],2],6],[8,7]]
         = [[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
+        <BLANKLINE>
         >>> print(ns3_sum)
         [[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
 
@@ -325,23 +344,15 @@ def part_2(numbers: list['Number']) -> int:
     return result
 
 
-class Number(ABC):
-    def __init__(self):
-        self.parent: Optional['PairNumber'] = None
+ValueLevel = tuple[int, int]
 
-    @classmethod
-    def from_str(cls, s: str) -> 'Number':
-        if not s:
-            raise ValueError('empty value')
 
-        if s[0].isdigit():
-            impl_cls = RegularNumber
-        elif s[0] == '[':
-            impl_cls = PairNumber
-        else:
-            raise ValueError(f'invalid number string: {s!r}')
+class Number:
+    def __init__(self, value_levels: Iterable[ValueLevel]):
+        self.value_levels = list(value_levels)
 
-        return impl_cls.from_str(s)
+    def __repr__(self) -> str:
+        return f'{type(self).__name__}({self.value_levels!r})'
 
     @classmethod
     def many_from_text(cls, text: str) -> list['Number']:
@@ -355,266 +366,175 @@ class Number(ABC):
     def many_from_lines(cls, lines: Iterable[str]) -> Iterable['Number']:
         return (cls.from_str(line.strip()) for line in lines)
 
-    def add(self, right: 'Number', explain: bool = False) -> 'Number':
-        result = PairNumber(left=self.copy(), right=right.copy())
-        if explain:
-            print(f'after addition: {result}')
-
-        # reduce
-        while True:
-            if result.explode():
-                if explain:
-                    print(f'after explode:  {result}')
-            elif result.split():
-                if explain:
-                    print(f'after split:    {result}')
-            else:
-                return result
-
-    def __add__(self, other) -> 'Number':
-        if isinstance(other, Number):
-            return self.add(right=other)
-        else:
-            raise TypeError(
-                f'unsupported operand type for +: '
-                f'{type(self).__name__!r} and {type(other).__name__!r}'
-            )
-
-    def __radd__(self, other) -> 'Number':
-        if isinstance(other, int) and other == 0:
-            # to enable sum(numbers)
-            return self
-        else:
-            raise TypeError(
-                f'unsupported operand type for +: '
-                f'{type(other).__name__!r} and {type(self).__name__!r}'
-            )
-
-    @abstractmethod
-    def explode(self, levels_remaining: int = 4) -> bool:
-        ...
-
-    def exploded(self) -> Optional['Number']:
-        return self if self.explode() else None
-
-    @abstractmethod
-    def split(self, limit: int = 10) -> Optional['PairNumber']:
-        ...
-
-    def splitted(self) -> Optional['Number']:
-        if self.parent:
-            return self if self.split() else None
-        else:
-            return self.split()
-
-    @abstractmethod
-    def copy(self) -> 'Number':
-        ...
-
-    @staticmethod
-    def sum(numbers: Iterable['Number'], explain: bool = False) -> 'Number':
-        numbers_iter = iter(numbers)
-        result = next(numbers_iter)
-        if explain:
-            print(f'  {result}')
-        for number in numbers_iter:
-            result = result + number
-            if explain:
-                print(f'+ {number}')
-                print(f'= {result}')
-        return result
-
-    @abstractmethod
-    def leftmost_regular(self) -> 'RegularNumber':
-        ...
-
-    @abstractmethod
-    def rightmost_regular(self) -> 'RegularNumber':
-        ...
-
-    @abstractmethod
-    def __abs__(self) -> int:
-        ...
-
-
-class RegularNumber(Number):
-    def __init__(self, value: int):
-        super().__init__()
-        self.value = value
-
-    def __repr__(self) -> str:
-        return f'{type(self).__name__}({self.value!r})'
-
-    def __str__(self) -> str:
-        return str(self.value)
-
     @classmethod
-    def from_str(cls, s: str) -> 'RegularNumber':
-        return cls(int(s))
-
-    def copy(self) -> 'RegularNumber':
-        return type(self)(self.value)
-
-    def explode(self, levels_remaining: int = 4) -> bool:
-        return False
-
-    def split(self, limit: int = 10) -> Optional['PairNumber']:
-        if self.value < limit:
-            return None
-
-        left_value = self.value // 2
-        right_value = self.value - left_value
-        split_number = PairNumber(left=RegularNumber(left_value), right=RegularNumber(right_value))
-        if self.parent:
-            self.parent.replace(self, split_number)
-
-        return split_number
-
-    def leftmost_regular(self) -> 'RegularNumber':
-        return self
-
-    def rightmost_regular(self) -> 'RegularNumber':
-        return self
-
-    def increase(self, by: int) -> None:
-        self.value += by
-
-    def __abs__(self) -> int:
-        return self.value
-
-
-class PairNumber(Number):
-    def __init__(self, left: Number, right: Number):
-        super().__init__()
-
-        self.left = left
-        self.right = right
-
-        self.left.parent = self
-        self.right.parent = self
-
-    def __repr__(self) -> str:
-        return f'{type(self).__name__}({self.left!r}, {self.right!r})'
-
-    def __str__(self) -> str:
-        return f'[{self.left},{self.right}]'
-
-    @classmethod
-    def from_str(cls, s: str) -> 'PairNumber':
-        def delimit(text: str, start: int) -> int:
+    def from_str(cls, line: str) -> 'Number':
+        def vls() -> Iterable[ValueLevel]:
             level = 0
-            for i in range(start, len(text)):
-                ch = text[i]
+            num_buffer = []
+            for ch in line:
+                if ch.isdigit():
+                    num_buffer.append(ch)
+                elif num_buffer:
+                    yield int(''.join(num_buffer)), level
+                    num_buffer.clear()
+
                 if ch == '[':
                     level += 1
                 elif ch == ']':
                     level -= 1
-                    if level == -1:
-                        return i
-                elif ch == ',':
-                    if level == 0:
-                        return i
+
+        return cls(vls())
+
+    @classmethod
+    def singular_from_int(cls, n: int) -> 'Number':
+        return cls([(n, 0)])
+
+    def __str__(self) -> str:
+        def chars() -> Iterable[str]:
+            states = []
+            for value, level in self.value_levels:
+                # opening brackets
+                while level > len(states):
+                    states.append(',')
+                    yield '['
+                # value
+                yield str(value)
+                # closing brackets
+                while states and states[-1] == ']':
+                    yield states.pop()
+                # commas
+                if states:
+                    assert states[-1] == ','
+                    yield states.pop()
+                    states.append(']')
+
+        return ''.join(chars())
+
+    def __add__(self, other) -> 'Number':
+        cls = type(self)
+        if not isinstance(other, cls):
+            raise TypeError(
+                f"unsupported operand type(s) for +: {cls.__name__!r} and {type(other).__name__!r}"
+            )
+
+        result = cls(chain(
+            ((value, level + 1) for value, level in self.value_levels),
+            ((value, level + 1) for value, level in other.value_levels)
+        ))
+
+        if Explain.LEVEL == 'reduction':
+            print(f'after addition: {result}')
+
+        # reduction
+        while True:
+            if exploded := result.exploded():
+                result = exploded
+                if Explain.LEVEL == 'reduction':
+                    print(f'after explode:  {result}')
+            elif split := result.split():
+                result = split
+                if Explain.LEVEL == 'reduction':
+                    print(f'after split:    {result}')
             else:
-                return -1
+                break
 
+        if Explain.LEVEL == 'addition':
+            print(f'  {self}')
+            print(f'+ {other}')
+            print(f'= {result}')
+            print()
+
+        return result
+
+    def __radd__(self, other) -> 'Number':
+        if isinstance(other, int) and other == 0:
+            return self  # support for sum()
+        else:
+            raise TypeError(
+                f"unsupported operand type(s) for +: "
+                f"{type(self).__name__!r} and {type(other).__name__!r}"
+            )
+
+    def exploded(self, level_limit: int = 4) -> Optional['Number']:
         try:
-            assert len(s) > 2
-            assert s[0] == '['
-            assert s[-1] == ']'
+            left_index, right_index, level, left_value, right_value = next(
+                (index, index + 1, l1, v1, v2)
+                for index, ((v1, l1), (v2, l2)) in enumerate(zip1(self.value_levels))
+                if l1 == l2 > level_limit
+            )
+        except StopIteration:
+            return None
 
-            left_start = 1
-            left_end = delimit(s, left_start)
-            assert left_end > left_start
-            assert s[left_end] == ','
+        new_vls = list(self.value_levels)
 
-            right_start = left_end + 1
-            right_end = delimit(s, right_start)
-            assert right_end > right_start
-            assert s[right_end] == ']'
-            assert right_end == len(s) - 1
+        def adjust_new_vls(index: int, value_diff: int):
+            if index in range(len(new_vls)):
+                v1, l1 = new_vls[index]
+                new_vls[index] = v1 + value_diff, l1
 
-        except AssertionError as exc:
-            raise ValueError(f'invalid pair number string: {s}') from exc
+        adjust_new_vls(left_index - 1, left_value)
+        adjust_new_vls(right_index + 1, right_value)
 
-        return cls(
-            left=Number.from_str(s[left_start:left_end]),
-            right=Number.from_str(s[right_start:right_end])
-        )
+        new_vls[left_index] = (0, level - 1)
+        new_vls.pop(right_index)
 
-    def copy(self) -> 'PairNumber':
-        return type(self)(left=self.left.copy(), right=self.right.copy())
+        return type(self)(new_vls)
 
-    def explode(self, levels_remaining: int = 4) -> bool:
-        if levels_remaining <= 0 and self.is_regular_pair():
-            left_value, right_value = self.regular_pair_values()
-
-            assert self.parent is not None
-
-            if (left_rn := self.parent.left_neighbor_regular(self)):
-                left_rn.increase(left_value)
-
-            if (right_rn := self.parent.right_neighbor_regular(self)):
-                right_rn.increase(right_value)
-
-            self.parent.replace(self, RegularNumber(0))
-
-            return True
-
-        # not exploding this one, try exploding its children
-        return self.left.explode(levels_remaining - 1) or self.right.explode(levels_remaining - 1)
-
-    def split(self, limit: int = 10) -> Optional['PairNumber']:
-        return self.left.split(limit) or self.right.split(limit)
-
-    def is_regular_pair(self) -> bool:
+    def split(self, value_limit: int = 10) -> Optional['Number']:
         try:
-            self.regular_pair_values()
-        except TypeError:
-            return False
-        else:
-            return True
+            index, value, level = next(
+                (i, v, l)
+                for i, (v, l) in enumerate(self.value_levels)
+                if v >= value_limit
+            )
+        except StopIteration:
+            return None
 
-    def regular_pair_values(self) -> tuple[int, int]:
-        if isinstance(self.left, RegularNumber) and isinstance(self.right, RegularNumber):
-            return self.left.value, self.right.value
-        else:
-            raise TypeError('not a regular pair')
+        new_value_left = value // 2
+        new_value_right = value - new_value_left
 
-    def replace(self, child: 'Number', with_number: 'Number') -> None:
-        with_number.parent = self
-        if child is self.left:
-            self.left.parent = None
-            self.left = with_number
-        elif child is self.right:
-            self.right.parent = None
-            self.right = with_number
-        else:
-            raise AssertionError(f'{child} not in {self}')
+        new_vls = list(self.value_levels)
+        new_vls[index] = (new_value_left, level + 1)
+        new_vls.insert(index + 1, (new_value_right, level + 1))
 
-    def left_neighbor_regular(self, child: 'PairNumber') -> RegularNumber | None:
-        if child is self.right:
-            return self.left.rightmost_regular()
-        elif child is self.left:
-            return self.parent.left_neighbor_regular(self) if self.parent else None
-        else:
-            raise AssertionError(f'{child} not in {self}')
-
-    def right_neighbor_regular(self, child: 'PairNumber') -> RegularNumber | None:
-        if child is self.left:
-            return self.right.leftmost_regular()
-        elif child is self.right:
-            return self.parent.right_neighbor_regular(self) if self.parent else None
-        else:
-            raise AssertionError(f'{child} not in {self}')
-
-    def leftmost_regular(self) -> 'RegularNumber':
-        return self.left.leftmost_regular()
-
-    def rightmost_regular(self) -> RegularNumber:
-        return self.right.rightmost_regular()
+        return type(self)(new_vls)
 
     def __abs__(self) -> int:
-        return 3 * abs(self.left) + 2 * abs(self.right)
+        stack: list[tuple[str, int]] = []
+
+        def add_to_stack(val: int) -> int | None:
+            if not stack:
+                return val
+            last_state, last_value = stack.pop()
+            if last_state == 'L':
+                stack.append(('R', last_value + 3 * val))
+                return None
+            elif last_state == 'R':
+                return add_to_stack(last_value + 2 * val)
+            else:
+                assert False, last_state
+
+        for value, level in self.value_levels:
+            while level > len(stack):
+                stack.append(('L', 0))
+            if (result := add_to_stack(value)) is not None:
+                return result
+
+
+class Explain:
+    LEVEL = None
+
+    def __init__(self, level):
+        self.level = level
+        self.previous_level = None
+
+    def __enter__(self):
+        self.previous_level = Explain.LEVEL
+        Explain.LEVEL = self.level
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        Explain.LEVEL = self.previous_level
+        return False
 
 
 if __name__ == '__main__':
