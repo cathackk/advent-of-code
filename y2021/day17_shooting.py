@@ -321,6 +321,16 @@ def triangular_root(t: int) -> int:
         >>> triangular_root(1035)
         45
     """
+
+    # (n+1) * (n/2) = t
+    # (n^2 + n) / 2 = t
+    #     4n^2 + 4n = 8t
+    # 4n^2 + 4n + 1 = 8t + 1
+    #    (2n + 1)^2 = 8t + 1
+    #        2n + 1 = sqrt(8t + 1)
+    #            2n = sqrt(8t + 1) - 1
+    #             n = (sqrt(8t + 1) - 1) / 2
+    
     return int((sqrt(8 * t + 1) - 1) / 2)
 
 
