@@ -8,9 +8,7 @@ import itertools
 from collections import Counter
 from dataclasses import dataclass
 from typing import Iterable
-from typing import NamedTuple
 
-from utils import eprint
 from utils import parse_line
 
 
@@ -137,15 +135,72 @@ def part_2(player_1_start: int, player_2_start: int) -> int:
     return result
 
 
-class Die:
-    def __init__(self, sides: int):
-        self.sides = sides
+@dataclass(frozen=True)
+class PlayerState:
+    pos: int
+    score: int
 
-    def single_roll(self, roll_index: int) -> int:
-        return 1 + roll_index % self.sides
+    def after_turn(self, roll_sum: int, board_size: int) -> 'PlayerState':
+        return PlayerState(
+            pos=(new_pos := 1 + (self.pos + roll_sum - 1) % board_size),
+            score=self.score + new_pos
+        )
 
-    def roll(self, first_roll_index: int, times: int) -> tuple[int, ...]:
-        return tuple(self.single_roll(first_roll_index + n) for n in range(times))
+
+@dataclass(frozen=True)
+class GameState:
+    p1_state: PlayerState
+    p2_state: PlayerState
+    winner: int | None = None
+
+    @classmethod
+    def initial(cls, p1_position: int, p2_position: int) -> 'GameState':
+        return cls(
+            p1_state=PlayerState(pos=p1_position, score=0),
+            p2_state=PlayerState(pos=p2_position, score=0)
+        )
+
+    def state_for(self, player: int):
+        if player == 1:
+            return self.p1_state
+        elif player == 2:
+            return self.p2_state
+        else:
+            raise ValueError(player)
+
+    def after_turn(self, active_player: int, roll: int, board_size: int, target_score: int):
+        assert self.winner is None
+
+        if active_player == 1:
+            return GameState(
+                p1_state=(new_p1_state := self.p1_state.after_turn(roll, board_size)),
+                p2_state=self.p2_state,
+                winner=1 if new_p1_state.score >= target_score else None
+            )
+
+        elif active_player == 2:
+            return GameState(
+                p1_state=self.p1_state,
+                p2_state=(new_p2_state := self.p2_state.after_turn(roll, board_size)),
+                winner=2 if new_p2_state.score >= target_score else None
+            )
+
+        else:
+            raise ValueError(active_player)
+
+    def _key(self) -> tuple:
+        if self.winner is None:
+            return self.p1_state, self.p2_state
+        else:
+            # all universes with winner=1 (or winner=2) are the same
+            # ie. states are ignored if there is a winner
+            return self.winner,
+
+    def __eq__(self, other) -> bool:
+        return isinstance(other, type(self)) and self._key() == other._key()
+
+    def __hash__(self) -> int:
+        return hash(self._key())
 
 
 @dataclass(frozen=True)
@@ -189,40 +244,42 @@ def play(
     assert board_size > 1
     assert starting_player in (1, 2)
 
-    player_pos = [player_1_start, player_2_start]
-    player_score = [0, 0]
+    game = GameState.initial(player_1_start, player_2_start)
     die_rolls_count = 0
 
-    active_player_index = starting_player - 1
-
-    while True:
+    for turn in itertools.count(0):
+        active_player = 1 + (starting_player + turn - 1) % 2
         rolls = tuple(1 + (die_rolls_count + n) % die_sides for n in range(die_rolls_per_turn))
         die_rolls_count += die_rolls_per_turn
-        new_pos = 1 + (player_pos[active_player_index] + sum(rolls) - 1) % board_size
-        player_pos[active_player_index] = new_pos
-        player_score[active_player_index] += new_pos
 
-        if player_score[active_player_index] >= target_score:
+        game = game.after_turn(
+            active_player=active_player,
+            roll=sum(rolls),
+            board_size=board_size,
+            target_score=target_score,
+        )
+
+        if game.winner is not None:
+            final_state = game.state_for(active_player)
             if log:
                 print(
-                    f"Player {active_player_index + 1} rolls {_rolls_str(rolls)} "
-                    f"and moves to space {new_pos} "
-                    f"for a final score, {player_score[active_player_index]}."
+                    f"Player {active_player} rolls {_rolls_str(rolls)} "
+                    f"and moves to space {final_state.pos} "
+                    f"for a final score, {final_state.score}."
                 )
             return GameResult(
-                player_1_score=player_score[0],
-                player_2_score=player_score[1],
+                player_1_score=game.p1_state.score,
+                player_2_score=game.p2_state.score,
                 die_rolls=die_rolls_count,
             )
 
         if log:
+            current_state = game.state_for(active_player)
             print(
-                f"Player {active_player_index + 1} rolls {_rolls_str(rolls)} "
-                f"and moves to space {new_pos} "
-                f"for a total score of {player_score[active_player_index]}."
+                f"Player {active_player} rolls {_rolls_str(rolls)} "
+                f"and moves to space {current_state.pos} "
+                f"for a total score of {current_state.score}."
             )
-
-        active_player_index = (active_player_index + 1) % 2
 
 
 @dataclass(frozen=True)
@@ -249,39 +306,6 @@ class QuantumGameResult:
         return self.player_1_wins if self.multiverse_loser == 1 else self.player_2_wins
 
 
-# TODO: dataclass instead of NamedTuple?
-# TODO: use PlayerState in normal game?
-
-class PlayerState(NamedTuple):
-    pos: int
-    score: int
-
-    def turn(self, roll_sum: int, board_size: int) -> 'PlayerState':
-        return PlayerState(
-            pos=(new_pos := 1 + (self.pos + roll_sum - 1) % board_size),
-            score=self.score + new_pos
-        )
-
-    def __str__(self) -> str:
-        return f'{self.pos}:{self.score}'
-
-
-class Universe(NamedTuple):
-    p1_state: PlayerState | None
-    p2_state: PlayerState | None
-    winner: int | None = None
-
-    @classmethod
-    def with_winner(cls, winner: int) -> 'Universe':
-        return cls(p1_state=None, p2_state=None, winner=winner)
-
-    def __str__(self) -> str:
-        if self.winner is None:
-            return f'{self.p1_state}|{self.p2_state}'
-        else:
-            return f'W{self.winner}'
-
-
 def play_quantum(
     player_1_start: int,
     player_2_start: int,
@@ -305,74 +329,45 @@ def play_quantum(
     )
 
     # at the start there is only one universe
-    initial_universe = Universe(
-        p1_state=PlayerState(pos=player_1_start, score=0),
-        p2_state=PlayerState(pos=player_2_start, score=0),
-        winner=None
-    )
-    universes: Counter[Universe] = Counter({initial_universe: 1})
-
-    def next_universe(u: Universe, active_p: int, roll: int) -> Universe:
-        assert u.winner is None
-
-        if active_p == 1:
-            new_p1_state = u.p1_state.turn(roll, board_size)
-            if new_p1_state.score >= target_score:
-                return Universe.with_winner(1)
-            else:
-                return Universe(p1_state=new_p1_state, p2_state=u.p2_state)
-
-        elif active_p == 2:
-            new_p2_state = u.p2_state.turn(roll, board_size)
-            if new_p2_state.score >= target_score:
-                return Universe.with_winner(2)
-            else:
-                return Universe(p1_state=u.p1_state, p2_state=new_p2_state)
-
-        else:
-            raise ValueError(active_p)
-
-    eprint(f'>> before any turns:\n{_universes_str(universes)}')
+    initial_universe = GameState.initial(player_1_start, player_2_start)
+    universe_counts: Counter[GameState] = Counter({initial_universe: 1})
 
     # split the universes one turn at a time
     for turn in itertools.count(0):
         active_player = 1 + (starting_player + turn - 1) % 2
-        new_universes: Counter[Universe] = Counter()
+        new_universe_counts: Counter[GameState] = Counter()
         any_split = False
 
         # split each universe without a winner
-        for universe, universe_quantity in universes.items():
+        for universe, universe_quantity in universe_counts.items():
             if universe.winner is None:
-                for roll_sum, roll_quantity in roll_sum_probs.items():
-                    new_universe = next_universe(universe, active_player, roll_sum)
-                    new_universes[new_universe] += universe_quantity * roll_quantity
+                for roll, roll_quantity in roll_sum_probs.items():
+                    new_universe = universe.after_turn(
+                        active_player=active_player,
+                        roll=roll,
+                        board_size=board_size,
+                        target_score=target_score,
+                    )
+                    new_universe_counts[new_universe] += universe_quantity * roll_quantity
                 any_split = True
             else:
                 # already has a winner, just copy
-                new_universes[universe] = universe_quantity
+                new_universe_counts[universe] = universe_quantity
 
         if not any_split:
+            # no more universe splits -> we are done
             break
 
-        universes = new_universes
-        eprint(f'>> after turn={turn}, player={active_player}\n{_universes_str(universes)}')
+        universe_counts = new_universe_counts
 
     # evaluation
-    assert len(universes) == 2
-    return QuantumGameResult(
-        player_1_wins=universes[Universe.with_winner(1)],
-        player_2_wins=universes[Universe.with_winner(2)]
-    )
+    wins_count = Counter()
+    for universe, quantity in universe_counts.items():
+        wins_count[universe.winner] += quantity
 
+    assert len(wins_count) == 2
 
-def _universes_str(universes: Counter[Universe], limit: int = 100) -> str:
-    def lines():
-        for index, (universe, quantity) in enumerate(universes.most_common()):
-            if index >= limit:
-                yield f'    ... (total {len(universes)})'
-                break
-            yield f'    {universe} x {quantity}'
-    return '\n'.join(lines())
+    return QuantumGameResult(player_1_wins=wins_count[1], player_2_wins=wins_count[2])
 
 
 def start_from_text(text: str) -> tuple[int, int]:
@@ -384,8 +379,6 @@ def start_from_file(fn: str) -> tuple[int, int]:
 
 
 def start_from_lines(lines: Iterable[str]) -> tuple[int, int]:
-    # Player 1 starting position: 4
-    # Player 2 starting position: 8
     lines = [line.strip() for line in lines]
     assert len(lines) == 2
     pos1, = parse_line(lines[0], "Player 1 starting position: $")
