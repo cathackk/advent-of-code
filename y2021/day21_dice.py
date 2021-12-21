@@ -352,7 +352,7 @@ def play_quantum(
                 any_split = True
             else:
                 # already has a winner, just copy
-                new_universe_counts[universe] = universe_quantity
+                new_universe_counts[universe] += universe_quantity
 
         if not any_split:
             # no more universe splits -> we are done
