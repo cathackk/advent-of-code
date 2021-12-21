@@ -4,9 +4,13 @@ Day 21: Dirac Dice
 https://adventofcode.com/2021/day/21
 """
 
+import itertools
+from collections import Counter
 from dataclasses import dataclass
 from typing import Iterable
+from typing import NamedTuple
 
+from utils import eprint
 from utils import parse_line
 
 
@@ -36,20 +40,19 @@ def part_1(player_1_start: int, player_2_start: int) -> int:
 
     For example, given these starting positions:
 
-        >>> player_1_start, player_2_start = start_from_text('''
+        >>> p1_start, p2_start = start_from_text('''
         ...
         ...     Player 1 starting position: 4
         ...     Player 2 starting position: 8
         ...
         ... ''')
-        >>> player_1_start, player_2_start
+        >>> p1_start, p2_start
         (4, 8)
 
     This is how the game would go:
 
-        >>> gr = play(
-        ...     player_1_start, player_2_start, die_sides=100, target_score=1000, log=True
-        ... )  # doctest: +ELLIPSIS
+        >>> gr = play(p1_start, p2_start, die_sides=100, target_score=1000, log=True)
+        ... # doctest: +ELLIPSIS
         Player 1 rolls 1+2+3 and moves to space 10 for a total score of 10.
         Player 2 rolls 4+5+6 and moves to space 3 for a total score of 3.
         Player 1 rolls 7+8+9 and moves to space 4 for a total score of 14.
@@ -68,7 +71,7 @@ def part_1(player_1_start: int, player_2_start: int) -> int:
     losing player had `745` points and the die had been rolled a total of `993` times
 
         >>> gr
-        GameResult(winner=1, player_1_score=1000, player_2_score=745, die_rolls=993)
+        GameResult(player_1_score=1000, player_2_score=745, die_rolls=993)
         >>> gr.winner, gr.loser, gr.winner_score, gr.loser_score
         (1, 2, 1000, 745)
         >>> gr.loser_score * gr.die_rolls
@@ -78,7 +81,7 @@ def part_1(player_1_start: int, player_2_start: int) -> int:
     **what do you get if you multiply the score of the losing player by the number of times the die
     was rolled during the game?**
 
-        >>> part_1(player_1_start, player_2_start)
+        >>> part_1(p1_start, p2_start)
         part 1: score 1000 vs 745, die rolls 993; 745 * 993 = 739785
         739785
     """
@@ -115,9 +118,9 @@ def part_2(player_1_start: int, player_2_start: int) -> int:
 
         >>> gr = play_quantum(player_1_start=4, player_2_start=8, die_sides=3, target_score=21)
         >>> gr
-        QuantumGameResult(winner=1, player_1_wins=444356092776315, player_2_wins=341960390180808)
-        >>> gr.winner_wins
-        444356092776315
+        QuantumGameResult(player_1_wins=444356092776315, player_2_wins=341960390180808)
+        >>> gr.multiverse_winner, gr.multiverse_loser, gr.multiverse_winner_wins
+        (1, 2, 444356092776315)
 
     Using your given starting positions, determine every possible outcome. **Find the player that
     wins in more universes; in how many universes does that player win?**
@@ -128,9 +131,9 @@ def part_2(player_1_start: int, player_2_start: int) -> int:
     """
 
     outcome = play_quantum(player_1_start, player_2_start, target_score=21, die_sides=3)
-    result = outcome.winner_wins
+    result = outcome.multiverse_winner_wins
 
-    print(f"part 2: player {outcome.winner} wins in {result} universes")
+    print(f"part 2: player {outcome.multiverse_winner} wins in {result} universes")
     return result
 
 
@@ -145,17 +148,19 @@ class Die:
         return tuple(self.single_roll(first_roll_index + n) for n in range(times))
 
 
-
 @dataclass(frozen=True)
 class GameResult:
-    winner: int
     player_1_score: int
     player_2_score: int
     die_rolls: int
 
     @property
+    def winner(self) -> int:
+        return 1 if self.player_1_score > self.player_2_score else 2
+
+    @property
     def loser(self) -> int:
-        return 2 if self.winner == 1 else 1
+        return 1 if self.player_1_score < self.player_2_score else 2
 
     @property
     def winner_score(self) -> int:
@@ -172,16 +177,16 @@ def play(
     target_score: int,
     die_sides: int,
     die_rolls_per_turn: int = 3,
-    board_spaces: int = 10,
+    board_size: int = 10,
     starting_player: int = 1,
     log: bool = False
 ) -> GameResult:
-    assert 1 <= player_1_start <= board_spaces
-    assert 1 <= player_2_start <= board_spaces
+    assert 1 <= player_1_start <= board_size
+    assert 1 <= player_2_start <= board_size
     assert target_score > 0
     assert die_sides > 0
     assert die_rolls_per_turn > 0
-    assert board_spaces > 1
+    assert board_size > 1
     assert starting_player in (1, 2)
 
     player_pos = [player_1_start, player_2_start]
@@ -193,7 +198,7 @@ def play(
     while True:
         rolls = tuple(1 + (die_rolls_count + n) % die_sides for n in range(die_rolls_per_turn))
         die_rolls_count += die_rolls_per_turn
-        new_pos = 1 + (player_pos[active_player_index] + sum(rolls) - 1) % board_spaces
+        new_pos = 1 + (player_pos[active_player_index] + sum(rolls) - 1) % board_size
         player_pos[active_player_index] = new_pos
         player_score[active_player_index] += new_pos
 
@@ -205,7 +210,6 @@ def play(
                     f"for a final score, {player_score[active_player_index]}."
                 )
             return GameResult(
-                winner=active_player_index+1,
                 player_1_score=player_score[0],
                 player_2_score=player_score[1],
                 die_rolls=die_rolls_count,
@@ -223,21 +227,59 @@ def play(
 
 @dataclass(frozen=True)
 class QuantumGameResult:
-    winner: int
     player_1_wins: int
     player_2_wins: int
 
     @property
-    def loser(self) -> int:
-        return 2 if self.winner == 1 else 1
+    def multiverse_winner(self) -> int:
+        assert self.player_1_wins != self.player_2_wins
+        return 1 if self.player_1_wins > self.player_2_wins else 2
 
     @property
-    def winner_wins(self) -> int:
-        return self.player_1_wins if self.winner == 1 else self.player_2_wins
+    def multiverse_loser(self) -> int:
+        assert self.player_1_wins != self.player_2_wins
+        return 1 if self.player_1_wins < self.player_2_wins else 2
 
     @property
-    def loser_wins(self) -> int:
-        return self.player_1_wins if self.loser == 1 else self.player_2_wins
+    def multiverse_winner_wins(self) -> int:
+        return self.player_1_wins if self.multiverse_winner == 1 else self.player_2_wins
+
+    @property
+    def multiverse_loser_wins(self) -> int:
+        return self.player_1_wins if self.multiverse_loser == 1 else self.player_2_wins
+
+
+# TODO: dataclass instead of NamedTuple?
+# TODO: use PlayerState in normal game?
+
+class PlayerState(NamedTuple):
+    pos: int
+    score: int
+
+    def turn(self, roll_sum: int, board_size: int) -> 'PlayerState':
+        return PlayerState(
+            pos=(new_pos := 1 + (self.pos + roll_sum - 1) % board_size),
+            score=self.score + new_pos
+        )
+
+    def __str__(self) -> str:
+        return f'{self.pos}:{self.score}'
+
+
+class Universe(NamedTuple):
+    p1_state: PlayerState | None
+    p2_state: PlayerState | None
+    winner: int | None = None
+
+    @classmethod
+    def with_winner(cls, winner: int) -> 'Universe':
+        return cls(p1_state=None, p2_state=None, winner=winner)
+
+    def __str__(self) -> str:
+        if self.winner is None:
+            return f'{self.p1_state}|{self.p2_state}'
+        else:
+            return f'W{self.winner}'
 
 
 def play_quantum(
@@ -246,12 +288,91 @@ def play_quantum(
     target_score: int,
     die_sides: int,
     die_rolls_per_turn: int = 3,
-    board_spaces: int = 10,
-    starting_player: int = 1,
-    log: bool = False
+    board_size: int = 10,
+    starting_player: int = 1
 ) -> QuantumGameResult:
-    # TODO: implement
-    return QuantumGameResult(1, 444356092776315, 341960390180808)
+    assert 1 <= player_1_start <= board_size
+    assert 1 <= player_2_start <= board_size
+    assert target_score > 0
+    assert die_sides > 0
+    assert die_rolls_per_turn > 0
+    assert board_size > 1
+    assert starting_player in (1, 2)
+
+    roll_sum_probs = Counter(
+        sum(rolls)
+        for rolls in itertools.product(range(1, die_sides + 1), repeat=die_rolls_per_turn)
+    )
+
+    # at the start there is only one universe
+    initial_universe = Universe(
+        p1_state=PlayerState(pos=player_1_start, score=0),
+        p2_state=PlayerState(pos=player_2_start, score=0),
+        winner=None
+    )
+    universes: Counter[Universe] = Counter({initial_universe: 1})
+
+    def next_universe(u: Universe, active_p: int, roll: int) -> Universe:
+        assert u.winner is None
+
+        if active_p == 1:
+            new_p1_state = u.p1_state.turn(roll, board_size)
+            if new_p1_state.score >= target_score:
+                return Universe.with_winner(1)
+            else:
+                return Universe(p1_state=new_p1_state, p2_state=u.p2_state)
+
+        elif active_p == 2:
+            new_p2_state = u.p2_state.turn(roll, board_size)
+            if new_p2_state.score >= target_score:
+                return Universe.with_winner(2)
+            else:
+                return Universe(p1_state=u.p1_state, p2_state=new_p2_state)
+
+        else:
+            raise ValueError(active_p)
+
+    eprint(f'>> before any turns:\n{_universes_str(universes)}')
+
+    # split the universes one turn at a time
+    for turn in itertools.count(0):
+        active_player = 1 + (starting_player + turn - 1) % 2
+        new_universes: Counter[Universe] = Counter()
+        any_split = False
+
+        # split each universe without a winner
+        for universe, universe_quantity in universes.items():
+            if universe.winner is None:
+                for roll_sum, roll_quantity in roll_sum_probs.items():
+                    new_universe = next_universe(universe, active_player, roll_sum)
+                    new_universes[new_universe] += universe_quantity * roll_quantity
+                any_split = True
+            else:
+                # already has a winner, just copy
+                new_universes[universe] = universe_quantity
+
+        if not any_split:
+            break
+
+        universes = new_universes
+        eprint(f'>> after turn={turn}, player={active_player}\n{_universes_str(universes)}')
+
+    # evaluation
+    assert len(universes) == 2
+    return QuantumGameResult(
+        player_1_wins=universes[Universe.with_winner(1)],
+        player_2_wins=universes[Universe.with_winner(2)]
+    )
+
+
+def _universes_str(universes: Counter[Universe], limit: int = 100) -> str:
+    def lines():
+        for index, (universe, quantity) in enumerate(universes.most_common()):
+            if index >= limit:
+                yield f'    ... (total {len(universes)})'
+                break
+            yield f'    {universe} x {quantity}'
+    return '\n'.join(lines())
 
 
 def start_from_text(text: str) -> tuple[int, int]:
