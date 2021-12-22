@@ -4,11 +4,11 @@ Day 3: Toboggan Trajectory
 https://adventofcode.com/2020/day/3
 """
 
+import math
 from typing import Iterable
 
 from rect import Rect
 from utils import join_and
-from utils import product
 
 
 def part_1(trees: 'TreesMap'):
@@ -155,7 +155,7 @@ def part_2(trees: 'TreesMap'):
 
     slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
     encounters = [trees.encounter_count(slope) for slope in slopes]
-    result = product(encounters)
+    result = math.prod(encounters)
     print(f"part 2: encountered {join_and(encounters, True)} tree(s); product is {result}")
     return result
 

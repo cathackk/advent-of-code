@@ -4,6 +4,7 @@ Day 20: Jurassic Jigsaw
 https://adventofcode.com/2020/day/20
 """
 
+import math
 import re
 import itertools
 from typing import Iterable
@@ -11,7 +12,6 @@ from typing import Optional
 
 from rect import Rect
 from utils import parse_line
-from utils import product
 from utils import single_value
 from utils import string_builder
 
@@ -162,7 +162,7 @@ def part_1(tiles: list['Tile']) -> tuple[int, 'Image']:
         >>> corner_ids = [t.tile_id for t in img.corner_tiles]
         >>> corner_ids
         [1951, 3079, 2971, 1171]
-        >>> product(corner_ids)
+        >>> math.prod(corner_ids)
         20899048083289
 
     Assemble the tiles into an image. *What do you get if you multiply together the IDs of the four
@@ -176,7 +176,7 @@ def part_1(tiles: list['Tile']) -> tuple[int, 'Image']:
 
     image = Image.assemble(tiles)
     corner_tiles_ids = [corner_tile.tile_id for corner_tile in image.corner_tiles]
-    result = product(corner_tiles_ids)
+    result = math.prod(corner_tiles_ids)
 
     corners_text = " * ".join(str(tid) for tid in corner_tiles_ids)
     print(f"part 1: assembled image has corner tiles {corners_text} = {result}")

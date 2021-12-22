@@ -1,6 +1,5 @@
+import math
 from collections import defaultdict
-
-from utils import product
 
 Target = tuple[str, int]
 Values = dict[Target, list[int]]
@@ -88,5 +87,5 @@ if __name__ == '__main__':
     f = Factory(initials_)
     while f.step(instructions_) > 0:
         pass
-    result = product(f.single_value_in_output(n) for n in range(3))
+    result = math.prod(f.single_value_in_output(n) for n in range(3))
     print(f"part 2: result is {result}")

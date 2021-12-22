@@ -4,7 +4,6 @@ from itertools import chain
 from typing import Iterable
 
 from utils import minmax
-from utils import product
 
 Pos = tuple[int, int]
 
@@ -196,11 +195,11 @@ class HyperCuboid:
 
     @property
     def volume(self) -> int:
-        return product(self.length(d) for d in self.range_dim)
+        return math.prod(self.length(d) for d in self.range_dim)
 
     @property
     def surface(self) -> int:
-        inner_volume = product(max(0, self.length(d) - 2) for d in self.range_dim)
+        inner_volume = math.prod(max(0, self.length(d) - 2) for d in self.range_dim)
         return self.volume - inner_volume
 
     def corners(self) -> Iterable[HyperPos]:

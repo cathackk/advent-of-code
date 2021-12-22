@@ -4,12 +4,12 @@ Day 16: Ticket Translation
 https://adventofcode.com/2020/day/16
 """
 
+import math
 from typing import Callable
 from typing import Iterable
 
 from utils import line_groups
 from utils import parse_line
-from utils import product
 from utils import single_value
 
 
@@ -178,7 +178,7 @@ def part_2(
     considered_fields = {r.field for r in rules if consider_field(r.field)}
     assert len(considered_fields) > 0
     all_fields_considered = len(considered_fields) == len(rules)
-    result = product(my_ticket_described[f] for f in considered_fields)
+    result = math.prod(my_ticket_described[f] for f in considered_fields)
 
     values_text = "values" if all_fields_considered else "selected values"
     print(f"part 2: {values_text} on your ticket:")

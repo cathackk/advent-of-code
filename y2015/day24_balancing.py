@@ -1,9 +1,9 @@
+import math
 from typing import Iterable
 
 from utils import following
 from utils import ilog
 from utils import mink
-from utils import product
 
 
 def subsqs(tsum: int, values: list[int]) -> Iterable[list[int]]:
@@ -38,7 +38,7 @@ def best_ps_balance(weights: list[int], containers_count: int) -> tuple[list[int
     weights = sorted(weights, reverse=True)
     ps, (l, qe) = mink(
         ilog(first_container(weights, containers_count), every=1000),
-        key=lambda c: (len(c), product(c))
+        key=lambda c: (len(c), math.prod(c))
     )
     return ps, qe
 

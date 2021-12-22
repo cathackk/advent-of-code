@@ -511,27 +511,6 @@ def ilog(
         yield item
 
 
-def product(numbers, start=1):
-    """
-    # TODO: replace with math.prod
-
-    >>> product(range(1, 5))
-    24
-    >>> product([4, 7, 10])
-    280
-    >>> product([2])
-    2
-    >>> product([10, 0, 8])
-    0
-    >>> product([1.4, 1.2, 1.6])
-    2.688
-    """
-    prod = start
-    for number in numbers:
-        prod *= number
-    return prod
-
-
 def constrained(value, min_value, max_value):
     if value < min_value:
         return min_value
