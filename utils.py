@@ -209,6 +209,22 @@ def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> dict[K, set[V]]:
     return d
 
 
+def separate(values: Iterable[V], predicate: Callable[[V], bool]) -> tuple[list[V], list[V]]:
+    """
+        >>> w3, others = separate(['dog', 'cat', 'monkey', 'rat', 'ox'], lambda x: len(x)==3)
+        >>> w3
+        ['dog', 'cat', 'rat']
+        >>> others
+        ['monkey', 'ox']
+    """
+    matching: list[V] = []
+    non_matching: list[V] = []
+
+    for value in values:
+        (matching if predicate(value) else non_matching).append(value)
+
+    return matching, non_matching
+
 def count(items: Iterable) -> int:
     return sum(1 for _ in items)
 
@@ -497,6 +513,8 @@ def ilog(
 
 def product(numbers, start=1):
     """
+    # TODO: replace with math.prod
+
     >>> product(range(1, 5))
     24
     >>> product([4, 7, 10])
