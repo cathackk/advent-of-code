@@ -330,7 +330,7 @@ def triangular_root(t: int) -> int:
     #        2n + 1 = sqrt(8t + 1)
     #            2n = sqrt(8t + 1) - 1
     #             n = (sqrt(8t + 1) - 1) / 2
-    
+
     return int((sqrt(8 * t + 1) - 1) / 2)
 
 
