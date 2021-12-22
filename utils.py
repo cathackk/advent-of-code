@@ -109,26 +109,26 @@ def single_value(items: Iterable[T]) -> T:
         >>> single_value(['cat', 'dog'])
         Traceback (most recent call last):
         ...
-        ValueError: items contains 2 elements (expected 1)
+        ValueError: items contain 2 elements (expected 1)
         >>> single_value((x for x in range(10) if x % 7 == 1))
         Traceback (most recent call last):
         ...
-        ValueError: items contains more than one element
+        ValueError: items contain more than one element
 
     If it has no elements, error is also raised:
 
         >>> single_value([])
         Traceback (most recent call last):
         ...
-        ValueError: items contains 0 elements (expected 1)
+        ValueError: items contain 0 elements (expected 1)
         >>> single_value((x for x in range(10) if x % 13 == 12))
         Traceback (most recent call last):
         ...
-        ValueError: items contains no elements
+        ValueError: items contain no elements
     """
     if isinstance(items, Sized):
         if len(items) != 1:
-            raise ValueError(f"items contains {len(items)} elements (expected 1)")
+            raise ValueError(f"items contain {len(items)} elements (expected 1)")
         return next(iter(items))
 
     else:
@@ -136,7 +136,7 @@ def single_value(items: Iterable[T]) -> T:
         try:
             element1 = next(iterator)
         except StopIteration:
-            raise ValueError("items contains no elements")
+            raise ValueError("items contain no elements")
 
         try:
             next(iterator)
@@ -144,7 +144,7 @@ def single_value(items: Iterable[T]) -> T:
             # that's ok! we didn't actually expect another element
             return element1
         else:
-            raise ValueError("items contains more than one element")
+            raise ValueError("items contain more than one element")
 
 
 def exhaust(g: Generator[Any, Any, T]) -> T:
@@ -211,19 +211,25 @@ def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> dict[K, set[V]]:
 
 def separate(values: Iterable[V], predicate: Callable[[V], bool]) -> tuple[list[V], list[V]]:
     """
-        >>> w3, others = separate(['dog', 'cat', 'monkey', 'rat', 'ox'], lambda x: len(x)==3)
-        >>> w3
+    Returns two list:
+    - the first one contains values that match the given `predicate`,
+    - the second one contains values that don't.
+
+        >>> animals = ['dog', 'cat', 'monkey', 'rat', 'ox']
+        >>> has_three_letters = lambda x: len(x) == 3
+        >>> three_lettered_animals, other_animals = separate(animals, has_three_letters)
+        >>> three_lettered_animals
         ['dog', 'cat', 'rat']
-        >>> others
+        >>> other_animals
         ['monkey', 'ox']
     """
-    matching: list[V] = []
-    non_matching: list[V] = []
+    matching_values, nonmatching_values = [], []
 
     for value in values:
-        (matching if predicate(value) else non_matching).append(value)
+        (matching_values if predicate(value) else nonmatching_values).append(value)
 
-    return matching, non_matching
+    return matching_values, nonmatching_values
+
 
 def count(items: Iterable) -> int:
     return sum(1 for _ in items)
@@ -497,15 +503,16 @@ def powerset(items: Iterable[T]) -> Iterable[tuple[T, ...]]:
         for r in range(len(s) + 1)
     )
 
+
 def ilog(
         items: Iterable[T],
-        format: Callable[[int, T], str] = None,
+        format_str: Callable[[int, T], str] = None,
         every: int = 1
 ) -> Iterable[T]:
     for index, item in enumerate(items):
         if index % every == 0:
             if format:
-                print(format(index, item))
+                print(format_str(index, item))
             else:
                 print('>', index, item)
         yield item
@@ -540,7 +547,7 @@ def create_logger(debug: bool = False) -> Callable[[Any], None]:
             print(o)
         return log
     else:
-        def nolog(o):
+        def nolog(_):
             pass
         return nolog
 
@@ -730,4 +737,3 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
     else:  # not_none_count > 1
         items_text = ", ".join(f"{k}={v!r}" for k, v in kwargs.items() if v is not None)
         raise AssertionError(f"multiple keys were not None: {items_text}")
-
