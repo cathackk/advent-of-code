@@ -3,12 +3,15 @@ Advent of Code 2021
 Day 23: Amphipod
 https://adventofcode.com/2021/day/23
 """
+
+import heapq
+from dataclasses import dataclass
+from dataclasses import field
 from itertools import chain
 from typing import Iterable
 
 from tqdm import tqdm
 
-from heap import Heap
 from utils import parse_line
 from utils import zip1
 
@@ -693,10 +696,10 @@ class State:
             return 1 if self.hallway[pos - 4] == '.' else 0
 
     def _path_is_free(self, from_: int, to: int) -> bool:
-        return all(self._pawn_at(pos) is None for pos in path(from_, to))
+        return all(self._pawn_at(pos) is None for pos in _maze_path(from_, to))
 
     def _distance(self, from_: int, to: int) -> int:
-        base_distance = len(_PATHS[from_, to]) + 1
+        base_distance = len(_MAZE_PATHS[from_, to]) + 1
         extra_room_from = (self.room_size - len(self.rooms[from_])) if from_ in range(4) else 0
         extra_room_to = (self.room_size - 1 - len(self.rooms[to])) if to in range(4) else 0
         return base_distance + extra_room_from + extra_room_to
@@ -706,24 +709,33 @@ class State:
 
         # Dijkstra's algorithm
 
+        @dataclass(frozen=True, order=True, slots=True)
+        class PathInfo:
+            total_cost: int = 0
+            previous_state: State | None = field(default=None, compare=False)
+            move: Move | None = field(default=None, compare=False)
+
         # state -> cheapest known reordering from starting state
-        # (stored as: total cost up to here, previous state, move from previous state to this one)
-        visited_states: dict[State, tuple[int, State | None, Move | None]] = dict()
+        visited_states: dict[State, PathInfo] = dict()
+
+        @dataclass(frozen=True, order=True, slots=True)
+        class Visit:
+            state: State = field(compare=False)
+            path: PathInfo = PathInfo()
+
         # unvisited states neighboring those that are visited
-        # (stored as: cost, (state, prev state, move from prev))
-        states_to_visit = Heap()
+        visits_heap: list[Visit] = []
 
-        def visit(total_cost: int, state: State, previous_state: State | None, move: Move | None):
-            visited_states[state] = total_cost, previous_state, move
-            states_to_visit.update(
-                (total_cost + cost1, (state1, state, move1))
-                # add following states of this one
-                for cost1, state1, move1 in generate_following_states(state)
-                # that were not visited yet
-                if state1 not in visited_states
-            )
+        def make_visit(visit: Visit) -> None:
+            visited_states[visit.state] = visit.path
+            # add states following this one that haven't been visited yet
+            for cost1, state1, move1 in generate_neighboring_states(visit.state):
+                heapq.heappush(
+                    visits_heap,
+                    Visit(state1, PathInfo(visit.path.total_cost + cost1, visit.state, move1))
+                )
 
-        def generate_following_states(state: State) -> Iterable[tuple[int, State, Move]]:
+        def generate_neighboring_states(state: State) -> Iterable[tuple[int, State, Move]]:
             from_to: Iterable[tuple[int, int]] = chain(
                 # room to room
                 ((from_r, to_r) for from_r in range(4) for to_r in range(4) if from_r != to_r),
@@ -737,28 +749,29 @@ class State:
                 new_cost_and_state + ((from_, to),)
                 for from_, to in from_to
                 if (new_cost_and_state := state.move(from_, to)) is not None
+                if new_cost_and_state[1] not in visited_states
             )
 
         # start by visiting origin = self ...
-        visit(total_cost=0, state=self, previous_state=None, move=None)
+        make_visit(Visit(self))
         # ... then adding following states until the destination is visited
         with tqdm(desc="finding cheapest reordering", initial=1, delay=1.0) as prog:
             while destination not in visited_states:
                 # visit the cheapest unvisited state adjacent to one visited
-                cost, (s, ps, m) = states_to_visit.pop_item()
-                if s in visited_states:
+                next_visit = heapq.heappop(visits_heap)
+                if next_visit.state in visited_states:
                     continue
-                visit(cost, s, ps, m)
+                make_visit(next_visit)
                 prog.update()
 
         # construct the final move sequence by backtracking
-        def backtrack(state: State) -> Iterable[Move]:
-            while state != self:
-                _, prev_state, move = visited_states[state]
-                yield move
-                state = prev_state
+        def backtrack(current_state: State) -> Iterable[Move]:
+            while current_state != self:
+                current_visit = visited_states[current_state]
+                yield current_visit.move
+                current_state = current_visit.previous_state
 
-        final_cost = visited_states[destination][0]
+        final_cost = visited_states[destination].total_cost
         final_moves = list(backtrack(destination))[::-1]
         return final_cost, final_moves
 
@@ -767,8 +780,8 @@ TARGET_STATE = State(rooms=('AA', 'BB', 'CC', 'DD'))
 TARGET_STATE_2 = State(rooms=('AAAA', 'BBBB', 'CCCC', 'DDDD'), room_size=4)
 
 
-def path(from_: int, to: int) -> Iterable[int]:
-    return (pos for pos in _PATHS[from_, to] if isinstance(pos, int))
+def _maze_path(from_: int, to: int) -> Iterable[int]:
+    return (pos for pos in _MAZE_PATHS[from_, to] if isinstance(pos, int))
 
 
 Node = int | str
@@ -776,12 +789,16 @@ Edge = tuple[Node, Node]
 
 
 def _generate_paths() -> dict[tuple[int, int], list[int | str]]:
-    # 4-5-H0-6-H1-7-H2-8-H3-9-10
-    #     |    |    |    |
-    #     0    1    2    3
+    # 4-5-"T0"-6-"T1"-7-"T2"-8-"T3"-9-10
+    #      |      |      |      |
+    #      0      1      2      3
+    #
+    # 0..3 = room spaces
+    # 4..10 = hallway spaces
+    # "T0".."T3" = intermediate spaces that can be only traversed
 
-    edges: set[Edge] = {(r, f'H{r}') for r in range(4)}
-    edges.update((a, b) for a, b in zip1([4, 5, 'H0', 6, 'H1', 7, 'H2', 8, 'H3', 9, 10]))
+    edges: set[Edge] = {(r, f'T{r}') for r in range(4)}
+    edges.update((a, b) for a, b in zip1([4, 5, 'T0', 6, 'T1', 7, 'T2', 8, 'T3', 9, 10]))
     nodes = sorted(set(node for n1n2 in edges for node in n1n2), key=str)
     neighbors: dict[Node, list[Node]] = {
         node: [
@@ -820,8 +837,9 @@ def _generate_paths() -> dict[tuple[int, int], list[int | str]]:
     }
 
 
-_PATHS = _generate_paths()
-assert len(_PATHS) == 110, len(_PATHS)  # 110 = 11 * 10 = each node to each node without identity
+_MAZE_PATHS = _generate_paths()
+# 110 = 11 * 10 = each node to each node without identity
+assert len(_MAZE_PATHS) == 110, len(_MAZE_PATHS)
 
 
 if __name__ == '__main__':
