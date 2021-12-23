@@ -8,7 +8,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from utils import eprint
+from heap import Heap
 from utils import parse_line
 from utils import zip1
 
@@ -113,7 +113,7 @@ def part_1(initial_state: 'State') -> int:
 
         >>> cost_1, state_1 = state_0.move(from_=2, to=6)
         >>> cost_1, state_1
-        (40, State(rooms=('AB', 'DC', 'C', 'AD'), hallway=('', '', 'B', '', '', '', '')))
+        (40, State(rooms=('AB', 'DC', 'C', 'AD'), hallway='..B....'))
         >>> print(state_1)
         #############
         #...B.......#
@@ -126,7 +126,7 @@ def part_1(initial_state: 'State') -> int:
 
         >>> cost_2, state_2 = state_1.move(1, 2)
         >>> cost_2, state_2
-        (400, State(rooms=('AB', 'D', 'CC', 'AD'), hallway=('', '', 'B', '', '', '', '')))
+        (400, State(rooms=('AB', 'D', 'CC', 'AD'), hallway='..B....'))
         >>> print(state_2)
         #############
         #...B.......#
@@ -138,13 +138,13 @@ def part_1(initial_state: 'State') -> int:
 
         >>> cost_3, state_3 = state_2.move(1, 7)
         >>> cost_3, state_3
-        (3000, State(rooms=('AB', '', 'CC', 'AD'), hallway=('', '', 'B', 'D', '', '', '')))
+        (3000, State(rooms=('AB', '', 'CC', 'AD'), hallway='..BD...'))
 
     ... and then the Bronze amphipod takes its place, taking 3 steps and using `30` energy:
 
         >>> cost_4, state_4 = state_3.move(6, 1)
         >>> cost_4, state_4
-        (30, State(rooms=('AB', 'B', 'CC', 'AD'), hallway=('', '', '', 'D', '', '', '')))
+        (30, State(rooms=('AB', 'B', 'CC', 'AD'), hallway='...D...'))
         >>> print(state_4)
         #############
         #.....D.....#
@@ -156,7 +156,7 @@ def part_1(initial_state: 'State') -> int:
 
         >>> cost_5, state_5 = state_4.move(0, 1)
         >>> cost_5, state_5
-        (40, State(rooms=('A', 'BB', 'CC', 'AD'), hallway=('', '', '', 'D', '', '', '')))
+        (40, State(rooms=('A', 'BB', 'CC', 'AD'), hallway='...D...'))
         >>> print(state_5)
         #############
         #.....D.....#
@@ -168,10 +168,10 @@ def part_1(initial_state: 'State') -> int:
 
         >>> cost_6, state_6 = state_5.move(3, 8)
         >>> cost_6, state_6
-        (2000, State(rooms=('A', 'BB', 'CC', 'A'), hallway=('', '', '', 'D', 'D', '', '')))
+        (2000, State(rooms=('A', 'BB', 'CC', 'A'), hallway='...DD..'))
         >>> cost_7, state_7 = state_6.move(3, 9)
         >>> cost_7, state_7
-        (3, State(rooms=('A', 'BB', 'CC', ''), hallway=('', '', '', 'D', 'D', 'A', '')))
+        (3, State(rooms=('A', 'BB', 'CC', ''), hallway='...DDA.'))
         >>> print(state_7)
         #############
         #.....D.D.A.#
@@ -183,10 +183,10 @@ def part_1(initial_state: 'State') -> int:
 
         >>> cost_8, state_8 = state_7.move(8, 3)
         >>> cost_8, state_8
-        (3000, State(rooms=('A', 'BB', 'CC', 'D'), hallway=('', '', '', 'D', '', 'A', '')))
+        (3000, State(rooms=('A', 'BB', 'CC', 'D'), hallway='...D.A.'))
         >>> cost_9, state_9 = state_8.move(7, 3)
         >>> cost_9, state_9
-        (4000, State(rooms=('A', 'BB', 'CC', 'DD'), hallway=('', '', '', '', '', 'A', '')))
+        (4000, State(rooms=('A', 'BB', 'CC', 'DD'), hallway='.....A.'))
         >>> print(state_9)
         #############
         #.........A.#
@@ -217,21 +217,293 @@ def part_1(initial_state: 'State') -> int:
         12521
     """
 
-    cost, moves = initial_state.find_cheapest_reordering(TARGET_STATE)
-    eprint(moves)
-
-    print(f"part 1: it takes {cost} energy to organize the amphipods")
-    return cost
+    result, moves = initial_state.find_cheapest_reordering(TARGET_STATE)
+    print(f"part 1: it takes {result} energy to organize the amphipods")
+    return result
 
 
-def part_2() -> int:
+def part_2(initial_state_extended: 'State') -> int:
     """
-    Instructions for part 2.
+    As you prepare to give the amphipods your solution, you notice that the diagram they handed you
+    was actually folded up. As you unfold it, you discover an extra part of the diagram.
+
+    Between the first and second lines of text that contain amphipod starting positions, insert
+    the following lines:
+
+      #D#C#B#A#
+      #D#B#A#C#
+
+    So, the above example now becomes:
+
+        >>> state_0 = State.from_file('data/23-example.txt').extended()
+        >>> print(state_0)
+        #############
+        #...........#
+        ###B#C#B#D###
+          #D#C#B#A#
+          #D#B#A#C#
+          #A#D#C#A#
+          #########
+        >>> state_0
+        State(rooms=('ADDB', 'DBCC', 'CABB', 'ACAD'), room_size=4)
+
+    The amphipods still want to be organized into rooms similar to before:
+
+        >>> print(TARGET_STATE_2)
+        #############
+        #...........#
+        ###A#B#C#D###
+          #A#B#C#D#
+          #A#B#C#D#
+          #A#B#C#D#
+          #########
+
+    In this updated example, the least energy required to organize these amphipods is **`44169`**:
+
+        >>> cost_1, state_1 = state_0.move(3, 10)
+        >>> cost_1, state_1
+        (3000, State(rooms=('ADDB', 'DBCC', 'CABB', 'ACA'), hallway='......D', room_size=4))
+        >>> print(state_1)
+        #############
+        #..........D#
+        ###B#C#B#.###
+          #D#C#B#A#
+          #D#B#A#C#
+          #A#D#C#A#
+          #########
+
+        >>> cost_2, state_2 = state_1.move(3, 4)
+        >>> cost_2, state_2
+        (10, State(rooms=('ADDB', 'DBCC', 'CABB', 'AC'), hallway='A.....D', room_size=4))
+        >>> print(state_2)
+        #############
+        #A.........D#
+        ###B#C#B#.###
+          #D#C#B#.#
+          #D#B#A#C#
+          #A#D#C#A#
+          #########
+
+        >>> cost_3, state_3 = state_2.move(2, 9)
+        >>> cost_3, state_3
+        (40, State(rooms=('ADDB', 'DBCC', 'CAB', 'AC'), hallway='A....BD', room_size=4))
+        >>> print(state_3)
+        #############
+        #A........BD#
+        ###B#C#.#.###
+          #D#C#B#.#
+          #D#B#A#C#
+          #A#D#C#A#
+          #########
+
+        >>> further_moves = [
+        ...     (2, 8), (2, 5), (1, 2), (1, 2), (1, 7), (1, 6), (7, 1), (8, 1), (9, 1), (3, 2),
+        ...     (3, 9), (6, 3), (0, 1), (0, 3), (0, 6), (5, 0), (4, 0), (6, 3), (9, 0), (10, 3)
+        ... ]
+        >>> state = state_3
+        >>> total_cost = cost_1 + cost_2 + cost_3
+        >>> for (from_, to) in further_moves:
+        ...     cost, state = state.move(from_, to)
+        ...     total_cost += cost
+        ...     print(f'{from_}->{to} cost={cost}')
+        ...     print(state)
+        ...     print('-------------')
+        2->8 cost=30
+        #############
+        #A......B.BD#
+        ###B#C#.#.###
+          #D#C#.#.#
+          #D#B#A#C#
+          #A#D#C#A#
+          #########
+        -------------
+        2->5 cost=8
+        #############
+        #AA.....B.BD#
+        ###B#C#.#.###
+          #D#C#.#.#
+          #D#B#.#C#
+          #A#D#C#A#
+          #########
+        -------------
+        1->2 cost=600
+        #############
+        #AA.....B.BD#
+        ###B#.#.#.###
+          #D#C#.#.#
+          #D#B#C#C#
+          #A#D#C#A#
+          #########
+        -------------
+        1->2 cost=600
+        #############
+        #AA.....B.BD#
+        ###B#.#.#.###
+          #D#.#C#.#
+          #D#B#C#C#
+          #A#D#C#A#
+          #########
+        -------------
+        1->7 cost=40
+        #############
+        #AA...B.B.BD#
+        ###B#.#.#.###
+          #D#.#C#.#
+          #D#.#C#C#
+          #A#D#C#A#
+          #########
+        -------------
+        1->6 cost=5000
+        #############
+        #AA.D.B.B.BD#
+        ###B#.#.#.###
+          #D#.#C#.#
+          #D#.#C#C#
+          #A#.#C#A#
+          #########
+        -------------
+        7->1 cost=50
+        #############
+        #AA.D...B.BD#
+        ###B#.#.#.###
+          #D#.#C#.#
+          #D#.#C#C#
+          #A#B#C#A#
+          #########
+        -------------
+        8->1 cost=60
+        #############
+        #AA.D.....BD#
+        ###B#.#.#.###
+          #D#.#C#.#
+          #D#B#C#C#
+          #A#B#C#A#
+          #########
+        -------------
+        9->1 cost=70
+        #############
+        #AA.D......D#
+        ###B#.#.#.###
+          #D#B#C#.#
+          #D#B#C#C#
+          #A#B#C#A#
+          #########
+        -------------
+        3->2 cost=600
+        #############
+        #AA.D......D#
+        ###B#.#C#.###
+          #D#B#C#.#
+          #D#B#C#.#
+          #A#B#C#A#
+          #########
+        -------------
+        3->9 cost=5
+        #############
+        #AA.D.....AD#
+        ###B#.#C#.###
+          #D#B#C#.#
+          #D#B#C#.#
+          #A#B#C#.#
+          #########
+        -------------
+        6->3 cost=9000
+        #############
+        #AA.......AD#
+        ###B#.#C#.###
+          #D#B#C#.#
+          #D#B#C#.#
+          #A#B#C#D#
+          #########
+        -------------
+        0->1 cost=40
+        #############
+        #AA.......AD#
+        ###.#B#C#.###
+          #D#B#C#.#
+          #D#B#C#.#
+          #A#B#C#D#
+          #########
+        -------------
+        0->3 cost=11000
+        #############
+        #AA.......AD#
+        ###.#B#C#.###
+          #.#B#C#.#
+          #D#B#C#D#
+          #A#B#C#D#
+          #########
+        -------------
+        0->6 cost=4000
+        #############
+        #AA.D.....AD#
+        ###.#B#C#.###
+          #.#B#C#.#
+          #.#B#C#D#
+          #A#B#C#D#
+          #########
+        -------------
+        5->0 cost=4
+        #############
+        #A..D.....AD#
+        ###.#B#C#.###
+          #.#B#C#.#
+          #A#B#C#D#
+          #A#B#C#D#
+          #########
+        -------------
+        4->0 cost=4
+        #############
+        #...D.....AD#
+        ###.#B#C#.###
+          #A#B#C#.#
+          #A#B#C#D#
+          #A#B#C#D#
+          #########
+        -------------
+        6->3 cost=7000
+        #############
+        #.........AD#
+        ###.#B#C#.###
+          #A#B#C#D#
+          #A#B#C#D#
+          #A#B#C#D#
+          #########
+        -------------
+        9->0 cost=8
+        #############
+        #..........D#
+        ###A#B#C#.###
+          #A#B#C#D#
+          #A#B#C#D#
+          #A#B#C#D#
+          #########
+        -------------
+        10->3 cost=3000
+        #############
+        #...........#
+        ###A#B#C#D###
+          #A#B#C#D#
+          #A#B#C#D#
+          #A#B#C#D#
+          #########
+        -------------
+
+        >>> total_cost
+        44169
+
+    Using the initial configuration from the full diagram, **what is the least energy required to
+    organize the amphipods?**
+
+        >>> part_2(state_0)
+        part 2: it takes 44169 energy to organize the amphipods in the full diagram
+        44169
     """
 
-    result = 2
+    assert initial_state_extended.room_size == 4
 
-    print(f"part 2: {result}")
+    result, moves = initial_state_extended.find_cheapest_reordering(TARGET_STATE_2)
+    print(f"part 2: it takes {result} energy to organize the amphipods in the full diagram")
     return result
 
 
@@ -240,17 +512,25 @@ Move = tuple[int, int]
 
 class State:
     MOVE_COSTS = {'A': 1, 'B': 10, 'C': 100, 'D': 1000}
+    EMPTY_HALLWAY = '.' * 7
 
-    def __init__(self, rooms: Iterable[str], hallway: Iterable[str] = ('',) * 7):
+    def __init__(
+        self,
+        rooms: Iterable[str],
+        hallway: str = EMPTY_HALLWAY,
+        room_size: int = 2
+    ):
         self.rooms = tuple(rooms)
-        self.hallway = tuple(hallway)
+        self.hallway = hallway
         assert len(self.rooms) == 4
         assert len(self.hallway) == 7
         self._hash = hash((self.rooms, self.hallway))  # precomputed hash for faster comparison
+        self.room_size = room_size
 
     def __repr__(self) -> str:
-        hallway_repr = f', hallway={self.hallway!r}' if any(self.hallway) else ''
-        return f'{type(self).__name__}(rooms={self.rooms!r}{hallway_repr})'
+        hallway_repr = f', hallway={self.hallway!r}' if self.hallway != self.EMPTY_HALLWAY else ''
+        room_size_repr = f', room_size={self.room_size}' if self.room_size != 2 else ''
+        return f'{type(self).__name__}(rooms={self.rooms!r}{hallway_repr}{room_size_repr})'
 
     def __hash__(self) -> int:
         return self._hash
@@ -262,14 +542,16 @@ class State:
         def hch(pos: int) -> str:
             return self.hallway[pos - 4] or '.'
 
-        def rch(pos: int, upper: bool) -> str:
-            return room[upper] if upper < len(room := self.rooms[pos]) else '.'
+        def rch(pos: int, rdepth: int) -> str:
+            return room[rdepth] if rdepth < len(room := self.rooms[pos]) else '.'
 
         def lines() -> Iterable[str]:
             yield '#############'
             yield '#' + '.'.join((hch(4) + hch(5), hch(6), hch(7), hch(8), hch(9) + hch(10))) + '#'
-            yield '###' + '#'.join(rch(n, upper=True) for n in range(4)) + '###'
-            yield '  #' + '#'.join(rch(n, upper=False) for n in range(4)) + '#'
+            for room_line_index in range(self.room_size):
+                depth = self.room_size - room_line_index - 1
+                walls = '###' if room_line_index == 0 else '#'
+                yield walls.rjust(3) + '#'.join(rch(n, depth) for n in range(4)) + walls
             yield '  #########'
 
         return '\n'.join(lines())
@@ -292,8 +574,7 @@ class State:
         assert len(lines[1]) == 13
         assert lines[1][0] == lines[1][-1] == '#'
         assert all(lines[1][n] == '.' for n in (3, 5, 7, 9))
-        hallway_chars = (lines[1][n] for n in (1, 2, 4, 6, 8, 10, 11))
-        hallway = tuple(hch if hch != '.' else '' for hch in hallway_chars)
+        hallway = ''.join(lines[1][n] for n in (1, 2, 4, 6, 8, 10, 11))
 
         # rooms
         rooms_upper = parse_line(lines[2], '###$#$#$#$###')
@@ -315,6 +596,15 @@ class State:
 
         return cls(rooms, hallway)
 
+    def extended(self) -> 'State':
+        assert self.room_size == 2, "already extended"
+        extensions = 'DD', 'BC', 'AB', 'CA'
+        return State(
+            rooms=(room[0] + ext + room[-1] for room, ext in zip(self.rooms, extensions)),
+            hallway=self.hallway,
+            room_size=4
+        )
+
     def move(self, from_: int, to: int) -> tuple[int, 'State'] | None:
         """
         #############
@@ -324,9 +614,9 @@ class State:
           #########
         """
 
-        # assert 0 <= from_ <= 10
-        # assert 0 <= to <= 10
-        # assert from_ != to
+        assert 0 <= from_ <= 10
+        assert 0 <= to <= 10
+        assert from_ != to
 
         # cannot move from hallway to hallway
         if from_ >= 4 and to >= 4:
@@ -343,19 +633,15 @@ class State:
         # cannot move into non-target room
         if to < 4 and to != pawns_target_room:
             return None
-
-        # # cannot move if already in target room with no foreigners
-        # if from_ == pawns_target_room and all(pawn_moved == p for p in self.rooms[from_]):
-        #     return None
-
+        # cannot move if already in target room with no foreigners
+        if from_ == pawns_target_room and all(pawn_moved == p for p in self.rooms[from_]):
+            return None
         # cannot move into room occupied by a foreigner (non-matching pawn)
         if to < 4 and any(pawn_moved != p for p in self.rooms[to]):
             return None
-
         # destination is already full
         if self._capacity_at(to) < 1:
             return None
-
         # path is blocked by other pawns
         if not self._path_is_free(from_, to):
             return None
@@ -371,18 +657,21 @@ class State:
             else:
                 return old_room
 
-        def new_hallway(pos: int) -> str:
+        def new_hwch(pos: int) -> str:
             old_hw = self.hallway[pos - 4]
             if pos == from_:
-                return ''
+                return '.'
             elif pos == to:
                 return pawn_moved
             else:
                 return old_hw
 
+        hw_involved = from_ >= 4 or to >= 4
+
         new_state = State(
             rooms=(new_room(r) for r in range(4)),
-            hallway=(new_hallway(h) for h in range(4, 11))
+            hallway=''.join(new_hwch(h) for h in range(4, 11)) if hw_involved else self.hallway,
+            room_size=self.room_size
         )
 
         return cost, new_state
@@ -393,50 +682,45 @@ class State:
             return room[-1] if (room := self.rooms[pos]) else None
         else:
             # hallway
-            return self.hallway[pos - 4] or None
+            return hw if (hw := self.hallway[pos - 4]) != '.' else None
 
     def _capacity_at(self, pos: int) -> int:
         if pos < 4:
             # rooms
-            return 2 - len(self.rooms[pos])
+            return self.room_size - len(self.rooms[pos])
         else:
             # hallway
-            return 1 - len(self.hallway[pos - 4])
+            return 1 if self.hallway[pos - 4] == '.' else 0
 
     def _path_is_free(self, from_: int, to: int) -> bool:
         return all(self._pawn_at(pos) is None for pos in path(from_, to))
 
     def _distance(self, from_: int, to: int) -> int:
         base_distance = len(_PATHS[from_, to]) + 1
-        # full room -> 0, half-full room -> 1, hallway -> 0
-        extra_room_from_steps = (2 - len(self.rooms[from_])) if from_ in range(4) else 0
-        # half-full room -> 0, empty room -> 1, hallway -> 0
-        extra_room_to_steps = (1 - len(self.rooms[to])) if to in range(4) else 0
-        return base_distance + extra_room_from_steps + extra_room_to_steps
+        extra_room_from = (self.room_size - len(self.rooms[from_])) if from_ in range(4) else 0
+        extra_room_to = (self.room_size - 1 - len(self.rooms[to])) if to in range(4) else 0
+        return base_distance + extra_room_from + extra_room_to
 
     def find_cheapest_reordering(self, destination: 'State') -> tuple[int, list[Move]]:
+        assert self.room_size == destination.room_size
+
         # Dijkstra's algorithm
 
         # state -> cheapest known reordering from starting state
-        # (stored as total cost up to here, previous state, move from previous state to this one)
+        # (stored as: total cost up to here, previous state, move from previous state to this one)
         visited_states: dict[State, tuple[int, State | None, Move | None]] = dict()
-        # unvisited states neighboring those that are visited (stored as the one above)
-        states_to_visit: dict[State, tuple[int, State, Move]] = dict()
+        # unvisited states neighboring those that are visited
+        # (stored as: cost, (state, prev state, move from prev))
+        states_to_visit = Heap()
 
-        def visit(state: State, total_cost: int, previous_state: State | None, move: Move | None):
+        def visit(total_cost: int, state: State, previous_state: State | None, move: Move | None):
             visited_states[state] = total_cost, previous_state, move
             states_to_visit.update(
-                (state1, (total_cost + cost1, state, move1))
+                (total_cost + cost1, (state1, state, move1))
                 # add following states of this one
                 for cost1, state1, move1 in generate_following_states(state)
                 # that were not visited yet
                 if state1 not in visited_states
-                if (
-                    # that were not following a visited state before
-                    state1 not in states_to_visit
-                    # or ones for which we just found a cheaper reordering
-                    or total_cost + cost1 < states_to_visit[state1][0]
-                )
             )
 
         def generate_following_states(state: State) -> Iterable[tuple[int, State, Move]]:
@@ -456,19 +740,20 @@ class State:
             )
 
         # start by visiting origin = self ...
-        origin = self
-        visit(origin, total_cost=0, previous_state=None, move=None)
+        visit(total_cost=0, state=self, previous_state=None, move=None)
         # ... then adding following states until the destination is visited
-        progress = tqdm(desc="finding cheapest reordering", unit="states", initial=1, delay=1.0)
-        while destination not in visited_states:
-            # visit the cheapest unvisited state adjacent to one visited
-            new_state = min(states_to_visit, key=lambda s: states_to_visit[s][0])
-            visit(new_state, *states_to_visit.pop(new_state))
-            progress.update()
+        with tqdm(desc="finding cheapest reordering", initial=1, delay=1.0) as prog:
+            while destination not in visited_states:
+                # visit the cheapest unvisited state adjacent to one visited
+                cost, (s, ps, m) = states_to_visit.pop_item()
+                if s in visited_states:
+                    continue
+                visit(cost, s, ps, m)
+                prog.update()
 
         # construct the final move sequence by backtracking
         def backtrack(state: State) -> Iterable[Move]:
-            while state != origin:
+            while state != self:
                 _, prev_state, move = visited_states[state]
                 yield move
                 state = prev_state
@@ -479,19 +764,21 @@ class State:
 
 
 TARGET_STATE = State(rooms=('AA', 'BB', 'CC', 'DD'))
+TARGET_STATE_2 = State(rooms=('AAAA', 'BBBB', 'CCCC', 'DDDD'), room_size=4)
 
 
 def path(from_: int, to: int) -> Iterable[int]:
     return (pos for pos in _PATHS[from_, to] if isinstance(pos, int))
 
 
+Node = int | str
+Edge = tuple[Node, Node]
+
+
 def _generate_paths() -> dict[tuple[int, int], list[int | str]]:
     # 4-5-H0-6-H1-7-H2-8-H3-9-10
     #     |    |    |    |
     #     0    1    2    3
-
-    Node = int | str
-    Edge = tuple[Node, Node]
 
     edges: set[Edge] = {(r, f'H{r}') for r in range(4)}
     edges.update((a, b) for a, b in zip1([4, 5, 'H0', 6, 'H1', 7, 'H2', 8, 'H3', 9, 10]))
@@ -527,14 +814,17 @@ def _generate_paths() -> dict[tuple[int, int], list[int | str]]:
     return {
         (from_, to): full_path[1:-1]
         for (from_, to), full_path in full_paths.items()
+        if isinstance(from_, int)
+        if isinstance(to, int)
         if from_ != to
     }
 
 
 _PATHS = _generate_paths()
+assert len(_PATHS) == 110, len(_PATHS)  # 110 = 11 * 10 = each node to each node without identity
 
 
 if __name__ == '__main__':
     initial_state_ = State.from_file('data/23-input.txt')
     part_1(initial_state_)
-    part_2()
+    part_2(initial_state_.extended())
