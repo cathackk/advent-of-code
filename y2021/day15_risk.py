@@ -278,7 +278,7 @@ class RiskMap:
         # position -> safest known path from origin (stored as previous pos, total risk up to here)
         visited: dict[Pos, tuple[int, Pos | None]] = dict()
         # unvisited positions neighboring those that are visited (stored as the one above)
-        to_visit: dict[Pos, tuple[int, Pos]] = dict()
+        to_visit: dict[Pos, tuple[int, Pos]] = dict()  # TODO: use heap
 
         def visit(pos: Pos, path_risk: int, previous_pos: Pos | None):
             visited[pos] = path_risk, previous_pos
@@ -304,7 +304,7 @@ class RiskMap:
             desc="finding safest path", total=self.bounds.area, unit="nodes", initial=1, delay=1.0
         )
         while destination not in visited:
-            # visit the safest unvisited position adjancent to one visited
+            # visit the safest unvisited position adjacent to one visited
             new_pos = min(to_visit, key=lambda pos: to_visit[pos])
             risk, prev_pos = to_visit.pop(new_pos)
             visit(new_pos, risk, prev_pos)
