@@ -6,6 +6,8 @@ https://adventofcode.com/2021/day/12
 
 from typing import Iterable
 
+from utils import relative_path
+
 
 def part_1(caves: 'Graph') -> int:
     r"""
@@ -270,7 +272,7 @@ class Graph:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Graph':
-        return cls.from_lines(open(fn))
+        return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Graph':

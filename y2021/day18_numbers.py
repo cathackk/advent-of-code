@@ -8,6 +8,7 @@ from itertools import chain
 from typing import Iterable
 from typing import Optional
 
+from utils import relative_path
 from utils import zip1
 
 
@@ -360,7 +361,7 @@ class Number:
 
     @classmethod
     def many_from_file(cls, fn: str) -> list['Number']:
-        return list(cls.many_from_lines(open(fn)))
+        return list(cls.many_from_lines(open(relative_path(__file__, fn))))
 
     @classmethod
     def many_from_lines(cls, lines: Iterable[str]) -> Iterable['Number']:

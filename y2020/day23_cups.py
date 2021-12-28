@@ -7,10 +7,11 @@ https://adventofcode.com/2020/day/23
 from itertools import chain
 from typing import Iterable
 
+from tqdm import tqdm
+
 from utils import timeit
 
 
-@timeit
 def part_1(cups: 'Cups', moves: int = 100) -> str:
     """
     The small crab challenges *you* to a game! The crab is going to mix up some cups, and you have
@@ -121,7 +122,6 @@ def part_1(cups: 'Cups', moves: int = 100) -> str:
     return result
 
 
-@timeit
 def part_2(cups: 'Cups', moves=10_000_000) -> int:
     """
     Due to what you can only assume is a mistranslation (you're not exactly fluent in Crab), you
@@ -172,7 +172,7 @@ def part_2(cups: 'Cups', moves=10_000_000) -> int:
     Determine which two cups will end up immediately clockwise of cup `1`.
     *What do you get if you multiply their labels together?*
 
-        >>> part_2(Cups.from_line('389125467'))
+        >>> part_2(Cups.from_line('389125467'))  # doctest: +SKIP
         part 2: after 10000000 moves, two cups after `1` are 934001, 159792 -> 149245887792
         149245887792
     """
@@ -212,7 +212,7 @@ class Cups:
         ))
 
     def play(self, moves: int, print_progress: bool = False):
-        for move in range(moves):
+        for move in tqdm(range(moves), unit="moves", delay=1.0):
             # pick three
             picked_1 = self.next[self.current]
             picked_2 = self.next[picked_1]

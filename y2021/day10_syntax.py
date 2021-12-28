@@ -3,9 +3,12 @@ Advent of Code 2021
 Day 10: Syntax Scoring
 https://adventofcode.com/2021/day/10
 """
+
 from dataclasses import dataclass
 from typing import ClassVar
 from typing import Iterable
+
+from utils import relative_path
 
 
 def part_1(lines: Iterable[str]) -> int:
@@ -260,7 +263,7 @@ def lines_from_text(text: str) -> list[str]:
 
 
 def lines_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(fn)]
+    return [line.strip() for line in open(relative_path(__file__, fn))]
 
 
 if __name__ == '__main__':

@@ -15,6 +15,7 @@ from rect import Rect
 from utils import dgroupby_pairs
 from utils import maxk
 from utils import parse_line
+from utils import relative_path
 from utils import sgn
 from xyz import Vector3
 
@@ -687,7 +688,7 @@ def report_from_text(text: str) -> list[Reading]:
 
 
 def report_from_file(fn: str) -> list[Reading]:
-    return list(report_from_lines(open(fn)))
+    return list(report_from_lines(open(relative_path(__file__, fn))))
 
 
 def report_from_lines(lines: Iterable[str]) -> Iterable[Reading]:

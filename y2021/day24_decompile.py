@@ -10,6 +10,8 @@ from typing import Any
 from typing import Generator
 from typing import Iterable
 
+from utils import relative_path
+
 
 def part_1(program: 'Program') -> int:
     """
@@ -215,7 +217,7 @@ class Program:
 
     @classmethod
     def from_file(cls, fn: str, return_from: str = 'wxyz') -> 'Program':
-        return cls.from_lines(open(fn), return_from)
+        return cls.from_lines(open(relative_path(__file__, fn)), return_from)
 
     @classmethod
     def from_lines(cls, lines: Iterable[str], return_from: str = 'wxyz') -> 'Program':

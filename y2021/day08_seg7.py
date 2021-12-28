@@ -5,9 +5,12 @@ https://adventofcode.com/2021/day/8
 """
 
 from itertools import permutations
+from pathlib import Path
 from typing import Iterable
 
 from tqdm import tqdm
+
+from utils import relative_path
 
 
 def part_1(entries: Iterable['Entry']) -> int:
@@ -328,7 +331,7 @@ def entries_from_text(text: str) -> list[Entry]:
 
 
 def entries_from_file(fn: str) -> list[Entry]:
-    return list(entries_from_lines(open(fn)))
+    return list(entries_from_lines(open(relative_path(__file__, fn))))
 
 
 def entries_from_lines(lines: Iterable[str]) -> Iterable[Entry]:

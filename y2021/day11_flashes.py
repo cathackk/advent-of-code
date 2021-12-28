@@ -7,6 +7,7 @@ https://adventofcode.com/2021/day/11
 from typing import Iterable
 
 from rect import Rect
+from utils import relative_path
 
 
 def part_1(octopuses: 'Map', steps: int = 100) -> int:
@@ -441,7 +442,7 @@ class Map:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Map':
-        return cls.from_lines(open(fn))
+        return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Map':

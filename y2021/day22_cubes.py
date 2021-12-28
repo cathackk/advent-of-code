@@ -14,6 +14,7 @@ from tqdm import tqdm
 
 from rect import Rect
 from utils import parse_line
+from utils import relative_path
 from utils import separate
 from utils import zip1
 
@@ -565,7 +566,7 @@ def steps_from_text(text: str) -> list[Step]:
 
 
 def steps_from_file(fn: str) -> list[Step]:
-    return list(steps_from_lines(open(fn)))
+    return list(steps_from_lines(open(relative_path(__file__, fn))))
 
 
 def steps_from_lines(lines: Iterable[str]) -> Iterable[Step]:

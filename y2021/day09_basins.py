@@ -7,6 +7,7 @@ https://adventofcode.com/2021/day/9
 from typing import Iterable
 
 from rect import Rect
+from utils import relative_path
 from utils import ro
 
 
@@ -165,7 +166,7 @@ class HeightMap:
 
     @classmethod
     def from_file(cls, fn: str) -> 'HeightMap':
-        return cls.from_lines(open(fn))
+        return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'HeightMap':

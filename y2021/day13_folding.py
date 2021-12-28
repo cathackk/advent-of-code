@@ -8,6 +8,7 @@ from typing import Iterable
 
 from rect import Rect
 from utils import parse_line
+from utils import relative_path
 
 
 def part_1(dots: set['Pos'], first_instruction: 'Instruction') -> int:
@@ -262,7 +263,7 @@ def input_from_text(text: str) -> Input:
 
 
 def input_from_file(fn: str) -> Input:
-    return input_from_lines(open(fn))
+    return input_from_lines(open(relative_path(__file__, fn)))
 
 
 def input_from_lines(lines: Iterable[str]) -> Input:

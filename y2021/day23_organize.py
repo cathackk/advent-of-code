@@ -13,6 +13,7 @@ from typing import Iterable
 from tqdm import tqdm
 
 from utils import parse_line
+from utils import relative_path
 from utils import zip1
 
 
@@ -565,7 +566,7 @@ class State:
 
     @classmethod
     def from_file(cls, fn: str) -> 'State':
-        return cls.from_lines(open(fn))
+        return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'State':

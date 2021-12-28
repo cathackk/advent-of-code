@@ -1,8 +1,10 @@
+from utils import relative_path
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 
 
-scan = Machine(load_tape("data/19-program.txt")).as_function_scalar(restarting=True)
+scan_machine = Machine(load_tape(relative_path(__file__, "data/19-program.txt")))
+scan = scan_machine.as_function_scalar(restarting=True)
 
 
 def part_1():

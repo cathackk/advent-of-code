@@ -737,3 +737,9 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
     else:  # not_none_count > 1
         items_text = ", ".join(f"{k}={v!r}" for k, v in kwargs.items() if v is not None)
         raise AssertionError(f"multiple keys were not None: {items_text}")
+
+
+def relative_path(file: str, *path: str) -> str:
+    import os
+    location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(file)))
+    return os.path.join(location, *path)

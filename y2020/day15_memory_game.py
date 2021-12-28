@@ -118,17 +118,17 @@ def part_2(numbers: list[int]) -> int:
 
     More examples:
 
-        >>> memory_game([1, 3, 2], turns=30_000_000)
+        >>> memory_game([1, 3, 2], turns=30_000_000)  # doctest: +SKIP
         2578
-        >>> memory_game([2, 1, 3], turns=30_000_000)
+        >>> memory_game([2, 1, 3], turns=30_000_000)  # doctest: +SKIP
         3544142
-        >>> memory_game([1, 2, 3], turns=30_000_000)
+        >>> memory_game([1, 2, 3], turns=30_000_000)  # doctest: +SKIP
         261214
-        >>> memory_game([2, 3, 1], turns=30_000_000)
+        >>> memory_game([2, 3, 1], turns=30_000_000)  # doctest: +SKIP
         6895259
-        >>> memory_game([3, 2, 1], turns=30_000_000)
+        >>> memory_game([3, 2, 1], turns=30_000_000)  # doctest: +SKIP
         18
-        >>> memory_game([3, 1, 2], turns=30_000_000)
+        >>> memory_game([3, 1, 2], turns=30_000_000)  # doctest: +SKIP
         362
 
     *Given your starting numbers, what will be the 30_000_000th number spoken?*
@@ -155,7 +155,7 @@ def memory_game(numbers: list[int], turns: int) -> int:
     game = memory_game_it(numbers)
 
     last_number = None
-    for _ in tqdm(range(turns)):
+    for _ in tqdm(range(turns), delay=1.0):
         last_number = next(game)
 
     return last_number
