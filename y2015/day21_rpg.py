@@ -2,8 +2,8 @@ from itertools import combinations
 from typing import Iterable
 from typing import NamedTuple
 
-from utils import maxk
-from utils import mink
+from common.utils import maxk
+from common.utils import mink
 
 
 class Item(NamedTuple):

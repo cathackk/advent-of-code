@@ -2,7 +2,7 @@ from itertools import count
 from typing import Iterable
 from typing import Optional
 
-from md5 import md5
+from common.md5 import md5
 
 
 def create_password(door_id: str, version: int, length: int = 8) -> str:

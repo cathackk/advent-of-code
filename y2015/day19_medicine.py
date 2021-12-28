@@ -2,8 +2,8 @@ from collections import defaultdict
 from typing import Generator
 from typing import Iterable
 
-from multibuffer import MultiBuffer
-from utils import last
+from common.multibuffer import MultiBuffer
+from common.utils import last
 
 Rules = dict[str, list[str]]
 

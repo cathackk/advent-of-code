@@ -4,8 +4,6 @@ from typing import Iterable
 from typing import Iterator
 from typing import Optional
 
-from utils import timeit
-
 
 class Link:
     def __init__(self, *ports: int):
@@ -157,7 +155,6 @@ def max_bridge(
     ), key=key, default=None)
 
 
-@timeit
 def part_1(links: set[Link]) -> int:
     strongest_bridge = max_bridge(0, links, key=lambda b: b.strength)
     print(
@@ -167,7 +164,6 @@ def part_1(links: set[Link]) -> int:
     return strongest_bridge.strength
 
 
-@timeit
 def part_2(links: set[Link]) -> int:
     longest_bridge = max_bridge(0, links, key=lambda b: len(b))
     print(

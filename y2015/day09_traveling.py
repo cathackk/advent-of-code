@@ -1,8 +1,8 @@
 from itertools import permutations
 from typing import Iterable
 
-from utils import minmax
-from utils import zip1
+from common.utils import minmax
+from common.utils import zip1
 
 
 Road = tuple[int, str, str]

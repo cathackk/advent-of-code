@@ -5,7 +5,7 @@ https://adventofcode.com/2020/day/25
 """
 
 from typing import Iterable
-from utils import eprint
+from common.utils import eprint
 
 
 def part_1(card_public_key: int, door_public_key: int) -> int:

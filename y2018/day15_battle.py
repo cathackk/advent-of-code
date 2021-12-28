@@ -3,7 +3,7 @@ from itertools import count
 from typing import Iterable
 from typing import Optional
 
-from utils import ro
+from common.utils import ro
 
 Pos = tuple[int, int]
 Path = list[Pos]

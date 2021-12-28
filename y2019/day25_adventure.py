@@ -1,6 +1,6 @@
 from typing import Generator
 
-from utils import subsequences
+from common.utils import subsequences
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 

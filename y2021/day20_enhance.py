@@ -9,8 +9,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from rect import Rect
-from utils import relative_path
+from common.rect import Rect
+from common.utils import relative_path
 
 
 def part_1(algorithm: 'Algorithm', image: 'Image', runs: int = 2) -> int:

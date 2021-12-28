@@ -1,6 +1,6 @@
 import string
 
-from utils import mink
+from common.utils import mink
 
 
 def react(polymer: str):

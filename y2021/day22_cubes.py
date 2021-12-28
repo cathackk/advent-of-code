@@ -12,11 +12,11 @@ from typing import Optional
 
 from tqdm import tqdm
 
-from rect import Rect
-from utils import parse_line
-from utils import relative_path
-from utils import separate
-from utils import zip1
+from common.rect import Rect
+from common.utils import parse_line
+from common.utils import relative_path
+from common.utils import separate
+from common.utils import zip1
 
 
 def part_1(steps: Iterable['Step']) -> int:

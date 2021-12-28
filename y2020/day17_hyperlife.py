@@ -8,8 +8,8 @@ from collections import Counter
 from itertools import product
 from typing import Iterable
 
-from rect import HyperCuboid
-from utils import single_value
+from common.rect import HyperCuboid
+from common.utils import single_value
 
 
 def part_1(initial_state: set['Pos'], cycles: int = 6) -> int:

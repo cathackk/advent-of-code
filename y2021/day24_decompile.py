@@ -10,7 +10,7 @@ from typing import Any
 from typing import Generator
 from typing import Iterable
 
-from utils import relative_path
+from common.utils import relative_path
 
 
 def part_1(program: 'Program') -> int:

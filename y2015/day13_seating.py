@@ -1,7 +1,7 @@
 from itertools import permutations
 from typing import Iterable
 
-from utils import zip1
+from common.utils import zip1
 
 Rule = tuple[str, str, int]
 

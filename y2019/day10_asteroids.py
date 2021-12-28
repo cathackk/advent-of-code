@@ -1,8 +1,8 @@
 import math
 from typing import Iterable
 
-from xy import Point
-from xy import Vector
+from common.xy import Point
+from common.xy import Vector
 
 
 def load_points(fn) -> list[Point]:

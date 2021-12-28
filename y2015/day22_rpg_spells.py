@@ -6,7 +6,7 @@ from typing import Iterable
 from typing import NamedTuple
 from typing import Optional
 
-from utils import ilog
+from common.utils import ilog
 
 
 class Character(NamedTuple):

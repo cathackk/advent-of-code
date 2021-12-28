@@ -1,10 +1,10 @@
 from itertools import count
 from typing import Iterable
 
-from rect import Rect
-from utils import parse_line
-from xy import Point
-from xy import Vector
+from common.rect import Rect
+from common.utils import parse_line
+from common.xy import Point
+from common.xy import Vector
 
 
 Star = tuple[Point, Vector]

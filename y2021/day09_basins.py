@@ -6,9 +6,9 @@ https://adventofcode.com/2021/day/9
 
 from typing import Iterable
 
-from rect import Rect
-from utils import relative_path
-from utils import ro
+from common.rect import Rect
+from common.utils import relative_path
+from common.utils import ro
 
 
 def part_1(heights: 'HeightMap') -> int:

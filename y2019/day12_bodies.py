@@ -3,12 +3,12 @@ from typing import Generator
 from typing import Iterable
 from typing import Optional
 
-from utils import exhaust
-from utils import last
-from utils import lcm
-from utils import sgn
-from xyz import Point3
-from xyz import Vector3
+from common.utils import exhaust
+from common.utils import last
+from common.utils import lcm
+from common.utils import sgn
+from common.xyz import Point3
+from common.xyz import Vector3
 
 
 def sgn_v3(v3: Vector3):

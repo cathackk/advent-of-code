@@ -8,9 +8,9 @@ import math
 from typing import Callable
 from typing import Iterable
 
-from utils import line_groups
-from utils import parse_line
-from utils import single_value
+from common.utils import line_groups
+from common.utils import parse_line
+from common.utils import single_value
 
 
 def part_1(rules: 'RuleList', nearby_tickets: list['Ticket']) -> int:

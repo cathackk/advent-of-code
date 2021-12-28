@@ -7,9 +7,9 @@ https://adventofcode.com/2021/day/5
 from collections import Counter
 from typing import Iterable
 
-from rect import Rect
-from utils import parse_line
-from utils import sgn
+from common.rect import Rect
+from common.utils import parse_line
+from common.utils import sgn
 
 
 def part_1(all_vents: Iterable['Vent']) -> int:

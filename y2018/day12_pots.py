@@ -2,8 +2,8 @@ from itertools import count
 from typing import Iterable
 from typing import Iterator
 
-from utils import minmax
-from utils import strip_line
+from common.utils import minmax
+from common.utils import strip_line
 
 Rule = tuple[int, bool]
 Rules = set[int]

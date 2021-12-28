@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from utils import count_ones
+from common.utils import count_ones
 from y2017.day10_knots import knot_hash
 
 

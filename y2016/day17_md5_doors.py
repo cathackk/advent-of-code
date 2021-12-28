@@ -2,10 +2,10 @@ from typing import Generator
 from typing import Iterable
 from typing import Optional
 
-from md5 import md5
-from rect import Pos
-from rect import Rect
-from utils import last
+from common.md5 import md5
+from common.rect import Pos
+from common.rect import Rect
+from common.utils import last
 
 Path = tuple[Pos, str]
 

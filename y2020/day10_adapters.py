@@ -7,7 +7,7 @@ https://adventofcode.com/2020/day/10
 from collections import Counter
 from collections import defaultdict
 
-from utils import diffs
+from common.utils import diffs
 
 
 def part_1(adapters: list[int]) -> int:

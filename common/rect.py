@@ -3,7 +3,7 @@ import math
 from itertools import chain
 from typing import Iterable
 
-from utils import minmax
+from common.utils import minmax
 
 Pos = tuple[int, int]
 

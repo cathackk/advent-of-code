@@ -1,9 +1,9 @@
 from collections import defaultdict
 from enum import Enum
 
-from utils import minmax
-from xy import Point
-from xy import Vector
+from common.utils import minmax
+from common.xy import Point
+from common.xy import Vector
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 

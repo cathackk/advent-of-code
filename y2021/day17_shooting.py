@@ -7,11 +7,11 @@ https://adventofcode.com/2021/day/17
 from math import sqrt
 from typing import Iterable
 
-from rect import Rect
-from utils import last
-from utils import parse_line
-from utils import sgn
-from utils import single_value
+from common.rect import Rect
+from common.utils import last
+from common.utils import parse_line
+from common.utils import sgn
+from common.utils import single_value
 
 
 def part_1(target: Rect) -> int:

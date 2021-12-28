@@ -1,4 +1,4 @@
-from utils import slidingw
+from common.utils import slidingw
 
 
 def captcha(digits: str) -> int:

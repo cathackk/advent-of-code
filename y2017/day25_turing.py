@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import Iterable
 from typing import NamedTuple
 
-from utils import strip_line
+from common.utils import strip_line
 
 
 RuleKey = tuple[str, int]

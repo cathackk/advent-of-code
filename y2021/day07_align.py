@@ -6,7 +6,7 @@ https://adventofcode.com/2021/day/7
 
 from typing import Callable
 
-from utils import minmax
+from common.utils import minmax
 
 
 def part_1(positions: list[int]) -> int:

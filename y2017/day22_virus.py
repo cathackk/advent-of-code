@@ -4,11 +4,11 @@ from typing import Generator
 from typing import Iterable
 from typing import Iterator
 
-from heading import Heading
-from utils import exhaust
-from utils import ilog
-from utils import last
-from utils import minmax
+from common.heading import Heading
+from common.utils import exhaust
+from common.utils import ilog
+from common.utils import last
+from common.utils import minmax
 
 
 class NodeState(Enum):

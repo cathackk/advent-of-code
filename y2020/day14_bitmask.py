@@ -7,7 +7,7 @@ https://adventofcode.com/2020/day/14
 from typing import Iterable
 from typing import Optional
 
-from utils import parse_line
+from common.utils import parse_line
 
 
 def part_1(program: 'Program') -> int:

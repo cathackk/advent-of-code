@@ -2,7 +2,7 @@ import string
 from typing import Iterable
 from typing import Optional
 
-from utils import timeit
+from common.utils import timeit
 
 Pos = tuple[int, int]
 PosD = tuple[Pos, int]

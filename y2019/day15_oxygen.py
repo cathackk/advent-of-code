@@ -2,9 +2,9 @@ from enum import Enum
 from typing import Callable
 from typing import Optional
 
-from utils import minmax
-from xy import Point
-from xy import Vector
+from common.utils import minmax
+from common.xy import Point
+from common.xy import Vector
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 

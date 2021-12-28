@@ -2,10 +2,10 @@ from itertools import count
 from typing import Generator
 from typing import Optional
 
-from md5 import rmd5
-from utils import ilog
-from utils import last
-from utils import nextn
+from common.md5 import rmd5
+from common.utils import ilog
+from common.utils import last
+from common.utils import nextn
 
 
 def find_repeating(s: str, length: int) -> Optional[tuple[int, str]]:

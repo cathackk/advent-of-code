@@ -4,11 +4,11 @@ from typing import Generator
 from typing import Iterable
 from typing import NamedTuple
 
-from heading import Heading
-from rect import Rect
-from utils import exhaust
-from utils import ro
-from utils import single_value
+from common.heading import Heading
+from common.rect import Rect
+from common.utils import exhaust
+from common.utils import ro
+from common.utils import single_value
 
 heading_chars = {
     Heading.NORTH: '^',

@@ -1,8 +1,8 @@
 from itertools import permutations
 from typing import Iterable
 
-from utils import mink
-from utils import slidingw
+from common.utils import mink
+from common.utils import slidingw
 
 Pos = tuple[int, int]
 Target = tuple[Pos, str]

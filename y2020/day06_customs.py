@@ -6,8 +6,8 @@ https://adventofcode.com/2020/day/6
 
 from typing import Iterable
 
-from utils import line_groups
-from utils import single_value
+from common.utils import line_groups
+from common.utils import single_value
 
 
 def part_1(groups: list['Group']) -> int:

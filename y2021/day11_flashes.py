@@ -6,8 +6,8 @@ https://adventofcode.com/2021/day/11
 
 from typing import Iterable
 
-from rect import Rect
-from utils import relative_path
+from common.rect import Rect
+from common.utils import relative_path
 
 
 def part_1(octopuses: 'Map', steps: int = 100) -> int:

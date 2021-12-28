@@ -6,8 +6,8 @@ https://adventofcode.com/2020/day/5
 
 from typing import Iterable
 
-from utils import maxk
-from utils import single_value
+from common.utils import maxk
+from common.utils import single_value
 
 
 def part_1(seat_codes: Iterable[str]) -> int:

@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from heading import Heading
-from utils import mink
+from common.heading import Heading
+from common.utils import mink
 
 Pos = tuple[int, int]
 PosTime = tuple[Pos, int]

@@ -1,8 +1,8 @@
 from collections import defaultdict
 from typing import Iterable
 
-from rect import Pos
-from rect import Rect
+from common.rect import Pos
+from common.rect import Rect
 
 
 class LightsPanel:

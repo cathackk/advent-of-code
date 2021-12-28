@@ -10,9 +10,9 @@ from functools import cached_property
 from typing import Iterable
 from typing import Optional
 
-from utils import line_groups
-from utils import parse_line
-from utils import single_value
+from common.utils import line_groups
+from common.utils import parse_line
+from common.utils import single_value
 
 
 def part_1(rules: dict[int, 'Rule'], messages: list[str]) -> int:

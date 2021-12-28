@@ -1,4 +1,4 @@
-from chain import Circle
+from common.chain import Circle
 
 
 def game(players_count: int, last_marble: int, log_each: int = 1_000_000) -> int:

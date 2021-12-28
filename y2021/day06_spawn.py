@@ -9,7 +9,7 @@ from collections import Counter
 from typing import Iterable
 from typing import Iterator
 
-from utils import nextn
+from common.utils import nextn
 
 
 def part_1(state: Iterable[int], days: int = 80) -> int:

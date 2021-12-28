@@ -11,13 +11,13 @@ from typing import Iterator
 
 from tqdm import tqdm
 
-from rect import Rect
-from utils import dgroupby_pairs
-from utils import maxk
-from utils import parse_line
-from utils import relative_path
-from utils import sgn
-from xyz import Vector3
+from common.rect import Rect
+from common.utils import dgroupby_pairs
+from common.utils import maxk
+from common.utils import parse_line
+from common.utils import relative_path
+from common.utils import sgn
+from common.xyz import Vector3
 
 
 def part_1(report: list['Reading']) -> 'Map':

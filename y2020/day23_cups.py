@@ -9,7 +9,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from utils import timeit
+from common.utils import timeit
 
 
 def part_1(cups: 'Cups', moves: int = 100) -> str:

@@ -1,6 +1,6 @@
 from itertools import count
 
-from md5 import md5
+from common.md5 import md5
 
 if __name__ == '__main__':
     key = 'ckczppom'

@@ -1,9 +1,9 @@
 from typing import Iterable
 from typing import NamedTuple
 
-from utils import count
-from utils import single_value
-from utils import strip_line
+from common.utils import count
+from common.utils import single_value
+from common.utils import strip_line
 
 all_ops = {
     'addr': lambda a, b, regs: regs[a] + regs[b],

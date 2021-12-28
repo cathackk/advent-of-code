@@ -3,8 +3,8 @@ from collections import Counter
 from typing import Iterable
 from typing import NamedTuple
 
-from bsrange import BSRange
-from utils import dgroupby
+from common.bsrange import BSRange
+from common.utils import dgroupby
 
 
 class IngrAmount(NamedTuple):

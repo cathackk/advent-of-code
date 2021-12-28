@@ -1,7 +1,7 @@
 import math
 
-from utils import gcd2
-from utils import sgn
+from common.utils import gcd2
+from common.utils import sgn
 
 
 class XY:

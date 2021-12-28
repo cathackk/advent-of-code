@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from heading import Heading
+from common.heading import Heading
 
 
 Pos = tuple[int, int]

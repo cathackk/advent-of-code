@@ -7,8 +7,8 @@ https://adventofcode.com/2020/day/3
 import math
 from typing import Iterable
 
-from rect import Rect
-from utils import join_and
+from common.rect import Rect
+from common.utils import join_and
 
 
 def part_1(trees: 'TreesMap'):

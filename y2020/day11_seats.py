@@ -10,7 +10,7 @@ from functools import cached_property
 from typing import Iterable
 from typing import Optional
 
-from rect import Rect
+from common.rect import Rect
 
 
 def part_1(seats_map: 'SeatsMap') -> int:

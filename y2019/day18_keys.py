@@ -3,7 +3,7 @@ from collections import defaultdict
 from typing import Iterable
 from typing import Optional
 
-from utils import timeit
+from common.utils import timeit
 
 Pos = tuple[int, int]
 Tile = tuple[Pos, str]

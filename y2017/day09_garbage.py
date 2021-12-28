@@ -1,6 +1,6 @@
 from typing import Generator
 
-from utils import exhaust
+from common.utils import exhaust
 
 Group = tuple[int, int, int]
 

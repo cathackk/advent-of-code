@@ -3,8 +3,8 @@ from itertools import zip_longest
 from typing import Callable
 from typing import Iterable
 
-from utils import create_logger
-from utils import single_value
+from common.utils import create_logger
+from common.utils import single_value
 
 Pos = tuple[int, int]
 Transformation = Callable[[int, int], Pos]

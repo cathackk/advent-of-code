@@ -6,7 +6,7 @@ https://adventofcode.com/2021/day/1
 
 from typing import Iterable
 
-from utils import slidingw
+from common.utils import slidingw
 
 
 def part_1(values: Iterable[int]) -> int:

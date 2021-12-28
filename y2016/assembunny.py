@@ -1,7 +1,7 @@
 from typing import Generator
 from typing import Optional
 
-from utils import exhaust
+from common.utils import exhaust
 
 Command = tuple[str, str, Optional[str]]
 Tape = list[Command]

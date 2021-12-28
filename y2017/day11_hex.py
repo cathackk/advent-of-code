@@ -28,7 +28,7 @@
 from functools import reduce
 from typing import Iterable
 
-from utils import maxk
+from common.utils import maxk
 
 Pos = tuple[int, int]
 

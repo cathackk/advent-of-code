@@ -1,7 +1,7 @@
 from typing import Iterable
 from typing import NamedTuple
 
-from utils import maxk
+from common.utils import maxk
 
 
 class Ingredient(NamedTuple):

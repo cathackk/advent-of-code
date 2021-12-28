@@ -3,8 +3,8 @@ from itertools import count
 from typing import Iterable
 from typing import Optional
 
-from rect import Rect
-from utils import single_value
+from common.rect import Rect
+from common.utils import single_value
 
 
 Pos = tuple[int, int]

@@ -9,7 +9,7 @@ from collections import Counter
 from dataclasses import dataclass
 from typing import Iterable
 
-from utils import parse_line
+from common.utils import parse_line
 
 
 def part_1(player_1_start: int, player_2_start: int) -> int:

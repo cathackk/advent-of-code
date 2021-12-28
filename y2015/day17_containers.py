@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from utils import following
-from utils import min_all
+from common.utils import following
+from common.utils import min_all
 
 
 def generate_fillings(amount: int, containers: Iterable[int]) -> Iterable[list[int]]:

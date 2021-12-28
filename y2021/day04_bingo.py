@@ -7,8 +7,8 @@ https://adventofcode.com/2021/day/4
 from typing import Iterable
 from typing import Iterator
 
-from utils import last
-from utils import nextn
+from common.utils import last
+from common.utils import nextn
 
 
 def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:

@@ -7,8 +7,8 @@ https://adventofcode.com/2020/day/7
 from functools import lru_cache
 from typing import Iterable
 
-from utils import dgroupby_pairs_set
-from utils import parse_line
+from common.utils import dgroupby_pairs_set
+from common.utils import parse_line
 
 
 def part_1(rule_set: 'RuleSet', my_bag_color='shiny gold') -> int:

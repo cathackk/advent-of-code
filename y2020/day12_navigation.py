@@ -5,7 +5,7 @@ https://adventofcode.com/2020/day/12
 """
 from typing import Iterable
 
-from heading import Heading
+from common.heading import Heading
 
 
 def part_1(instructions: list['Instruction']) -> int:

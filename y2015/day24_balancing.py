@@ -1,9 +1,9 @@
 import math
 from typing import Iterable
 
-from utils import following
-from utils import ilog
-from utils import mink
+from common.utils import following
+from common.utils import ilog
+from common.utils import mink
 
 
 def subsqs(tsum: int, values: list[int]) -> Iterable[list[int]]:

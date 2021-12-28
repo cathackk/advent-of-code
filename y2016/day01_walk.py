@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from heading import Heading
-from utils import last
+from common.heading import Heading
+from common.utils import last
 
 
 def turn(direction: str, heading: Heading):

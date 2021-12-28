@@ -12,9 +12,9 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from utils import parse_line
-from utils import relative_path
-from utils import zip1
+from common.utils import parse_line
+from common.utils import relative_path
+from common.utils import zip1
 
 
 def part_1(initial_state: 'State') -> int:

@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from utils import sgn
-from xy import Point
+from common.utils import sgn
+from common.xy import Point
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 

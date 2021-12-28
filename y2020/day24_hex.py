@@ -9,7 +9,7 @@ from enum import Enum
 from functools import cached_property
 from typing import Iterable
 
-from rect import Rect
+from common.rect import Rect
 
 
 def part_1(walks: Iterable['Walk']) -> tuple[int, 'HexGrid']:

@@ -1,7 +1,7 @@
 from typing import Callable
 
-from utils import maxk
-from utils import memoized
+from common.utils import maxk
+from common.utils import memoized
 
 
 def power_fn(serial: int) -> Callable[[int, int], int]:

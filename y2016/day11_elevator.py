@@ -2,7 +2,7 @@ from itertools import combinations
 from typing import Iterable
 from typing import Optional
 
-from utils import dgroupby
+from common.utils import dgroupby
 
 
 class State:
