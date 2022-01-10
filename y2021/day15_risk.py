@@ -5,7 +5,8 @@ https://adventofcode.com/2021/day/15
 """
 
 from typing import Iterable
-from tqdm import tqdm
+
+from common.graph import shortest_path
 from common.rect import Rect
 from common.utils import relative_path
 
@@ -40,7 +41,7 @@ def part_1(risk_map: 'RiskMap') -> int:
     Your goal is to find a path with the **lowest total risk**. In this example, a path with
     the lowest total risk is highlighted here:
 
-        >>> path = cave_map.safest_path()
+        >>> path_risk, path = cave_map.safest_path()
         >>> print(cave_map.draw_path(path))
         1·········
         1·········
@@ -52,6 +53,8 @@ def part_1(risk_map: 'RiskMap') -> int:
         ········3·
         ········21
         ·········1
+        >>> path_risk
+        40
         >>> len(path)
         18
         >>> path[:9]
@@ -64,8 +67,6 @@ def part_1(risk_map: 'RiskMap') -> int:
 
         >>> cave_map.risk_values(path)
         [1, 2, 1, 3, 6, 5, 1, 1, 1, 5, 1, 1, 3, 2, 3, 2, 1, 1]
-        >>> cave_map.total_risk(path)
-        40
 
     A simple counter-example to solutions consisting only of down and right steps:
 
@@ -77,8 +78,8 @@ def part_1(risk_map: 'RiskMap') -> int:
         ...     121191
         ...
         ... ''')
-        >>> path_2 = cave_map_2.safest_path()
-        >>> cave_map_2.total_risk(path_2)
+        >>> path_2_risk, path_2 = cave_map_2.safest_path()
+        >>> path_2_risk
         15
         >>> print(cave_map_2.draw_path(path_2))
         1·····
@@ -93,12 +94,9 @@ def part_1(risk_map: 'RiskMap') -> int:
         40
     """
 
-    safest_path = risk_map.safest_path()
-    # eprint(risk_map.draw_path(safest_path))
-
-    result = risk_map.total_risk(safest_path)
-    print(f"part 1: safest path has risk {result}")
-    return result
+    risk, _ = risk_map.safest_path()
+    print(f"part 1: safest path has risk {risk}")
+    return risk
 
 
 def part_2(risk_map: 'RiskMap') -> int:
@@ -147,7 +145,7 @@ def part_2(risk_map: 'RiskMap') -> int:
     Equipped with the full map, you can now find a path from the top left corner to the bottom right
     corner with the lowest total risk:
 
-        >>> path = larger_cave_map.safest_path()
+        >>> path_risk, path = larger_cave_map.safest_path()
         >>> print(larger_cave_map.draw_path(path))
         1·················································
         1·················································
@@ -203,7 +201,7 @@ def part_2(risk_map: 'RiskMap') -> int:
     The total risk of this path is **`315`** (the starting position is still never entered, so its
     risk is not counted).
 
-        >>> larger_cave_map.total_risk(path)
+        >>> path_risk
         315
 
     Using the full map, **what is the lowest total risk of any path from the top left to the bottom
@@ -215,12 +213,10 @@ def part_2(risk_map: 'RiskMap') -> int:
     """
 
     extended_map = risk_map.extended(times=5)
-    safest_path = extended_map.safest_path()
-    # eprint(extended_map.draw_path(safest_path))
+    risk, _ = extended_map.safest_path()
 
-    result = extended_map.total_risk(safest_path)
-    print(f"part 2: safest path in the extended map has risk {result}")
-    return result
+    print(f"part 2: safest path in the extended map has risk {risk}")
+    return risk
 
 
 Pos = tuple[int, int]
@@ -270,55 +266,17 @@ class RiskMap:
             for x, ch in enumerate(line.strip())
         )
 
-    def safest_path(self, origin: Pos = None, destination: Pos = None) -> Path:
-        origin = origin or self.bounds.top_left
-        destination = destination or self.bounds.bottom_right
-
-        # accidentally reinvented Dijkstra's algorithm:
-
-        # position -> safest known path from origin (stored as previous pos, total risk up to here)
-        visited: dict[Pos, tuple[int, Pos | None]] = dict()
-        # unvisited positions neighboring those that are visited (stored as the one above)
-        to_visit: dict[Pos, tuple[int, Pos]] = dict()  # TODO: use heap
-
-        def visit(pos: Pos, path_risk: int, previous_pos: Pos | None):
-            visited[pos] = path_risk, previous_pos
-            to_visit.update(
-                (npos, (path_risk + self[npos], pos))
-                # add neighbors of this pos
+    def safest_path(self, origin: Pos = None, destination: Pos = None) -> tuple[int, Path]:
+        return shortest_path(
+            start=origin or self.bounds.top_left,
+            target=destination or self.bounds.bottom_right,
+            edges=lambda pos: (
+                (self[npos], npos, npos)
                 for npos in adjacent(pos)
                 if npos in self
-                # that were not visited yet
-                if npos not in visited
-                if (
-                    # that were not neighboring a visited pos before
-                    npos not in to_visit
-                    # or ones for which we just found a safer path
-                    or path_risk + self[npos] < to_visit[npos][0]
-                )
-            )
-
-        # start by visiting origin ...
-        visit(origin, 0, None)
-        # ... then adding neighbors until destination is visited
-        progress = tqdm(
-            desc="finding safest path", total=self.bounds.area, unit="nodes", initial=1, delay=1.0
+            ),
+            nodes_count=self.bounds.area
         )
-        while destination not in visited:
-            # visit the safest unvisited position adjacent to one visited
-            new_pos = min(to_visit, key=lambda pos: to_visit[pos])
-            risk, prev_pos = to_visit.pop(new_pos)
-            visit(new_pos, risk, prev_pos)
-            progress.update()
-
-        # construct the found path by backtracking
-        def backtrack(pos: Pos) -> Iterable[Pos]:
-            while pos != origin:
-                yield pos
-                pos = visited[pos][1]
-
-        # reverse the backtracked path
-        return list(backtrack(destination))[::-1]
 
     def draw_path(self, path: Path, origin: Pos = None) -> str:
         path_set = set(path) | {origin or self.bounds.top_left}
@@ -333,9 +291,6 @@ class RiskMap:
 
     def risk_values(self, path: Path) -> list[int]:
         return [self[pos] for pos in path]
-
-    def total_risk(self, path: Path) -> int:
-        return sum(self.risk_values(path))
 
     def extended(self, times: int) -> 'RiskMap':
         width, height = self.bounds.shape

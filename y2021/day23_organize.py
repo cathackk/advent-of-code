@@ -4,14 +4,10 @@ Day 23: Amphipod
 https://adventofcode.com/2021/day/23
 """
 
-import heapq
-from dataclasses import dataclass
-from dataclasses import field
 from itertools import chain
 from typing import Iterable
 
-from tqdm import tqdm
-
+from common.graph import shortest_path
 from common.utils import parse_line
 from common.utils import relative_path
 from common.utils import zip1
@@ -708,35 +704,7 @@ class State:
     def find_cheapest_reordering(self, destination: 'State') -> tuple[int, list[Move]]:
         assert self.room_size == destination.room_size
 
-        # Dijkstra's algorithm
-
-        @dataclass(frozen=True, order=True, slots=True)
-        class PathInfo:
-            total_cost: int = 0
-            previous_state: State | None = field(default=None, compare=False)
-            move: Move | None = field(default=None, compare=False)
-
-        # state -> cheapest known reordering from starting state
-        visited_states: dict[State, PathInfo] = dict()
-
-        @dataclass(frozen=True, order=True, slots=True)
-        class Visit:
-            state: State = field(compare=False)
-            path: PathInfo = PathInfo()
-
-        # unvisited states neighboring those that are visited
-        visits_heap: list[Visit] = []
-
-        def make_visit(visit: Visit) -> None:
-            visited_states[visit.state] = visit.path
-            # add states following this one that haven't been visited yet
-            for cost1, state1, move1 in generate_neighboring_states(visit.state):
-                heapq.heappush(
-                    visits_heap,
-                    Visit(state1, PathInfo(visit.path.total_cost + cost1, visit.state, move1))
-                )
-
-        def generate_neighboring_states(state: State) -> Iterable[tuple[int, State, Move]]:
+        def generate_neighboring_states(state: State) -> Iterable[tuple[int, Move, State]]:
             from_to: Iterable[tuple[int, int]] = chain(
                 # room to room
                 ((from_r, to_r) for from_r in range(4) for to_r in range(4) if from_r != to_r),
@@ -747,34 +715,17 @@ class State:
             )
 
             return (
-                new_cost_and_state + ((from_, to),)
+                (new_cost_and_state[0], (from_, to), new_cost_and_state[1])
                 for from_, to in from_to
                 if (new_cost_and_state := state.move(from_, to)) is not None
-                if new_cost_and_state[1] not in visited_states
             )
 
-        # start by visiting origin = self ...
-        make_visit(Visit(self))
-        # ... then adding following states until the destination is visited
-        with tqdm(desc="finding cheapest reordering", initial=1, delay=1.0) as prog:
-            while destination not in visited_states:
-                # visit the cheapest unvisited state adjacent to one visited
-                next_visit = heapq.heappop(visits_heap)
-                if next_visit.state in visited_states:
-                    continue
-                make_visit(next_visit)
-                prog.update()
-
-        # construct the final move sequence by backtracking
-        def backtrack(current_state: State) -> Iterable[Move]:
-            while current_state != self:
-                current_visit = visited_states[current_state]
-                yield current_visit.move
-                current_state = current_visit.previous_state
-
-        final_cost = visited_states[destination].total_cost
-        final_moves = list(backtrack(destination))[::-1]
-        return final_cost, final_moves
+        return shortest_path(
+            start=self,
+            target=destination,
+            edges=generate_neighboring_states,
+            description="finding cheapest reordering"
+        )
 
 
 TARGET_STATE = State(rooms=('AA', 'BB', 'CC', 'DD'))
