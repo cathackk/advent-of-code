@@ -1,0 +1,28 @@
+spells:
+
+  - name: Magic Missile
+    cost: 53
+    damage: 4
+
+  - name: Drain
+    cost: 73
+    damage: 2
+    heal: 2
+
+  - name: Shield
+    cost: 113
+    effect:
+      lasts: 6
+      armor: 7
+
+  - name: Poison
+    cost: 173
+    effect:
+      lasts: 6
+      damage: 3
+
+  - name: Recharge
+    cost: 229
+    effect:
+      lasts: 5
+      add_mana: 101

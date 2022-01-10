@@ -1,0 +1,2 @@
+Hit Points: 50
+Mana: 500
