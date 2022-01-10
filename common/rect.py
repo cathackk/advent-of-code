@@ -58,6 +58,17 @@ class Rect:
         return self.bottom_right[1]
 
     @property
+    def top_right(self) -> Pos:
+        return self.right_x, self.top_y
+
+    @property
+    def bottom_left(self) -> Pos:
+        return self.left_x, self.bottom_y
+
+    def corners(self) -> Iterable[Pos]:
+        return (self.top_left, self.top_right, self.bottom_left, self.bottom_right)
+
+    @property
     def width(self) -> int:
         return self.right_x - self.left_x + 1
 
@@ -125,10 +136,7 @@ class Rect:
             )
         else:
             x, y = item
-            return (
-                x in self.range_x()
-                and y in self.range_y()
-            )
+            return x in self.range_x() and y in self.range_y()
 
 
 HyperPos = tuple[int, ...]

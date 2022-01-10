@@ -443,6 +443,38 @@ def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
         raise ValueError("min_all() arg is an empty sequence")
 
 
+def max_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
+    """
+    >>> max_all([1,2,3,1,2,3,1,2,3])
+    [3, 3, 3]
+    >>> max_all(["dog", "cat", "monkey", "donkey", "snake", "ant"], key=len)
+    ['monkey', 'donkey']
+    >>> max_all([1, 2, 3])
+    [3]
+    >>> max_all([1])
+    [1]
+    >>> max_all([])
+    Traceback (most recent call last):
+    ...
+    ValueError: max_all() arg is an empty sequence
+    """
+    max_k = None
+    max_vs = None
+
+    for value in values:
+        k = key(value) if key else value
+        if max_k is None or k > max_k:
+            max_k = k
+            max_vs = [value]
+        elif k == max_k:
+            max_vs.append(value)
+
+    if max_vs is not None:
+        return max_vs
+    else:
+        raise ValueError("max_all() arg is an empty sequence")
+
+
 def picking(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     """
     >>> list(picking('ABC'))
@@ -506,15 +538,15 @@ def powerset(items: Iterable[T]) -> Iterable[tuple[T, ...]]:
 
 def ilog(
         items: Iterable[T],
-        format_str: Callable[[int, T], str] = None,
+        formatter: Callable[[int, T], str] = None,
         every: int = 1
 ) -> Iterable[T]:
     for index, item in enumerate(items):
         if index % every == 0:
-            if format:
-                print(format_str(index, item))
+            if formatter:
+                eprint(formatter(index, item))
             else:
-                print('>', index, item)
+                eprint('>', index, item)
         yield item
 
 
@@ -743,3 +775,14 @@ def relative_path(file: str, *path: str) -> str:
     import os
     location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(file)))
     return os.path.join(location, *path)
+
+
+def sorted_keys(d: dict[str, Any]) -> dict[str, Any]:
+    """
+    Useful in doctests:
+
+        >>> sorted_keys({'x': 1, 'a': 2, 'y': 3, 'b': 4, 'w':5})
+        {'a': 2, 'b': 4, 'w': 5, 'x': 1, 'y': 3}
+    """
+
+    return dict(sorted((k, v) for k, v in d.items()))

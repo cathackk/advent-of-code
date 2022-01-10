@@ -175,7 +175,7 @@ def part_2(fn: str, steps: int = 10_000_000) -> int:
     infected_count = last(ilog(
         run_virus_2(grid, steps_limit=steps),
         every=10_000,
-        format_str=lambda step, infected: f"> {step//1_000}K -> {infected} infected"
+        formatter=lambda step, infected: f"> {step//1_000}K -> {infected} infected"
     ))
     print(f"part 2: {infected_count} infected nodes after {steps} bursts")
     return infected_count

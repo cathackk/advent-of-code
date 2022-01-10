@@ -27,16 +27,20 @@ class MultiBuffer:
             for item in items
         )
 
+    def max_key(self) -> int:
+        return max(self._buffers.keys())
+
+    def min_key(self) -> int:
+        return min(self._buffers.keys())
+
     def pop(self, index: int = -1) -> T:
         return self.pop_max(index)
 
     def pop_max(self, index: int = -1) -> T:
-        score = max(self._buffers.keys())
-        return self.pop_by_score(score, index)
+        return self.pop_by_score(self.max_key(), index)
 
     def pop_min(self, index: int = -1) -> T:
-        score = min(self._buffers.keys())
-        return self.pop_by_score(score, index)
+        return self.pop_by_score(self.min_key(), index)
 
     def pop_by_score(self, score: int, index: int = -1) -> T:
         buffer = self._buffers[score]

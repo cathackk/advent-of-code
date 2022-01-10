@@ -7,7 +7,7 @@ def md5(v: str) -> str:
     >>> md5('abc0')
     '577571be4de9dcce85a041ba0410f29f'
     """
-    return hashlib.md5(v.encode()).hexdigest()
+    return hashlib.md5(v.encode(), usedforsecurity=False).hexdigest()
 
 
 @lru_cache(maxsize=1200)
