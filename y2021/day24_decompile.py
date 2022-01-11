@@ -230,19 +230,21 @@ class Program:
         return len(self.instructions)
 
     def __call__(self, *args):
-        g = self.run()
-        next(g)
+        gen = self.run()
+        next(gen)
         for arg in args:
             try:
-                g.send(arg)
+                gen.send(arg)
             except StopIteration as exc:
-                result = exc.value
+                result = dict(exc.value)
                 if len(self.return_from) == 0:
                     return None
                 elif len(self.return_from) == 1:
                     return result[self.return_from[0]]
                 else:
                     return tuple(result[r] for r in self.return_from)
+
+        raise ValueError("program didn't terminate")
 
     def run(self) -> Generator[None, Any, dict[str, int]]:
         regs: dict[str, int] = {r: 0 for r in 'wxyz'}
@@ -446,14 +448,14 @@ def all_monad_solutions(monad_variables: Iterable[tuple[int, int, int]]) -> Iter
     z_stack: list[tuple[int, int]] = []  # (i, C[i])
     d_pair_indexes: list[tuple[int, int]] = []  # (i1, i2) for each pair
     d_values: list[list[tuple[int, int]]] = []  # [(d1, d2), ...] for each pair
-    for i, (a, b, c) in enumerate(monad_variables):
+    for index, (a, b, c) in enumerate(monad_variables):
         if b >= 9:
             # push is necessary -> store current `i` and the offset-determinant `c`
-            z_stack.append((i, c))
+            z_stack.append((index, c))
         else:
             # push is preventable by having the correct input value `d`
-            paired_i, paired_c = z_stack[-1]
-            d_pair_indexes.append((i, paired_i))
+            paired_index, paired_c = z_stack[-1]
+            d_pair_indexes.append((index, paired_index))
 
             offset = -(paired_c + b)
             # offset = 5 -> d1,2 = (1,6), (2,7), (3,8), (4,9)
@@ -467,11 +469,11 @@ def all_monad_solutions(monad_variables: Iterable[tuple[int, int, int]]) -> Iter
     # result should be seven pairs
     assert len(d_pair_indexes) == len(d_values) == 7
     # yield each combination of the valid digits
-    for ds in itertools.product(*d_values):
+    for ds_prod in itertools.product(*d_values):
         digits = [None] * 14
-        for (d1, d2), (d1i, d2i) in zip(ds, d_pair_indexes):
-            digits[d1i] = d1
-            digits[d2i] = d2
+        for (d_1, d_2), (d_1i, d_2i) in zip(ds_prod, d_pair_indexes):
+            digits[d_1i] = d_1
+            digits[d_2i] = d_2
         assert all(digit is not None for digit in digits)
         yield int(''.join(str(digit) for digit in digits))
 

@@ -372,16 +372,16 @@ class Number:
         def vls() -> Iterable[ValueLevel]:
             level = 0
             num_buffer = []
-            for ch in line:
-                if ch.isdigit():
-                    num_buffer.append(ch)
+            for char in line:
+                if char.isdigit():
+                    num_buffer.append(char)
                 elif num_buffer:
                     yield int(''.join(num_buffer)), level
                     num_buffer.clear()
 
-                if ch == '[':
+                if char == '[':
                     level += 1
-                elif ch == ']':
+                elif char == ']':
                     level -= 1
 
         return cls(vls())
@@ -470,8 +470,8 @@ class Number:
 
         def adjust_new_vls(index: int, value_diff: int):
             if index in range(len(new_vls)):
-                v1, l1 = new_vls[index]
-                new_vls[index] = v1 + value_diff, l1
+                value_1, level_1 = new_vls[index]
+                new_vls[index] = value_1 + value_diff, level_1
 
         adjust_new_vls(left_index - 1, left_value)
         adjust_new_vls(right_index + 1, right_value)

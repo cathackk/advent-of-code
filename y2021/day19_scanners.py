@@ -437,8 +437,8 @@ class Rotation:
         return Rotation.AXES[n + 3]
 
     @staticmethod
-    def axis_from_str(s: str) -> int:
-        return Rotation.AXES.index(s) - 3
+    def axis_from_str(line: str) -> int:
+        return Rotation.AXES.index(line) - 3
 
     def __repr__(self) -> str:
         return f'{type(self).__name__}({self.x_to!r}, {self.y_to!r}, {self.z_to!r})'
@@ -448,11 +448,11 @@ class Rotation:
 
     @classmethod
     def from_str(cls, line: str) -> 'Rotation':
-        sx, sy, sz = parse_line(line, 'x->$, y->$, z->$')
+        s_x, s_y, s_z = parse_line(line, 'x->$, y->$, z->$')
         return cls(
-            x_to=cls.axis_from_str(sx),
-            y_to=cls.axis_from_str(sy),
-            z_to=cls.axis_from_str(sz)
+            x_to=cls.axis_from_str(s_x),
+            y_to=cls.axis_from_str(s_y),
+            z_to=cls.axis_from_str(s_z)
         )
 
     def apply(self, vector: Vector3):
@@ -554,7 +554,7 @@ class Reading:
         flat_origin = (0, 0)
         canvas = Rect.with_all(flat_beacons | {flat_origin})
 
-        def ch(pos: tuple[int, int]) -> str:
+        def char(pos: tuple[int, int]) -> str:
             if pos == flat_origin:
                 return 'S'
             elif pos in flat_beacons:
@@ -563,7 +563,7 @@ class Reading:
                 return '·'
 
         for y in canvas.range_y():
-            print(''.join(ch((x, y)) for x in canvas.range_x()))
+            print(''.join(char((x, y)) for x in canvas.range_x()))
 
 
 ROTATIONS = list(Rotation.all(mirrored=False))
@@ -662,7 +662,7 @@ class Map:
         flat_beacons = {(b.x, b.y) for b in self.all_beacons if b.z == z}
         canvas = Rect.with_all(flat_scanners | flat_beacons)
 
-        def ch(pos: tuple[int, int]) -> str:
+        def char(pos: tuple[int, int]) -> str:
             if pos in flat_scanners:
                 return 'S'
             elif pos in flat_beacons:
@@ -671,7 +671,7 @@ class Map:
                 return '·'
 
         for y in canvas.range_y():
-            print(''.join(ch((x, y)) for x in canvas.range_x()))
+            print(''.join(char((x, y)) for x in canvas.range_x()))
 
     def most_distant_scanners(self) -> tuple[tuple[Scanner, Scanner], int]:
         assert len(self.fixed_readings) >= 2

@@ -9,6 +9,7 @@ from typing import Iterable
 
 from common.rect import Rect
 from common.utils import parse_line
+from common.utils import relative_path
 from common.utils import sgn
 
 
@@ -164,13 +165,13 @@ Pos = tuple[int, int]
 
 
 class Vent:
-    def __init__(self, p1: Pos, p2: Pos):
-        self.p1, self.p2 = p1, p2
-        self.x1, self.y1 = self.p1
-        self.x2, self.y2 = self.p2
+    def __init__(self, pos_1: Pos, pos_2: Pos):
+        self.pos_1, self.pos_2 = pos_1, pos_2
+        self.x1, self.y1 = self.pos_1
+        self.x2, self.y2 = self.pos_2
 
     def __repr__(self) -> str:
-        return f'{type(self).__name__}({self.p1}, {self.p2})'
+        return f'{type(self).__name__}({self.pos_1}, {self.pos_2})'
 
     def __str__(self) -> str:
         return f'{self.x1},{self.y1} -> {self.x2},{self.y2}'
@@ -201,19 +202,19 @@ class Vent:
     def points(self) -> Iterable[Pos]:
         if self.is_vertical():
             # vertical: x1 == x2
-            s = sgn(self.dy)
-            return ((self.x1, y) for y in range(self.y1, self.y2 + s, s))
+            sign = sgn(self.dy)
+            return ((self.x1, y) for y in range(self.y1, self.y2 + sign, sign))
 
         elif self.is_horizontal():
             # horizontal: y1 == y2
-            s = sgn(self.dx)
-            return ((x, self.y1) for x in range(self.x1, self.x2 + s, s))
+            sign = sgn(self.dx)
+            return ((x, self.y1) for x in range(self.x1, self.x2 + sign, sign))
 
         elif abs(self.dx) == abs(self.dy):
             # 45 degree diagonal
-            sx, sy = sgn(self.dx), sgn(self.dy)
+            sign_x, sign_y = sgn(self.dx), sgn(self.dy)
             return (
-                (self.x1 + sx * d, self.y1 + sy * d)
+                (self.x1 + sign_x * d, self.y1 + sign_y * d)
                 for d in range(abs(self.dx) + 1)
             )
 
@@ -228,7 +229,7 @@ def draw_map(vents: Iterable[Vent], allow_diagonal: bool = False) -> None:
         if allow_diagonal or vent.is_vertical() or vent.is_horizontal()
     ]
 
-    bounds = Rect.with_all(pos for vent in considered_vents for pos in (vent.p1, vent.p2))
+    bounds = Rect.with_all(pos for vent in considered_vents for pos in (vent.pos_1, vent.pos_2))
     counts = Counter(p for vent in considered_vents for p in vent.points())
     lines = (
         ''.join(str(counts[(x, y)] or '·') for x in bounds.range_x())
@@ -238,7 +239,7 @@ def draw_map(vents: Iterable[Vent], allow_diagonal: bool = False) -> None:
 
 
 def vents_from_file(fn: str) -> list[Vent]:
-    return [Vent.parse(line.strip()) for line in open(fn)]
+    return [Vent.parse(line.strip()) for line in open(relative_path(__file__, fn))]
 
 
 def vents_from_text(text: str) -> list[Vent]:

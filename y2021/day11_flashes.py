@@ -480,11 +480,11 @@ class Map:
                 for y in self.bounds.range_y()
             ))
 
-        def increment(*ps: Pos) -> None:
-            for p in ps:
-                values[p] += 1
-                if values[p] == 10:
-                    neighbors = (a for a in adjacent(p) if a in values)
+        def increment(*positions: Pos) -> None:
+            for pos in positions:
+                values[pos] += 1
+                if values[pos] == 10:
+                    neighbors = (a for a in adjacent(pos) if a in values)
                     increment(*neighbors)
 
         def reset() -> int:

@@ -51,7 +51,7 @@ def part_1(steps: Iterable['Step']) -> int:
         >>> print(step_1 := reboot_steps[0])
         on x=10..12,y=10..12,z=10..12
         >>> step_1
-        Step(on=True, cuboid=Cuboid((10, 10, 10), (12, 12, 12)))
+        Step(light_on=True, cuboid=Cuboid((10, 10, 10), (12, 12, 12)))
         >>> step_1.run(reactor)
         27
         >>> reactor.draw()
@@ -180,21 +180,26 @@ Pos3D = tuple[int, int, int]
 
 class Cuboid:
     def __init__(self, corner_0: Pos3D, corner_1: Pos3D):
-        self.x0, self.y0, self.z0 = corner_0
-        self.x1, self.y1, self.z1 = corner_1
-        assert self.x0 <= self.x1
-        assert self.y0 <= self.y1
-        assert self.z0 <= self.z1
+        self.x_0, self.y_0, self.z_0 = corner_0
+        self.x_1, self.y_1, self.z_1 = corner_1
+        assert self.x_0 <= self.x_1
+        assert self.y_0 <= self.y_1
+        assert self.z_0 <= self.z_1
 
     def __repr__(self) -> str:
-        corner_0 = self.x0, self.y0, self.z0
-        corner_1 = self.x1, self.y1, self.z1
+        corner_0 = self.x_0, self.y_0, self.z_0
+        corner_1 = self.x_1, self.y_1, self.z_1
         return f'{type(self).__name__}({corner_0!r}, {corner_1!r})'
 
     def __str__(self):
-        def edge(v0: int, v1: int) -> str:
-            return f'{v0}..{v1}' if v0 != v1 else str(v0)
-        return f'x={edge(self.x0, self.x1)},y={edge(self.y0, self.y1)},z={edge(self.z0, self.z1)}'
+        def edge(v_0: int, v_1: int) -> str:
+            return f'{v_0}..{v_1}' if v_0 != v_1 else str(v_0)
+
+        return (
+            f'x={edge(self.x_0, self.x_1)},'
+            f'y={edge(self.y_0, self.y_1)},'
+            f'z={edge(self.z_0, self.z_1)}'
+        )
 
     @classmethod
     def from_str(cls, line: str) -> 'Cuboid':
@@ -205,25 +210,25 @@ class Cuboid:
             else:
                 return int(edge), int(edge)
 
-        ex, ey, ez = parse_line(line.strip(), 'x=$,y=$,z=$')
-        x0, x1 = parse_edge(ex)
-        y0, y1 = parse_edge(ey)
-        z0, z1 = parse_edge(ez)
-        return cls(corner_0=(x0, y0, z0), corner_1=(x1, y1, z1))
+        e_x, e_y, e_z = parse_line(line.strip(), 'x=$,y=$,z=$')
+        x_0, x_1 = parse_edge(e_x)
+        y_0, y_1 = parse_edge(e_y)
+        z_0, z_1 = parse_edge(e_z)
+        return cls(corner_0=(x_0, y_0, z_0), corner_1=(x_1, y_1, z_1))
 
     @property
     def range_x(self) -> range:
-        return range(self.x0, self.x1 + 1)
+        return range(self.x_0, self.x_1 + 1)
 
     @property
     def range_y(self) -> range:
-        return range(self.y0, self.y1 + 1)
+        return range(self.y_0, self.y_1 + 1)
 
     @property
     def range_z(self) -> range:
-        return range(self.z0, self.z1 + 1)
+        return range(self.z_0, self.z_1 + 1)
 
-    def range(self, axis: str) -> range:
+    def get_range(self, axis: str) -> range:
         if axis == 'x':
             return self.range_x
         elif axis == 'y':
@@ -260,9 +265,9 @@ class Cuboid:
 
     def is_fully_within(self, other: 'Cuboid') -> bool:
         return (
-            other.x0 <= self.x0 and self.x1 <= other.x1 and
-            other.y0 <= self.y0 and self.y1 <= other.y1 and
-            other.z0 <= self.z0 and self.z1 <= other.z1
+            other.x_0 <= self.x_0 and self.x_1 <= other.x_1 and
+            other.y_0 <= self.y_0 and self.y_1 <= other.y_1 and
+            other.z_0 <= self.z_0 and self.z_1 <= other.z_1
         )
 
     def is_fully_outside(self, other: 'Cuboid') -> bool:
@@ -270,9 +275,9 @@ class Cuboid:
 
     def does_intersect(self, other: 'Cuboid') -> bool:
         return (
-            self.x0 <= other.x1 and other.x0 <= self.x1 and
-            self.y0 <= other.y1 and other.y0 <= self.y1 and
-            self.z0 <= other.z1 and other.z0 <= self.z1
+            self.x_0 <= other.x_1 and other.x_0 <= self.x_1 and
+            self.y_0 <= other.y_1 and other.y_0 <= self.y_1 and
+            self.z_0 <= other.z_1 and other.z_0 <= self.z_1
         )
 
     def intersect(self, other: 'Cuboid') -> Optional['Cuboid']:
@@ -280,8 +285,8 @@ class Cuboid:
             return None
 
         return type(self)(
-            corner_0=(max(self.x0, other.x0), max(self.y0, other.y0), max(self.z0, other.z0)),
-            corner_1=(min(self.x1, other.x1), min(self.y1, other.y1), min(self.z1, other.z1))
+            corner_0=(max(self.x_0, other.x_0), max(self.y_0, other.y_0), max(self.z_0, other.z_0)),
+            corner_1=(min(self.x_1, other.x_1), min(self.y_1, other.y_1), min(self.z_1, other.z_1))
         )
 
     def __and__(self, other: 'Cuboid') -> Optional['Cuboid']:
@@ -291,7 +296,7 @@ class Cuboid:
         # break `self` into pieces which are all fully within or fully outside of `other`
 
         if not self.does_intersect(other):
-            return self,
+            return (self,)
 
         # TODO: reimplement splitting using intersection?
 
@@ -315,17 +320,17 @@ class Cuboid:
 
             return [(left, right - 1) for left, right in zip1(split_points)]
 
-        x_split = edge_split(self.x0, self.x1, other.x0, other.x1)
-        y_split = edge_split(self.y0, self.y1, other.y0, other.y1)
-        z_split = edge_split(self.z0, self.z1, other.z0, other.z1)
+        x_split = edge_split(self.x_0, self.x_1, other.x_0, other.x_1)
+        y_split = edge_split(self.y_0, self.y_1, other.y_0, other.y_1)
+        z_split = edge_split(self.z_0, self.z_1, other.z_0, other.z_1)
 
         cls = type(self)
         # TODO: optimize pieces by joining into larger cuboids
         return (
-            cls((x0, y0, z0), (x1, y1, z1))
-            for (x0, x1) in x_split
-            for (y0, y1) in y_split
-            for (z0, z1) in z_split
+            cls((x_0, y_0, z_0), (x_1, y_1, z_1))
+            for (x_0, x_1) in x_split
+            for (y_0, y_1) in y_split
+            for (z_0, z_1) in z_split
         )
 
     def union(self, other: 'Cuboid') -> Iterable['Cuboid']:
@@ -345,9 +350,9 @@ class Cuboid:
 
         # trivial cases
         if other.is_fully_within(self):
-            return self,
+            return (self,)
         if self.is_fully_within(other):
-            return other,
+            return (other,)
         if self.is_fully_outside(other):
             return self, other
 
@@ -481,15 +486,15 @@ class Set3D:
 
 
 class Step:
-    def __init__(self, on: bool, cuboid: Cuboid):
-        self.on = on
+    def __init__(self, light_on: bool, cuboid: Cuboid):
+        self.light_on = light_on
         self.cuboid = cuboid
 
     def __repr__(self) -> str:
-        return f'{type(self).__name__}(on={self.on!r}, cuboid={self.cuboid!r})'
+        return f'{type(self).__name__}(light_on={self.light_on!r}, cuboid={self.cuboid!r})'
 
     def __str__(self) -> str:
-        state = 'on' if self.on else 'off'
+        state = 'on' if self.light_on else 'off'
         return f'{state} {self.cuboid}'
 
     @classmethod
@@ -497,12 +502,12 @@ class Step:
         # on x=-22..28,y=-29..23,z=-38..16
         # off x=-48..-32,y=-32..-16,z=-15..-5
         state, cuboid = line.split(' ')
-        return cls(on=(state == 'on'), cuboid=Cuboid.from_str(cuboid))
+        return cls(light_on=(state == 'on'), cuboid=Cuboid.from_str(cuboid))
 
     def run(self, cubes: Set3D) -> int:
         volume_before = len(cubes)
 
-        if self.on:
+        if self.light_on:
             cubes.add(self.cuboid)
         else:
             cubes.remove(self.cuboid)
@@ -526,18 +531,18 @@ class Step:
 
 
 def draw(cuboids: Iterable[Cuboid], axis_flat: str = 'z') -> None:
-    axis_h, axis_v = {'x': ('y', 'z'), 'y': ('x', 'z'), 'z': ('x', 'y')}[axis_flat]
+    axis_hor, axis_vert = {'x': ('y', 'z'), 'y': ('x', 'z'), 'z': ('x', 'y')}[axis_flat]
     depths = (
-        ((h, v), len(cuboid.range(axis_flat)))
+        ((h, v), len(cuboid.get_range(axis_flat)))
         for cuboid in cuboids
-        for h in cuboid.range(axis_h)
-        for v in cuboid.range(axis_v)
+        for h in cuboid.get_range(axis_hor)
+        for v in cuboid.get_range(axis_vert)
     )
     total_depths = Counter()
-    for hv, depth in depths:
-        total_depths[hv] += depth
+    for h_v, depth in depths:
+        total_depths[h_v] += depth
 
-    def ch(pos: tuple[int, int]) -> str:
+    def char(pos: tuple[int, int]) -> str:
         val = total_depths[pos]
         if val == 0:
             return '·'
@@ -548,17 +553,17 @@ def draw(cuboids: Iterable[Cuboid], axis_flat: str = 'z') -> None:
 
     bounds = Rect.with_all(total_depths.keys())
     left_margin = len(str(bounds.top_y)) + 1
-    print(' ' * left_margin + f'{bounds.left_x} -> {axis_h}')  # h_label
-    v_labels = [
+    print(' ' * left_margin + f'{bounds.left_x} -> {axis_hor}')  # h_label
+    vert_labels = [
         f'{bounds.top_y} ',
         '↓'.rjust(left_margin - 1) + ' ',
-        axis_v.rjust(left_margin - 1) + ' '
+        axis_vert.rjust(left_margin - 1) + ' '
     ]
 
-    for v in bounds.range_y():
-        v_off = v - bounds.top_y
-        v_label = v_labels[v_off] if v_off < len(v_labels) else ' ' * left_margin
-        print(v_label + ''.join(ch((h, v)) for h in bounds.range_x()))
+    for vert in bounds.range_y():
+        vert_off = vert - bounds.top_y
+        vert_label = vert_labels[vert_off] if vert_off < len(vert_labels) else ' ' * left_margin
+        print(vert_label + ''.join(char((h, vert)) for h in bounds.range_x()))
 
 
 def steps_from_text(text: str) -> list[Step]:

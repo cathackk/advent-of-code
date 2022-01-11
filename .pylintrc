@@ -12,12 +12,17 @@ disable=
 [BASIC]
 good-names=K,R,T,V,a,b,c,d,dx,dy,fn,k,m,n,op,q,r,t,tn,to,x,x1,x2,y,y1,y2,z
 
-
 [DESIGN]
 max-args=10
 max-attributes=15
 max-locals=20
 
+[SIMILARITIES]
+min-similarity-lines=8
 
 [FORMAT]
 max-line-length=100
+
+[MISCELLANEOUS]
+# don't list TODOs
+notes=FIXME

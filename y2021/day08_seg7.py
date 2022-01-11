@@ -5,7 +5,6 @@ https://adventofcode.com/2021/day/8
 """
 
 from itertools import permutations
-from pathlib import Path
 from typing import Iterable
 
 from tqdm import tqdm
@@ -277,7 +276,7 @@ class EntrySolution:
     def __init__(self, entry: Entry, permutation: Iterable[str]):
         self.entry = entry
         self.permutation = tuple(permutation)
-        self.decoder_dict = {sd: se for sd, se in zip(self.permutation, 'abcdefg')}
+        self.decoder_dict = dict(zip(self.permutation, 'abcdefg'))
         assert ''.join(sorted(self.permutation)) == 'abcdefg'
 
     def __repr__(self) -> str:

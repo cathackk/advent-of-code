@@ -249,10 +249,10 @@ class Graph:
             # mixed case not allowed
             assert c.islower() or c.isupper()
 
-        for c1, c2 in self.edges:
-            assert c1 != c2
+        for cave_1, cave_2 in self.edges:
+            assert cave_1 != cave_2
             # both caves cannot be big
-            assert c1.islower() or c2.islower()
+            assert cave_1.islower() or cave_2.islower()
 
         self.cave_links: dict[str, list[str]] = {
             cave: sorted(
@@ -277,8 +277,8 @@ class Graph:
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Graph':
         def parse_edge(t: str) -> Edge:
-            c1, c2 = t.split('-')
-            return c1, c2
+            cave_1, cave_2 = t.split('-')
+            return cave_1, cave_2
 
         return cls(parse_edge(line.strip()) for line in lines)
 

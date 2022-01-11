@@ -10,6 +10,8 @@ from itertools import islice
 from typing import Iterable
 from typing import Iterator
 
+from common.utils import relative_path
+
 
 def part_1(state: Iterable[int], days: int = 80) -> int:
     """
@@ -233,7 +235,7 @@ def simulate(state: Iterable[int], days: int, log: bool = False) -> State:
     state_cls = State if days < 100 else StateOptimized
     state = state_cls(state)
 
-    dw = len(str(days))
+    days_width = len(str(days))
 
     if log:
         print(f'Initial state: {state}')
@@ -241,13 +243,13 @@ def simulate(state: Iterable[int], days: int, log: bool = False) -> State:
     for day in range(days):
         state = state.next_state()
         if log:
-            print(f'After {day+1:{dw}} {"days:" if day else "day: "} {state}')
+            print(f'After {day+1:{days_width}} {"days:" if day else "day: "} {state}')
 
     return state
 
 
 def state_from_file(fn: str) -> State:
-    return State(int(v) for v in next(open(fn)).strip().split(','))
+    return State(int(v) for v in next(open(relative_path(__file__, fn))).strip().split(','))
 
 
 if __name__ == '__main__':

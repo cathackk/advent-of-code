@@ -7,6 +7,7 @@ https://adventofcode.com/2021/day/7
 from typing import Callable
 
 from common.utils import minmax
+from common.utils import relative_path
 
 
 def part_1(positions: list[int]) -> int:
@@ -127,15 +128,15 @@ def part_2(positions: list[int]) -> int:
 CostFunction = Callable[[int, int], int]
 
 
-def cost_linear(p1: int, p2: int) -> int:
+def cost_linear(pos_1: int, pos_2: int) -> int:
     # distance
-    return abs(p1 - p2)
+    return abs(pos_1 - pos_2)
 
 
-def cost_quadratic(p1: int, p2: int) -> int:
+def cost_quadratic(pos_1: int, pos_2: int) -> int:
     # 1 + 2 + 3 + 4 + ... per unit of distance
-    d = abs(p1 - p2)
-    return (d * (d + 1)) // 2
+    dist = abs(pos_1 - pos_2)
+    return (dist * (dist + 1)) // 2
 
 
 def alignment_cost(
@@ -158,7 +159,7 @@ def best_destination(positions: list[int], cost_fn: CostFunction = cost_linear):
 
 
 def positions_from_file(fn: str) -> list[int]:
-    return [int(v) for v in next(open(fn)).strip().split(',')]
+    return [int(v) for v in next(open(relative_path(__file__, fn))).strip().split(',')]
 
 
 if __name__ == '__main__':

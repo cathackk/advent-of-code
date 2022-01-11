@@ -10,6 +10,7 @@ from typing import Iterable
 from common.rect import Rect
 from common.utils import last
 from common.utils import parse_line
+from common.utils import relative_path
 from common.utils import sgn
 from common.utils import single_value
 
@@ -141,10 +142,10 @@ def part_1(target: Rect) -> int:
         45
     """
 
-    max_y, v0 = highest_y(target)
-    assert does_hit(v0, target)
+    max_y, v_0 = highest_y(target)
+    assert does_hit(v_0, target)
 
-    print(f"part 1: the probe reaches y={max_y} using initial velocity {v0}")
+    print(f"part 1: the probe reaches y={max_y} using initial velocity {v_0}")
     return max_y
 
 
@@ -201,13 +202,13 @@ def shoot(initial_velocity: Vector, target: Rect) -> Iterable[Pos]:
     assert target.left_x > 0
 
     x, y = 0, 0
-    vx, vy = initial_velocity
+    v_x, v_y = initial_velocity
 
     while True:
-        x += vx
-        y += vy
-        vx -= sgn(vx)
-        vy -= 1
+        x += v_x
+        y += v_y
+        v_x -= sgn(v_x)
+        v_y -= 1
         yield x, y
 
         # hit!
@@ -227,7 +228,7 @@ def draw_trajectory(initial_velocity: Vector, target: Rect) -> None:
     origin = (0, 0)
     bounds = Rect.with_all([origin, target.top_left, target.bottom_right] + steps)
 
-    def ch(pos: Pos) -> str:
+    def char(pos: Pos) -> str:
         if pos == origin:
             return 'S'
         elif pos in steps:
@@ -238,7 +239,7 @@ def draw_trajectory(initial_velocity: Vector, target: Rect) -> None:
             return '·'
 
     for y in reversed(bounds.range_y()):
-        print(''.join(ch((x, y)) for x in bounds.range_x()))
+        print(''.join(char((x, y)) for x in bounds.range_x()))
 
 
 def does_hit(initial_velocity: Vector, target: Rect) -> bool:
@@ -359,7 +360,7 @@ def target_area_from_text(text: str) -> Rect:
 
 
 def target_area_from_file(fn: str) -> Rect:
-    return target_area_from_text(single_value(open(fn)).strip())
+    return target_area_from_text(single_value(open(relative_path(__file__, fn))).strip())
 
 
 if __name__ == '__main__':

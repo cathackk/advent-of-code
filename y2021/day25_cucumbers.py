@@ -433,8 +433,8 @@ def run(initial_map: Map, steps_limit: int = None, log: bool | Iterable[int] = F
 
     last_step_logged = None
 
-    def should_log(s: int) -> int:
-        return log if isinstance(log, bool) else s in log
+    def should_log(step_: int) -> int:
+        return log if isinstance(log, bool) else step_ in log
 
     if should_log(0):
         print("Initial state:")

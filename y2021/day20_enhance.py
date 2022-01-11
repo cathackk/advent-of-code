@@ -231,11 +231,11 @@ class Image:
 
         canvas = self.bounds.grow_by(context, context)
 
-        def ch(pos: Pos) -> str:
+        def char(pos: Pos) -> str:
             return light_char if self[pos] else dark_char
 
         for y in canvas.range_y():
-            print(''.join(ch((x, y)) for x in canvas.range_x()))
+            print(''.join(char((x, y)) for x in canvas.range_x()))
 
 
 class Algorithm:
@@ -257,8 +257,8 @@ class Algorithm:
     def from_str(cls, string: str, light_char: str = '#', dark_char: str = '.') -> 'Algorithm':
         assert len(light_char) == 1
         assert len(dark_char) == 1
-        tr = {light_char: True, dark_char: False}
-        return cls(tr[ch] for ch in string)
+        char_to_bool = {light_char: True, dark_char: False}
+        return cls(char_to_bool[ch] for ch in string)
 
     def enhance(self, image: Image, runs: int = 1) -> Image:
         assert runs >= 0
@@ -295,7 +295,7 @@ class Algorithm:
             for y in range(3)
         }
 
-        for run_index in range(runs):
+        for _ in range(runs):
 
             totals = defaultdict(int)
             for (x, y), lit in image.pixel_rows():
@@ -308,7 +308,8 @@ class Algorithm:
 
             image = type(image)(
                 pixels=(
-                    (pos, not others) for pos, total in totals.items()
+                    (pos, not others)
+                    for pos, total in totals.items()
                     if self[total] != others
                 ),
                 others=others

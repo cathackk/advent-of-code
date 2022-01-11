@@ -145,10 +145,12 @@ def part_2(heights: 'HeightMap') -> int:
 
     basin_sizes = sorted((len(b) for b in heights.basins()), reverse=True)
     assert len(basin_sizes) >= 3
-    s1, s2, s3 = basin_sizes[:3]
-    result = s1 * s2 * s3
+    size_1, size_2, size_3 = basin_sizes[:3]
+    result = size_1 * size_2 * size_3
 
-    print(f"part 2: three largest basin sizes multiplied = {s1} * {s2} * {s3} = {result}")
+    print(
+        f"part 2: three largest basin sizes multiplied = {size_1} * {size_2} * {size_3} = {result}"
+    )
     return result
 
 
@@ -226,7 +228,7 @@ class HeightMap:
     def draw_basins(self, *basins: set[Pos]) -> str:
         all_basins = set.union(*basins)
 
-        def ch(pos: Pos) -> str:
+        def char(pos: Pos) -> str:
             if pos in all_basins:
                 return str(self[pos])
             elif self[pos] == 9 and all_basins & set(adjacent(pos)):
@@ -235,7 +237,7 @@ class HeightMap:
                 return '·'
 
         return '\n'.join(
-            ''.join(ch((x, y)) for x in self.bounds.range_x())
+            ''.join(char((x, y)) for x in self.bounds.range_x())
             for y in self.bounds.range_y()
         )
 

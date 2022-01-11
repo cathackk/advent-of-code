@@ -6,6 +6,7 @@ https://adventofcode.com/2021/day/1
 
 from typing import Iterable
 
+from common.utils import relative_path
 from common.utils import slidingw
 
 
@@ -81,7 +82,7 @@ def count_increases(values: Iterable[int]) -> int:
 
 
 def values_from_file(fn: str) -> list[int]:
-    return [int(line.strip()) for line in open(fn)]
+    return [int(line.strip()) for line in open(relative_path(__file__, fn))]
 
 
 if __name__ == '__main__':

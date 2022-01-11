@@ -8,6 +8,8 @@ from collections import Counter
 from typing import Callable
 from typing import Iterable
 
+from common.utils import relative_path
+
 
 def part_1(values: list[str]) -> int:
     """
@@ -137,11 +139,11 @@ def part_2(values: list[str]) -> int:
         230
     """
 
-    o2 = o2_generator_rating(values)
+    oxygen = o2_generator_rating(values)
     co2 = co2_scrubber_rating(values)
-    result = o2 * co2
+    result = oxygen * co2
 
-    print(f"part 2: life support rating is {o2} * {co2} = {result}")
+    print(f"part 2: life support rating is {oxygen} * {co2} = {result}")
     return result
 
 
@@ -210,7 +212,8 @@ def _select_bit(
 
 
 def values_from_file(fn: str) -> list[str]:
-    values = [line.strip() for line in open(fn)]
+    with open(relative_path(__file__, fn)) as file_in:
+        values = [line.strip() for line in file_in]
 
     # make sure there are any values
     assert values

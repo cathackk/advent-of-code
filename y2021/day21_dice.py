@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Iterable
 
 from common.utils import parse_line
+from common.utils import relative_path
 
 
 def part_1(player_1_start: int, player_2_start: int) -> int:
@@ -194,7 +195,7 @@ class GameState:
         else:
             # all universes with winner=1 (or winner=2) are the same
             # ie. states are ignored if there is a winner
-            return self.winner,
+            return (self.winner,)
 
     def __eq__(self, other) -> bool:
         return isinstance(other, type(self)) and self._key() == other._key()
@@ -246,9 +247,9 @@ def play(
 
     game = GameState.initial(player_1_start, player_2_start)
     die_rolls_count = 0
+    active_player = starting_player
 
-    for turn in itertools.count(0):
-        active_player = 1 + (starting_player + turn - 1) % 2
+    while True:
         rolls = tuple(1 + (die_rolls_count + n) % die_sides for n in range(die_rolls_per_turn))
         die_rolls_count += die_rolls_per_turn
 
@@ -281,6 +282,8 @@ def play(
                 f"for a total score of {current_state.score}."
             )
 
+        active_player = 1 + active_player % 2
+
 
 @dataclass(frozen=True)
 class QuantumGameResult:
@@ -306,6 +309,7 @@ class QuantumGameResult:
         return self.player_1_wins if self.multiverse_loser == 1 else self.player_2_wins
 
 
+# pylint: disable=too-many-locals
 def play_quantum(
     player_1_start: int,
     player_2_start: int,
@@ -375,7 +379,7 @@ def start_from_text(text: str) -> tuple[int, int]:
 
 
 def start_from_file(fn: str) -> tuple[int, int]:
-    return start_from_lines(open(fn))
+    return start_from_lines(open(relative_path(__file__, fn)))
 
 
 def start_from_lines(lines: Iterable[str]) -> tuple[int, int]:

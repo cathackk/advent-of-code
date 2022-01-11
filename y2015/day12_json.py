@@ -58,11 +58,11 @@ def part_2(document) -> int:
     Ignore any object (and all of its children) which has any property with the value `"red"`.
     Do this only for objects (`{...}`), not arrays (`[...]`).
 
-        >>> sumj([1, 2, 3], fv='red')
+        >>> sumj([1, 2, 3], fobidden_value='red')
         6
-        >>> sumj([1, {"c": "red", "b": 2}, 3], fv='red')
+        >>> sumj([1, {"c": "red", "b": 2}, 3], fobidden_value='red')
         4
-        >>> sumj({"d": "red", "e": [1, 2, 3, 4], "f": 5}, fv='red')
+        >>> sumj({"d": "red", "e": [1, 2, 3, 4], "f": 5}, fobidden_value='red')
         0
         >>> sumj([1, "red", 5])
         6

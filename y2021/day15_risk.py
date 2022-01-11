@@ -281,11 +281,11 @@ class RiskMap:
     def draw_path(self, path: Path, origin: Pos = None) -> str:
         path_set = set(path) | {origin or self.bounds.top_left}
 
-        def ch(pos: Pos) -> str:
+        def char(pos: Pos) -> str:
             return str(self[pos]) if pos in path_set else '·'
 
         return '\n'.join(
-            ''.join(ch((x, y)) for x in self.bounds.range_x())
+            ''.join(char((x, y)) for x in self.bounds.range_x())
             for y in self.bounds.range_y()
         )
 

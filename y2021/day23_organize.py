@@ -217,7 +217,7 @@ def part_1(initial_state: 'State') -> int:
         12521
     """
 
-    result, moves = initial_state.find_cheapest_reordering(TARGET_STATE)
+    result, _ = initial_state.find_cheapest_reordering(TARGET_STATE)
     print(f"part 1: it takes {result} energy to organize the amphipods")
     return result
 
@@ -502,7 +502,7 @@ def part_2(initial_state_extended: 'State') -> int:
 
     assert initial_state_extended.room_size == 4
 
-    result, moves = initial_state_extended.find_cheapest_reordering(TARGET_STATE_2)
+    result, _ = initial_state_extended.find_cheapest_reordering(TARGET_STATE_2)
     print(f"part 2: it takes {result} energy to organize the amphipods in the full diagram")
     return result
 
@@ -605,6 +605,7 @@ class State:
             room_size=4
         )
 
+    # pylint: disable=too-many-return-statements
     def move(self, from_: int, to: int) -> tuple[int, 'State'] | None:
         """
         #############
@@ -679,10 +680,10 @@ class State:
     def _pawn_at(self, pos: int) -> str | None:
         if pos < 4:
             # rooms
-            return room[-1] if (room := self.rooms[pos]) else None
+            return room_pawns[-1] if (room_pawns := self.rooms[pos]) else None
         else:
             # hallway
-            return hw if (hw := self.hallway[pos - 4]) != '.' else None
+            return hw_pawn if (hw_pawn := self.hallway[pos - 4]) != '.' else None
 
     def _capacity_at(self, pos: int) -> int:
         if pos < 4:
@@ -762,7 +763,7 @@ def _generate_paths() -> dict[tuple[int, int], list[int | str]]:
     }
 
     # (from, to): [from, intermediate nodes, to]
-    full_paths: dict[tuple[Node, Node], list[Node]] = dict()
+    full_paths: dict[tuple[Node, Node], list[Node]] = {}
     for origin in nodes:
         full_paths[origin, origin] = [origin]
         visited: set[Node] = set()

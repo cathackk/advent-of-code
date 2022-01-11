@@ -7,6 +7,8 @@ https://adventofcode.com/2021/day/2
 from dataclasses import dataclass
 from typing import Iterable
 
+from common.utils import relative_path
+
 
 def part_1(commands: Iterable['Command']) -> int:
     """
@@ -142,7 +144,7 @@ Command = tuple[str, int]
 
 
 def commands_from_file(fn: str) -> list[Command]:
-    return list(commands_from_lines(open(fn)))
+    return list(commands_from_lines(open(relative_path(__file__, fn))))
 
 
 def commands_from_text(text: str) -> list[Command]:

@@ -179,7 +179,7 @@ def part_2(lines: Iterable[str]) -> int:
 
 CHUNK_PAIRS = ['()', '[]', '{}', '<>']
 OPENING, CLOSING = zip(*CHUNK_PAIRS)
-O2C = {o: c for o, c in CHUNK_PAIRS}
+O2C = dict(CHUNK_PAIRS)
 
 
 @dataclass()
@@ -220,19 +220,21 @@ class IncompleteValidationError:
 
 def validate(line: str) -> SyntaxValidationError | IncompleteValidationError | None:
     stack = []
-    for ch in line:
-        if ch in OPENING:
-            stack.append(ch)
-        elif ch in CLOSING:
+    for char in line:
+        if char in OPENING:
+            stack.append(char)
+        elif char in CLOSING:
             opening = stack.pop()
             expected_closing = O2C[opening]
-            if ch != expected_closing:
-                return SyntaxValidationError(line, expected=expected_closing, actual=ch)
+            if char != expected_closing:
+                return SyntaxValidationError(line, expected=expected_closing, actual=char)
         else:
-            raise ValueError(f'unexpected char {ch!r}')
+            raise ValueError(f'unexpected char {char!r}')
 
     if stack:
         return IncompleteValidationError(line, extra=''.join(stack))
+
+    return None
 
 
 def is_complete(line: str) -> bool:

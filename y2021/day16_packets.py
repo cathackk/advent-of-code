@@ -10,6 +10,7 @@ from enum import IntEnum
 from math import prod
 from typing import Iterable
 from common.utils import assert_single_not_none
+from common.utils import relative_path
 
 
 def part_1(packet: 'Packet') -> int:
@@ -324,10 +325,10 @@ class BitStream:
 
     @classmethod
     def concat(cls, streams: Iterable['BitStream']) -> 'BitStream':
-        bs = BitStream()
+        bits = BitStream()
         for stream in streams:
-            bs.append(stream)
-        return bs
+            bits.append(stream)
+        return bits
 
     def append(self, other: 'BitStream') -> None:
         self.bits += other.bits
@@ -351,7 +352,7 @@ class Packet(ABC):
 
     @classmethod
     def from_file(cls, fn: str) -> 'Packet':
-        return cls.from_hex(open(fn).readline().strip())
+        return cls.from_hex(open(relative_path(__file__, fn)).readline().strip())
 
     @classmethod
     def from_hex(cls, hex_string: str) -> 'Packet':
@@ -365,20 +366,21 @@ class Packet(ABC):
         return packet_cls.impl_from_bits(version, p_type, bits)
 
     def bits(self) -> BitStream:
-        bs = BitStream()
-        bs.append(self.bits_impl())
-        bs.lalign(8)
-        return bs
+        bits = BitStream()
+        bits.append(self.bits_impl())
+        bits.lalign(8)
+        return bits
 
     def explain(self) -> str:
         return f'{self.bits()}\n{self.bits_labels()}'
 
     def bits_impl(self) -> BitStream:
-        bs = BitStream()
-        bs.push(self.version, rpad=3)
-        bs.push(self.p_type.value, rpad=3)
-        return bs
+        bits = BitStream()
+        bits.push(self.version, rpad=3)
+        bits.push(self.p_type.value, rpad=3)
+        return bits
 
+    # pylint: disable=no-self-use
     def bits_labels(self) -> str:
         return 'VVVTTT'
 
@@ -425,16 +427,16 @@ class ValuePacket(Packet):
         return cls(version=version, p_type=p_type, value=value)
 
     def bits_impl(self) -> BitStream:
-        bs = super().bits_impl()
+        bits = super().bits_impl()
 
         value_bits = BitStream()
         value_bits.push(self.value, ralign=4)
         while value_bits:
             chunk_value = value_bits.pop(4)
             has_more = bool(value_bits)
-            bs.push(has_more * 16 + chunk_value, rpad=5)
+            bits.push(has_more * 16 + chunk_value, rpad=5)
 
-        return bs
+        return bits
 
     def bits_labels(self) -> str:
         value_chunks_count = (len(bin(self.value)[2:]) + 3) // 4
@@ -487,8 +489,8 @@ class OperatorPacket(Packet):
         )
 
     def bits_impl(self) -> BitStream:
-        bs = super().bits_impl()
-        bs.push(self.length_type_id, rpad=1)
+        bits = super().bits_impl()
+        bits.push(self.length_type_id, rpad=1)
         sub_packets_bits = BitStream.concat(
             sub_packet.bits_impl()
             for sub_packet in self.sub_packets
@@ -496,13 +498,13 @@ class OperatorPacket(Packet):
 
         if self.length_type_id == 0:
             # 15 bits of total sub-packet length
-            bs.push(len(sub_packets_bits), rpad=15)
+            bits.push(len(sub_packets_bits), rpad=15)
         elif self.length_type_id == 1:
             # 11 bits of immediate sub-packet count
-            bs.push(len(self.sub_packets), rpad=11)
+            bits.push(len(self.sub_packets), rpad=11)
 
-        bs.append(sub_packets_bits)
-        return bs
+        bits.append(sub_packets_bits)
+        return bits
 
     def bits_labels(self) -> str:
         length_bits_count = 15 if self.length_type_id == 0 else 11
@@ -518,6 +520,7 @@ class OperatorPacket(Packet):
 
     @property
     def value(self) -> int:
+        # pylint: disable=too-many-return-statements
         match self.p_type:
             case PacketType.SUM:
                 return sum(sp.value for sp in self.sub_packets)
@@ -547,6 +550,7 @@ class OperatorPacket(Packet):
             return expr
 
     def _expression_base(self) -> str:
+        # pylint: disable=too-many-return-statements
         match self.p_type:
             case PacketType.SUM:
                 return '(' + ' + '.join(sp.expression(False) for sp in self.sub_packets) + ')'

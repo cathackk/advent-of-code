@@ -220,15 +220,15 @@ class Instruction:
     def is_horizontal(self) -> bool:
         return self.y is not None
 
-    def tx(self, x: int) -> int:
+    def translated_x(self, x: int) -> int:
         return self.x - abs(x - self.x) if self.x is not None else x
 
-    def ty(self, y: int) -> int:
+    def translated_y(self, y: int) -> int:
         return self.y - abs(y - self.y) if self.y is not None else y
 
-    def translate(self, pos: Pos) -> Pos:
+    def translated(self, pos: Pos) -> Pos:
         x, y = pos
-        return self.tx(x), self.ty(y)
+        return self.translated_x(x), self.translated_y(y)
 
     def is_on_fold(self, pos: Pos) -> bool:
         x, y = pos
@@ -236,7 +236,7 @@ class Instruction:
 
 
 def draw(dots: set[Pos], instruction: Instruction = None, full_char='█', empty_char='·') -> None:
-    def ch(pos: Pos) -> str:
+    def char(pos: Pos) -> str:
         if pos in dots:
             return full_char
         elif instruction and instruction.is_on_fold(pos):
@@ -246,12 +246,12 @@ def draw(dots: set[Pos], instruction: Instruction = None, full_char='█', empty
 
     bounds = Rect.with_all(dots)
     for y in bounds.range_y():
-        print(''.join(ch((x, y)) for x in bounds.range_x()))
+        print(''.join(char((x, y)) for x in bounds.range_x()))
 
 
 def fold(dots: set[Pos], *instructions: Instruction) -> set[Pos]:
     for instr in instructions:
-        dots = {instr.translate(dot) for dot in dots}
+        dots = {instr.translated(dot) for dot in dots}
     return dots
 
 
@@ -271,7 +271,7 @@ def input_from_lines(lines: Iterable[str]) -> Input:
         x, y = line_.strip().split(',')
         return int(x), int(y)
 
-    dots, instructions = set(), list()
+    dots, instructions = set(), []
 
     for line in lines:
         line = line.strip()

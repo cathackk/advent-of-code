@@ -9,6 +9,7 @@ from typing import Iterable
 from typing import Iterator
 
 from common.utils import last
+from common.utils import relative_path
 
 
 def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:
@@ -294,7 +295,7 @@ Game = tuple[list[int], 'Boards']
 
 
 def game_from_file(fn: str) -> Game:
-    return game_from_lines(open(fn))
+    return game_from_lines(open(relative_path(__file__, fn)))
 
 
 def game_from_text(text: str) -> Game:

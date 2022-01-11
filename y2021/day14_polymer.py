@@ -194,7 +194,7 @@ def grow_optimized(polymer: str, rules: Rules, steps: int) -> Counter[str, int]:
     # instead of keeping track of the polymer itself, we'll watch only counts of its pairs
     pairs = Counter(slidingw(polymer, 2))
 
-    for step in range(steps):
+    for _ in range(steps):
         pairs = _total_counts(
             (new_pair, count)
             for (i0, i1), count in pairs.items()
@@ -236,8 +236,8 @@ def input_from_file(fn: str) -> Input:
 
 def input_from_lines(lines: Iterable[str]) -> Input:
     def parse_rule(line: str) -> tuple[tuple[str, str], str]:
-        (i1, i2), o = parse_line(line, '$ -> $')
-        return (i1, i2), o
+        (input_1, input_2), output = parse_line(line, '$ -> $')
+        return (input_1, input_2), output
 
     lines_it = (sline for line in lines if (sline := line.strip()))
     template = next(lines_it).strip()
