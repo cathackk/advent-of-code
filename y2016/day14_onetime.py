@@ -1,11 +1,11 @@
 from itertools import count
+from itertools import islice
 from typing import Generator
 from typing import Optional
 
 from common.md5 import rmd5
 from common.utils import ilog
 from common.utils import last
-from common.utils import nextn
 
 
 def find_repeating(s: str, length: int) -> Optional[tuple[int, str]]:
@@ -45,13 +45,13 @@ def generate_keys(salt: str, repeats: int = 1) -> Generator[tuple[int, str], Non
 
 
 def part_1(salt: str) -> int:
-    index, key = last(ilog(nextn(generate_keys(salt), 64)))
+    index, _ = last(ilog(islice(generate_keys(salt), 64)))
     print(f"part 1: 64th key is generated at index {index}")
     return index
 
 
 def part_2(salt: str) -> int:
-    index, key = last(ilog(nextn(generate_keys(salt, repeats=2017), 64)))
+    index, _ = last(ilog(islice(generate_keys(salt, repeats=2017), 64)))
     print(f"part 2: 64th key is generated at index {index}")
     return index
 

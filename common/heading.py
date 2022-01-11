@@ -16,8 +16,8 @@ class Heading(Enum):
     def from_letter(cls, letter: str) -> 'Heading':
         try:
             return next(h for h in cls if h.letter == letter)
-        except StopIteration:
-            raise KeyError(letter)
+        except StopIteration as stop:
+            raise KeyError(letter) from stop
 
     def right(self) -> 'Heading':
         return {

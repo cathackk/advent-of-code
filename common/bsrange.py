@@ -17,7 +17,7 @@ class BSRange:
         elif self.has_upper():
             return f"[... {self.upper}]"
         else:
-            return f"[...]"
+            return "[...]"
 
     def has_lower(self) -> bool:
         return self._lower is not None

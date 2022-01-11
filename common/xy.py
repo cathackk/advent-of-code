@@ -1,11 +1,13 @@
 import math
 
+from common.mixin import Orderable
 from common.utils import gcd2
 from common.utils import sgn
 
 
-class XY:
+class XY(Orderable):
     __slots__ = ['x', 'y']
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -16,15 +18,6 @@ class XY:
     def __iter__(self):
         yield self.x
         yield self.y
-
-    def __hash__(self):
-        return hash(repr(self))
-
-    def __eq__(self, other):
-        return isinstance(other, type(self)) and tuple(self) == tuple(other)
-
-    def __gt__(self, other):
-        return isinstance(other, type(self)) and tuple(self) > tuple(other)
 
 
 class Vector(XY):
@@ -46,7 +39,8 @@ class Vector(XY):
     def normalize(self) -> 'Vector':
         if self.is_null():
             raise ZeroDivisionError(f"cannot normalize vector {self}")
-        elif self.x == 0 or self.y == 0:
+
+        if self.x == 0 or self.y == 0:
             return Vector(sgn(self.x), sgn(self.y))
         else:
             return self // gcd2(self.x, self.y)

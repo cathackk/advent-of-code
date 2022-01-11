@@ -18,8 +18,8 @@ class Link:
         try:
             first_link = last_link = cls(next(items))
             count = 1
-        except StopIteration:
-            raise ValueError("build_chain() arg is an empty sequence")
+        except StopIteration as stop:
+            raise ValueError("build_chain() arg is an empty sequence") from stop
 
         for item in items:
             last_link = cls(item).connect_to(prev_link=last_link)
@@ -126,14 +126,14 @@ class Circle:
         return removed_link.value
 
     def __str__(self):
-        def g():
+        def gen_links():
             link = self._current_link
             yield str(link)
             link = link.next_link
             while link != self._current_link:
                 yield str(link)
                 link = link.next_link
-        return ' -> '.join(g()) + ' -> ...'
+        return ' -> '.join(gen_links()) + ' -> ...'
 
     def __len__(self):
         return self._length

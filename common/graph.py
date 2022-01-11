@@ -35,7 +35,7 @@ def shortest_path(
         path: PathInfo = field(compare=True)
 
     # node -> previous edge forming cheapest path into this node
-    visited_nodes: dict[Node, PathInfo] = dict()
+    visited_nodes: dict[Node, PathInfo] = {}
     # heap of unvisited nodes adjacent to visited nodes
     unvisited_nodes: list[NodeInfo] = []
 

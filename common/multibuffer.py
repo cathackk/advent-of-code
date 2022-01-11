@@ -7,9 +7,54 @@ T = TypeVar('T')
 
 
 class MultiBuffer:
+    """
+    Multiple buffers by given criteria.
+
+    For example by length:
+
+        >>> mb = MultiBuffer(len)
+        >>> mb.append('dog')
+        >>> mb.extend(['cat', 'monkey', 'antelope', 'ox', 'spider'])
+        >>> len(mb)
+        6
+
+    Give me the shortest:
+
+        >>> mb.pop_min()
+        'ox'
+        >>> mb.pop_min()
+        'cat'
+        >>> len(mb)
+        4
+
+    Give me the longest:
+
+        >>> mb.pop_max()
+        'antelope'
+        >>> len(mb)
+        3
+
+    Etc ...
+
+        >>> mb.pop_min()
+        'dog'
+        >>> mb.pop_min()
+        'spider'
+        >>> len(mb)
+        1
+        >>> bool(mb)
+        True
+
+        >>> mb.pop_min()
+        'monkey'
+        >>> len(mb)
+        0
+        >>> bool(mb)
+        False
+    """
     def __init__(self, scoring: Callable[[T], int], items: Iterable[T] = None):
         self._scoring = scoring
-        self._buffers: dict[int, list[T]] = dict()
+        self._buffers: dict[int, list[T]] = {}
         self._items_count = 0
         if items is not None:
             self.extend(items)
@@ -18,7 +63,7 @@ class MultiBuffer:
         return self._items_count
 
     def __bool__(self):
-        return self._items_count > 0
+        return bool(len(self))
 
     def __iter__(self) -> Iterable[tuple[int, T]]:
         return (
@@ -60,29 +105,3 @@ class MultiBuffer:
     def extend(self, items: Iterable[T]):
         for item in items:
             self.append(item)
-
-
-def test():
-    mb = MultiBuffer(lambda s: len(s))
-
-    mb.append('dog')
-    mb.extend(['cat', 'monkey', 'antelope', 'ox', 'spider'])
-    assert len(mb) == 6
-
-    assert mb.pop_min() == 'ox'
-    assert len(mb) == 5
-
-    assert mb.pop_min() == 'cat'
-    assert len(mb) == 4
-
-    assert mb.pop_max() == 'antelope'
-    assert len(mb) == 3
-
-    assert mb.pop_min() == 'dog'
-    assert mb.pop_min() == 'spider'
-    assert len(mb) == 1
-    assert bool(mb) is True
-
-    assert mb.pop_min() == 'monkey'
-    assert len(mb) == 0
-    assert bool(mb) is False

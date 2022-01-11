@@ -4,11 +4,11 @@ Day 4: Giant Squid
 https://adventofcode.com/2021/day/4
 """
 
+from itertools import islice
 from typing import Iterable
 from typing import Iterator
 
 from common.utils import last
-from common.utils import nextn
 
 
 def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:
@@ -56,7 +56,7 @@ def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:
     After the first five numbers are drawn, ...
 
         >>> drawn = iter(numbers)
-        >>> list(nextn(drawn, 5))
+        >>> list(islice(drawn, 5))
         [7, 4, 9, 5, 11]
 
     ... there are no winners, but the boards are marked as follows:
@@ -71,7 +71,7 @@ def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:
 
     After the next six numbers are drawn, there are still no winners:
 
-        >>> list(nextn(drawn, 6))
+        >>> list(islice(drawn, 6))
         [17, 23, 2, 0, 14, 21]
         >>> boards.mark(*_)
         >>> print(boards)
@@ -245,7 +245,7 @@ class Boards:
     def from_lines(cls, lines: Iterator[str]) -> 'Boards':
         def boards() -> Iterable[Board]:
             while True:
-                rows = [[int(num) for num in line.split()] for line in nextn(lines, BOARD_HEIGHT)]
+                rows = [[int(num) for num in line.split()] for line in islice(lines, BOARD_HEIGHT)]
                 assert all(len(row) == BOARD_WIDTH for row in rows)
                 yield Board(num for row in rows for num in row)
 

@@ -1,4 +1,5 @@
 import functools
+import os
 import sys
 import time
 from itertools import chain
@@ -7,7 +8,6 @@ from typing import Any
 from typing import Callable
 from typing import Generator
 from typing import Iterable
-from typing import Iterator
 from typing import Optional
 from typing import Sized
 from typing import TypeVar
@@ -40,8 +40,7 @@ def gcd(*xs: int) -> Optional[int]:
 
 
 def lcm2(a: int, b: int) -> int:
-    g = gcd2(a, b)
-    return abs(a * b) // g
+    return abs(a * b) // gcd2(a, b)
 
 
 def lcm(*xs: int) -> Optional[int]:
@@ -135,8 +134,8 @@ def single_value(items: Iterable[T]) -> T:
         iterator = iter(items)
         try:
             element1 = next(iterator)
-        except StopIteration:
-            raise ValueError("items contain no elements")
+        except StopIteration as stop:
+            raise ValueError("items contain no elements") from stop
 
         try:
             next(iterator)
@@ -147,10 +146,10 @@ def single_value(items: Iterable[T]) -> T:
             raise ValueError("items contain more than one element")
 
 
-def exhaust(g: Generator[Any, Any, T]) -> T:
+def exhaust(gen: Generator[Any, Any, T]) -> T:
     try:
         while True:
-            next(g)
+            next(gen)
     except StopIteration as exc:
         return exc.value
 
@@ -160,7 +159,7 @@ def dgroupby(
         key: Callable[[T], K],
         value: Callable[[T], V] = lambda t: t
 ) -> dict[K, list[V]]:
-    d: dict[K, list[V]] = dict()
+    d: dict[K, list[V]] = {}
 
     for item in items:
         item_key, item_value = key(item), value(item)
@@ -176,7 +175,7 @@ def dgroupby_set(
         key: Callable[[T], K],
         value: Callable[[T], V] = lambda t: t
 ) -> dict[K, set[V]]:
-    d: dict[K, set[V]] = dict()
+    d: dict[K, set[V]] = {}
 
     for item in items:
         item_key, item_value = key(item), value(item)
@@ -188,7 +187,7 @@ def dgroupby_set(
 
 
 def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> dict[K, list[V]]:
-    d: dict[K, list[V]] = dict()
+    d: dict[K, list[V]] = {}
 
     for item_key, item_value in items:
         if item_key not in d:
@@ -199,7 +198,7 @@ def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> dict[K, list[V]]:
 
 
 def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> dict[K, set[V]]:
-    d: dict[K, set[V]] = dict()
+    d: dict[K, set[V]] = {}
 
     for item_key, item_value in items:
         if item_key not in d:
@@ -231,13 +230,8 @@ def separate(values: Iterable[V], predicate: Callable[[V], bool]) -> tuple[list[
     return matching_values, nonmatching_values
 
 
-def count(items: Iterable) -> int:
+def ilen(items: Iterable) -> int:
     return sum(1 for _ in items)
-
-
-def nextn(g: Iterator[T], n: int) -> Iterable[T]:
-    for _ in range(n):
-        yield next(g)
 
 
 def timeit(func):
@@ -487,8 +481,8 @@ def picking(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     []
     """
     items = list(items)
-    for k in range(len(items)):
-        yield items[k], items[:k]+items[k+1:]
+    for k, item in enumerate(items):
+        yield item, items[:k]+items[k+1:]
 
 
 def following(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
@@ -503,8 +497,8 @@ def following(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     []
     """
     items = list(items)
-    for k in range(len(items)):
-        yield items[k], items[k+1:]
+    for k, item in enumerate(items):
+        yield item, items[k+1:]
 
 
 def subsequences(items: T) -> Iterable[T]:
@@ -517,9 +511,9 @@ def subsequences(items: T) -> Iterable[T]:
     [(0, 1), (1,), (0,), ()]
     """
     if items:
-        for ss in subsequences(items[1:]):
-            yield items[:1] + ss
-            yield ss
+        for subseq in subsequences(items[1:]):
+            yield items[:1] + subseq
+            yield subseq
     else:
         yield items
 
@@ -529,10 +523,10 @@ def powerset(items: Iterable[T]) -> Iterable[tuple[T, ...]]:
     >>> list(powerset([1, 2, 3]))
     [(), (1,), (2,), (3,), (1, 2), (1, 3), (2, 3), (1, 2, 3)]
     """
-    s = list(items)
+    items = list(items)
     return chain.from_iterable(
-        combinations(s, r)
-        for r in range(len(s) + 1)
+        combinations(items, r)
+        for r in range(len(items) + 1)
     )
 
 
@@ -559,24 +553,40 @@ def constrained(value, min_value, max_value):
         return value
 
 
-def until_repeat(g: Generator[T, None, None]) -> Generator[T, None, T]:
+def until_repeat(gen: Generator[T, None, None]) -> Generator[T, None, T | None]:
     seen: set[T] = set()
-    for state in g:
+    for state in gen:
         if state not in seen:
             seen.add(state)
             yield state
         else:
             return state
 
+    return None
 
-def count_ones(bs: bytes) -> int:
-    return sum(bin(b).count('1') for b in bs)
+
+def unique(values: Iterable[T]) -> Iterable[T]:
+    """
+    Like set, but retains order:
+
+        >>> list(unique(['dog', 'cat', 'dog', 'elephant', 'elephant', 'cat', 'ox', 'dog']))
+        ['dog', 'cat', 'elephant', 'ox']
+    """
+    seen: set[T] = set()
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            yield value
+
+
+def count_ones(bytes_: bytes) -> int:
+    return sum(bin(byte).count('1') for byte in bytes_)
 
 
 def create_logger(debug: bool = False) -> Callable[[Any], None]:
     if debug:
-        def log(o):
-            print(o)
+        def log(*args, **kwargs):
+            eprint(*args, **kwargs)
         return log
     else:
         def nolog(_):
@@ -605,11 +615,11 @@ def _parse_line_fixes(line: str, *fixes: str) -> tuple[str, ...]:
 
     results = []
 
-    for f1, f2 in slidingw(fixes, 2):
-        assert line.startswith(f1)
-        line = line[len(f1):]
-        if f2:
-            pos2 = line.index(f2)
+    for fix1, fix2 in slidingw(fixes, 2):
+        assert line.startswith(fix1)
+        line = line[len(fix1):]
+        if fix2:
+            pos2 = line.index(fix2)
             results.append(line[:pos2])
             line = line[pos2:]
         else:
@@ -628,24 +638,9 @@ def strip_line(line: str, prefix: str, suffix: str) -> str:
     return single_value(_parse_line_fixes(line, prefix, suffix))
 
 
-def memoized(func):
-    func._memoized_cache = dict()
-
-    @functools.wraps(func)
-    def wrapped(*args, **kwargs):
-        key = tuple(args), tuple(sorted(kwargs.items()))
-        if key in func._memoized_cache:
-            return func._memoized_cache[key]
-        else:
-            result = func(*args, **kwargs)
-            func._memoized_cache[key] = result
-            return result
-
-    return wrapped
-
-
-# reading order -> y matters more than x
+# pylint: disable=invalid-name
 def ro(pos: tuple[int, int]) -> tuple[int, int]:
+    # reading order -> y matters more than x
     x, y = pos
     return y, x
 
@@ -764,7 +759,7 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
     if not_none_count == 1:
         return single_value((k, v) for k, v in kwargs.items() if v is not None)
     elif not_none_count == 0:
-        items_text = ", ".join(f"{k}=None" for k in kwargs.keys())
+        items_text = ", ".join(f"{k}=None" for k in kwargs)
         raise AssertionError(f"all keys were None: {items_text}")
     else:  # not_none_count > 1
         items_text = ", ".join(f"{k}={v!r}" for k, v in kwargs.items() if v is not None)
@@ -772,7 +767,6 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
 
 
 def relative_path(file: str, *path: str) -> str:
-    import os
     location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(file)))
     return os.path.join(location, *path)
 

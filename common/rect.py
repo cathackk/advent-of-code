@@ -4,6 +4,8 @@ from itertools import chain
 from typing import Iterable
 
 from common.utils import minmax
+from common.utils import sgn
+from common.utils import unique
 
 Pos = tuple[int, int]
 
@@ -23,10 +25,10 @@ class Rect:
         return cls((0, 0), (width - 1, height - 1))
 
     @classmethod
-    def with_all(cls, ps: Iterable[Pos]):
-        ps = list(ps)
-        x_min, x_max = minmax(x for x, _ in ps)
-        y_min, y_max = minmax(y for _, y in ps)
+    def with_all(cls, positions: Iterable[Pos]):
+        positions = list(positions)
+        x_min, x_max = minmax(x for x, _ in positions)
+        y_min, y_max = minmax(y for _, y in positions)
         return cls((x_min, y_min), (x_max, y_max))
 
     def grow_by(self, dx: int = 0, dy: int = 0):
@@ -35,10 +37,10 @@ class Rect:
             (self.right_x + dx, self.bottom_y + dy)
         )
 
-    def grow_to_fit(self, ps: Iterable[Pos]):
+    def grow_to_fit(self, positions: Iterable[Pos]):
         return type(self).with_all(chain(
             [self.top_left, self.bottom_right],
-            ps
+            positions
         ))
 
     @property
@@ -66,7 +68,7 @@ class Rect:
         return self.left_x, self.bottom_y
 
     def corners(self) -> Iterable[Pos]:
-        return (self.top_left, self.top_right, self.bottom_left, self.bottom_right)
+        return self.top_left, self.top_right, self.bottom_left, self.bottom_right
 
     @property
     def width(self) -> int:
@@ -143,48 +145,89 @@ HyperPos = tuple[int, ...]
 
 
 class HyperCuboid:
-    # TODO: use exclusive corner_max
     def __init__(self, corner1: HyperPos, corner2: HyperPos):
         HyperCuboid._assert_dimensions_aligned(len(corner1), len(corner2))
         self.corner_min = tuple(min(a, b) for a, b in zip(corner1, corner2))
         self.corner_max = tuple(max(a, b) for a, b in zip(corner1, corner2))
 
+    def __repr__(self):
+        """
+            >>> HyperCuboid((0, 0, 0, 0), (0, 0, 0, 0))
+            HyperCuboid.unit(4)
+            >>> HyperCuboid((0, 0, 0), (1, 2, 3))
+            HyperCuboid.at_origin((2, 3, 4))
+            >>> HyperCuboid((0, 1, 2, 3, 4), (5, 6, 7, 8, 9))
+            HyperCuboid((0, 1, 2, 3, 4), (5, 6, 7, 8, 9))
+        """
+        if all(v == 0 for v in self.corner_min):
+            if set(self.shape) == {1}:
+                return f'{type(self).__name__}.unit({len(self)})'
+            else:
+                return f'{type(self).__name__}.at_origin({self.shape!r})'
+        elif all(v_min * v_max == 0 for v_min, v_max in zip(self.corner_min, self.corner_max)):
+            signed_shape = tuple(
+                (val := v_min or v_max) + sgn(val)
+                for v_min, v_max in zip(self.corner_min, self.corner_max)
+            )
+            return f'{type(self).__name__}.at_origin({signed_shape!r})'
+        else:
+            return f'{type(self).__name__}({self.corner_min!r}, {self.corner_max!r})'
+
     @classmethod
     def unit(cls, dimensions: int):
+        """
+            >>> (h := HyperCuboid.unit(3))
+            HyperCuboid.unit(3)
+            >>> h.corner_min, h.corner_max
+            ((0, 0, 0), (0, 0, 0))
+        """
         origin = tuple(0 for _ in range(dimensions))
         return cls(origin, origin)
 
     @classmethod
     def at_origin(cls, lengths: HyperPos):
-        # TODO: negative length
+        """
+            >>> (h := HyperCuboid.at_origin((1, 2, 3)))
+            HyperCuboid.at_origin((1, 2, 3))
+            >>> h.shape
+            (1, 2, 3)
+            >>> h.corner_min, h.corner_max
+            ((0, 0, 0), (0, 1, 2))
+            >>> (h2 := HyperCuboid.at_origin((-5, 2, -4)))
+            HyperCuboid.at_origin((-5, 2, -4))
+            >>> h2.shape
+            (5, 2, 4)
+            >>> h2.corner_min, h2.corner_max
+            ((-4, 0, -3), (0, 1, 0))
+        """
         return cls(
             corner1=tuple(0 for _ in range(len(lengths))),
-            corner2=tuple(v - 1 for v in lengths)
+            corner2=tuple(v - sgn(v) for v in lengths)
         )
 
     @classmethod
-    def with_all(cls, ps: Iterable[HyperPos]):
-        ps = iter(ps)
+    def with_all(cls, positions: Iterable[HyperPos]):
+        positions = iter(positions)
 
         try:
-            first_pos = next(ps)
-        except StopIteration:
-            raise ValueError("with_all() arg is an empty sequence")
+            first_pos = next(positions)
+        except StopIteration as stop:
+            raise ValueError("with_all() arg is an empty sequence") from stop
 
         min_values, max_values = list(first_pos), list(first_pos)
 
-        for pos in ps:
+        for pos in positions:
             HyperCuboid._assert_dimensions_aligned(len(first_pos), len(pos))
-            for ix, value in enumerate(pos):
-                if value < min_values[ix]:
-                    min_values[ix] = value
-                if value > max_values[ix]:
-                    max_values[ix] = value
+            for index, value in enumerate(pos):
+                if value < min_values[index]:
+                    min_values[index] = value
+                if value > max_values[index]:
+                    max_values[index] = value
 
         return cls(tuple(min_values), tuple(max_values))
 
-    def grow_to_fit(self, ps: Iterable[HyperPos]):
-        return type(self).with_all(chain([self.corner_min, self.corner_max], ps))
+    def grow_to_fit(self, positions: Iterable[HyperPos]):
+        return type(self).with_all(chain([self.corner_min, self.corner_max], positions))
 
     def __len__(self):
         return len(self.corner_min)
@@ -211,8 +254,13 @@ class HyperCuboid:
         return self.volume - inner_volume
 
     def corners(self) -> Iterable[HyperPos]:
-        # TODO: remove duplicates when any length is 1
-        return itertools.product(*zip(self.corner_min, self.corner_max))
+        """
+            >>> list(HyperCuboid.at_origin((2, 3, 4)).corners())
+            [(0, 0, 0), (0, 0, 3), (0, 2, 0), (0, 2, 3), (1, 0, 0), (1, 0, 3), (1, 2, 0), (1, 2, 3)]
+            >>> list(HyperCuboid.at_origin((1, 3, 1, 4)).corners())
+            [(0, 0, 0, 0), (0, 0, 0, 3), (0, 2, 0, 0), (0, 2, 0, 3)]
+        """
+        return unique(itertools.product(*zip(self.corner_min, self.corner_max)))
 
     @property
     def corners_count(self) -> int:
@@ -253,6 +301,9 @@ class HyperCuboid:
                 corner2=self.corner_max[dim]
             )
 
+        else:
+            raise TypeError(type(dim))
+
     def __iter__(self) -> Iterable[HyperPos]:
         return itertools.product(*(self[d] for d in self.range_dim))
 
@@ -283,15 +334,6 @@ class HyperCuboid:
         else:
             self._assert_has_dimensions(1)
             return item in self[0]
-
-    def __repr__(self):
-        if all(v == 0 for v in self.corner_min):
-            if all(self.length(d) == 1 for d in self.range_dim):
-                return f'{type(self).__name__}.unit({len(self)})'
-            else:
-                return f'{type(self).__name__}.at_origin({self.shape!r})'
-        else:
-            return f'{type(self).__name__}({self.corner_min!r}, {self.corner_max!r})'
 
     @staticmethod
     def _assert_dimensions_aligned(dims1: int, dims2: int):

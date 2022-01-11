@@ -1,0 +1,20 @@
+[MESSAGES CONTROL]
+disable=
+    missing-class-docstring,
+    missing-function-docstring,
+    missing-module-docstring,
+    no-else-return
+
+
+[BASIC]
+good-names=K,R,T,V,a,b,d,dx,dy,k,m,n,r,t,to,x,x1,x2,y,y1,y2,z
+
+
+[DESIGN]
+max-args=10
+max-attributes=15
+max-locals=20
+
+
+[FORMAT]
+max-line-length=100

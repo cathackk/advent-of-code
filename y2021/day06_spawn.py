@@ -4,12 +4,11 @@ Day 6: Lanternfish
 https://adventofcode.com/2021/day/6
 """
 
-import itertools
 from collections import Counter
+from itertools import chain
+from itertools import islice
 from typing import Iterable
 from typing import Iterator
-
-from common.utils import nextn
 
 
 def part_1(state: Iterable[int], days: int = 80) -> int:
@@ -183,7 +182,7 @@ class State:
         new_fish_count = sum(1 for val in self.values if val == 0)
         new_fish = (SPAWN_DAYS + MATURING_DAYS - 1 for _ in range(new_fish_count))
         existing_fish = (val - 1 if val > 0 else SPAWN_DAYS - 1 for val in self.values)
-        return type(self)(itertools.chain(existing_fish, new_fish))
+        return type(self)(chain(existing_fish, new_fish))
 
 
 class StateOptimized:
@@ -202,7 +201,7 @@ class StateOptimized:
         if len(self) < self.VALUES_ENUM_LIMIT:
             return ','.join(str(val) for val in self)
         else:
-            return ','.join(str(val) for val in nextn(iter(self), self.VALUES_ENUM_LIMIT)) + ',...'
+            return ','.join(str(val) for val in islice(iter(self), self.VALUES_ENUM_LIMIT)) + ',...'
 
     def __iter__(self) -> Iterator[int]:
         return self.by_day.elements()

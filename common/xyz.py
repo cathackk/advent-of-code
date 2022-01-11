@@ -1,4 +1,7 @@
-class XYZ:
+from common.mixin import Orderable
+
+
+class XYZ(Orderable):
     def __init__(self, x, y, z):
         self.x = x
         self.y = y
@@ -14,15 +17,6 @@ class XYZ:
 
     def __bool__(self):
         return any(v for v in self)
-
-    def __hash__(self):
-        return hash(repr(self))
-
-    def __eq__(self, other):
-        return isinstance(other, type(self)) and tuple(self) == tuple(other)
-
-    def __gt__(self, other):
-        return isinstance(other, type(self)) and tuple(self) > tuple(other)
 
 
 class Vector3(XYZ):

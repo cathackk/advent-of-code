@@ -18,5 +18,5 @@ jobs:
           architecture: 'x64'
       - name: Requirements
         run: pip install -r requirements.txt
-      - name: Doctests
-        run: py.test --doctest-modules
+      - name: Check
+        run: make check

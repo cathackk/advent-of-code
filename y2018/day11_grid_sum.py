@@ -1,7 +1,7 @@
+from functools import lru_cache
 from typing import Callable
 
 from common.utils import maxk
-from common.utils import memoized
 
 
 def power_fn(serial: int) -> Callable[[int, int], int]:
@@ -21,7 +21,7 @@ def power_fn(serial: int) -> Callable[[int, int], int]:
     return power
 
 
-@memoized
+@lru_cache(maxsize=None)
 def square_sum(x: int, y: int, size: int, val: Callable[[int, int], int]) -> int:
     """
     >>> square_sum(33, 45, 3, power_fn(18))

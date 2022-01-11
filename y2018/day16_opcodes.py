@@ -1,7 +1,7 @@
 from typing import Iterable
 from typing import NamedTuple
 
-from common.utils import count
+from common.utils import ilen
 from common.utils import single_value
 from common.utils import strip_line
 
@@ -100,9 +100,9 @@ def load_program(fn: str) -> Iterable[FourInts]:
 
 
 def part_1(fn_samples: str) -> int:
-    three_or_more = count(
+    three_or_more = ilen(
         s for s in Sample.load(fn_samples)
-        if count(s.possible_opcodes()) >= 3
+        if ilen(s.possible_opcodes()) >= 3
     )
     print(f"part 1: there are {three_or_more} samples with at least three possible opcodes")
     return three_or_more
