@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from typing import Generator
 from typing import Iterable
 
+from common.utils import relative_path
+
 
 def part_1(program: 'Program') -> int:
     """
@@ -32,7 +34,6 @@ def part_1(program: 'Program') -> int:
     For example, consider the following program:
 
         >>> prog = Program.from_text('''
-        ...
         ...     nop +0
         ...     acc +1
         ...     jmp +4
@@ -42,7 +43,6 @@ def part_1(program: 'Program') -> int:
         ...     acc +1
         ...     jmp -4
         ...     acc +6
-        ...
         ... ''')
         >>> len(prog)
         9
@@ -116,7 +116,6 @@ def part_2(program: 'Program') -> int:
     For example, consider the same program from above:
 
         >>> prog = Program.from_text('''
-        ...
         ...     nop +0
         ...     acc +1
         ...     jmp +4
@@ -126,7 +125,6 @@ def part_2(program: 'Program') -> int:
         ...     acc +1
         ...     jmp -4
         ...     acc +6
-        ...
         ... ''')
 
     If you change the first instruction from `nop +0` to `jmp +0`, it would create
@@ -198,7 +196,7 @@ class Program:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(fn))
+        return cls.from_lines(relative_path(__file__, fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]):
@@ -207,10 +205,7 @@ class Program:
             op, arg = line.strip().split(" ")
             return op, int(arg)
 
-        return cls(
-            instruction_from_line(line)
-            for line in lines
-        )
+        return cls(instruction_from_line(line) for line in lines)
 
     def __len__(self):
         return len(self.instructions)
@@ -255,7 +250,7 @@ class Program:
                     changes.append(f"acc={self.acc_after}")
 
             changes_text = (" -> " + ", ".join(changes)) if changes else ""
-            result_text = f" (loop!)" if loop_detected else ""
+            result_text = " (loop!)" if loop_detected else ""
             return changes_text + result_text
 
         def log(self, debug: bool, tick: int, loop_detected: bool = False):

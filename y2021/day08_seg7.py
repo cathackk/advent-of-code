@@ -90,7 +90,6 @@ def part_1(entries: Iterable['Entry']) -> int:
     For now, **focus on the easy digits**. Consider this larger example:
 
         >>> example = entries_from_text('''
-        ...
         ...   be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
         ...   edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
         ...   fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef | cg cg fdcagb cbg
@@ -101,7 +100,6 @@ def part_1(entries: Iterable['Entry']) -> int:
         ...   bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbgef
         ...   egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
         ...   gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
-        ...
         ... ''')
         >>> len(example)
         10

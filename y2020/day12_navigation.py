@@ -6,6 +6,7 @@ https://adventofcode.com/2020/day/12
 from typing import Iterable
 
 from common.heading import Heading
+from common.utils import relative_path
 
 
 def part_1(instructions: list['Instruction']) -> int:
@@ -36,13 +37,11 @@ def part_1(instructions: list['Instruction']) -> int:
     For example:
 
         >>> instrs = instructions_from_text('''
-        ...
         ...     F10
         ...     N3
         ...     F7
         ...     R90
         ...     F11
-        ...
         ... ''')
         >>> instrs
         [('F', 10), ('N', 3), ('F', 7), ('R', 90), ('F', 11)]
@@ -172,7 +171,7 @@ def instructions_from_text(text: str) -> list[Instruction]:
 
 
 def instructions_from_file(fn: str) -> list[Instruction]:
-    return list(instructions_from_lines(open(fn)))
+    return list(instructions_from_lines(relative_path(__file__, fn)))
 
 
 def instructions_from_lines(lines: Iterable[str]) -> Iterable[Instruction]:
@@ -189,7 +188,7 @@ Pos = tuple[int, int]
 class Ship:
     def __init__(self, pos: Pos = (0, 0), heading: Heading = None, waypoint: Pos = None):
         assert (heading is None) != (waypoint is None),\
-            f"exactly one of (heading, waypoint) must be given"
+            "exactly one of (heading, waypoint) must be given"
 
         self.pos = pos
         self.heading = heading

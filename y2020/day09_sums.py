@@ -8,6 +8,8 @@ from typing import Collection
 from typing import Iterator
 from typing import Optional
 
+from common.utils import relative_path
+
 
 def part_1(numbers: list[int], preamble_length: int = 25) -> int:
     """
@@ -243,7 +245,7 @@ def load_nums(fn: str) -> list[int]:
     """ Load numbers from file, one per line. """
     return [
         int(line_stripped)
-        for line in open(fn)
+        for line in relative_path(__file__, fn)
         if (line_stripped := line.strip())
     ]
 

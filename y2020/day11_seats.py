@@ -11,6 +11,7 @@ from typing import Iterable
 from typing import Optional
 
 from common.rect import Rect
+from common.utils import relative_path
 
 
 def part_1(seats_map: 'SeatsMap') -> int:
@@ -378,7 +379,7 @@ class SeatsMap:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(fn))
+        return cls.from_lines(relative_path(__file__, fn))
 
     @classmethod
     def from_text(cls, text: str):
@@ -409,11 +410,11 @@ class SeatsMap:
         adjacents = defaultdict(set)
 
         for x, y in self.tiles.keys():
-            for dx, dy in [(+1, 0), (0, +1), (+1, +1), (-1, +1)]:
-                nx, ny = x + dx, y + dy
-                if (nx, ny) in self.tiles:
-                    adjacents[(x, y)].add((nx, ny))
-                    adjacents[(nx, ny)].add((x, y))
+            for d_x, d_y in [(+1, 0), (0, +1), (+1, +1), (-1, +1)]:
+                n_x, n_y = x + d_x, y + d_y
+                if (n_x, n_y) in self.tiles:
+                    adjacents[(x, y)].add((n_x, n_y))
+                    adjacents[(n_x, n_y)].add((x, y))
 
         return dict(adjacents)
 
@@ -421,14 +422,14 @@ class SeatsMap:
     def visibles(self) -> dict[Pos, set[Pos]]:
         """ Precompute visible seat pairs. """
 
-        def visible_from(pos0: Pos, vector: tuple[int, int]) -> Optional[Pos]:
-            dx, dy = vector
-            x0, y0 = pos0
-            x, y = x0 + dx, y0 + dy
+        def visible_from(pos_0: Pos, vector: tuple[int, int]) -> Optional[Pos]:
+            d_x, d_y = vector
+            x_0, y_0 = pos_0
+            x, y = x_0 + d_x, y_0 + d_y
             while (x, y) in self.bounds:
                 if (x, y) in self.tiles:
                     return x, y
-                x, y = x + dx, y + dy
+                x, y = x + d_x, y + d_y
             else:
                 return None
 

@@ -12,6 +12,7 @@ from typing import Optional
 
 from common.utils import line_groups
 from common.utils import parse_line
+from common.utils import relative_path
 from common.utils import single_value
 
 
@@ -26,12 +27,10 @@ def part_1(rules: dict[int, 'Rule'], messages: list[str]) -> int:
     each other. For example:
 
         >>> rs = rules_from_text('''
-        ...
         ...     0: 1 2
         ...     1: "a"
         ...     2: 1 3 | 3 1
         ...     3: "b"
-        ...
         ... ''')
         >>> len(rs)
         4
@@ -85,14 +84,12 @@ def part_1(rules: dict[int, 'Rule'], messages: list[str]) -> int:
     Here's a more interesting example:
 
         >>> rs = rules_from_text('''
-        ...
         ...     0: 4 1 5
         ...     1: 2 3 | 3 2
         ...     2: 4 4 | 5 5
         ...     3: 4 5 | 5 4
         ...     4: "a"
         ...     5: "b"
-        ...
         ... ''')
         >>> len(rs)
         6
@@ -150,7 +147,6 @@ def part_1(rules: dict[int, 'Rule'], messages: list[str]) -> int:
     messages together, this might look like:
 
         >>> rs, ms = input_from_text('''
-        ...
         ...     0: 4 1 5
         ...     1: 2 3 | 3 2
         ...     2: 4 4 | 5 5
@@ -163,7 +159,6 @@ def part_1(rules: dict[int, 'Rule'], messages: list[str]) -> int:
         ...     abbbab
         ...     aaabbb
         ...     aaaabbb
-        ...
         ... ''')
         >>> len(rs), len(ms)
         (6, 5)
@@ -213,7 +208,6 @@ def part_2(rules: dict[int, 'Rule'], messages: list[str]) -> int:
     For example:
 
         >>> rs, ms = input_from_text('''
-        ...
         ...     42: 9 14 | 10 1
         ...     9: 14 27 | 1 26
         ...     10: 23 14 | 28 1
@@ -261,7 +255,6 @@ def part_2(rules: dict[int, 'Rule'], messages: list[str]) -> int:
         ...     aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
         ...     babaaabbbaaabaababbaabababaaab
         ...     aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba
-        ...
         ... ''')
         >>> len(rs), len(ms)
         (31, 15)
@@ -333,10 +326,10 @@ class Rule(ABC):
         pass
 
     def match(self, text: str) -> bool:
-        return self._match_partial(text) == ""
+        return self.match_partial(text) == ""
 
     @abstractmethod
-    def _match_partial(self, text: str) -> Optional[str]:
+    def match_partial(self, text: str) -> Optional[str]:
         pass
 
     def filter(self, texts: Iterable[str]) -> Iterable[str]:
@@ -364,7 +357,7 @@ class RuleText(Rule):
     def pattern(self) -> str:
         return self.text
 
-    def _match_partial(self, text: str) -> Optional[str]:
+    def match_partial(self, text: str) -> Optional[str]:
         if text.startswith(self.text):
             return text[len(self.text):]
         else:
@@ -404,7 +397,7 @@ class RuleGroups(Rule):
                 for group in self.groups
             ) + ')'
 
-    def _match_partial(self, text: str) -> Optional[str]:
+    def match_partial(self, text: str) -> Optional[str]:
         for group in self.groups:
             remainder = self._match_single_group(text, group)
             if remainder is not None:
@@ -416,7 +409,7 @@ class RuleGroups(Rule):
     def _match_single_group(text: str, group: list[Rule]) -> Optional[str]:
         remainder = text
         for rule in group:
-            remainder = rule._match_partial(remainder)
+            remainder = rule.match_partial(remainder)
             if remainder is None:
                 return None
         return remainder
@@ -442,11 +435,12 @@ class Rule0(Rule):
     def __len__(self):
         raise ValueError(f"{type(self).__name__} has no fixed length")
 
+    @property
     def pattern(self) -> str:
         a, b = self.rule_42.pattern, self.rule_31.pattern
         return f"({a})+({a}){{x}}({b}){{x}}"
 
-    def _match_partial(self, text: str) -> Optional[str]:
+    def match_partial(self, text: str) -> Optional[str]:
         raise ValueError(f"{type(self).__name__} cannot only do full matches")
 
     def match(self, text: str) -> bool:
@@ -523,8 +517,8 @@ def rules_from_text(text: str) -> dict[int, Rule]:
 
 
 def rules_from_lines(lines: Iterable[str]) -> dict[int, Rule]:
-    rules: dict[int, Rule] = dict()
-    rule_refs: dict[int, list[list[int]]] = dict()
+    rules: dict[int, Rule] = {}
+    rule_refs: dict[int, list[list[int]]] = {}
 
     for line in lines:
         if '"' in line:
@@ -565,7 +559,7 @@ def rules_from_lines(lines: Iterable[str]) -> dict[int, Rule]:
 
 
 def input_from_file(fn: str) -> tuple[dict[int, Rule], list[str]]:
-    return input_from_lines(open(fn))
+    return input_from_lines(relative_path(__file__, fn))
 
 
 def input_from_text(text: str) -> tuple[dict[int, Rule], list[str]]:

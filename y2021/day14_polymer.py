@@ -24,7 +24,6 @@ def part_1(template: str, rules: 'Rules', steps: int = 10) -> int:
     For example:
 
         >>> p0, insertion_rules = input_from_text('''
-        ...
         ...     NNCB
         ...
         ...     CH -> B
@@ -43,7 +42,6 @@ def part_1(template: str, rules: 'Rules', steps: int = 10) -> int:
         ...     BC -> B
         ...     CC -> N
         ...     CN -> C
-        ...
         ... ''')
 
     The first line is the **polymer template** - this is the starting point of the process.

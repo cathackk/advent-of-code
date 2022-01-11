@@ -8,6 +8,7 @@ from typing import Iterable
 from typing import Optional
 
 from common.utils import parse_line
+from common.utils import relative_path
 
 
 def part_1(program: 'Program') -> int:
@@ -25,12 +26,10 @@ def part_1(program: 'Program') -> int:
     For example, consider the following program:
 
         >>> prog = Program.from_text('''
-        ...
         ...     mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
         ...     mem[8] = 11
         ...     mem[7] = 101
         ...     mem[8] = 0
-        ...
         ... ''')
         >>> len(prog)
         4
@@ -111,12 +110,10 @@ def part_2(program: 'Program') -> int:
     For example, consider the following program:
 
         >>> prog = Program.from_text('''
-        ...
         ...     mask = 000000000000000000000000000000X1001X
         ...     mem[42] = 100
         ...     mask = 00000000000000000000000000000000X0XX
         ...     mem[26] = 1
-        ...
         ... ''')
         >>> len(prog)
         4
@@ -249,7 +246,7 @@ class Program:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(fn))
+        return cls.from_lines(relative_path(__file__, fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]):
@@ -280,7 +277,7 @@ class Program:
         assert chip_version in (1, 2)
 
         current_mask: Optional[BitMask] = None
-        memory: dict[int, int] = dict()
+        memory: dict[int, int] = {}
 
         for instruction in self:
             match instruction:

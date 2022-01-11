@@ -10,6 +10,7 @@ from typing import Optional
 
 from common.chain import Link
 from common.utils import line_groups
+from common.utils import relative_path
 
 
 def part_1(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
@@ -23,7 +24,6 @@ def part_1(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
     For example, consider the following starting decks:
 
         >>> d1, d2 = decks_from_text('''
-        ...
         ...     Player 1:
         ...     9
         ...     2
@@ -37,7 +37,6 @@ def part_1(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
         ...     4
         ...     7
         ...     10
-        ...
         ... ''')
 
     This means that player 1's deck contains 5 cards, with `9` on top and `1` on the bottom:
@@ -496,10 +495,17 @@ class Deck:
 
         elif isinstance(item, slice):
             start, stop, step = item.indices(self.length)
-            head = self.top_card.follow(start)
-            for _ in range(start, stop, step):
-                yield head.value
-                head = head.follow(step)
+
+            def values():
+                head = self.top_card.follow(start)
+                for _ in range(start, stop, step):
+                    yield head.value
+                    head = head.follow(step)
+
+            return values()
+
+        else:
+            raise TypeError(type(item))
 
     def __len__(self):
         return self.length
@@ -509,7 +515,7 @@ Decks = tuple[Deck, Deck]
 
 
 def decks_from_file(fn: str) -> Decks:
-    return decks_from_lines(open(fn))
+    return decks_from_lines(relative_path(__file__, fn))
 
 
 def decks_from_text(text: str) -> Decks:
@@ -550,6 +556,9 @@ class Victory:
         )
 
 
+# TODO: Game could be refactored to look better
+
+# pylint: disable=too-few-public-methods
 class Game:
     def __init__(
             self,
@@ -573,6 +582,7 @@ class Game:
         assert len(self.deck_1) >= 1, (self.game_number, self.deck_1, self.deck_2)
         assert len(self.deck_2) >= 1, (self.game_number, self.deck_1, self.deck_2)
 
+    # pylint: disable=too-many-branches,too-many-statements
     def play(self, rounds: int = None, print_progress: bool = False) -> Optional[Victory]:
         def log(text: str):
             if print_progress:

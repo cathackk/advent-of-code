@@ -7,6 +7,7 @@ https://adventofcode.com/2020/day/6
 from typing import Iterable
 
 from common.utils import line_groups
+from common.utils import relative_path
 from common.utils import single_value
 
 
@@ -18,11 +19,9 @@ def part_1(groups: list['Group']) -> int:
     example:
 
         >>> g = group_from_text('''
-        ...
         ...     abcx
         ...     abcy
         ...     abcz
-        ...
         ... ''')
         >>> len(g)
         3
@@ -36,7 +35,6 @@ def part_1(groups: list['Group']) -> int:
     answers are on a single line. For example:
 
         >>> gs = groups_from_text('''
-        ...
         ...     abc
         ...
         ...     a
@@ -52,7 +50,6 @@ def part_1(groups: list['Group']) -> int:
         ...     a
         ...
         ...     b
-        ...
         ... ''')
 
     This list represents answers from five groups:
@@ -169,8 +166,7 @@ def groups_from_text(text: str) -> list[Group]:
 
 
 def groups_from_file(fn: str) -> list[Group]:
-    with open(fn) as f:
-        return list(groups_from_lines(f))
+    return list(groups_from_lines(open(relative_path(__file__, fn))))
 
 
 def groups_from_lines(lines: Iterable[str]) -> Iterable[Group]:

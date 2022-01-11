@@ -10,6 +10,7 @@ from typing import Iterable
 
 from common.utils import line_groups
 from common.utils import parse_line
+from common.utils import relative_path
 from common.utils import single_value
 
 
@@ -59,7 +60,6 @@ def part_1(rules: 'RuleList', nearby_tickets: list['Ticket']) -> int:
     For example, suppose you have the following notes:
 
         >>> rules, my_ticket, nearby_tickets = data_from_text('''
-        ...
         ...     class: 1-3 or 5-7
         ...     row: 6-11 or 33-44
         ...     seat: 13-40 or 45-50
@@ -72,7 +72,6 @@ def part_1(rules: 'RuleList', nearby_tickets: list['Ticket']) -> int:
         ...     40,4,50
         ...     55,2,20
         ...     38,6,12
-        ...
         ... ''')
         >>> len(rules), len(nearby_tickets)
         (3, 4)
@@ -134,7 +133,6 @@ def part_2(
     For example, suppose you have the following notes:
 
         >>> rules, my_ticket, nearby_tickets = data_from_text('''
-        ...
         ...     class: 0-1 or 4-19
         ...     row: 0-5 or 8-19
         ...     seat: 0-13 or 16-19
@@ -146,7 +144,6 @@ def part_2(
         ...     3,9,18
         ...     15,1,5
         ...     5,14,9
-        ...
         ... ''')
 
     Based on the *nearby tickets* in the above example, the first position must be `row`, the
@@ -203,8 +200,8 @@ class Rule:
     @classmethod
     def from_line(cls, text: str):
         # class: 1-3 or 5-7
-        name, l1, h1, l2, h2 = parse_line(text, "$: $-$ or $-$")
-        return cls(name, (int(l1), int(h1)), (int(l2), int(h2)))
+        name, l_1, h_1, l_2, h_2 = parse_line(text, "$: $-$ or $-$")
+        return cls(name, (int(l_1), int(h_1)), (int(l_2), int(h_2)))
 
     def __repr__(self):
         ranges_repr = ', '.join(repr(r) for r in self.ranges)
@@ -278,7 +275,7 @@ class RuleList:
         }
 
         # find the only possible permutation
-        field_order: dict[int, str] = dict()
+        field_order: dict[int, str] = {}
         while possible_rule_indexes:
             rule, index = next(
                 (r, single_value(ixs))
@@ -309,7 +306,7 @@ def data_from_text(text: str) -> tuple[RuleList, Ticket, list[Ticket]]:
 
 
 def data_from_file(fn: str) -> tuple[RuleList, Ticket, list[Ticket]]:
-    return data_from_lines(open(fn))
+    return data_from_lines(relative_path(__file__, fn))
 
 
 def data_from_lines(lines: Iterable[str]) -> tuple[RuleList, Ticket, list[Ticket]]:

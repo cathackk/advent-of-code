@@ -22,7 +22,6 @@ def part_1(all_vents: Iterable['Vent']) -> int:
     (your puzzle input) for you to review. For example:
 
         >>> vents = vents_from_text('''
-        ...
         ...     0,9 -> 5,9
         ...     8,0 -> 0,8
         ...     9,4 -> 3,4
@@ -33,7 +32,6 @@ def part_1(all_vents: Iterable['Vent']) -> int:
         ...     3,4 -> 1,4
         ...     0,0 -> 8,8
         ...     5,5 -> 8,2
-        ...
         ... ''')
         >>> len(vents)
         10
@@ -114,7 +112,6 @@ def part_2(all_vents: Iterable['Vent']) -> int:
     Considering all lines from the above example would now produce the following diagram:
 
         >>> vents = vents_from_text('''
-        ...
         ...     0,9 -> 5,9
         ...     8,0 -> 0,8
         ...     9,4 -> 3,4
@@ -125,7 +122,6 @@ def part_2(all_vents: Iterable['Vent']) -> int:
         ...     3,4 -> 1,4
         ...     0,0 -> 8,8
         ...     5,5 -> 8,2
-        ...
         ... ''')
         >>> draw_map(vents, allow_diagonal=True)
         1·1····11·

@@ -7,6 +7,7 @@ https://adventofcode.com/2020/day/21
 from typing import Iterable
 
 from common.utils import parse_line
+from common.utils import relative_path
 from common.utils import single_value
 
 
@@ -133,6 +134,15 @@ class Food:
         self.ingredients = list(ingredients)
         self.allergens = list(allergens)
 
+    def __repr__(self) -> str:
+        tn = type(self).__name__
+        return f'{tn}(ingredients={self.ingredients!r}, allergens={self.allergens!r})'
+
+    def __str__(self) -> str:
+        ingredients = " ".join(self.ingredients)
+        allergens = " ".join(self.allergens)
+        return f"{ingredients} (contains {allergens})"
+
     @classmethod
     def from_line(cls, line: str):
         # mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
@@ -142,7 +152,7 @@ class Food:
 
 def match_allergens(foods: list[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
     # initialize unmatched allergens and their possible ingredients
-    unmatched_a2is: dict[Allergen, set[Ingredient]] = dict()
+    unmatched_a2is: dict[Allergen, set[Ingredient]] = {}
     for food in foods:
         for allergen in food.allergens:
             if allergen not in unmatched_a2is:
@@ -153,11 +163,15 @@ def match_allergens(foods: list[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
     # then
     while unmatched_a2is:
         # find allergen with only one possible ingredient match
-        m_ingredient, m_allergen = next(
-            (single_value(ingrs), allergen)
-            for allergen, ingrs in unmatched_a2is.items()
-            if len(ingrs) == 1
-        )
+        try:
+            m_ingredient, m_allergen = next(
+                (single_value(ingrs), allergen)
+                for allergen, ingrs in unmatched_a2is.items()
+                if len(ingrs) == 1
+            )
+        except StopIteration as stop:
+            raise ValueError("no more allergens with a single match") from stop
+
         yield m_ingredient, m_allergen
 
         # mark both as matched
@@ -167,7 +181,7 @@ def match_allergens(foods: list[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
 
 
 def foods_from_file(fn: str) -> list[Food]:
-    return list(foods_from_lines(open(fn)))
+    return list(foods_from_lines(relative_path(__file__, fn)))
 
 
 def foods_from_text(text: str) -> list[Food]:

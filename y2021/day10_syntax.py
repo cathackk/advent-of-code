@@ -54,7 +54,6 @@ def part_1(lines: Iterable[str]) -> int:
     For example, consider the following navigation subsystem:
 
         >>> example_lines = lines_from_text('''
-        ...
         ...     [({(<(())[]>[[{[]{<()<>>
         ...     [(()[<>])]({[<{<<[]>>(
         ...     {([(<{}[<>[]}>{[]{[(<()>
@@ -65,7 +64,6 @@ def part_1(lines: Iterable[str]) -> int:
         ...     [<(<(<(<{}))><([]([]()
         ...     <{([([[(<>()){}]>(<<{{
         ...     <{([{{}}[<[[[<>{}]]]>[]]
-        ...
         ... ''')
 
     Some of the lines aren't corrupted, just incomplete; you can ignore these lines for now.

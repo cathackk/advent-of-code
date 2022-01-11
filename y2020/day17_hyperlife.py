@@ -9,6 +9,7 @@ from itertools import product
 from typing import Iterable
 
 from common.rect import HyperCuboid
+from common.utils import relative_path
 from common.utils import single_value
 
 
@@ -393,7 +394,7 @@ def state_from_text(dimensions: int, text: str) -> set[Pos]:
 
 
 def state_from_file(dimensions: int, fn: str) -> set[Pos]:
-    return set(active_positions_from_lines(dimensions, open(fn)))
+    return set(active_positions_from_lines(dimensions, relative_path(__file__, fn)))
 
 
 def active_positions_from_lines(dimensions: int, lines: Iterable[str]) -> Iterable[Pos]:
@@ -447,6 +448,6 @@ def print_state(state: set[Pos], cycle: int):
 
 
 if __name__ == '__main__':
-    fn_ = "data/17-input.txt"
-    part_1(state_from_file(3, fn_))
-    part_2(state_from_file(4, fn_))
+    FILENAME = 'data/17-input.txt'
+    part_1(state_from_file(3, FILENAME))
+    part_2(state_from_file(4, FILENAME))

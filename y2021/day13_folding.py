@@ -28,7 +28,6 @@ def part_1(dots: set['Pos'], first_instruction: 'Instruction') -> int:
     (your puzzle input). For example:
 
         >>> example_dots, example_instructions = input_from_text('''
-        ...
         ...     6,10
         ...     0,14
         ...     9,10
@@ -50,7 +49,6 @@ def part_1(dots: set['Pos'], first_instruction: 'Instruction') -> int:
         ...
         ...     fold along y=7
         ...     fold along x=5
-        ...
         ... ''')
 
     The first section is a list of dots on the transparent paper. `0,0` represents the top-left

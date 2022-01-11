@@ -316,20 +316,20 @@ def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[tupl
 
 def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> tuple[T, T]:
     """
-    >>> minmax([1,4,8,10,4,-4,15,-2])
-    (-4, 15)
-    >>> minmax(["cat", "dog", "antelope"])
-    ('antelope', 'dog')
-    >>> minmax(["cat", "dog", "antelope"], key=len)
-    ('cat', 'antelope')
-    >>> minmax([4,4,4])
-    (4, 4)
-    >>> minmax([3])
-    (3, 3)
-    >>> minmax([])
-    Traceback (most recent call last):
-    ...
-    ValueError: minmax() arg is an empty sequence
+        >>> minmax([1,4,8,10,4,-4,15,-2])
+        (-4, 15)
+        >>> minmax(["cat", "dog", "antelope"])
+        ('antelope', 'dog')
+        >>> minmax(["cat", "dog", "antelope"], key=len)
+        ('cat', 'antelope')
+        >>> minmax([4,4,4])
+        (4, 4)
+        >>> minmax([3])
+        (3, 3)
+        >>> minmax([])
+        Traceback (most recent call last):
+        ...
+        ValueError: minmax() arg is an empty sequence
     """
     min_k, max_k = None, None
     min_v, max_v = None, None
@@ -351,14 +351,14 @@ def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> tuple[T, T]:
 
 def maxk(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
     """
-    >>> maxk(["dog", "cat", "monkey"], key=len)
-    ('monkey', 6)
-    >>> maxk([1, 5, 10, 20], key=str)
-    (5, '5')
-    >>> maxk([], key=lambda x: 1)
-    Traceback (most recent call last):
-    ...
-    ValueError: maxk() arg is an empty sequence
+        >>> maxk(["dog", "cat", "monkey"], key=len)
+        ('monkey', 6)
+        >>> maxk([1, 5, 10, 20], key=str)
+        (5, '5')
+        >>> maxk([], key=lambda x: 1)
+        Traceback (most recent call last):
+        ...
+        ValueError: maxk() arg is an empty sequence
     """
     max_k = None
     max_v = None
@@ -378,14 +378,14 @@ def maxk(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
 
 def mink(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
     """
-    >>> mink(["dog", "zebra", "monkey"], key=len)
-    ('dog', 3)
-    >>> mink([5, 6, 8, 10, 12], key=str)
-    (10, '10')
-    >>> mink([], key=lambda x: 1)
-    Traceback (most recent call last):
-    ...
-    ValueError: mink() arg is an empty sequence
+        >>> mink(["dog", "zebra", "monkey"], key=len)
+        ('dog', 3)
+        >>> mink([5, 6, 8, 10, 12], key=str)
+        (10, '10')
+        >>> mink([], key=lambda x: 1)
+        Traceback (most recent call last):
+        ...
+        ValueError: mink() arg is an empty sequence
     """
     min_k = None
     min_v = None
@@ -405,20 +405,20 @@ def mink(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
 
 def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
     """
-    >>> min_all([1,2,3,1,2,3,1,2,3])
-    [1, 1, 1]
-    >>> min_all(["dog", "cat", "monkey", "antelope", "snake", "ant"], key=len)
-    ['dog', 'cat', 'ant']
-    >>> min_all(["dog", "cat", "monkey", "antelope", "snake", "ant"], key=lambda s: s[0])
-    ['antelope', 'ant']
-    >>> min_all([1, 2, 3])
-    [1]
-    >>> min_all([1])
-    [1]
-    >>> min_all([])
-    Traceback (most recent call last):
-    ...
-    ValueError: min_all() arg is an empty sequence
+        >>> min_all([1,2,3,1,2,3,1,2,3])
+        [1, 1, 1]
+        >>> min_all(["dog", "cat", "monkey", "antelope", "snake", "ant"], key=len)
+        ['dog', 'cat', 'ant']
+        >>> min_all(["dog", "cat", "monkey", "antelope", "snake", "ant"], key=lambda s: s[0])
+        ['antelope', 'ant']
+        >>> min_all([1, 2, 3])
+        [1]
+        >>> min_all([1])
+        [1]
+        >>> min_all([])
+        Traceback (most recent call last):
+        ...
+        ValueError: min_all() arg is an empty sequence
     """
     min_k = None
     min_vs = None
@@ -439,18 +439,18 @@ def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
 
 def max_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
     """
-    >>> max_all([1,2,3,1,2,3,1,2,3])
-    [3, 3, 3]
-    >>> max_all(["dog", "cat", "monkey", "donkey", "snake", "ant"], key=len)
-    ['monkey', 'donkey']
-    >>> max_all([1, 2, 3])
-    [3]
-    >>> max_all([1])
-    [1]
-    >>> max_all([])
-    Traceback (most recent call last):
-    ...
-    ValueError: max_all() arg is an empty sequence
+        >>> max_all([1,2,3,1,2,3,1,2,3])
+        [3, 3, 3]
+        >>> max_all(["dog", "cat", "monkey", "donkey", "snake", "ant"], key=len)
+        ['monkey', 'donkey']
+        >>> max_all([1, 2, 3])
+        [3]
+        >>> max_all([1])
+        [1]
+        >>> max_all([])
+        Traceback (most recent call last):
+        ...
+        ValueError: max_all() arg is an empty sequence
     """
     max_k = None
     max_vs = None

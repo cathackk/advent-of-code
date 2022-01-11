@@ -7,6 +7,7 @@ https://adventofcode.com/2020/day/2
 from typing import Iterable
 
 from common.utils import parse_line
+from common.utils import relative_path
 
 
 def part_1(rules_passwords: list[tuple['PasswordRule', str]]) -> int:
@@ -14,11 +15,9 @@ def part_1(rules_passwords: list[tuple['PasswordRule', str]]) -> int:
     Suppose you have the following list:
 
         >>> data = data_from_text('''
-        ...
         ...     1-3 a: abcde
         ...     1-3 b: cdefg
         ...     2-9 c: ccccccccc
-        ...
         ... ''')
         >>> len(data)
         3
@@ -158,7 +157,7 @@ class PasswordRule:
 
 
 def data_from_file(fn: str) -> list[tuple[PasswordRule, str]]:
-    return list(data_from_lines(open(fn)))
+    return list(data_from_lines(relative_path(__file__, fn)))
 
 
 def data_from_text(text: str) -> list[tuple[PasswordRule, str]]:

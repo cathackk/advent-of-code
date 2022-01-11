@@ -7,6 +7,7 @@ https://adventofcode.com/2020/day/1
 from itertools import combinations
 from typing import Iterable
 
+from common.utils import relative_path
 from common.utils import single_value
 
 
@@ -18,14 +19,12 @@ def part_1(numbers: list[int]) -> int:
     For example, suppose your expense report contained the following:
 
         >>> values = values_from_text('''
-        ...
         ...     1721
         ...     979
         ...     366
         ...     299
         ...     675
         ...     1456
-        ...
         ... ''')
 
     In this list, the two entries that sum to 2020 are 1721 and 299.
@@ -47,9 +46,9 @@ def part_1(numbers: list[int]) -> int:
         part 1: 1721 + 299 = 2020; 1721 * 299 = 514579
         514579
     """
-    n1, n2 = find_summation(numbers, total=2020, count=2)
-    result = n1 * n2
-    print(f"part 1: {n1} + {n2} = {n1 + n2}; {n1} * {n2} = {result}")
+    n_1, n_2 = find_summation(numbers, total=2020, count=2)
+    result = n_1 * n_2
+    print(f"part 1: {n_1} + {n_2} = {n_1 + n_2}; {n_1} * {n_2} = {result}")
     return result
 
 
@@ -76,9 +75,9 @@ def part_2(numbers: list[int]) -> int:
         part 2: 979 + 366 + 675 = 2020; 979 * 366 * 675 = 241861950
         241861950
     """
-    n1, n2, n3 = find_summation(numbers, total=2020, count=3)
-    result = n1 * n2 * n3
-    print(f"part 2: {n1} + {n2} + {n3} = {n1 + n2 + n3}; {n1} * {n2} * {n3} = {result}")
+    n_1, n_2, n_3 = find_summation(numbers, total=2020, count=3)
+    result = n_1 * n_2 * n_3
+    print(f"part 2: {n_1} + {n_2} + {n_3} = {n_1 + n_2 + n_3}; {n_1} * {n_2} * {n_3} = {result}")
     return result
 
 
@@ -91,7 +90,7 @@ def find_summation(numbers: list[int], *, total: int, count: int) -> tuple[int, 
 
 
 def values_from_file(fn: str) -> list[int]:
-    return list(values_from_lines(open(fn)))
+    return list(values_from_lines(relative_path(__file__, fn)))
 
 
 def values_from_text(text: str) -> list[int]:

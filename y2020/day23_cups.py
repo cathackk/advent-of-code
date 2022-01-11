@@ -9,7 +9,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.utils import timeit
+from common.utils import relative_path
 
 
 def part_1(cups: 'Cups', moves: int = 100) -> str:
@@ -188,7 +188,7 @@ def part_2(cups: 'Cups', moves=10_000_000) -> int:
 
 class Cups:
     def __init__(self, labels: Iterable[int]):
-        self.next: dict[int, int] = dict()
+        self.next: dict[int, int] = {}
         labels = iter(labels)
         self.current = prev = next(labels)
         for label in labels:
@@ -203,7 +203,7 @@ class Cups:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_line(next(open(fn)))
+        return cls.from_line(next(relative_path(__file__, fn)))
 
     def grown_to(self, count: int):
         return type(self)(chain(
@@ -246,7 +246,7 @@ class Cups:
         if not final:
             print(f"-- move {move + 1} --")
         else:
-            print(f"-- final --")
+            print("-- final --")
 
         first = self.follow(start=self.current, steps=-move)
         cups_text = "".join(

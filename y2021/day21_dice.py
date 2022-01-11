@@ -40,10 +40,8 @@ def part_1(player_1_start: int, player_2_start: int) -> int:
     For example, given these starting positions:
 
         >>> p1_start, p2_start = start_from_text('''
-        ...
         ...     Player 1 starting position: 4
         ...     Player 2 starting position: 8
-        ...
         ... ''')
         >>> p1_start, p2_start
         (4, 8)

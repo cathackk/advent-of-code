@@ -7,6 +7,7 @@ https://adventofcode.com/2020/day/5
 from typing import Iterable
 
 from common.utils import maxk
+from common.utils import relative_path
 from common.utils import single_value
 
 
@@ -135,7 +136,11 @@ def seat_id(seat_code: str) -> int:
     return r * 8 + c
 
 
+def passes_from_file(fn: str) -> list[str]:
+    return [line.strip() for line in open(relative_path(__file__, fn))]
+
+
 if __name__ == '__main__':
-    passes_ = [line.strip() for line in open('data/05-input.txt')]
+    passes_ = passes_from_file('data/05-input.txt')
     part_1(passes_)
     part_2(passes_)

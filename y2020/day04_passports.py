@@ -9,6 +9,7 @@ from functools import partial
 from typing import Iterable
 
 from common.utils import line_groups
+from common.utils import relative_path
 
 
 def part_1(passports: list['Passport']) -> int:
@@ -32,7 +33,6 @@ def part_1(passports: list['Passport']) -> int:
     Here is an example batch file containing four passports:
 
         >>> pps = passports_from_text('''
-        ...
         ...     ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
         ...     byr:1937 iyr:2017 cid:147 hgt:183cm
         ...
@@ -46,7 +46,6 @@ def part_1(passports: list['Passport']) -> int:
         ...
         ...     hcl:#cfa07d eyr:2025 pid:166559648
         ...     iyr:2011 ecl:brn hgt:59in
-        ...
         ... ''')
         >>> len(pps)
         4
@@ -163,7 +162,6 @@ def part_2(passports: list['Passport']) -> int:
     Here are some invalid passports:
 
         >>> invalid_passports = passports_from_text('''
-        ...
         ...     eyr:1972 cid:100
         ...     hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
         ...
@@ -177,7 +175,6 @@ def part_2(passports: list['Passport']) -> int:
         ...     hgt:59cm ecl:zzz
         ...     eyr:2038 hcl:74454a iyr:2023
         ...     pid:3556412378 byr:2007
-        ...
         ... ''')
         >>> len(invalid_passports)
         4
@@ -187,7 +184,6 @@ def part_2(passports: list['Passport']) -> int:
     Here are some valid passports:
 
         >>> valid_passports = passports_from_text('''
-        ...
         ...     pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
         ...     hcl:#623a2f
         ...
@@ -200,7 +196,6 @@ def part_2(passports: list['Passport']) -> int:
         ...     eyr:2022
         ...
         ...     iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
-        ...
         ... ''')
         >>> len(valid_passports)
         4
@@ -224,8 +219,7 @@ Passport = dict[str, str]
 
 
 def passports_from_file(fn: str) -> list[Passport]:
-    with open(fn) as f:
-        return list(passports_from_lines(f))
+    return list(passports_from_lines(relative_path(__file__, fn)))
 
 
 def passports_from_text(text: str) -> list[Passport]:
@@ -239,8 +233,8 @@ def passports_from_lines(lines: Iterable[str]) -> Iterable[Passport]:
     """
 
     def entry_from_text(text: str) -> tuple[str, str]:
-        k, v = text.split(':')
-        return k, v
+        key, value = text.split(':')
+        return key, value
 
     for lines_group in line_groups(lines):
         yield dict(

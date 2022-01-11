@@ -9,6 +9,7 @@ from typing import Iterable
 
 from common.rect import Rect
 from common.utils import join_and
+from common.utils import relative_path
 
 
 def part_1(trees: 'TreesMap'):
@@ -174,7 +175,7 @@ class TreesMap:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(fn))
+        return cls.from_lines(relative_path(__file__, fn))
 
     @classmethod
     def from_text(cls, text: str):

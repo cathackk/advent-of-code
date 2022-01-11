@@ -8,6 +8,7 @@ from collections import Counter
 from collections import defaultdict
 
 from common.utils import diffs
+from common.utils import relative_path
 
 
 def part_1(adapters: list[int]) -> int:
@@ -154,7 +155,7 @@ def arrangements_count(adapters: list[int]) -> int:
 def load_data(fn: str) -> list[int]:
     return [
         int(line_stripped)
-        for line in open(fn)
+        for line in relative_path(__file__, fn)
         if (line_stripped := line.strip())
     ]
 

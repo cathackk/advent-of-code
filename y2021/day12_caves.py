@@ -19,7 +19,6 @@ def part_1(caves: 'Graph') -> int:
     caves (your puzzle input). For example:
 
         >>> g = Graph.from_text('''
-        ...
         ...     start-A
         ...     start-b
         ...     A-c
@@ -27,7 +26,6 @@ def part_1(caves: 'Graph') -> int:
         ...     b-d
         ...     A-end
         ...     b-end
-        ...
         ... ''')
         >>> g  # doctest: +NORMALIZE_WHITESPACE
         Graph([('start', 'A'), ('start', 'b'), ('A', 'c'), ('A', 'b'),
@@ -80,7 +78,6 @@ def part_1(caves: 'Graph') -> int:
     Here is a slightly larger example:
 
         >>> g2 = Graph.from_text('''
-        ...
         ...     dc-end
         ...     HN-start
         ...     start-kj
@@ -91,7 +88,6 @@ def part_1(caves: 'Graph') -> int:
         ...     kj-sa
         ...     kj-HN
         ...     kj-dc
-        ...
         ... ''')
 
     The 19 paths through it are as follows:

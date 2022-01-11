@@ -9,6 +9,8 @@ from typing import Iterable
 from typing import Iterator
 from typing import Union
 
+from common.utils import relative_path
+
 
 def part_1(expressions: Iterable['Expr']) -> int:
     """
@@ -294,7 +296,7 @@ class Expr:
                     op = Operator(symbol)
 
                 case None, _ if symbol.isdigit():
-                    raise ValueError(f"missing operator before int")
+                    raise ValueError("missing operator before int")
 
                 case _, _ if symbol.isdigit():
                     parts.append((op, int(symbol)))
@@ -307,7 +309,7 @@ class Expr:
 
     @classmethod
     def load_from_file(cls, fn: str) -> list['Expr']:
-        return list(cls.load_from_lines(open(fn)))
+        return list(cls.load_from_lines(relative_path(__file__, fn)))
 
     @classmethod
     def load_from_text(cls, text: str) -> list['Expr']:

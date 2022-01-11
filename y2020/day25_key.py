@@ -6,6 +6,7 @@ https://adventofcode.com/2020/day/25
 
 from typing import Iterable
 from common.utils import eprint
+from common.utils import relative_path
 
 
 def part_1(card_public_key: int, door_public_key: int) -> int:
@@ -102,9 +103,9 @@ def transform(subject_number: int, loop_size: int, modulo: int = MODULO) -> int:
 
 
 def crack_loop_size(
-        public_key: int,
-        subject_number: int = 7,
-        modulo: int = MODULO
+    public_key: int,
+    subject_number: int = 7,
+    modulo: int = MODULO
 ) -> int:
     value = subject_number
     for loop_size in range(1, modulo):
@@ -112,9 +113,12 @@ def crack_loop_size(
             return loop_size
         value = (value * subject_number) % modulo
 
+    else:
+        raise ValueError(f"loop size not found ({public_key=}, {subject_number=}, {modulo=})")
+
 
 def public_keys_from_file(fn: str) -> tuple[int, int]:
-    return public_keys_from_lines(open(fn))
+    return public_keys_from_lines(relative_path(__file__, fn))
 
 
 def public_keys_from_lines(lines: Iterable[str]) -> tuple[int, int]:

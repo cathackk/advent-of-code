@@ -12,6 +12,7 @@ from typing import Optional
 
 from common.rect import Rect
 from common.utils import parse_line
+from common.utils import relative_path
 from common.utils import single_value
 from common.utils import string_builder
 
@@ -408,7 +409,7 @@ class Tile:
 
 
 def tiles_from_file(fn: str) -> list[Tile]:
-    return list(tiles_from_lines(open(fn)))
+    return list(tiles_from_lines(relative_path(__file__, fn)))
 
 
 def tiles_from_text(text: str) -> list[Tile]:
@@ -459,8 +460,8 @@ class Image:
             for tile in row
         ))
 
-    def __str__(self):
-        return self.draw()
+    def __str__(self) -> str:
+        return str(self.draw())
 
     @string_builder()
     def draw(self, borders: bool = True, gaps: bool = True) -> str:
@@ -522,7 +523,7 @@ class Image:
         tiles = list(tiles)
 
         # matrix of continuously placed tiles; bordering ones must match
-        placed: dict[Pos, Tile] = dict()
+        placed: dict[Pos, Tile] = {}
         # pool of unplaced tiles -> needs to be emptied by the end of the algorithm
         unplaced_tiles: dict[int, Tile] = {tile.tile_id: tile for tile in tiles}
         # empty positions bordering any placed tiles -> needs to be updated continuously
@@ -636,11 +637,11 @@ class Pattern:
     def find_in(self, drawn_image: str) -> Iterable[Pos]:
         image_lines = drawn_image.split("\n")
 
-        def is_match(ix, iy):
+        def is_match(i_x, i_y):
             return all(
                 image_pixel == '#'
-                for pattern_line, image_line in zip(self.pixel_rows, image_lines[iy:])
-                for pattern_pixel, image_pixel in zip(pattern_line, image_line[ix:])
+                for pattern_line, image_line in zip(self.pixel_rows, image_lines[i_y:])
+                for pattern_pixel, image_pixel in zip(pattern_line, image_line[i_x:])
                 if pattern_pixel == '#'
             )
 
@@ -657,15 +658,15 @@ class Pattern:
     def highlight(self, drawn_image: str, matches: Iterable[Pos], hchr: str = 'O') -> str:
         image_pixels = [list(line) for line in drawn_image.split("\n")]
 
-        for mx, my in matches:
+        for m_x, m_y in matches:
             pixels_to_highlight = (
-                (px, py)
-                for px in range(self.width)
-                for py in range(self.height)
-                if self.pixel_rows[py][px] == '#'
+                (p_x, p_y)
+                for p_x in range(self.width)
+                for p_y in range(self.height)
+                if self.pixel_rows[p_y][p_x] == '#'
             )
-            for px, py in pixels_to_highlight:
-                image_pixels[my+py][mx+px] = hchr
+            for p_x, p_y in pixels_to_highlight:
+                image_pixels[m_y + p_y][m_x + p_x] = hchr
 
         return "\n".join("".join(row) for row in image_pixels)
 

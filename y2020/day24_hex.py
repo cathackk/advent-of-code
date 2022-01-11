@@ -10,6 +10,7 @@ from functools import cached_property
 from typing import Iterable
 
 from common.rect import Rect
+from common.utils import relative_path
 
 
 def part_1(walks: Iterable['Walk']) -> tuple[int, 'HexGrid']:
@@ -65,7 +66,6 @@ def part_1(walks: Iterable['Walk']) -> tuple[int, 'HexGrid']:
     Here is a larger example:
 
         >>> ws = Walk.parse_text('''
-        ...
         ...     sesenwnenenewseeswwswswwnenewsewsw
         ...     neeenesenwnwwswnenewnwwsewnenwseswesw
         ...     seswneswswsenwwnwse
@@ -86,7 +86,6 @@ def part_1(walks: Iterable['Walk']) -> tuple[int, 'HexGrid']:
         ...     eneswnwswnwsenenwnwnwwseeswneewsenese
         ...     neswnwewnwnwseenwseesewsenwsweewe
         ...     wseweeenwnesenwwwswnew
-        ...
         ... ''')
         >>> len(ws)
         20
@@ -224,6 +223,9 @@ class Step(Enum):
     NW = (-1, -1)
     NE = (+1, -1)
 
+    def __repr__(self):
+        return f'{type(self).__name__}.{self.name}'
+
     @property
     def dx(self) -> int:
         return self.value[0]
@@ -237,15 +239,21 @@ class Step(Enum):
 
     @classmethod
     def parse_line(cls, line: str) -> Iterable['Step']:
-        # eseswnnenw
-        # ->
-        # E, SE, SW, N, NE, NW
-        line = line.upper()
+        """
+            >>> list(Step.parse_line("eseswwnenw"))
+            [Step.E, Step.SE, Step.SW, Step.W, Step.NE, Step.NW]
+        """
+        line_upper = line.upper()
         head = 0
-        while head < len(line):
-            step = next(s for s in cls if line[head:].startswith(s.name))
-            yield step
-            head += len(step.name)
+
+        try:
+            while head < len(line_upper):
+                step = next(s for s in cls if line_upper[head:].startswith(s.name))
+                yield step
+                head += len(step.name)
+
+        except StopIteration as stop:
+            raise ValueError(line) from stop
 
 
 Pos = tuple[int, int]
@@ -257,7 +265,7 @@ class Walk:
 
     @classmethod
     def parse_file(cls, fn: str) -> list['Walk']:
-        return list(cls.parse_lines(open(fn)))
+        return list(cls.parse_lines(relative_path(__file__, fn)))
 
     @classmethod
     def parse_text(cls, text: str) -> list['Walk']:
@@ -335,7 +343,7 @@ class HexGrid:
         return f'{type(self).__name__}({{{active_repr}}})'
 
     def __str__(self):
-        def ch(pos: Pos) -> str:
+        def char(pos: Pos) -> str:
             x, y = pos
             if (x + y) % 2 == 1:
                 return ' '
@@ -343,9 +351,10 @@ class HexGrid:
                 return '#'
             else:
                 return '.'
+
         bounds = Rect.with_all(self.active_tiles)
         return "\n".join(
-            "".join(ch((x, y)) for x in bounds.range_x())
+            "".join(char((x, y)) for x in bounds.range_x())
             for y in bounds.range_y()
         )
 

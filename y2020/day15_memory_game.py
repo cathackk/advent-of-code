@@ -9,6 +9,8 @@ from typing import Iterator
 
 from tqdm import tqdm
 
+from common.utils import relative_path
+
 
 def part_1(numbers: list[int]) -> int:
     """
@@ -142,7 +144,7 @@ def part_2(numbers: list[int]) -> int:
 
 
 def memory_game_it(starting_numbers: list[int]) -> Iterator[int]:
-    last_seen_on: dict[int, int] = dict()
+    last_seen_on: dict[int, int] = {}
     age = 0
     for turn in count(0):
         num = starting_numbers[turn] if turn < len(starting_numbers) else age
@@ -164,7 +166,7 @@ def memory_game(numbers: list[int], turns: int) -> int:
 def load_numbers(fn: str) -> list[int]:
     return [
         int(v)
-        for line in open(fn)
+        for line in relative_path(__file__, fn)
         for v in line.split(",")
     ]
 

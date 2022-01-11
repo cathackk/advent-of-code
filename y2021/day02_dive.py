@@ -25,14 +25,12 @@ def part_1(commands: Iterable['Command']) -> int:
     figure out where it's going. For example:
 
         >>> cmds = commands_from_text('''
-        ...
         ...     forward 5
         ...     down 5
         ...     forward 8
         ...     up 3
         ...     down 8
         ...     forward 2
-        ...
         ... ''')
 
     Your horizontal position and depth both start at `0`.

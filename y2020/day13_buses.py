@@ -7,6 +7,7 @@ https://adventofcode.com/2020/day/13
 from typing import Iterable
 
 from common.utils import modular_inverse
+from common.utils import relative_path
 
 
 def part_1(start: int, bus_ids: Iterable[int]) -> int:
@@ -35,10 +36,8 @@ def part_1(start: int, bus_ids: Iterable[int]) -> int:
     For example, suppose you have the following notes:
 
         >>> start, buses = data_from_text('''
-        ...
         ...     939
         ...     7,13,x,x,59,x,31,19
-        ...
         ... ''')
 
     Here, the earliest timestamp you could depart is `939`, and the bus IDs in service are `7`,
@@ -207,7 +206,7 @@ def data_from_text(text: str) -> tuple[int, dict[int, int]]:
 
 
 def data_from_file(fn: str) -> tuple[int, dict[int, int]]:
-    return data_from_lines(open(fn))
+    return data_from_lines(relative_path(__file__, fn))
 
 
 def data_from_lines(lines: Iterable[str]) -> tuple[int, dict[int, int]]:
