@@ -111,10 +111,10 @@ def draw_arrangement(arrangement: list[str], rules: Rules) -> None:
     assert len(arrangement) > 1
 
     seats = arrangement[-1:] + arrangement[:-1]
-    for n1, seat, n2 in slidingw(seats, 3, wrap=True):
-        h1 = rules[seat, n1]
-        h2 = rules[seat, n2]
-        print(f"{h1:+3} {seat:5} {h2:+3}")
+    for neighbor_1, seat, neighbor_2 in slidingw(seats, 3, wrap=True):
+        happines_1 = rules[seat, neighbor_1]
+        happines_2 = rules[seat, neighbor_2]
+        print(f"{happines_1:+3} {seat:5} {happines_2:+3}")
 
 
 def arrangement_happiness(arrangement: list[str], rules: Rules) -> int:
@@ -156,10 +156,13 @@ def rulelist_from_lines(lines: Iterable[str]) -> Iterable[Rule]:
     return (rule_from_str(line.strip()) for line in lines)
 
 
-def rule_from_str(s: str) -> Rule:
+def rule_from_str(line: str) -> Rule:
     # 'Alice would gain 54 happiness units by sitting next to Bob.'
     # 'Alice would lose 79 happiness units by sitting next to Carol.'
-    name1, verb, amount, name2 = parse_line(s, "$ would $ $ happiness units by sitting next to $.")
+    name1, verb, amount, name2 = parse_line(
+        line,
+        pattern="$ would $ $ happiness units by sitting next to $."
+    )
 
     amount = int(amount)
     assert verb in ("lose", "gain")

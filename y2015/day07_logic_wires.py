@@ -182,25 +182,25 @@ class Connection:
             yield self.arg2
 
     def evaluate(self, values: dict[str, int] = None) -> tuple[str, int]:
-        return self.target, self._eval_value(values or dict())
+        return self.target, self._eval_value(values or {})
 
     def _eval_value(self, values: dict[str, int]) -> int:
-        v1 = int(self.arg1) if self.arg1.isnumeric() else values[self.arg1]
+        val1 = int(self.arg1) if self.arg1.isnumeric() else values[self.arg1]
 
         if self.command == Command.VALUE:
-            return v1
+            return val1
         elif self.command == Command.NOT:
-            return v1 ^ 0xffff
+            return val1 ^ 0xffff
 
-        v2 = int(self.arg2) if self.arg2.isnumeric() else values[self.arg2]
+        val2 = int(self.arg2) if self.arg2.isnumeric() else values[self.arg2]
         if self.command == Command.AND:
-            return v1 & v2
+            return val1 & val2
         elif self.command == Command.OR:
-            return v1 | v2
+            return val1 | val2
         elif self.command == Command.LSHIFT:
-            return v1 << v2
+            return val1 << val2
         elif self.command == Command.RSHIFT:
-            return v1 >> v2
+            return val1 >> val2
         else:
             raise ValueError(f"unsupported command {self.command.name}")
 
@@ -211,7 +211,7 @@ Circuit = list[Connection]
 def evaluate_circuit(circuit: Circuit) -> dict[str, int]:
     unprocessed_connections = list(circuit)
 
-    values: dict[str, int] = dict()
+    values: dict[str, int] = {}
 
     while unprocessed_connections:
         known_variables = set(values.keys())

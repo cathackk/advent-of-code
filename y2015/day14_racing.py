@@ -176,6 +176,7 @@ class Reindeer:
     def from_str(cls, line: str) -> 'Reindeer':
         # 'Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds.'
         args = parse_line(line, "$ can fly $ km/s for $ seconds, but then must rest for $ seconds.")
+        # pylint: disable=no-value-for-parameter
         return cls(*args)
 
     def distance(self, seconds: int) -> int:
@@ -200,6 +201,7 @@ def race_winner(reindeer: list[Reindeer], seconds: int) -> tuple[str, int]:
 def points_race(reindeer: list[Reindeer], seconds: int) -> dict[str, int]:
     points: dict[str, int] = {r.name: 0 for r in reindeer}
     for second in range(1, seconds + 1):
+        # pylint: disable=cell-var-from-loop
         leading = max_all(reindeer, key=lambda r: r.distance(second))
         for r in leading:
             points[r.name] += 1

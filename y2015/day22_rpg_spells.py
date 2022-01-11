@@ -363,7 +363,7 @@ class Battle:
             player_armor=0,
             player_mana=self.player.mana,
             boss_hp=self.boss.hit_points,
-            active_effects=dict(),
+            active_effects={},
             logging=logging,
         )
 
@@ -374,7 +374,7 @@ class Battle:
             player_mana=0,
             player_armor=0,
             boss_hp=0,
-            active_effects=dict(),
+            active_effects={},
             logging=False
         )
 
@@ -421,8 +421,8 @@ class BattleState:
         )
 
     def __str__(self) -> str:
-        def hp_str(hp: int) -> str:
-            return f"1 hit point" if hp == 1 else f"{hp} hit points"
+        def hp_str(hps: int) -> str:
+            return "1 hit point" if hps == 1 else f"{hps} hit points"
 
         if self.player_wins:
             winner = "\nPlayer wins!"
@@ -440,9 +440,9 @@ class BattleState:
     def _key(self) -> tuple:
         # all winning states are considered the same:
         if self.player_wins:
-            return 'player wins',
+            return ('player wins',)
         if self.boss_wins:
-            return 'boss wins',
+            return ('boss wins',)
 
         # otherwise consider other values
         return (
@@ -503,13 +503,13 @@ class BattleState:
     def after_turn(self, spell: Spell | str) -> 'BattleState':
         new_state = self.copy()
         try:
-            new_state._do_turn(spell)
+            new_state.do_turn(spell)
         except BattleEnds:
             assert new_state.player_hp <= 0 or new_state.boss_hp <= 0
 
         return new_state
 
-    def _do_turn(self, spell: Spell | str) -> None:
+    def do_turn(self, spell: Spell | str) -> None:
         assert not self.has_winner
         # Player turn
         self._log_turn("Player")

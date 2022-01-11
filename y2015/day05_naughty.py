@@ -7,6 +7,7 @@ https://adventofcode.com/2015/day/5
 from typing import Iterable
 
 from common.utils import relative_path
+from common.utils import zip1
 
 
 def part_1(strings: Iterable[str]) -> int:
@@ -109,27 +110,27 @@ def part_2(strings: Iterable[str]) -> int:
     return result
 
 
-def is_nice(s: str) -> bool:
+def is_nice(string: str) -> bool:
     return (
-        sum(1 for c in s if c in set('aeiou')) >= 3
-        and any(c1 == c2 for c1, c2 in zip(s, s[1:]))
+        sum(1 for char in string if char in set('aeiou')) >= 3
+        and any(c1 == c2 for c1, c2 in zip1(string))
         and not any(
-           s[k:k+2] in {'ab', 'cd', 'pq', 'xy'}
-           for k in range(len(s)-1)
+           string[k:k + 2] in {'ab', 'cd', 'pq', 'xy'}
+           for k in range(len(string) - 1)
         )
     )
 
 
-def is_nice_2(s: str) -> bool:
+def is_nice_2(string: str) -> bool:
     return (
         any(
-            s[i:i + 2] == s[j:j + 2]
-            for i in range(len(s) - 3)
-            for j in range(i + 2, len(s) - 1)
+            string[i:i + 2] == string[j:j + 2]
+            for i in range(len(string) - 3)
+            for j in range(i + 2, len(string) - 1)
         )
         and any(
-            s[k - 1] == s[k + 1]
-            for k in range(1, len(s) - 1)
+            string[k - 1] == string[k + 1]
+            for k in range(1, len(string) - 1)
         )
     )
 

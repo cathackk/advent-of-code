@@ -88,10 +88,10 @@ def part_1(weights: list[int]) -> int:
         part 1: ideal configuration has QE=99 (`11 9`, `10 8 2`, `7 5 4 3 1`)
         99
     """
-    config, qe = ideal_configuration(weights, 3)
+    config, quantum_entanglement = ideal_configuration(weights, 3)
     config_str = ", ".join("`" + " ".join(str(w) for w in ws) + "`" for ws in config)
-    print(f"part 1: ideal configuration has QE={qe} ({config_str})")
-    return qe
+    print(f"part 1: ideal configuration has QE={quantum_entanglement} ({config_str})")
+    return quantum_entanglement
 
 
 def part_2(weights: list[int]) -> int:
@@ -131,10 +131,10 @@ def part_2(weights: list[int]) -> int:
         44
     """
 
-    config, qe = ideal_configuration(weights, 4)
+    config, quantum_entanglement = ideal_configuration(weights, 4)
     config_str = ", ".join("`" + " ".join(str(w) for w in ws) + "`" for ws in config)
-    print(f"part 2: ideal configuration has QE={qe} ({config_str})")
-    return qe
+    print(f"part 2: ideal configuration has QE={quantum_entanglement} ({config_str})")
+    return quantum_entanglement
 
 
 Config = tuple[tuple[int, ...], ...]
@@ -190,12 +190,12 @@ def subsqs_of_length(values: list[int], tsum: int, length: int) -> Iterable[tupl
 
 
 def print_configs(configs: Iterable[Config]):
-    def fw(ws: tuple[int, ...]) -> str:
-        return " ".join(str(w) for w in ws)
+    def ws_str(weights: tuple[int, ...]) -> str:
+        return " ".join(str(w) for w in weights)
 
     headers = ["Group 1", "QE"] + [f"Group {g}" for g in (2, 3, 4)]
     rows = (
-        (fw(config[0]), math.prod(config[0])) + tuple(fw(c) for c in config[1:])
+        (ws_str(config[0]), math.prod(config[0])) + tuple(ws_str(c) for c in config[1:])
         for config in configs
     )
     print(tabulate(rows, headers=headers, tablefmt='github'))
@@ -207,16 +207,17 @@ def ideal_configuration(weights: list[int], containers_count: int) -> tuple[Conf
     def generate_configs_with_shortest_c1():
         prev_config = None
         for config in generate_configs(weights, containers_count):
+            # pylint: disable=unsubscriptable-object
             if prev_config and len(prev_config[0]) < len(config[0]):
                 return
             yield config
             prev_config = config
 
-    best_config, qe = mink(
+    best_config, quantum_entanglement = mink(
         tqdm(generate_configs_with_shortest_c1(), delay=1.0, unit=" configs"),
         key=lambda c: math.prod(c[0])
     )
-    return best_config, qe
+    return best_config, quantum_entanglement
 
 
 def weights_from_file(fn: str) -> list[int]:

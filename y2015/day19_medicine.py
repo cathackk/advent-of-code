@@ -128,11 +128,11 @@ def part_2(target_molecule: str, rules: Rules, start: str = 'e') -> int:
 
 def replacements(molecule: str, rules: Rules) -> Iterable[str]:
     for rfrom, rtos in rules.items():
-        ln = len(rfrom)
+        length = len(rfrom)
         yield from (
-            molecule[:k] + rto + molecule[k+ln:]
-            for k in range(len(molecule)-ln+1)
-            if molecule[k:k+ln] == rfrom
+            molecule[:k] + rto + molecule[k + length:]
+            for k in range(len(molecule) - length + 1)
+            if molecule[k:k + length] == rfrom
             for rto in rtos
         )
 
@@ -156,12 +156,12 @@ def traceback(start: str, rules: Rules, target: str) -> Generator[tuple[str, int
         molecule, steps = buffer.pop_min()
 
         for rfrom, rtos in rrules.items():
-            ln = len(rfrom)
-            for k in range(len(molecule) - ln + 1):
-                if molecule[k:k+ln] != rfrom:
+            length = len(rfrom)
+            for k in range(len(molecule) - length + 1):
+                if molecule[k:k + length] != rfrom:
                     continue
                 for rto in rtos:
-                    molecule_after = molecule[:k]+rto+molecule[k+ln:]
+                    molecule_after = molecule[:k] + rto + molecule[k + length:]
                     if molecule_after not in known:
                         known[molecule_after] = steps + 1
                         buffer.append((molecule_after, steps+1))

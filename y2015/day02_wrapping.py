@@ -87,11 +87,11 @@ def part_2(dimensions: Iterable[Dimension]) -> int:
 
 
 def paper(length: int, width: int, height: int) -> int:
-    lw = length * width
-    wh = width * height
-    hl = height * length
-    smallest = min([lw, wh, hl])
-    return 2 * (lw + wh + hl) + smallest
+    side_lw = length * width
+    side_wh = width * height
+    side_hl = height * length
+    side_smallest = min([side_lw, side_wh, side_hl])
+    return 2 * (side_lw + side_wh + side_hl) + side_smallest
 
 
 def ribbon(length: int, width: int, height: int) -> int:
@@ -105,8 +105,8 @@ def dimensions_from_file(fn: str) -> list[Dimension]:
 
 def dimensions_from_lines(lines: Iterable[str]) -> Iterable[Dimension]:
     for line in lines:
-        l, w, h = line.split('x')
-        yield int(l), int(w), int(h)
+        length, width, height = line.split('x')
+        yield int(length), int(width), int(height)
 
 
 if __name__ == '__main__':

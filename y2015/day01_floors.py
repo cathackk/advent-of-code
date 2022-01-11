@@ -70,19 +70,19 @@ def part_2(instructions: str) -> int:
     return result
 
 
-def floor_number(s: str) -> int:
-    return last(floors(s))
+def floor_number(line: str) -> int:
+    return last(floors_from_str(line))
 
 
-def basement_at(s: str) -> int:
-    return next(pos for pos, floor in enumerate(floors(s)) if floor < 0)
+def basement_at(line: str) -> int:
+    return next(pos for pos, floor in enumerate(floors_from_str(line)) if floor < 0)
 
 
-def floors(s: str) -> Iterable[int]:
+def floors_from_str(line: str) -> Iterable[int]:
     current = 0
     yield current
-    for c in s:
-        current += {'(': +1, ')': -1}[c]
+    for char in line:
+        current += {'(': +1, ')': -1}[char]
         yield current
 
 

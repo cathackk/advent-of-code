@@ -183,6 +183,10 @@ class Item:
         armor_repr = f', armor={self.armor!r}' if self.armor else ''
         return f'{type(self).__name__}({self.name!r}, cost={self.cost!r}{damage_repr}{armor_repr})'
 
+    @classmethod
+    def from_line(cls, line: str) -> 'Item':
+        return cls(*line.split())
+
 
 def total_cost(items: Iterable[Item]) -> int:
     return sum(item.cost for item in items)
@@ -227,15 +231,15 @@ class Shop:
         lines = (line.strip() for line in lines)
 
         def category_from_lines(cat_name: str) -> Iterable[Item]:
-            header = next(lines)
+            header = next(lines, None)
+            if header is None:
+                raise ValueError(f"no more lines for {cat_name}")
+
             assert header.startswith(cat_name + ":")
             for line in lines:
                 if not line:
                     return
-                yield item_from_line(line)
-
-        def item_from_line(line: str) -> Item:
-            return Item(*line.split())
+                yield Item.from_line(line)
 
         return cls(
             weapons=category_from_lines("Weapons"),
@@ -283,10 +287,10 @@ class Character:
     @classmethod
     def from_lines(cls, name: str, lines: Iterable[str]) -> 'Character':
         lines = (line.strip() for line in lines)
-        hp, = parse_line(next(lines), "Hit Points: $")
-        dmg, = parse_line(next(lines), "Damage: $")
-        ac, = parse_line(next(lines), "Armor: $")
-        return cls(name, hit_points=int(hp), damage=int(dmg), armor=int(ac))
+        hit_points, = parse_line(next(lines), "Hit Points: $")
+        damage, = parse_line(next(lines), "Damage: $")
+        armor, = parse_line(next(lines), "Armor: $")
+        return cls(name, hit_points=int(hit_points), damage=int(damage), armor=int(armor))
 
     def with_equipment(self, items: Iterable[Item]) -> 'Character':
         return type(self)(
@@ -305,10 +309,10 @@ def battle(character_1: Character, character_2: Character, log: bool = False) ->
     dmg_2 = max(character_2.damage - character_1.armor, 1)
     dmg_2_str = f"{character_2.damage}-{character_1.armor} = {dmg_2} damage"
 
-    def log_state(attacker: Character, defender: Character, dmg_str: str, hp: int) -> None:
-        hp_str = "hit point" if hp == 1 else "hit points"
+    def log_state(attacker: Character, defender: Character, dmg_str: str, hps: int) -> None:
+        hp_str = "hit point" if hps == 1 else "hit points"
         print(
-            f"The {attacker.name} deals {dmg_str}; the {defender.name} goes down to {hp} {hp_str}."
+            f"The {attacker.name} deals {dmg_str}; the {defender.name} goes down to {hps} {hp_str}."
         )
 
     while True:
@@ -333,8 +337,8 @@ def is_beating_boss(items: list[Item], boss: Character, player_hp: int):
 
 if __name__ == '__main__':
     boss_ = Character.from_file("boss", 'data/21-input.txt')
-    player_hp_ = 100
+    PLAYER_HP = 100
     shop_ = Shop.from_file('data/21-shop.txt')
 
-    part_1(boss_, player_hp_, shop_)
-    part_2(boss_, player_hp_, shop_)
+    part_1(boss_, PLAYER_HP, shop_)
+    part_2(boss_, PLAYER_HP, shop_)

@@ -107,10 +107,10 @@ def distances_from_file(fn: str) -> Distances:
 def roads_from_lines(lines: Iterable[str]) -> Iterable[Road]:
     # "London to Dublin = 464"
     for line in lines:
-        p1, p2, distance_str = parse_line(line.strip(), "$ to $ = $")
+        place_1, place_2, distance_str = parse_line(line.strip(), "$ to $ = $")
         distance = int(distance_str)
-        yield (p1, p2), distance
-        yield (p2, p1), distance
+        yield (place_1, place_2), distance
+        yield (place_2, place_1), distance
 
 
 if __name__ == '__main__':

@@ -118,8 +118,8 @@ def index_from_pos(row: int, column: int) -> int:
         >>> index_from_pos(5, 2)
         17
     """
-    s = row + column - 2
-    offset = (s * (s + 1)) // 2
+    diag = row + column - 2
+    offset = (diag * (diag + 1)) // 2
     return offset + column
 
 

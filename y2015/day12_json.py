@@ -72,22 +72,22 @@ def part_2(document) -> int:
         4
     """
 
-    result = sumj(document, fv='red')
+    result = sumj(document, fobidden_value='red')
     print(f'part 2: sum of all numbers in document (ignoring "red") is {result}')
     return result
 
 
-def sumj(d, fv=None) -> int:
+def sumj(d, fobidden_value=None) -> int:
     if isinstance(d, int):
         return d
 
     elif isinstance(d, list):
-        return sum(sumj(v, fv) for v in d)
+        return sum(sumj(v, fobidden_value) for v in d)
 
     elif isinstance(d, dict):
         return (
-            sum(sumj(v, fv) for k, v in d.items())
-            if fv is None or all(v != fv for v in d.values())
+            sum(sumj(value, fobidden_value) for value in d.values())
+            if fobidden_value is None or all(value != fobidden_value for value in d.values())
             else 0
         )
 

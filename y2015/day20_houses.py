@@ -108,12 +108,12 @@ def divisors(num: int) -> Iterable[int]:
         yield 1
         return
 
-    for d in range(1, int(math.sqrt(num)) + 1):
-        if num % d == 0:
-            yield d
-            dn = num // d
-            if dn != d:
-                yield dn
+    for divisor in range(1, int(math.sqrt(num)) + 1):
+        if num % divisor == 0:
+            yield divisor
+            divisor_2 = num // divisor
+            if divisor_2 != divisor:
+                yield divisor_2
             else:
                 return
 
@@ -126,16 +126,21 @@ def gifts2(house: int) -> int:
     return sum(d for d in divisors(house) if house // d <= 50) * 11
 
 
-def first_house_to_receive(target_gifts: int, gifts_fn: Callable[[int], int]) -> tuple[int, int]:
+def first_house_to_receive(
+    target_gifts: int,
+    gifts_func: Callable[[int], int]
+) -> tuple[int, int] | None:
     max_gifts = 0
     with tqdm(total=target_gifts, unit="gifts", delay=1.0) as progress:
         for house_no in count(1):
-            current_gifts = gifts_fn(house_no)
+            current_gifts = gifts_func(house_no)
             if current_gifts > max_gifts:
                 progress.update(min(current_gifts, target_gifts) - max_gifts)
                 max_gifts = current_gifts
                 if current_gifts >= target_gifts:
                     return house_no, current_gifts
+
+    return None
 
 
 def target_gifts_from_file(fn: str) -> int:

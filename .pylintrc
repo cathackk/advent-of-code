@@ -3,11 +3,14 @@ disable=
     missing-class-docstring,
     missing-function-docstring,
     missing-module-docstring,
-    no-else-return
+    no-else-return,
+    unbalanced-tuple-unpacking,
+    unspecified-encoding,
+    useless-else-on-loop
 
 
 [BASIC]
-good-names=K,R,T,V,a,b,d,dx,dy,k,m,n,r,t,to,x,x1,x2,y,y1,y2,z
+good-names=K,R,T,V,a,b,c,d,dx,dy,fn,k,m,n,op,q,r,t,tn,to,x,x1,x2,y,y1,y2,z
 
 
 [DESIGN]

@@ -120,7 +120,7 @@ def is_valid(pwd: str) -> bool:
     )
 
 
-def pairs(s: str) -> Iterable[str]:
+def pairs(line: str) -> Iterable[str]:
     """
         >>> list(pairs('abcddabbc'))
         ['dd', 'bb']
@@ -128,14 +128,14 @@ def pairs(s: str) -> Iterable[str]:
         ['aa', 'aa', 'bb', 'aa']
     """
     last_pair_k = None
-    for k in range(len(s) - 1):
-        if s[k] == s[k + 1]:
+    for k in range(len(line) - 1):
+        if line[k] == line[k + 1]:
             if last_pair_k is None or last_pair_k < k - 1:
-                yield s[k:k + 2]
+                yield line[k:k + 2]
                 last_pair_k = k
 
 
-def next_str(s: str) -> str:
+def next_str(line: str) -> str:
     """
         >>> next_str('abc')
         'abd'
@@ -152,22 +152,25 @@ def next_str(s: str) -> str:
         >>> next_str('k')
         'm'
     """
-    if not s:
-        return s
+    if not line:
+        return line
 
-    first_invalid_char_index = next((i for i, c in enumerate(s) if c not in VALID_CHARS_SET), None)
+    first_invalid_char_index = next(
+        (i for i, c in enumerate(line) if c not in VALID_CHARS_SET),
+        None
+    )
     if first_invalid_char_index is not None:
-        valid_prefix = s[:first_invalid_char_index]
-        invalid_char = s[first_invalid_char_index]
+        valid_prefix = line[:first_invalid_char_index]
+        invalid_char = line[first_invalid_char_index]
         valid_char = chr(ord(invalid_char) + 1)
         assert valid_char in VALID_CHARS
-        padding_suffix = VALID_CHARS[0] * (len(s) - len(valid_prefix) - 1)
+        padding_suffix = VALID_CHARS[0] * (len(line) - len(valid_prefix) - 1)
         return valid_prefix + valid_char + padding_suffix
 
-    if s[-1] == VALID_CHARS[-1]:
-        return next_str(s[:-1]) + VALID_CHARS[0]
+    if line[-1] == VALID_CHARS[-1]:
+        return next_str(line[:-1]) + VALID_CHARS[0]
 
-    return s[:-1] + VALID_CHARS[VALID_CHARS_ORD[s[-1]] + 1]
+    return line[:-1] + VALID_CHARS[VALID_CHARS_ORD[line[-1]] + 1]
 
 
 def valid_passwords(start: str) -> Iterator[str]:

@@ -4,7 +4,7 @@ install:
 make checks: pylint doctests
 
 pylint:
-	pylint --rcfile=.pylintrc common
+	pylint --rcfile=.pylintrc common y2015
 
 doctests:
 	py.test --doctest-modules

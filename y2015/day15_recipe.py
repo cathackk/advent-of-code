@@ -140,6 +140,7 @@ class Ingredient:
     @classmethod
     def from_str(cls, line: str) -> 'Ingredient':
         args = parse_line(line, "$: capacity $, durability $, flavor $, texture $, calories $")
+        # pylint: disable=no-value-for-parameter
         return cls(*args)
 
 
@@ -166,7 +167,7 @@ def generate_recipes(
     limit: int
 ) -> Iterable[list[tuple[Ingredient, int]]]:
     if len(ingredients) == 1:
-        return [(ingredients[0], limit)],
+        return ([(ingredients[0], limit)],)
 
     return (
         [(ingredients[0], amount)] + subrecipe

@@ -55,7 +55,7 @@ def part_2(containers: list[int], amount: int = 150) -> int:
         part 2: there are 3 combinations of length 2 to contain 25 liters of eggnog
         3
     """
-    min_fillings = min_all(generate_fillings(amount, containers), key=lambda s: len(s))
+    min_fillings = min_all(generate_fillings(amount, containers), key=len)
     min_length = len(min_fillings[0])
     min_combs_count = len(min_fillings)
     print(
