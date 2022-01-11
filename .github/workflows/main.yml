@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,7 +16,19 @@ jobs:
         with:
           python-version: '3.10.0'
           architecture: 'x64'
-      - name: Requirements
-        run: pip install -r requirements.txt
-      - name: Check
-        run: make check
+      - name: install
+        run: make install
+      - name: pylint
+        run: make pylint
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.0'
+          architecture: 'x64'
+      - name: install
+        run: make install
+      - name: doctests
+        run: make doctests

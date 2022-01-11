@@ -1,3 +1,4 @@
+pylint==2.12.2
 pytest==6.2.5
 PyYAML==6.0
 tabulate==0.8.9
