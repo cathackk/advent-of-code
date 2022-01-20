@@ -11,7 +11,7 @@ disable=
 
 
 [BASIC]
-good-names=K,R,T,V,a,b,c,d,dx,dy,fn,ip,k,m,n,op,q,r,t,tn,to,x,x1,x2,y,y1,y2,z
+good-names=K,R,T,V,a,b,c,d,dx,dy,fn,ip,k,m,n,on,op,q,r,t,tn,to,w,x,x1,x2,y,y1,y2,z
 
 [DESIGN]
 max-args=10

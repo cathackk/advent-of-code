@@ -50,7 +50,7 @@ def lcm(*xs: int) -> Optional[int]:
     return result
 
 
-def modular_inverse(x, m):
+def modular_inverse(x: int, m: int) -> int:
     t, newt = 0, 1
     r, newr = m, x % m
     while newr != 0:
@@ -58,7 +58,7 @@ def modular_inverse(x, m):
         t, newt = newt, t - quotient * newt
         r, newr = newr, r - quotient * newr
     if r > 1:
-        return None
+        raise ValueError(f"no modular inverse for 1/{x} mod {m}")
     return t % m
 
 
@@ -553,16 +553,33 @@ def constrained(value, min_value, max_value):
         return value
 
 
-def until_repeat(gen: Generator[T, None, None]) -> Generator[T, None, T | None]:
+def until_repeat(values: Iterable[T]) -> Generator[T, None, T | None]:
+    """
+        >>> nums = [1, 4, 2, 5, 3, 6, 4, 7, 5, 1]
+        >>> list(until_repeat(nums))
+        [1, 4, 2, 5, 3, 6]
+    """
     seen: set[T] = set()
-    for state in gen:
-        if state not in seen:
-            seen.add(state)
-            yield state
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            yield value
         else:
-            return state
+            return value
 
     return None
+
+
+def first_repeat(values: Iterable[T]) -> T | None:
+    """
+        >>> first_repeat([1, 3, 5, 4, 6, 2, 3, 7])
+        3
+        >>> first_repeat('mississippi')
+        's'
+        >>> first_repeat('abcd') is None
+        True
+    """
+    return exhaust(until_repeat(values))
 
 
 def unique(values: Iterable[T]) -> Iterable[T]:
@@ -616,7 +633,7 @@ def _parse_line_fixes(line: str, *fixes: str) -> tuple[str, ...]:
     results = []
 
     for fix1, fix2 in slidingw(fixes, 2):
-        assert line.startswith(fix1)
+        assert line.startswith(fix1), (line, fix1)
         line = line[len(fix1):]
         if fix2:
             pos2 = line.index(fix2)
@@ -780,3 +797,38 @@ def sorted_keys(d: dict[str, Any]) -> dict[str, Any]:
     """
 
     return dict(sorted((k, v) for k, v in d.items()))
+
+
+def abc_rot(letter: str, diff: int) -> str:
+    """
+        >>> abc_rot('A', 1)
+        'B'
+        >>> abc_rot('B', 2)
+        'D'
+        >>> abc_rot('X', 3)
+        'A'
+        >>> abc_rot('a', 4)
+        'e'
+        >>> abc_rot('t', 5)
+        'y'
+        >>> abc_rot('y', 6)
+        'e'
+        >>> abc_rot('B', -1)
+        'A'
+        >>> abc_rot('B', -2)
+        'Z'
+        >>> abc_rot('q', -3)
+        'n'
+        >>> abc_rot('c', -4)
+        'y'
+    """
+    assert len(letter) == 1
+
+    if letter.islower():
+        first_letter = 'a'
+    elif letter.isupper():
+        first_letter = 'A'
+    else:
+        raise ValueError(letter)
+
+    return chr((ord(letter) - ord(first_letter) + diff) % 26 + ord(first_letter))

@@ -1,0 +1,3 @@
+cpy 42 a
+jnz c 2
+dec a

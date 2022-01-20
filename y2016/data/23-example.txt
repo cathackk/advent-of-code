@@ -1,7 +1,13 @@
-cpy 2 a
-tgl a
-tgl a
-tgl a
-cpy 1 a
-dec a
-dec a
+cpy 60 b
+cpy -1 c
+cpy -1 d
+cpy a d
+cpy 0 a
+cpy b c
+inc a
+dec c
+jnz c -2
+dec d
+jnz d -5
+inc c
+inc d

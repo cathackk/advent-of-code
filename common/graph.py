@@ -7,7 +7,6 @@ from typing import TypeVar
 
 from tqdm import tqdm
 
-
 Node = TypeVar('Node')
 Edge = TypeVar('Edge')
 
@@ -15,7 +14,7 @@ Edge = TypeVar('Edge')
 def shortest_path(
     start: Node,
     target: Node,
-    edges: Callable[[Node], Iterable[tuple[int, Edge, Node]]],
+    edges: Callable[[Node], Iterable[tuple[Node, Edge, int]]],
     description: str = "finding shortest path",
     nodes_count: int = None
 ) -> tuple[int, list[Edge]]:
@@ -25,9 +24,9 @@ def shortest_path(
 
     @dataclass(frozen=True, order=True)
     class PathInfo:
-        total_cost: int = field(compare=True, default=0)
-        edge: Edge | None = field(compare=False, default=None)
         prev_node: Node | None = field(compare=False, default=None)
+        edge: Edge | None = field(compare=False, default=None)
+        total_cost: int = field(compare=True, default=0)
 
     @dataclass(frozen=True, order=True)
     class NodeInfo:
@@ -41,20 +40,29 @@ def shortest_path(
 
     def visit_node(node: Node, path: PathInfo):
         visited_nodes[node] = path
-        for cost, edge, next_node in edges(node):
+        for next_node, edge, cost in edges(node):
             heapq.heappush(
                 unvisited_nodes,
                 NodeInfo(
                     node=next_node,
-                    path=PathInfo(total_cost=path.total_cost + cost, edge=edge, prev_node=node)
+                    path=PathInfo(prev_node=node, edge=edge, total_cost=path.total_cost + cost)
                 )
             )
 
     # start by visiting the `start` node
     visit_node(start, PathInfo())
     # then visit node by node, until target is reached
-    with tqdm(desc=description, initial=1, delay=1.0, total=nodes_count) as progress:
+    with tqdm(
+        total=nodes_count,
+        desc=description,
+        initial=1,
+        unit=" nodes",
+        unit_scale=True,
+        delay=1.0
+    ) as progress:
         while target not in visited_nodes:
+            if not unvisited_nodes:
+                raise ValueError("path not found")
             # visit cheapest unvisited node
             node_info = heapq.heappop(unvisited_nodes)
             if node_info.node in visited_nodes:

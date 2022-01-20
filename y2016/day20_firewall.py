@@ -1,8 +1,80 @@
+"""
+Advent of Code 2016
+Day 20: Firewall Rules
+https://adventofcode.com/2016/day/20
+"""
+
 from typing import Iterable
+
+from common.utils import relative_path
+
+
+def part_1(ranges: 'RangeSet') -> int:
+    """
+    You'd like to set up a small hidden computer here so you can use it to get back into the network
+    later. However, the corporate firewall only allows communication with certain external IP
+    addresses.
+
+    You've retrieved the list of blocked IPs from the firewall, but the list seems to be messy and
+    poorly maintained, and it's not clear which IPs are allowed. Also, rather than being written in
+    dot-decimal notation, they are written as plain 32-bit integers, which can have any value from
+    `0` through `4294967295`, inclusive.
+
+        >>> range(0, 1 << 32)
+        range(0, 4294967296)
+
+    For example, suppose only the values `0` through `9` were valid, and that you retrieved
+    the following blacklist:
+
+
+        >>> example_blacklist = RangeSet.from_text('''
+        ...     5-8
+        ...     0-2
+        ...     4-7
+        ... ''')
+        >>> print(example_blacklist)
+        0-2, 4-8
+
+    The blacklist specifies ranges of IPs (inclusive of both the start and end value) that are
+    **not** allowed. Then, the only IPs that this firewall allows are `3` and `9`, since those are
+    the only numbers not in any range.
+
+        >>> [ip for ip in range(10) if ip not in example_blacklist]
+        [3, 9]
+
+    Given the list of blocked IPs you retrieved from the firewall (your puzzle input), **what is
+    the lowest-valued IP** that is not blocked?
+
+        >>> part_1(example_blacklist)
+        part 1: first allowed IP address is 3
+        3
+    """
+
+    first_allowed = ranges.ranges[0].vmax + 1
+    print(f"part 1: first allowed IP address is {first_allowed}")
+    return first_allowed
+
+
+def part_2(ranges: 'RangeSet', total_ips_count: int = 1 << 32) -> int:
+    """
+    **How many IPs** are allowed by the blacklist?
+
+        >>> example_blacklist = RangeSet.from_file('data/20-example.txt')
+        >>> print(example_blacklist)
+        0-2, 4-8
+        >>> part_2(example_blacklist, total_ips_count=10)
+        part 2: there are total 2 allowed IPs
+        2
+    """
+
+    allowed_count = total_ips_count - len(ranges)
+    print(f"part 2: there are total {allowed_count} allowed IPs")
+    return allowed_count
 
 
 class Range:
-    def __init__(self, vmin: int, vmax: int):
+    def __init__(self, vmin, vmax):
+        vmin, vmax = int(vmin), int(vmax)
         if vmin > vmax:
             vmin, vmax = vmax, vmin
         self.vmin = vmin
@@ -12,7 +84,7 @@ class Range:
         return f'{type(self).__name__}({self.vmin}, {self.vmax})'
 
     def __str__(self):
-        return f'{self.vmin}..{self.vmax}'
+        return f'{self.vmin}-{self.vmax}'
 
     def __len__(self):
         return self.vmax - self.vmin + 1
@@ -48,37 +120,39 @@ class Range:
 
     def __and__(self, other):
         """
-        >>> Range(10, 20) & Range(1, 3)
-        >>> Range(10, 20) & Range(1, 10)
-        Range(10, 10)
-        >>> Range(10, 20) & Range(1, 13)
-        Range(10, 13)
-        >>> Range(10, 20) & Range(1, 20)
-        Range(10, 20)
-        >>> Range(10, 20) & Range(1, 24)
-        Range(10, 20)
-        >>> Range(10, 20) & Range(10, 10)
-        Range(10, 10)
-        >>> Range(10, 20) & Range(10, 12)
-        Range(10, 12)
-        >>> Range(10, 20) & Range(10, 20)
-        Range(10, 20)
-        >>> Range(10, 20) & Range(10, 23)
-        Range(10, 20)
-        >>> Range(10, 20) & Range(12, 12)
-        Range(12, 12)
-        >>> Range(10, 20) & Range(12, 14)
-        Range(12, 14)
-        >>> Range(10, 20) & Range(12, 20)
-        Range(12, 20)
-        >>> Range(10, 20) & Range(12, 24)
-        Range(12, 20)
-        >>> Range(10, 20) & Range(20, 20)
-        Range(20, 20)
-        >>> Range(10, 20) & Range(20, 22)
-        Range(20, 20)
-        >>> Range(10, 20) & Range(23, 23)
-        >>> Range(10, 20) & Range(23, 25)
+        Logical conjuction of two ranges. Result contains only items present in both.
+
+            >>> Range(10, 20) & Range(1, 3)
+            >>> Range(10, 20) & Range(1, 10)
+            Range(10, 10)
+            >>> Range(10, 20) & Range(1, 13)
+            Range(10, 13)
+            >>> Range(10, 20) & Range(1, 20)
+            Range(10, 20)
+            >>> Range(10, 20) & Range(1, 24)
+            Range(10, 20)
+            >>> Range(10, 20) & Range(10, 10)
+            Range(10, 10)
+            >>> Range(10, 20) & Range(10, 12)
+            Range(10, 12)
+            >>> Range(10, 20) & Range(10, 20)
+            Range(10, 20)
+            >>> Range(10, 20) & Range(10, 23)
+            Range(10, 20)
+            >>> Range(10, 20) & Range(12, 12)
+            Range(12, 12)
+            >>> Range(10, 20) & Range(12, 14)
+            Range(12, 14)
+            >>> Range(10, 20) & Range(12, 20)
+            Range(12, 20)
+            >>> Range(10, 20) & Range(12, 24)
+            Range(12, 20)
+            >>> Range(10, 20) & Range(20, 20)
+            Range(20, 20)
+            >>> Range(10, 20) & Range(20, 22)
+            Range(20, 20)
+            >>> Range(10, 20) & Range(23, 23)
+            >>> Range(10, 20) & Range(23, 25)
         """
         if not isinstance(other, Range):
             raise TypeError(
@@ -98,43 +172,46 @@ class Range:
 
     def __or__(self, other):
         """
-        >>> Range(10, 20) | Range(1, 3)
-        >>> Range(10, 20) | Range(1, 9)
-        Range(1, 20)
-        >>> Range(10, 20) | Range(1, 10)
-        Range(1, 20)
-        >>> Range(10, 20) | Range(1, 14)
-        Range(1, 20)
-        >>> Range(10, 20) | Range(1, 20)
-        Range(1, 20)
-        >>> Range(10, 20) | Range(1, 25)
-        Range(1, 25)
-        >>> Range(10, 20) | Range(9, 9)
-        Range(9, 20)
-        >>> Range(10, 20) | Range(9, 15)
-        Range(9, 20)
-        >>> Range(10, 20) | Range(9, 22)
-        Range(9, 22)
-        >>> Range(10, 20) | Range(10, 10)
-        Range(10, 20)
-        >>> Range(10, 20) | Range(10, 20)
-        Range(10, 20)
-        >>> Range(10, 20) | Range(10, 22)
-        Range(10, 22)
-        >>> Range(10, 20) | Range(14, 17)
-        Range(10, 20)
-        >>> Range(10, 20) | Range(14, 20)
-        Range(10, 20)
-        >>> Range(10, 20) | Range(14, 23)
-        Range(10, 23)
-        >>> Range(10, 20) | Range(20, 21)
-        Range(10, 21)
-        >>> Range(10, 20) | Range(21, 21)
-        Range(10, 21)
-        >>> Range(10, 20) | Range(21, 24)
-        Range(10, 24)
-        >>> Range(10, 20) | Range(22, 22)
-        >>> Range(10, 20) | Range(22, 24)
+        Logical disjunction of two ranges. Contains items present in either.
+        However if the two ranges are disjunct (no common items), `None` is returned.
+
+            >>> Range(10, 20) | Range(1, 3)
+            >>> Range(10, 20) | Range(1, 9)
+            Range(1, 20)
+            >>> Range(10, 20) | Range(1, 10)
+            Range(1, 20)
+            >>> Range(10, 20) | Range(1, 14)
+            Range(1, 20)
+            >>> Range(10, 20) | Range(1, 20)
+            Range(1, 20)
+            >>> Range(10, 20) | Range(1, 25)
+            Range(1, 25)
+            >>> Range(10, 20) | Range(9, 9)
+            Range(9, 20)
+            >>> Range(10, 20) | Range(9, 15)
+            Range(9, 20)
+            >>> Range(10, 20) | Range(9, 22)
+            Range(9, 22)
+            >>> Range(10, 20) | Range(10, 10)
+            Range(10, 20)
+            >>> Range(10, 20) | Range(10, 20)
+            Range(10, 20)
+            >>> Range(10, 20) | Range(10, 22)
+            Range(10, 22)
+            >>> Range(10, 20) | Range(14, 17)
+            Range(10, 20)
+            >>> Range(10, 20) | Range(14, 20)
+            Range(10, 20)
+            >>> Range(10, 20) | Range(14, 23)
+            Range(10, 23)
+            >>> Range(10, 20) | Range(20, 21)
+            Range(10, 21)
+            >>> Range(10, 20) | Range(21, 21)
+            Range(10, 21)
+            >>> Range(10, 20) | Range(21, 24)
+            Range(10, 24)
+            >>> Range(10, 20) | Range(22, 22)
+            >>> Range(10, 20) | Range(22, 24)
         """
         if not isinstance(other, Range):
             raise TypeError(
@@ -161,23 +238,27 @@ class RangeSet:
 
     @staticmethod
     def _simplify(ranges: Iterable[Range]) -> list[Range]:
-        xrs = []
-        for r in ranges:
+        simplified_ranges = []
+        for range_ in ranges:
+            # combine with as many other ranges as possible
             while True:
-                xr = next((xr for xr in xrs if r | xr), None)
-                if xr:
-                    xrs.remove(xr)
-                    r = r | xr
+                merged_range = next((xr for xr in simplified_ranges if range_ | xr), None)
+                if merged_range:
+                    # found one to merge with
+                    simplified_ranges.remove(merged_range)
+                    range_ = range_ | merged_range
                 else:
-                    xrs.append(r)
+                    # nothing to merge with -> we are done for this particular range
+                    simplified_ranges.append(range_)
                     break
-        return sorted(xrs, key=lambda r_: r_.vmin)
+
+        return sorted(simplified_ranges, key=lambda r: r.vmin)
 
     def __repr__(self):
         return f'{type(self).__name__}({self.ranges!r})'
 
     def __str__(self):
-        return ', '.join(str(r) for r in self.ranges)
+        return ", ".join(str(r) for r in self.ranges)
 
     def __contains__(self, item):
         return any(item in r for r in self.ranges)
@@ -189,28 +270,20 @@ class RangeSet:
         for r in self.ranges:
             yield from r
 
+    @classmethod
+    def from_file(cls, fn: str) -> 'RangeSet':
+        return cls.from_lines(open(relative_path(__file__, fn)))
 
-def load_ranges(fn: str) -> Iterable[Range]:
-    for line in open(fn):
-        vmin, vmax = line.strip().split('-')
-        yield Range(int(vmin), int(vmax))
+    @classmethod
+    def from_text(cls, text: str) -> 'RangeSet':
+        return cls.from_lines(text.strip().splitlines())
 
-
-def part_1(ranges: RangeSet) -> int:
-    first_allowed = ranges.ranges[0].vmax + 1
-    print(f"part 1: first allowed IP address is {first_allowed}")
-    return first_allowed
-
-
-def part_2(ranges: RangeSet) -> int:
-    blocked_count = len(ranges)
-    total_count = 1 << 32
-    allowed_count = total_count - blocked_count
-    print(f"part 2: there are total {allowed_count} allowed IPs")
-    return allowed_count
+    @classmethod
+    def from_lines(cls, lines: Iterable[str]) -> 'RangeSet':
+        return cls(Range(*line.strip().split('-')) for line in lines)
 
 
 if __name__ == '__main__':
-    ranges_ = RangeSet(load_ranges("data/20-input.txt"))
+    ranges_ = RangeSet.from_file('data/20-input.txt')
     part_1(ranges_)
     part_2(ranges_)
