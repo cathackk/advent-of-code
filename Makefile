@@ -1,7 +1,7 @@
 install:
 	pip install -r requirements.txt
 
-make checks: pylint doctests
+checks: pylint doctests
 
 pylint:
 	# TODO: y2017 y2018 y2019

@@ -1,5 +1,5 @@
 - [x] `.split('\n')` -> `.splitlines()`
-- [ ] integrate envdir
+- [x] integrate direnv
 - [ ] integrate black
 - [ ] integrate mypy
 - [ ] use OCR where applicable
