@@ -6,7 +6,6 @@ https://adventofcode.com/2020/day/22
 
 from dataclasses import dataclass
 from typing import Iterable
-from typing import Optional
 
 from common.chain import Link
 from common.utils import line_groups
@@ -575,7 +574,7 @@ class Game:
         self.level = level
         # states
         self.round_number = 0
-        self.victory: Optional[Victory] = None
+        self.victory: Victory | None = None
         self.next_subgame_number = game_number + 1
 
         # checks
@@ -583,7 +582,7 @@ class Game:
         assert len(self.deck_2) >= 1, (self.game_number, self.deck_1, self.deck_2)
 
     # pylint: disable=too-many-branches,too-many-statements
-    def play(self, rounds: int = None, print_progress: bool = False) -> Optional[Victory]:
+    def play(self, rounds: int = None, print_progress: bool = False) -> Victory | None:
         def log(text: str):
             if print_progress:
                 print("    " * self.level + text)

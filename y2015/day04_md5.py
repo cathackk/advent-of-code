@@ -6,6 +6,8 @@ https://adventofcode.com/2015/day/4
 
 from itertools import count
 
+from tqdm import tqdm
+
 from common.md5 import md5
 from common.utils import relative_path
 
@@ -46,7 +48,7 @@ def part_1(key: str) -> int:
         181349
     """
 
-    result = mine(key, target='00000')
+    result = mine(key, target='0' * 5)
     print(f"part 1: coin mined with number {result}")
     return result
 
@@ -60,13 +62,23 @@ def part_2(key: str) -> int:
         8218955
     """
 
-    result = mine(key, target='000000')
+    result = mine(key, target='0' * 6)
     print(f"part 2: coin mined with number {result}")
     return result
 
 
 def mine(key: str, target: str = '00000') -> int:
-    return next(k for k in count(1) if md5(key + str(k)).startswith(target))
+    return next(
+        k
+        for k in tqdm(
+            count(1),
+            desc=f"mining for {target}",
+            unit=" hashes",
+            unit_scale=True,
+            delay=1.0
+        )
+        if md5(key + str(k)).startswith(target)
+    )
 
 
 def key_from_file(fn: str) -> str:

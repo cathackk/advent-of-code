@@ -7,6 +7,7 @@ from typing import TypeVar
 
 from tqdm import tqdm
 
+
 Node = TypeVar('Node')
 Edge = TypeVar('Edge')
 

@@ -629,7 +629,7 @@ def optimal_victory_sequence(battle: Battle) -> tuple[int, list[Spell]]:
         start=battle.initial_state(),
         target=battle.victory_state(),
         edges=lambda state: (
-            (spell.cost, spell, state.after_turn(spell))
+            (state.after_turn(spell), spell, spell.cost)
             for spell in state.castable_spells()
         ),
         description="finding victory sequence" + (" (hard)" if battle.hard else "")

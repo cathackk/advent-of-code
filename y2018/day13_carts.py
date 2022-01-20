@@ -84,7 +84,7 @@ class Map:
 
         return by_pos, collisions
 
-    def run(self, min_carts: int = 2,) -> Generator[tuple[int, Pos], None, int]:
+    def run(self, min_carts: int = 2) -> Generator[tuple[int, Pos], None, int]:
         for tick in count(1):
             if len(self.carts) < min_carts:
                 return tick

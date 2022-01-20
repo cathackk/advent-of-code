@@ -157,7 +157,7 @@ def memory_game(numbers: list[int], turns: int) -> int:
     game = memory_game_it(numbers)
 
     last_number = None
-    for _ in tqdm(range(turns), delay=1.0):
+    for _ in tqdm(range(turns), unit=" turns", unit_scale=True, delay=1.0):
         last_number = next(game)
 
     return last_number

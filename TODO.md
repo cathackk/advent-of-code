@@ -1,0 +1,8 @@
+- [ ] `.split('\n')` -> `.splitlines()`
+- [ ] black
+- [ ] mypy
+- [ ] envdir
+- [ ] use OCR where applicable
+- [ ] rework 2017
+- [ ] rework and finish 2018
+- [ ] rework 2019

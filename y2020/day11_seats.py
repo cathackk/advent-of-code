@@ -8,7 +8,6 @@ from collections import Counter
 from collections import defaultdict
 from functools import cached_property
 from typing import Iterable
-from typing import Optional
 
 from common.rect import Rect
 from common.utils import relative_path
@@ -422,7 +421,7 @@ class SeatsMap:
     def visibles(self) -> dict[Pos, set[Pos]]:
         """ Precompute visible seat pairs. """
 
-        def visible_from(pos_0: Pos, vector: tuple[int, int]) -> Optional[Pos]:
+        def visible_from(pos_0: Pos, vector: tuple[int, int]) -> Pos | None:
             d_x, d_y = vector
             x_0, y_0 = pos_0
             x, y = x_0 + d_x, y_0 + d_y

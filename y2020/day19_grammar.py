@@ -8,7 +8,6 @@ from abc import ABC
 from abc import abstractmethod
 from functools import cached_property
 from typing import Iterable
-from typing import Optional
 
 from common.utils import line_groups
 from common.utils import parse_line
@@ -329,7 +328,7 @@ class Rule(ABC):
         return self.match_partial(text) == ""
 
     @abstractmethod
-    def match_partial(self, text: str) -> Optional[str]:
+    def match_partial(self, text: str) -> str | None:
         pass
 
     def filter(self, texts: Iterable[str]) -> Iterable[str]:
@@ -357,7 +356,7 @@ class RuleText(Rule):
     def pattern(self) -> str:
         return self.text
 
-    def match_partial(self, text: str) -> Optional[str]:
+    def match_partial(self, text: str) -> str | None:
         if text.startswith(self.text):
             return text[len(self.text):]
         else:
@@ -397,7 +396,7 @@ class RuleGroups(Rule):
                 for group in self.groups
             ) + ')'
 
-    def match_partial(self, text: str) -> Optional[str]:
+    def match_partial(self, text: str) -> str | None:
         for group in self.groups:
             remainder = self._match_single_group(text, group)
             if remainder is not None:
@@ -406,7 +405,7 @@ class RuleGroups(Rule):
             return None
 
     @staticmethod
-    def _match_single_group(text: str, group: list[Rule]) -> Optional[str]:
+    def _match_single_group(text: str, group: list[Rule]) -> str | None:
         remainder = text
         for rule in group:
             remainder = rule.match_partial(remainder)
@@ -440,7 +439,7 @@ class Rule0(Rule):
         a, b = self.rule_42.pattern, self.rule_31.pattern
         return f"({a})+({a}){{x}}({b}){{x}}"
 
-    def match_partial(self, text: str) -> Optional[str]:
+    def match_partial(self, text: str) -> str | None:
         raise ValueError(f"{type(self).__name__} cannot only do full matches")
 
     def match(self, text: str) -> bool:
@@ -579,4 +578,3 @@ if __name__ == '__main__':
 
     part_1(rules_, messages_)
     part_2(rules_, messages_)
-    # 337 too high

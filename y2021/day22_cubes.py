@@ -3,6 +3,7 @@ Advent of Code 2021
 Day 22: Reactor Reboot
 https://adventofcode.com/2021/day/22
 """
+
 import math
 from collections import Counter
 from itertools import chain

@@ -212,7 +212,7 @@ class Cups:
         ))
 
     def play(self, moves: int, print_progress: bool = False):
-        for move in tqdm(range(moves), unit="moves", delay=1.0):
+        for move in tqdm(range(moves), unit=" moves", unit_scale=True, delay=1.0):
             # pick three
             picked_1 = self.next[self.current]
             picked_2 = self.next[picked_1]

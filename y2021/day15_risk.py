@@ -271,7 +271,7 @@ class RiskMap:
             start=origin or self.bounds.top_left,
             target=destination or self.bounds.bottom_right,
             edges=lambda pos: (
-                (self[npos], npos, npos)
+                (npos, npos, self[npos])
                 for npos in adjacent(pos)
                 if npos in self
             ),

@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/14
 """
 
 from typing import Iterable
-from typing import Optional
 
 from common.utils import parse_line
 from common.utils import relative_path
@@ -276,7 +275,7 @@ class Program:
     def run(self, chip_version: int = 1) -> dict[int, int]:
         assert chip_version in (1, 2)
 
-        current_mask: Optional[BitMask] = None
+        current_mask: BitMask | None = None
         memory: dict[int, int] = {}
 
         for instruction in self:

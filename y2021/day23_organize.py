@@ -705,7 +705,7 @@ class State:
     def find_cheapest_reordering(self, destination: 'State') -> tuple[int, list[Move]]:
         assert self.room_size == destination.room_size
 
-        def generate_neighboring_states(state: State) -> Iterable[tuple[int, Move, State]]:
+        def generate_neighboring_states(state: State) -> Iterable[tuple[State, Move, int]]:
             from_to: Iterable[tuple[int, int]] = chain(
                 # room to room
                 ((from_r, to_r) for from_r in range(4) for to_r in range(4) if from_r != to_r),
@@ -716,7 +716,7 @@ class State:
             )
 
             return (
-                (new_cost_and_state[0], (from_, to), new_cost_and_state[1])
+                (new_cost_and_state[1], (from_, to), new_cost_and_state[0])
                 for from_, to in from_to
                 if (new_cost_and_state := state.move(from_, to)) is not None
             )

@@ -6,7 +6,6 @@ https://adventofcode.com/2020/day/9
 
 from typing import Collection
 from typing import Iterator
-from typing import Optional
 
 from common.utils import relative_path
 
@@ -172,7 +171,7 @@ def validate_xmas(nums: list[int], preamble_length: int = 25) -> Iterator[tuple[
         pool.add(num)
 
 
-def find_sum2(target_sum: int, numbers: Collection[int]) -> Optional[tuple[int, int]]:
+def find_sum2(target_sum: int, numbers: Collection[int]) -> tuple[int, int] | None:
     """ Find two values among `numbers` that add up to `target_sum`. """
 
     for a in numbers:
@@ -188,7 +187,7 @@ def find_sum_subseq(
         target_sum: int,
         numbers: list[int],
         min_length: int = 2
-) -> Optional[list[int]]:
+) -> list[int] | None:
     """
     Find subsequence of `numbers` with at least `min_length` values that sum to `target_sum`.
     """
