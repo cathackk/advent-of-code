@@ -236,7 +236,7 @@ def override_value(circuit: Circuit, wire: str, value: int) -> Circuit:
 
 
 def circuit_from_text(text: str) -> Circuit:
-    return list(connections_from_lines(text.strip().split('\n')))
+    return list(connections_from_lines(text.strip().splitlines()))
 
 
 def circuit_from_file(fn: str) -> Circuit:

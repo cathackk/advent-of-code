@@ -85,7 +85,7 @@ def is_possible(triangle: Triangle):
 
 
 def triangles_from_text(text: str, vertically: bool = False) -> list[Triangle]:
-    return list(triangles_from_lines(text.strip().split('\n'), vertically))
+    return list(triangles_from_lines(text.strip().splitlines(), vertically))
 
 
 def triangles_from_file(fn: str, vertically: bool = False) -> list[Triangle]:

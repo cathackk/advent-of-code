@@ -390,7 +390,7 @@ def state_dimensions(state: set[Pos]) -> int:
 
 
 def state_from_text(dimensions: int, text: str) -> set[Pos]:
-    return set(active_positions_from_lines(dimensions, text.strip().split("\n")))
+    return set(active_positions_from_lines(dimensions, text.strip().splitlines()))
 
 
 def state_from_file(dimensions: int, fn: str) -> set[Pos]:

@@ -373,7 +373,7 @@ def play_quantum(
 
 
 def start_from_text(text: str) -> tuple[int, int]:
-    return start_from_lines(text.strip().split('\n'))
+    return start_from_lines(text.strip().splitlines())
 
 
 def start_from_file(fn: str) -> tuple[int, int]:

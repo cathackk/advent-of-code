@@ -259,7 +259,7 @@ def incompletion_score(lines: Iterable[str]) -> int:
 
 
 def lines_from_text(text: str) -> list[str]:
-    return [line.strip() for line in text.strip().split('\n')]
+    return [line.strip() for line in text.strip().splitlines()]
 
 
 def lines_from_file(fn: str) -> list[str]:

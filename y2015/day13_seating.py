@@ -149,7 +149,7 @@ def rules_from_file(fn: str) -> Rules:
 
 
 def rules_from_text(text: str) -> Rules:
-    return dict(rulelist_from_lines(text.strip().split('\n')))
+    return dict(rulelist_from_lines(text.strip().splitlines()))
 
 
 def rulelist_from_lines(lines: Iterable[str]) -> Iterable[Rule]:

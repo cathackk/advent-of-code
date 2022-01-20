@@ -194,7 +194,7 @@ def watch_for_comparison(simulation: Simulation, watched_chips: tuple[int, int])
 
 
 def instructions_from_text(text: str) -> Instructions:
-    return instructions_from_lines(text.strip().split('\n'))
+    return instructions_from_lines(text.strip().splitlines())
 
 
 def instructions_from_file(fn: str) -> Instructions:

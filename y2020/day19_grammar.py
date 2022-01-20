@@ -512,7 +512,7 @@ class Rule0(Rule):
 
 
 def rules_from_text(text: str) -> dict[int, Rule]:
-    return rules_from_lines(text.strip().split("\n"))
+    return rules_from_lines(text.strip().splitlines())
 
 
 def rules_from_lines(lines: Iterable[str]) -> dict[int, Rule]:
@@ -562,7 +562,7 @@ def input_from_file(fn: str) -> tuple[dict[int, Rule], list[str]]:
 
 
 def input_from_text(text: str) -> tuple[dict[int, Rule], list[str]]:
-    return input_from_lines(text.strip().split("\n"))
+    return input_from_lines(text.strip().splitlines())
 
 
 def input_from_lines(lines: Iterable[str]) -> tuple[dict[int, Rule], list[str]]:

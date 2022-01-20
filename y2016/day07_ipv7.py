@@ -198,7 +198,7 @@ def ips_from_file(fn: str) -> list[str]:
 
 
 def ips_from_text(text: str) -> list[str]:
-    return [line.strip() for line in text.strip().split('\n')]
+    return [line.strip() for line in text.strip().splitlines()]
 
 
 if __name__ == '__main__':

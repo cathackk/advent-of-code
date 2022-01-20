@@ -324,7 +324,7 @@ def solve(entry: Entry) -> EntrySolution:
 
 
 def entries_from_text(text: str) -> list[Entry]:
-    return list(entries_from_lines(text.strip().split('\n')))
+    return list(entries_from_lines(text.strip().splitlines()))
 
 
 def entries_from_file(fn: str) -> list[Entry]:

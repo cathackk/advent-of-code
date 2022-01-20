@@ -225,7 +225,7 @@ Input = tuple[str, dict[[str, str], str]]
 
 
 def input_from_text(text: str) -> Input:
-    return input_from_lines(text.strip().split('\n'))
+    return input_from_lines(text.strip().splitlines())
 
 
 def input_from_file(fn: str) -> Input:

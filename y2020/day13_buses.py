@@ -202,7 +202,7 @@ def part_2(bus_offsets: dict[int, int]) -> int:
 
 
 def data_from_text(text: str) -> tuple[int, dict[int, int]]:
-    return data_from_lines(text.strip().split("\n"))
+    return data_from_lines(text.strip().splitlines())
 
 
 def data_from_file(fn: str) -> tuple[int, dict[int, int]]:

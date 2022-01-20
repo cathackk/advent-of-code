@@ -285,7 +285,7 @@ class Boards:
 
     def __str__(self) -> str:
         pad = 4 * ' '
-        boards_lines = [str(board).split('\n') for board in self]
+        boards_lines = [str(board).splitlines() for board in self]
         return '\n'.join(pad.join(blines) for blines in zip(*boards_lines))
 
 
@@ -297,7 +297,7 @@ def game_from_file(fn: str) -> Game:
 
 
 def game_from_text(text: str) -> Game:
-    return game_from_lines(text.strip().split('\n'))
+    return game_from_lines(text.strip().splitlines())
 
 
 def game_from_lines(lines: Iterable[str]) -> Game:

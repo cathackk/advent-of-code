@@ -191,7 +191,7 @@ class Panel:
 
 
 def instructions_from_text(text: str) -> list[Instruction]:
-    return list(instructions_from_lines(text.strip().split('\n')))
+    return list(instructions_from_lines(text.strip().splitlines()))
 
 
 def instructions_from_file(fn: str) -> list[Instruction]:

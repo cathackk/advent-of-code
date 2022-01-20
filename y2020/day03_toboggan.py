@@ -179,7 +179,7 @@ class TreesMap:
 
     @classmethod
     def from_text(cls, text: str):
-        return cls.from_lines(text.strip().split('\n'))
+        return cls.from_lines(text.strip().splitlines())
 
     @classmethod
     def example_map(cls):

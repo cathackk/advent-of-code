@@ -160,7 +160,7 @@ def tape_from_file(fn: str) -> Tape:
 
 
 def tape_from_text(text: str) -> Tape:
-    return list(tape_from_lines(text.strip().split('\n')))
+    return list(tape_from_lines(text.strip().splitlines()))
 
 
 def tape_from_lines(lines: Iterable[str]) -> Iterable[Command]:

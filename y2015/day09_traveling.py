@@ -97,7 +97,7 @@ def print_routes(routes: Iterable[Route]) -> None:
 
 
 def distances_from_text(text: str) -> Distances:
-    return dict(roads_from_lines(text.strip().split('\n')))
+    return dict(roads_from_lines(text.strip().splitlines()))
 
 
 def distances_from_file(fn: str) -> Distances:

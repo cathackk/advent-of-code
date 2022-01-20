@@ -146,7 +146,7 @@ def commands_from_file(fn: str) -> list[Command]:
 
 
 def commands_from_text(text: str) -> list[Command]:
-    return list(commands_from_lines(text.strip().split('\n')))
+    return list(commands_from_lines(text.strip().splitlines()))
 
 
 def commands_from_lines(lines: Iterable[str]) -> Iterable[Command]:

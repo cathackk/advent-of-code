@@ -214,7 +214,7 @@ def points_race_winner(reindeer: list[Reindeer], seconds: int) -> tuple[str, int
 
 
 def reindeer_from_text(text: str) -> list[Reindeer]:
-    return list(reindeer_from_lines(text.strip().split('\n')))
+    return list(reindeer_from_lines(text.strip().splitlines()))
 
 
 def reindeer_from_file(fn: str) -> list[Reindeer]:

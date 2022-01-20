@@ -181,7 +181,7 @@ def adjust_criteria(criteria: Iterable[Criterium]) -> Iterable[Criterium]:
 
 
 def aunts_from_text(text: str) -> list[Aunt]:
-    return list(aunts_from_lines(text.strip().split('\n')))
+    return list(aunts_from_lines(text.strip().splitlines()))
 
 
 def aunts_from_file(fn: str) -> list[Aunt]:
@@ -193,7 +193,7 @@ def aunts_from_lines(lines: Iterable[str]) -> Iterable[Aunt]:
 
 
 def criteria_from_text(text: str) -> list[Criterium]:
-    return list(criteria_from_lines(text.strip().split('\n')))
+    return list(criteria_from_lines(text.strip().splitlines()))
 
 
 def criteria_from_file(fn: str) -> list[Criterium]:

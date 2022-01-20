@@ -355,7 +355,7 @@ class Number:
 
     @classmethod
     def many_from_text(cls, text: str) -> list['Number']:
-        return list(cls.many_from_lines(text.strip().split('\n')))
+        return list(cls.many_from_lines(text.strip().splitlines()))
 
     @classmethod
     def many_from_file(cls, fn: str) -> list['Number']:

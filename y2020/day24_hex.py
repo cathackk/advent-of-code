@@ -269,7 +269,7 @@ class Walk:
 
     @classmethod
     def parse_text(cls, text: str) -> list['Walk']:
-        return list(cls.parse_lines(text.strip().split("\n")))
+        return list(cls.parse_lines(text.strip().splitlines()))
 
     @classmethod
     def parse_lines(cls, lines: Iterable[str]) -> Iterable['Walk']:

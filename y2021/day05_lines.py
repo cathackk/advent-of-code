@@ -239,7 +239,7 @@ def vents_from_file(fn: str) -> list[Vent]:
 
 
 def vents_from_text(text: str) -> list[Vent]:
-    return [Vent.parse(line.strip()) for line in text.strip().split('\n')]
+    return [Vent.parse(line.strip()) for line in text.strip().splitlines()]
 
 
 if __name__ == '__main__':

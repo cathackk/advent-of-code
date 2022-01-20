@@ -203,7 +203,7 @@ def input_from_lines(lines: Iterable[str]) -> tuple[str, Rules]:
 
 
 def rules_from_text(text: str) -> Rules:
-    return rules_from_lines(text.strip().split('\n'))
+    return rules_from_lines(text.strip().splitlines())
 
 
 def rules_from_lines(lines: Iterable[str]) -> Rules:

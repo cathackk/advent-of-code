@@ -518,7 +518,7 @@ def decks_from_file(fn: str) -> Decks:
 
 
 def decks_from_text(text: str) -> Decks:
-    return decks_from_lines(text.strip().split("\n"))
+    return decks_from_lines(text.strip().splitlines())
 
 
 def decks_from_lines(lines: Iterable[str]) -> Decks:

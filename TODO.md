@@ -1,7 +1,7 @@
-- [ ] `.split('\n')` -> `.splitlines()`
-- [ ] black
-- [ ] mypy
-- [ ] envdir
+- [x] `.split('\n')` -> `.splitlines()`
+- [ ] integrate envdir
+- [ ] integrate black
+- [ ] integrate mypy
 - [ ] use OCR where applicable
 - [ ] rework 2017
 - [ ] rework and finish 2018

@@ -413,7 +413,7 @@ def tiles_from_file(fn: str) -> list[Tile]:
 
 
 def tiles_from_text(text: str) -> list[Tile]:
-    return list(tiles_from_lines(text.strip().split("\n")))
+    return list(tiles_from_lines(text.strip().splitlines()))
 
 
 def tiles_from_lines(lines: Iterable[str]) -> Iterable[Tile]:
@@ -631,11 +631,11 @@ class Pattern:
     def from_text(cls, text: str):
         return cls(
             line.strip()
-            for line in text.strip().split("\n")
+            for line in text.strip().splitlines()
         )
 
     def find_in(self, drawn_image: str) -> Iterable[Pos]:
-        image_lines = drawn_image.split("\n")
+        image_lines = drawn_image.splitlines()
 
         def is_match(i_x, i_y):
             return all(
@@ -656,7 +656,7 @@ class Pattern:
         )
 
     def highlight(self, drawn_image: str, matches: Iterable[Pos], hchr: str = 'O') -> str:
-        image_pixels = [list(line) for line in drawn_image.split("\n")]
+        image_pixels = [list(line) for line in drawn_image.splitlines()]
 
         for m_x, m_y in matches:
             pixels_to_highlight = (

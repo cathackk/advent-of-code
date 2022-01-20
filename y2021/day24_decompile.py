@@ -213,7 +213,7 @@ class Program:
 
     @classmethod
     def from_text(cls, text: str, return_from: str = 'wxyz') -> 'Program':
-        return cls.from_lines(text.strip().split('\n'), return_from)
+        return cls.from_lines(text.strip().splitlines(), return_from)
 
     @classmethod
     def from_file(cls, fn: str, return_from: str = 'wxyz') -> 'Program':

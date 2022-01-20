@@ -684,7 +684,7 @@ class Map:
 
 
 def report_from_text(text: str) -> list[Reading]:
-    return list(report_from_lines(text.strip().split('\n')))
+    return list(report_from_lines(text.strip().splitlines()))
 
 
 def report_from_file(fn: str) -> list[Reading]:

@@ -150,7 +150,7 @@ class Keypad:
 
     @classmethod
     def from_str(cls, text: str) -> 'Keypad':
-        return cls.from_lines(text.strip("\n").split("\n"))
+        return cls.from_lines(text.strip("\n").splitlines())
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Keypad':
@@ -191,7 +191,7 @@ KEYPAD_2 = Keypad.from_str('''
 
 
 def instructions_from_text(text: str) -> list[Steps]:
-    return list(instructions_from_lines(text.strip().split('\n')))
+    return list(instructions_from_lines(text.strip().splitlines()))
 
 
 def instructions_from_file(fn: str) -> list[Steps]:

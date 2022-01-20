@@ -161,7 +161,7 @@ def data_from_file(fn: str) -> list[tuple[PasswordRule, str]]:
 
 
 def data_from_text(text: str) -> list[tuple[PasswordRule, str]]:
-    return list(data_from_lines(text.strip().split("\n")))
+    return list(data_from_lines(text.strip().splitlines()))
 
 
 def data_from_lines(lines: Iterable[str]) -> Iterable[tuple[PasswordRule, str]]:

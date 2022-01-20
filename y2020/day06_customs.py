@@ -162,7 +162,7 @@ def group_from_text(text: str) -> Group:
 
 
 def groups_from_text(text: str) -> list[Group]:
-    return list(groups_from_lines(text.strip().split('\n')))
+    return list(groups_from_lines(text.strip().splitlines()))
 
 
 def groups_from_file(fn: str) -> list[Group]:

@@ -143,6 +143,6 @@ def read_string(ascii_text: str) -> str:
         for letter in zip(*(
             [line[k:k + LETTER_WIDTH].ljust(LETTER_WIDTH) for k in
              range(0, len(line), LETTER_WIDTH)]
-            for line in dedent(ascii_text.strip('\n')).split('\n')
+            for line in dedent(ascii_text.strip('\n')).splitlines()
         ))
     )

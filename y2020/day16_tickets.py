@@ -302,7 +302,7 @@ class RuleList:
 
 
 def data_from_text(text: str) -> tuple[RuleList, Ticket, list[Ticket]]:
-    return data_from_lines(text.strip().split("\n"))
+    return data_from_lines(text.strip().splitlines())
 
 
 def data_from_file(fn: str) -> tuple[RuleList, Ticket, list[Ticket]]:

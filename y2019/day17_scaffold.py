@@ -11,7 +11,7 @@ def part_1():
     print(screen_output)
     lines = [
         line.strip()
-        for line in ''.join(chr(v) for v in screen_output).split('\n')
+        for line in ''.join(chr(v) for v in screen_output).splitlines()
         if line.strip()
     ]
 
@@ -116,7 +116,7 @@ def part_2(screen):
         L,8,R,6,L,10,L,10
     """
 
-    lines = [line.strip()+'\n' for line in script.split('\n') if line.strip()]
+    lines = [line.strip()+'\n' for line in script.splitlines() if line.strip()]
     assert len(lines) == 4
 
     draw_screen(io, screen)

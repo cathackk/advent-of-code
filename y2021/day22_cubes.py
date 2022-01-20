@@ -568,7 +568,7 @@ def draw(cuboids: Iterable[Cuboid], axis_flat: str = 'z') -> None:
 
 
 def steps_from_text(text: str) -> list[Step]:
-    return list(steps_from_lines(text.strip().split('\n')))
+    return list(steps_from_lines(text.strip().splitlines()))
 
 
 def steps_from_file(fn: str) -> list[Step]:

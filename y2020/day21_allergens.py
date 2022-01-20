@@ -185,7 +185,7 @@ def foods_from_file(fn: str) -> list[Food]:
 
 
 def foods_from_text(text: str) -> list[Food]:
-    return list(foods_from_lines(text.strip().split("\n")))
+    return list(foods_from_lines(text.strip().splitlines()))
 
 
 def foods_from_lines(lines: Iterable[str]) -> Iterable[Food]:

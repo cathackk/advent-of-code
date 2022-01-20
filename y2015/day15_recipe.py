@@ -177,7 +177,7 @@ def generate_recipes(
 
 
 def ingredients_from_text(text: str) -> list[Ingredient]:
-    return list(ingredients_from_lines(text.strip().split('\n')))
+    return list(ingredients_from_lines(text.strip().splitlines()))
 
 
 def ingredients_from_file(fn: str) -> list[Ingredient]:

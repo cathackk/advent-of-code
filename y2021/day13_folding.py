@@ -257,7 +257,7 @@ Input = tuple[set[Pos], list[Instruction]]
 
 
 def input_from_text(text: str) -> Input:
-    return input_from_lines(text.split('\n'))
+    return input_from_lines(text.splitlines())
 
 
 def input_from_file(fn: str) -> Input:

@@ -313,7 +313,7 @@ class Expr:
 
     @classmethod
     def load_from_text(cls, text: str) -> list['Expr']:
-        return list(cls.load_from_lines(text.strip().split("\n")))
+        return list(cls.load_from_lines(text.strip().splitlines()))
 
     @classmethod
     def load_from_lines(cls, lines: Iterable[str]) -> Iterable['Expr']:
