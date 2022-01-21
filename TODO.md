@@ -6,5 +6,5 @@
 - [ ] rework [2017](y2017)
 - [ ] rework and finish [2018](y2018)
 - [ ] rework [2019](y2019)
-- [ ] index in [readme](README.md)
+- [x] index in [readme](README.md)
 - [x] split [utils](common/utils.py)
