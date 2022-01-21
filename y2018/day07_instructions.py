@@ -3,9 +3,9 @@ from itertools import count
 from typing import Generator
 from typing import Iterable
 
-from common.utils import dgroupby_set
-from common.utils import exhaust
-from common.utils import parse_line
+from common.iteration import dgroupby_set
+from common.iteration import exhaust
+from common.text import parse_line
 
 Dependency = tuple[str, str]
 

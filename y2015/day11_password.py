@@ -8,7 +8,7 @@ import string
 from typing import Iterable
 from typing import Iterator
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(last_password: str) -> str:

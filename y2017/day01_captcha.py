@@ -4,8 +4,8 @@ Day 1: Inverse Captcha
 https://adventofcode.com/2017/day/1
 """
 
-from common.utils import relative_path
-from common.utils import slidingw
+from common.file import relative_path
+from common.iteration import slidingw
 
 
 def part_1(digits: str) -> int:

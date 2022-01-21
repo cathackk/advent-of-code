@@ -3,8 +3,8 @@ from typing import Generator
 from typing import Iterable
 from typing import Iterator
 
-from common.utils import exhaust
-from common.utils import relative_path
+from common.iteration import exhaust
+from common.file import relative_path
 
 
 class Command:

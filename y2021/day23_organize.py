@@ -8,9 +8,9 @@ from itertools import chain
 from typing import Iterable
 
 from common.graph import shortest_path
-from common.utils import parse_line
-from common.utils import relative_path
-from common.utils import zip1
+from common.text import parse_line
+from common.file import relative_path
+from common.iteration import zip1
 
 
 def part_1(initial_state: 'State') -> int:

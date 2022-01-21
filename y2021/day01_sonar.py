@@ -6,8 +6,8 @@ https://adventofcode.com/2021/day/1
 
 from typing import Iterable
 
-from common.utils import relative_path
-from common.utils import slidingw
+from common.file import relative_path
+from common.iteration import slidingw
 
 
 def part_1(values: Iterable[int]) -> int:

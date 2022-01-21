@@ -10,7 +10,7 @@ from typing import Iterable
 from tqdm import tqdm
 
 from common.rect import Rect
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(grid: 'Grid', steps: int = 100) -> int:

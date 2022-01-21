@@ -19,7 +19,7 @@ import math
 from textwrap import dedent
 from typing import Iterable
 
-from common.utils import triangular_root
+from common.math import triangular_root
 
 Pos = tuple[int, int]
 
@@ -95,6 +95,8 @@ def to_pos(number: int) -> Pos:
         return -layer, index_in_side - layer
     elif side == 3:  # down
         return index_in_side - layer, layer
+    else:
+        raise ValueError(side)
 
 
 def from_pos(pos: Pos) -> int:

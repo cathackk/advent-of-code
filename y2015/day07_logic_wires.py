@@ -7,7 +7,7 @@ https://adventofcode.com/2015/day/7
 from enum import Enum
 from typing import Iterable
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(circuit: 'Circuit') -> int:

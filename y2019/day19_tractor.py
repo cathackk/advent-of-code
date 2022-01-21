@@ -1,4 +1,4 @@
-from common.utils import relative_path
+from common.file import relative_path
 from y2019.intcode import load_tape
 from y2019.intcode import Machine
 

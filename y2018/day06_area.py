@@ -4,8 +4,8 @@ from typing import Iterable
 
 from common.rect import Pos
 from common.rect import Rect
-from common.utils import dgroupby_set
-from common.utils import single_value
+from common.iteration import dgroupby_set
+from common.iteration import single_value
 
 
 def neighbors(pos: Pos) -> Iterable[Pos]:

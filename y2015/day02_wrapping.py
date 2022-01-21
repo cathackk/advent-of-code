@@ -6,7 +6,7 @@ https://adventofcode.com/2015/day/2
 
 from typing import Iterable
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 Dimension = tuple[int, int, int]

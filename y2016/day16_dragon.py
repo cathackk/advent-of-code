@@ -6,7 +6,7 @@ https://adventofcode.com/2016/day/16
 
 from tqdm import tqdm
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(initial_state: str, disk_size: int = 272) -> str:

@@ -1,7 +1,7 @@
 from collections import defaultdict
 from enum import Enum
 
-from common.utils import minmax
+from common.iteration import minmax
 from common.xy import Point
 from common.xy import Vector
 from y2019.intcode import load_tape

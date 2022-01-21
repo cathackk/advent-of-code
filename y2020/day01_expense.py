@@ -7,8 +7,8 @@ https://adventofcode.com/2020/day/1
 from itertools import combinations
 from typing import Iterable
 
-from common.utils import relative_path
-from common.utils import single_value
+from common.file import relative_path
+from common.iteration import single_value
 
 
 def part_1(numbers: list[int]) -> int:

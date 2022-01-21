@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import ClassVar
 from typing import Iterable
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(lines: Iterable[str]) -> int:

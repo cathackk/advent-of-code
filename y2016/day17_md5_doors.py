@@ -10,7 +10,7 @@ from typing import Iterable
 from common.graph import shortest_path
 from common.md5 import md5
 from common.rect import Rect
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(password: str) -> str:

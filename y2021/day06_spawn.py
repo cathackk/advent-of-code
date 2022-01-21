@@ -10,7 +10,7 @@ from itertools import islice
 from typing import Iterable
 from typing import Iterator
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(state: Iterable[int], days: int = 80) -> int:

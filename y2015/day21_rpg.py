@@ -7,10 +7,10 @@ https://adventofcode.com/2015/day/21
 from itertools import combinations
 from typing import Iterable
 
-from common.utils import maxk
-from common.utils import mink
-from common.utils import parse_line
-from common.utils import relative_path
+from common.iteration import maxk
+from common.iteration import mink
+from common.text import parse_line
+from common.file import relative_path
 
 
 def part_1(boss: 'Character', player_hp: int, shop: 'Shop') -> int:

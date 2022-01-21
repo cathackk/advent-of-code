@@ -8,8 +8,8 @@ from itertools import chain
 from typing import Iterable
 from typing import Optional
 
-from common.utils import relative_path
-from common.utils import zip1
+from common.file import relative_path
+from common.iteration import zip1
 
 
 def part_1(numbers: list['Number']) -> int:

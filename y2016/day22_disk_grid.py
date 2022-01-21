@@ -8,9 +8,9 @@ from typing import Iterable
 
 from common.graph import shortest_path
 from common.rect import Rect
-from common.utils import parse_line
-from common.utils import relative_path
-from common.utils import single_value
+from common.text import parse_line
+from common.file import relative_path
+from common.iteration import single_value
 
 
 def part_1(grid: 'Grid') -> int:

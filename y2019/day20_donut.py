@@ -2,8 +2,6 @@ import string
 from typing import Iterable
 from typing import Optional
 
-from common.utils import timeit
-
 Pos = tuple[int, int]
 PosD = tuple[Pos, int]
 Portal = tuple[str, Pos, Pos]
@@ -219,13 +217,11 @@ class Maze:
             yield (x, y + 1), depth
 
 
-@timeit
 def part_1(maze):
     distance = maze.solve()
     print(f"part 1: path is {distance} long")
 
 
-@timeit
 def part_2(maze):
     distance = maze.solve3()
     print(f"part 2: path is {distance} long")

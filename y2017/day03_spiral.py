@@ -8,7 +8,7 @@ from itertools import count
 from typing import Iterable
 
 from common import spiral
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(number: int) -> int:

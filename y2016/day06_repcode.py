@@ -6,7 +6,7 @@ https://adventofcode.com/2016/day/6
 
 from collections import Counter
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(lines: list[str]) -> str:

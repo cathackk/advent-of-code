@@ -1,8 +1,8 @@
 from typing import Iterable
 
 from common.rect import Rect
-from common.utils import dgroupby
-from common.utils import parse_line
+from common.iteration import dgroupby
+from common.text import parse_line
 
 Claim = tuple[int, Rect]
 

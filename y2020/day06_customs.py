@@ -6,9 +6,9 @@ https://adventofcode.com/2020/day/6
 
 from typing import Iterable
 
-from common.utils import line_groups
-from common.utils import relative_path
-from common.utils import single_value
+from common.text import line_groups
+from common.file import relative_path
+from common.iteration import single_value
 
 
 def part_1(groups: list['Group']) -> int:

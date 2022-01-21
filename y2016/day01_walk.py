@@ -7,9 +7,9 @@ https://adventofcode.com/2016/day/1
 from typing import Iterable
 
 from common.heading import Heading
-from common.utils import first_repeat
-from common.utils import last
-from common.utils import relative_path
+from common.iteration import first_repeat
+from common.iteration import last
+from common.file import relative_path
 
 
 def part_1(instructions: Iterable['Instr'] | str) -> int:

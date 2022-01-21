@@ -11,10 +11,10 @@ from typing import Iterable
 from typing import Optional
 
 from common.rect import Rect
-from common.utils import parse_line
-from common.utils import relative_path
-from common.utils import single_value
-from common.utils import string_builder
+from common.text import parse_line
+from common.file import relative_path
+from common.iteration import single_value
+from common.text import string_builder
 
 
 def part_1(tiles: list['Tile']) -> tuple[int, 'Image']:

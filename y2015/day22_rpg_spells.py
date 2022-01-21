@@ -9,8 +9,8 @@ from typing import Iterable
 import yaml
 
 from common.graph import shortest_path
-from common.utils import join_and
-from common.utils import relative_path
+from common.text import join_and
+from common.file import relative_path
 
 
 def part_1(player: 'Character', boss: 'Character', spellbook: 'SpellBook') -> int:

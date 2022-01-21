@@ -4,7 +4,7 @@ Day 18: Like a Rogue
 https://adventofcode.com/2016/day/18
 """
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(first_row: str, height: int = 40) -> int:

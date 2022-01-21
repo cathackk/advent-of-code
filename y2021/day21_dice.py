@@ -9,8 +9,8 @@ from collections import Counter
 from dataclasses import dataclass
 from typing import Iterable
 
-from common.utils import parse_line
-from common.utils import relative_path
+from common.text import parse_line
+from common.file import relative_path
 
 
 def part_1(player_1_start: int, player_2_start: int) -> int:

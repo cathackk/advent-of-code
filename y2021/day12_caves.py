@@ -6,7 +6,7 @@ https://adventofcode.com/2021/day/12
 
 from typing import Iterable
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(caves: 'Graph') -> int:

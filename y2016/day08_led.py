@@ -8,8 +8,8 @@ from typing import Iterable
 
 from common.ocr import read_string
 from common.rect import Rect
-from common.utils import parse_line
-from common.utils import relative_path
+from common.text import parse_line
+from common.file import relative_path
 
 
 def part_1(commands: list[str]) -> int:

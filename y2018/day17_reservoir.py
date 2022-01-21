@@ -3,7 +3,7 @@ from typing import Iterable
 from typing import Optional
 
 from common.rect import Rect
-from common.utils import parse_line
+from common.text import parse_line
 
 Pos = tuple[int, int]
 Board = dict[Pos, str]

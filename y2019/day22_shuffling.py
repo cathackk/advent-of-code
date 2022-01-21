@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from common.utils import modular_inverse
+from common.math import modular_inverse
 
 Instr = tuple[str, int]
 

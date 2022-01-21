@@ -9,9 +9,9 @@ from itertools import chain
 from typing import Iterable
 from typing import TypeVar
 
-from common.utils import parse_line
-from common.utils import relative_path
-from common.utils import slidingw
+from common.text import parse_line
+from common.file import relative_path
+from common.iteration import slidingw
 
 
 def part_1(template: str, rules: 'Rules', steps: int = 10) -> int:

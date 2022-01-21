@@ -13,8 +13,8 @@ from typing import Iterable
 from tqdm import tqdm
 
 from common.md5 import md5 as plain_md5
-from common.utils import last
-from common.utils import relative_path
+from common.iteration import last
+from common.file import relative_path
 
 
 def part_1(salt: str, nth: int = 64) -> int:

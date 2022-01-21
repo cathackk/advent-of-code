@@ -1,6 +1,5 @@
 from typing import Iterable
 
-from common.utils import count_ones
 from y2017.day10_knots import knot_hash
 
 
@@ -42,6 +41,10 @@ def count_regions(seed: str) -> int:
         regions_count += 1
 
     return regions_count
+
+
+def count_ones(bytes_: bytes) -> int:
+    return sum(bin(byte).count('1') for byte in bytes_)
 
 
 def test_bits_count():

@@ -7,7 +7,7 @@ https://adventofcode.com/2020/day/12
 from typing import Iterable
 
 from common.heading import Heading
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(instructions: list['Instruction']) -> int:

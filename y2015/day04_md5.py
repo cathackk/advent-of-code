@@ -9,7 +9,7 @@ from itertools import count
 from tqdm import tqdm
 
 from common.md5 import md5
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(key: str) -> int:

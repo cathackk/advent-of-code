@@ -11,8 +11,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.utils import exhaust
-from common.utils import relative_path
+from common.iteration import exhaust
+from common.file import relative_path
 
 
 def part_1(jumps: list[int]) -> int:
@@ -91,7 +91,7 @@ def part_2(jumps: list[int]) -> int:
         >>> example_jumps = [0, 3, 0, 1, -3]
         >>> exhaust(go(example_jumps, inc=inc_2))
         10
-        >>> from common.utils import last
+        >>> from common.iteration import last
         >>> print_jump(last(go(example_jumps, inc=inc_2, yield_states=True)))
         2  3  2  3  -1
 

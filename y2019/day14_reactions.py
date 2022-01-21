@@ -4,7 +4,7 @@ from typing import Iterable
 from typing import NamedTuple
 
 from common.bsrange import BSRange
-from common.utils import dgroupby
+from common.iteration import dgroupby
 
 
 class IngrAmount(NamedTuple):

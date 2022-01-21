@@ -4,7 +4,7 @@ Day 19: An Elephant Named Joseph
 https://adventofcode.com/2016/day/19
 """
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(elf_count: int) -> int:

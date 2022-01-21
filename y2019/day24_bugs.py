@@ -1,7 +1,7 @@
 from collections import Counter
 from typing import Iterable
 
-from common.utils import minmax
+from common.iteration import minmax
 
 
 Pos = tuple[int, int]

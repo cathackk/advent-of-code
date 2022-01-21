@@ -9,11 +9,11 @@ from collections import defaultdict
 from typing import Generator
 from typing import Iterable
 
-from common.utils import exhaust
-from common.utils import join_and
-from common.utils import parse_line
-from common.utils import relative_path
-from common.utils import single_value
+from common.iteration import exhaust
+from common.text import join_and
+from common.text import parse_line
+from common.file import relative_path
+from common.iteration import single_value
 
 
 def part_1(instructions: 'Instructions', watch_for: tuple[int, int] = (61, 17)) -> int:

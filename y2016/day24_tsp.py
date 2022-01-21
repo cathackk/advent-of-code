@@ -8,9 +8,9 @@ from itertools import permutations
 from typing import Iterable
 
 from common.rect import Rect
-from common.utils import mink
-from common.utils import relative_path
-from common.utils import slidingw
+from common.iteration import mink
+from common.file import relative_path
+from common.iteration import slidingw
 
 
 def part_1(maze: 'Maze') -> int:

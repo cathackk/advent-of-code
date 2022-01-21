@@ -9,8 +9,8 @@ from itertools import product
 from typing import Iterable
 
 from common.rect import HyperCuboid
-from common.utils import relative_path
-from common.utils import single_value
+from common.file import relative_path
+from common.iteration import single_value
 
 
 def part_1(initial_state: set['Pos'], cycles: int = 6) -> int:

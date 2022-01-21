@@ -6,9 +6,9 @@ from typing import NamedTuple
 
 from common.heading import Heading
 from common.rect import Rect
-from common.utils import exhaust
+from common.iteration import exhaust
 from common.utils import ro
-from common.utils import single_value
+from common.iteration import single_value
 
 heading_chars = {
     Heading.NORTH: '^',

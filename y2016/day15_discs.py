@@ -6,9 +6,9 @@ https://adventofcode.com/2016/day/15
 
 from typing import Iterable
 
-from common.utils import modular_inverse
-from common.utils import parse_line
-from common.utils import relative_path
+from common.math import modular_inverse
+from common.text import parse_line
+from common.file import relative_path
 
 
 def part_1(discs: list['Disc']) -> int:

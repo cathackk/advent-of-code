@@ -2,8 +2,8 @@ from collections import Counter
 from itertools import count
 from typing import Iterable
 
-from common.utils import create_logger
-from common.utils import min_all
+from common.logging import create_logger
+from common.iteration import min_all
 from common.xyz import Point3
 from common.xyz import Vector3
 

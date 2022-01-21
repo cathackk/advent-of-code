@@ -7,8 +7,8 @@ https://adventofcode.com/2021/day/13
 from typing import Iterable
 
 from common.rect import Rect
-from common.utils import parse_line
-from common.utils import relative_path
+from common.text import parse_line
+from common.file import relative_path
 
 
 def part_1(dots: set['Pos'], first_instruction: 'Instruction') -> int:

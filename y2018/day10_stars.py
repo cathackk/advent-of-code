@@ -2,7 +2,7 @@ from itertools import count
 from typing import Iterable
 
 from common.rect import Rect
-from common.utils import parse_line
+from common.text import parse_line
 from common.xy import Point
 from common.xy import Vector
 

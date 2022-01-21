@@ -3,8 +3,6 @@ from collections import defaultdict
 from typing import Iterable
 from typing import Optional
 
-from common.utils import timeit
-
 Pos = tuple[int, int]
 Tile = tuple[Pos, str]
 Solution = tuple[int, list[str]]
@@ -365,12 +363,10 @@ def test_example_multi3():
     assert maze.solve_multi()[0] == 72
 
 
-@timeit
 def part_1(maze):
     print(maze.solve())
 
 
-@timeit
 def part_2(maze):
     print(maze.solve_multi())
 

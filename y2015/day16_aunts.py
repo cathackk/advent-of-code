@@ -6,8 +6,8 @@ https://adventofcode.com/2015/day/16
 
 from typing import Iterable
 
-from common.utils import relative_path
-from common.utils import single_value
+from common.file import relative_path
+from common.iteration import single_value
 
 
 def part_1(aunts: list['Aunt'], criteria: list['Criterium']) -> int:

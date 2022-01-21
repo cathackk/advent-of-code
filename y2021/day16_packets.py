@@ -10,7 +10,7 @@ from enum import IntEnum
 from math import prod
 from typing import Iterable
 from common.utils import assert_single_not_none
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(packet: 'Packet') -> int:

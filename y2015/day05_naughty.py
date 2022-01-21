@@ -6,8 +6,8 @@ https://adventofcode.com/2015/day/5
 
 from typing import Iterable
 
-from common.utils import relative_path
-from common.utils import zip1
+from common.file import relative_path
+from common.iteration import zip1
 
 
 def part_1(strings: Iterable[str]) -> int:

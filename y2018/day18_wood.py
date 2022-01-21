@@ -4,7 +4,7 @@ from typing import Iterable
 from typing import Optional
 
 from common.rect import Rect
-from common.utils import single_value
+from common.iteration import single_value
 
 
 Pos = tuple[int, int]

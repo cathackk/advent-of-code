@@ -3,10 +3,10 @@ from typing import Generator
 from typing import Iterable
 from typing import Optional
 
-from common.utils import exhaust
-from common.utils import last
-from common.utils import lcm
-from common.utils import sgn
+from common.iteration import exhaust
+from common.iteration import last
+from common.math import lcm
+from common.math import sgn
 from common.xyz import Point3
 from common.xyz import Vector3
 

@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Callable
 
-from common.utils import maxk
+from common.iteration import maxk
 
 
 def power_fn(serial: int) -> Callable[[int, int], int]:

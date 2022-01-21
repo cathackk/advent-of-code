@@ -7,4 +7,4 @@
 - [ ] rework and finish [2018](y2018)
 - [ ] rework [2019](y2019)
 - [ ] index in [readme](README.md)
-- [ ] split [utils](common/utils.py)
+- [x] split [utils](common/utils.py)

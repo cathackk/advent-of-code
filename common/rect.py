@@ -3,9 +3,9 @@ import math
 from itertools import chain
 from typing import Iterable
 
-from common.utils import minmax
-from common.utils import sgn
-from common.utils import unique
+from common.iteration import minmax
+from common.math import sgn
+from common.iteration import unique
 
 Pos = tuple[int, int]
 

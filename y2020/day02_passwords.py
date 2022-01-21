@@ -6,8 +6,8 @@ https://adventofcode.com/2020/day/2
 
 from typing import Iterable
 
-from common.utils import parse_line
-from common.utils import relative_path
+from common.text import parse_line
+from common.file import relative_path
 
 
 def part_1(rules_passwords: list[tuple['PasswordRule', str]]) -> int:

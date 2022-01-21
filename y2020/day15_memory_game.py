@@ -9,7 +9,7 @@ from typing import Iterator
 
 from tqdm import tqdm
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(numbers: list[int]) -> int:

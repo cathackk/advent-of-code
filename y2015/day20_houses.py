@@ -11,7 +11,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(target_gifts: int) -> int:

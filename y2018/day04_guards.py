@@ -3,10 +3,10 @@ from typing import Iterable
 from typing import NamedTuple
 from typing import Optional
 
-from common.utils import dgroupby
-from common.utils import maxk
-from common.utils import parse_line
-from common.utils import strip_line
+from common.iteration import dgroupby
+from common.iteration import maxk
+from common.text import parse_line
+from common.text import strip_line
 
 
 class Event(NamedTuple):

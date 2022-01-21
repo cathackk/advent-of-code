@@ -6,8 +6,8 @@ https://adventofcode.com/2021/day/7
 
 from typing import Callable
 
-from common.utils import minmax
-from common.utils import relative_path
+from common.iteration import minmax
+from common.file import relative_path
 
 
 def part_1(positions: list[int]) -> int:

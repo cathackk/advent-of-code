@@ -6,7 +6,7 @@ https://adventofcode.com/2015/day/23
 
 from typing import Iterable
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(tape: 'Tape'):

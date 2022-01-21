@@ -6,8 +6,8 @@ https://adventofcode.com/2015/day/1
 
 from typing import Iterable
 
-from common.utils import last
-from common.utils import relative_path
+from common.iteration import last
+from common.file import relative_path
 
 
 def part_1(instructions: str) -> int:

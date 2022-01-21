@@ -6,7 +6,7 @@ https://adventofcode.com/2015/day/8
 
 from ast import literal_eval
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(strings: list[str]) -> int:

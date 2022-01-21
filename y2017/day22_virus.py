@@ -5,10 +5,10 @@ from typing import Iterable
 from typing import Iterator
 
 from common.heading import Heading
-from common.utils import exhaust
-from common.utils import ilog
-from common.utils import last
-from common.utils import minmax
+from common.iteration import exhaust
+from common.logging import ilog
+from common.iteration import last
+from common.iteration import minmax
 
 
 class NodeState(Enum):

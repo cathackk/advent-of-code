@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Callable
 from typing import Optional
 
-from common.utils import minmax
+from common.iteration import minmax
 from common.xy import Point
 from common.xy import Vector
 from y2019.intcode import load_tape

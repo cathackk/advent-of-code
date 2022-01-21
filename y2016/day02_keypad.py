@@ -8,7 +8,7 @@ from typing import Iterable
 
 from common.heading import Heading
 from common.rect import Rect
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(instructions: Iterable['Steps']) -> str:

@@ -7,7 +7,7 @@ https://adventofcode.com/2020/day/9
 from typing import Collection
 from typing import Iterator
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(numbers: list[int], preamble_length: int = 25) -> int:

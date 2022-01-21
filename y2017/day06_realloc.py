@@ -7,7 +7,7 @@ https://adventofcode.com/2017/day/6
 from typing import Iterable
 from typing import Iterator
 
-from common.utils import relative_path
+from common.file import relative_path
 
 
 def part_1(initial_state: Iterable[int]) -> int:
