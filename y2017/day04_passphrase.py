@@ -1,53 +1,115 @@
+"""
+Advent of Code 2017
+Day 4: High-Entropy Passphrases
+https://adventofcode.com/2017/day/4
+"""
+
 from typing import Iterable
 
-
-def load_passphrases(fn: str) -> Iterable[str]:
-    return (line.strip() for line in open(fn))
+from common.utils import relative_path
 
 
-def is_valid(passphrase: str) -> bool:
+def part_1(passphrases: Iterable[str]) -> int:
     """
-    >>> is_valid("aa bb cc dd ee")
-    True
-    >>> is_valid("aa bb cc dd aa")
-    False
-    >>> is_valid("aa bb cc dd aaa")
-    True
+    A new system policy has been put in place that requires all accounts to use a **passphrase**
+    instead of simply a pass**word**. A passphrase consists of a series of words (lowercase letters)
+    separated by spaces.
+
+    To ensure security, a valid passphrase must contain no duplicate words.
+
+    For example:
+
+      - `aa bb cc dd ee` is valid:
+
+        >>> is_valid('aa bb cc dd ee')
+        True
+
+      - `aa bb cc dd aa` is not valid - the word aa appears more than once:
+
+        >>> is_valid('aa bb cc dd aa')
+        False
+
+      - `aa bb cc dd aaa` is valid - aa and aaa count as different words:
+
+        >>> is_valid('aa bb cc dd aaa')
+        True
+
+    The system's full passphrase list is available as your puzzle input. **How many passphrases are
+    valid?**
+
+        >>> part_1(['aa bb cc', 'aa bb aa', 'aa bb aaa'])
+        part 1: 2 valid passphrases
+        2
     """
-    words = passphrase.split(' ')
-    return len(words) == len(set(words))
 
-
-def is_valid2(passphrase: str) -> bool:
-    """
-    >>> is_valid2("abcde fghij")
-    True
-    >>> is_valid2("abcde xyz ecdab")
-    False
-    >>> is_valid2("a ab abc abd abf abj")
-    True
-    >>> is_valid2("iiii oiii ooii oooi oooo")
-    True
-    >>> is_valid2("oiii ioii iioi iiio")
-    False
-    """
-    words = [''.join(sorted(word)) for word in passphrase.split(' ')]
-    return len(words) == len(set(words))
-
-
-def part_1(fn: str) -> int:
-    result = sum(1 for pp in load_passphrases(fn) if is_valid(pp))
+    result = sum(1 for pp in passphrases if is_valid(pp))
     print(f"part 1: {result} valid passphrases")
     return result
 
 
-def part_2(fn: str) -> int:
-    result = sum(1 for pp in load_passphrases(fn) if is_valid2(pp))
+def part_2(passphrases: Iterable[str]) -> int:
+    """
+    For added security, yet another system policy has been put in place. Now, a valid passphrase
+    must contain no two words that are anagrams of each other - that is, a passphrase is invalid if
+    any word's letters can be rearranged to form any other word in the passphrase.
+
+    For example:
+
+      - `abcde fghij` is a valid passphrase:
+
+        >>> is_valid_2('abcde fghij')
+        True
+
+      - `abcde xyz ecdab` is not valid - the letters from the third word can be rearranged to form
+        the first word:
+
+        >>> is_valid_2('abcde xyz ecdab')
+        False
+
+      - `a ab abc abd abf abj` is a valid passphrase, because all letters need to be used when
+        forming another word:
+
+        >>> is_valid_2('a ab abc abd abf abj')
+        True
+
+      - `iiii oiii ooii oooi oooo` is valid:
+
+        >>> is_valid_2('iiii oiii ooii oooi oooo')
+        True
+
+      - `oiii ioii iioi iiio` is not valid - any of these words can be rearranged to form any other
+        word:
+
+        >>> is_valid_2('oiii ioii iioi iiio')
+        False
+
+    Under this new system policy, how many passphrases are valid?
+
+        >>> part_2(['ab bc cd', 'ab ba cd', 'aa bb cc', 'ab ac cd', 'ad hd da dh'])
+        part 2: 3 valid passphrases
+        3
+    """
+
+    result = sum(1 for pp in passphrases if is_valid_2(pp))
     print(f"part 2: {result} valid passphrases")
     return result
 
 
+def is_valid(passphrase: str) -> bool:
+    words = passphrase.split()
+    return len(words) == len(set(words))
+
+
+def is_valid_2(passphrase: str) -> bool:
+    words = [''.join(sorted(word)) for word in passphrase.split()]
+    return len(words) == len(set(words))
+
+
+def passphrases_from_file(fn: str) -> list[str]:
+    return [line.strip() for line in open(relative_path(__file__, fn))]
+
+
 if __name__ == '__main__':
-    fn = "data/04-input.txt"
-    part_1(fn)
-    part_2(fn)
+    passphrases_ = passphrases_from_file('data/04-input.txt')
+    part_1(passphrases_)
+    part_2(passphrases_)

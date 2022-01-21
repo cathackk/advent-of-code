@@ -4,6 +4,7 @@ import sys
 import time
 from itertools import chain
 from itertools import combinations
+from math import sqrt
 from typing import Any
 from typing import Callable
 from typing import Generator
@@ -13,12 +14,16 @@ from typing import Sized
 from typing import TypeVar
 
 
+# TODO: split utils into math, iteration, text, ...
+
+
 T = TypeVar('T')
 K = TypeVar('K')
 V = TypeVar('V')
 R = TypeVar('R')
 
 
+# TODO: move to common.math
 def gcd2(a: int, b: int) -> int:
     if a == 0 or b == 0:
         raise ZeroDivisionError("integer division or modulo by zero")
@@ -32,6 +37,7 @@ def gcd2(a: int, b: int) -> int:
     return b
 
 
+# TODO: move to common.math
 def gcd(*xs: int) -> Optional[int]:
     result = None
     for x in xs:
@@ -39,10 +45,12 @@ def gcd(*xs: int) -> Optional[int]:
     return result
 
 
+# TODO: move to common.math
 def lcm2(a: int, b: int) -> int:
     return abs(a * b) // gcd2(a, b)
 
 
+# TODO: move to common.math
 def lcm(*xs: int) -> Optional[int]:
     result = None
     for x in xs:
@@ -50,6 +58,7 @@ def lcm(*xs: int) -> Optional[int]:
     return result
 
 
+# TODO: move to common.math
 def modular_inverse(x: int, m: int) -> int:
     t, newt = 0, 1
     r, newr = m, x % m
@@ -62,6 +71,52 @@ def modular_inverse(x: int, m: int) -> int:
     return t % m
 
 
+# TODO: move to common.math
+def triangular_root(t: int) -> int:
+    """
+    Given a number `t`, find `n` such that `tr(n) <= t < tr(n+1)`.
+
+    Perfect roots:
+
+        >>> triangular_root(10)
+        4
+        >>> triangular_root(15)
+        5
+        >>> triangular_root(5050)
+        100
+
+    Close roots:
+
+    tr(4) = 10 <= 12 < 15 = tr(4+1)
+
+        >>> triangular_root(12)
+        4
+
+    tr(44) = 990 <= 1000 < 1035 = tr(44+1)
+
+        >>> triangular_root(1000)
+        44
+        >>> triangular_root(990)
+        44
+        >>> triangular_root(1034)
+        44
+        >>> triangular_root(1035)
+        45
+    """
+
+    # (n+1) * (n/2) = t
+    # (n^2 + n) / 2 = t
+    #     4n^2 + 4n = 8t
+    # 4n^2 + 4n + 1 = 8t + 1
+    #    (2n + 1)^2 = 8t + 1
+    #        2n + 1 = sqrt(8t + 1)
+    #            2n = sqrt(8t + 1) - 1
+    #             n = (sqrt(8t + 1) - 1) / 2
+
+    return int((sqrt(8 * t + 1) - 1) / 2)
+
+
+# TODO: move to common.math
 def sgn(x) -> int:
     """
     >>> sgn(-15)
@@ -81,10 +136,12 @@ def sgn(x) -> int:
         return 0
 
 
+# TODO: move to common.iteration
 def first(items: Iterable[T], default: T = None) -> Optional[T]:
     return next(iter(items), default)
 
 
+# TODO: move to common.iteration
 def last(items: Iterable[T], default: T = None) -> Optional[T]:
     last_item = default
     for item in items:
@@ -92,6 +149,7 @@ def last(items: Iterable[T], default: T = None) -> Optional[T]:
     return last_item
 
 
+# TODO: move to common.iteration
 def single_value(items: Iterable[T]) -> T:
     """
     Return the first element of an iterable if it has exactly one element:
@@ -146,6 +204,7 @@ def single_value(items: Iterable[T]) -> T:
             raise ValueError("items contain more than one element")
 
 
+# TODO: move to common.iteration
 def exhaust(gen: Generator[Any, Any, T]) -> T:
     try:
         while True:
@@ -154,6 +213,7 @@ def exhaust(gen: Generator[Any, Any, T]) -> T:
         return exc.value
 
 
+# TODO: move to common.iteration
 def dgroupby(
         items: Iterable[T],
         key: Callable[[T], K],
@@ -170,6 +230,7 @@ def dgroupby(
     return d
 
 
+# TODO: move to common.iteration
 def dgroupby_set(
         items: Iterable[T],
         key: Callable[[T], K],
@@ -186,6 +247,7 @@ def dgroupby_set(
     return d
 
 
+# TODO: move to common.iteration
 def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> dict[K, list[V]]:
     d: dict[K, list[V]] = {}
 
@@ -197,6 +259,7 @@ def dgroupby_pairs(items: Iterable[tuple[K, V]]) -> dict[K, list[V]]:
     return d
 
 
+# TODO: move to common.iteration
 def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> dict[K, set[V]]:
     d: dict[K, set[V]] = {}
 
@@ -208,6 +271,7 @@ def dgroupby_pairs_set(items: Iterable[tuple[K, V]]) -> dict[K, set[V]]:
     return d
 
 
+# TODO: move to common.iteration
 def separate(values: Iterable[V], predicate: Callable[[V], bool]) -> tuple[list[V], list[V]]:
     """
     Returns two list:
@@ -230,10 +294,12 @@ def separate(values: Iterable[V], predicate: Callable[[V], bool]) -> tuple[list[
     return matching_values, nonmatching_values
 
 
+# TODO: move to common.iteration
 def ilen(items: Iterable) -> int:
     return sum(1 for _ in items)
 
 
+# TODO: delete
 def timeit(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -245,6 +311,7 @@ def timeit(func):
     return wrapper
 
 
+# TODO: move to common.iteration
 def zip1(items: Iterable[T], wrap: bool = False) -> Iterable[tuple[T, T]]:
     """
     >>> list(zip1([1,2,3,4]))
@@ -270,10 +337,12 @@ def zip1(items: Iterable[T], wrap: bool = False) -> Iterable[tuple[T, T]]:
         yield last_item, first_item
 
 
+# TODO: delete?
 def diffs(items: Iterable[T]) -> Iterable[T]:
     return (b - a for a, b in zip1(items))
 
 
+# TODO: move to common.iteration
 def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[tuple[T, ...]]:
     """
     >>> list(slidingw([1,2,3,4], 2))
@@ -314,6 +383,7 @@ def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[tupl
             del buffer[0]
 
 
+# TODO: move to common.iteration
 def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> tuple[T, T]:
     """
         >>> minmax([1,4,8,10,4,-4,15,-2])
@@ -349,6 +419,7 @@ def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> tuple[T, T]:
         raise ValueError("minmax() arg is an empty sequence")
 
 
+# TODO: move to common.iteration
 def maxk(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
     """
         >>> maxk(["dog", "cat", "monkey"], key=len)
@@ -376,6 +447,7 @@ def maxk(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
         raise ValueError("maxk() arg is an empty sequence")
 
 
+# TODO: move to common.iteration
 def mink(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
     """
         >>> mink(["dog", "zebra", "monkey"], key=len)
@@ -403,6 +475,7 @@ def mink(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
         raise ValueError("mink() arg is an empty sequence")
 
 
+# TODO: move to common.iteration
 def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
     """
         >>> min_all([1,2,3,1,2,3,1,2,3])
@@ -437,6 +510,7 @@ def min_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
         raise ValueError("min_all() arg is an empty sequence")
 
 
+# TODO: move to common.iteration
 def max_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
     """
         >>> max_all([1,2,3,1,2,3,1,2,3])
@@ -469,6 +543,7 @@ def max_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
         raise ValueError("max_all() arg is an empty sequence")
 
 
+# TODO: move to common.iteration
 def picking(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     """
     >>> list(picking('ABC'))
@@ -485,6 +560,7 @@ def picking(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
         yield item, items[:k]+items[k+1:]
 
 
+# TODO: move to common.iteration
 def following(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     """
     >>> list(following('ABC'))
@@ -501,6 +577,7 @@ def following(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
         yield item, items[k+1:]
 
 
+# TODO: move to common.iteration
 def subsequences(items: T) -> Iterable[T]:
     """
     >>> list(subsequences('AB'))
@@ -518,6 +595,7 @@ def subsequences(items: T) -> Iterable[T]:
         yield items
 
 
+# TODO: move to common.iteration
 def powerset(items: Iterable[T]) -> Iterable[tuple[T, ...]]:
     """
     >>> list(powerset([1, 2, 3]))
@@ -530,6 +608,7 @@ def powerset(items: Iterable[T]) -> Iterable[tuple[T, ...]]:
     )
 
 
+# TODO: move to common.logging?
 def ilog(
         items: Iterable[T],
         formatter: Callable[[int, T], str] = None,
@@ -544,6 +623,7 @@ def ilog(
         yield item
 
 
+# TODO: move to common.math
 def constrained(value, min_value, max_value):
     if value < min_value:
         return min_value
@@ -553,6 +633,7 @@ def constrained(value, min_value, max_value):
         return value
 
 
+# TODO: delete
 def until_repeat(values: Iterable[T]) -> Generator[T, None, T | None]:
     """
         >>> nums = [1, 4, 2, 5, 3, 6, 4, 7, 5, 1]
@@ -570,6 +651,7 @@ def until_repeat(values: Iterable[T]) -> Generator[T, None, T | None]:
     return None
 
 
+# TODO: move to common.iteration
 def first_repeat(values: Iterable[T]) -> T | None:
     """
         >>> first_repeat([1, 3, 5, 4, 6, 2, 3, 7])
@@ -582,6 +664,7 @@ def first_repeat(values: Iterable[T]) -> T | None:
     return exhaust(until_repeat(values))
 
 
+# TODO: move to common.iteration
 def unique(values: Iterable[T]) -> Iterable[T]:
     """
     Like set, but retains order:
@@ -596,10 +679,12 @@ def unique(values: Iterable[T]) -> Iterable[T]:
             yield value
 
 
+# TODO: delete?
 def count_ones(bytes_: bytes) -> int:
     return sum(bin(byte).count('1') for byte in bytes_)
 
 
+# TODO: move to common.logging
 def create_logger(debug: bool = False) -> Callable[[Any], None]:
     if debug:
         def log(*args, **kwargs):
@@ -611,6 +696,7 @@ def create_logger(debug: bool = False) -> Callable[[Any], None]:
         return nolog
 
 
+# TODO: move to common.text
 def parse_line(line: str, pattern: str) -> tuple[str, ...]:
     r"""
     >>> parse_line("Dogs have four paws.", "Dogs have $ paws.")
@@ -627,6 +713,7 @@ def parse_line(line: str, pattern: str) -> tuple[str, ...]:
         return tuple()
 
 
+# TODO: move to common.text
 def _parse_line_fixes(line: str, *fixes: str) -> tuple[str, ...]:
     assert len(fixes) >= 2
 
@@ -647,6 +734,7 @@ def _parse_line_fixes(line: str, *fixes: str) -> tuple[str, ...]:
     return tuple(results)
 
 
+# TODO: move to common.text?
 def strip_line(line: str, prefix: str, suffix: str) -> str:
     """
     >>> strip_line("What is love?", "What is ", "?")
@@ -655,6 +743,7 @@ def strip_line(line: str, prefix: str, suffix: str) -> str:
     return single_value(_parse_line_fixes(line, prefix, suffix))
 
 
+# TODO: move to common.iteration?
 # pylint: disable=invalid-name
 def ro(pos: tuple[int, int]) -> tuple[int, int]:
     # reading order -> y matters more than x
@@ -662,6 +751,7 @@ def ro(pos: tuple[int, int]) -> tuple[int, int]:
     return y, x
 
 
+# TODO: move to common.text
 def string_builder(delimiter: str = "\n"):
     """
     >>> @string_builder(" + ")
@@ -685,6 +775,7 @@ def string_builder(delimiter: str = "\n"):
     return decorator
 
 
+# TODO: move to common.text
 def join_english(items: Iterable[Any], conj=" and "):
     """
     >>> join_english([1, 2, 3])
@@ -705,6 +796,7 @@ def join_english(items: Iterable[Any], conj=" and "):
         return ", ".join(str(v) for v in items_list)
 
 
+# TODO: move to common.text
 def join_and(items: Iterable[Any], oxford_comma=False) -> str:
     """
     >>> join_and(["spam", "spam", "spam", "bacon", "eggs"])
@@ -715,6 +807,7 @@ def join_and(items: Iterable[Any], oxford_comma=False) -> str:
     return join_english(items, conj=", and " if oxford_comma else " and ")
 
 
+# TODO: move to common.text
 def join_or(items: Iterable[Any], oxford_comma=False) -> str:
     """
     >>> join_or([1, True, "cheddar"])
@@ -725,6 +818,7 @@ def join_or(items: Iterable[Any], oxford_comma=False) -> str:
     return join_english(items, conj=", or " if oxford_comma else " or ")
 
 
+# TODO: move to common.text ... may be utilized in more places?
 def line_groups(lines: Iterable[str]) -> Iterable[list[str]]:
     r"""
     Separate stream of lines into groups of whitespace-stripped lines.
@@ -754,6 +848,7 @@ def line_groups(lines: Iterable[str]) -> Iterable[list[str]]:
         yield buffer
 
 
+# TODO: move to common.logging
 def eprint(*args, **kwargs):
     print(*args, **kwargs, file=sys.stderr)
 
@@ -799,6 +894,7 @@ def sorted_keys(d: dict[str, Any]) -> dict[str, Any]:
     return dict(sorted((k, v) for k, v in d.items()))
 
 
+# TODO: move to common.text
 def abc_rot(letter: str, diff: int) -> str:
     """
         >>> abc_rot('A', 1)

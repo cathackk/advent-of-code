@@ -1,8 +1,10 @@
 - [x] `.split('\n')` -> `.splitlines()`
-- [x] integrate direnv
+- [x] integrate [direnv](.envrc)
 - [ ] integrate black
 - [ ] integrate mypy
-- [ ] use OCR where applicable
-- [ ] rework 2017
-- [ ] rework and finish 2018
-- [ ] rework 2019
+- [ ] use [OCR](common/ocr.py) where applicable
+- [ ] rework [2017](y2017)
+- [ ] rework and finish [2018](y2018)
+- [ ] rework [2019](y2019)
+- [ ] index in [readme](README.md)
+- [ ] split [utils](common/utils.py)

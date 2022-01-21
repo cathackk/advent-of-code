@@ -13,6 +13,7 @@ from common.utils import parse_line
 from common.utils import relative_path
 from common.utils import sgn
 from common.utils import single_value
+from common.utils import triangular_root
 
 
 def part_1(target: Rect) -> int:
@@ -289,50 +290,6 @@ def triangular(n: int) -> int:
     """
     assert n >= 0
     return (n * (n + 1)) // 2
-
-
-def triangular_root(t: int) -> int:
-    """
-    Given a number `t`, find `n` such that `tr(n) <= t < tr(n+1)`.
-
-    Perfect roots:
-
-        >>> triangular_root(10)
-        4
-        >>> triangular_root(15)
-        5
-        >>> triangular_root(5050)
-        100
-
-    Close roots:
-
-    tr(4) = 10 <= 12 < 15 = tr(4+1)
-
-        >>> triangular_root(12)
-        4
-
-    tr(44) = 990 <= 1000 < 1035 = tr(44+1)
-
-        >>> triangular_root(1000)
-        44
-        >>> triangular_root(990)
-        44
-        >>> triangular_root(1034)
-        44
-        >>> triangular_root(1035)
-        45
-    """
-
-    # (n+1) * (n/2) = t
-    # (n^2 + n) / 2 = t
-    #     4n^2 + 4n = 8t
-    # 4n^2 + 4n + 1 = 8t + 1
-    #    (2n + 1)^2 = 8t + 1
-    #        2n + 1 = sqrt(8t + 1)
-    #            2n = sqrt(8t + 1) - 1
-    #             n = (sqrt(8t + 1) - 1) / 2
-
-    return int((sqrt(8 * t + 1) - 1) / 2)
 
 
 def hitting_velocities(target: Rect) -> Iterable[Vector]:
