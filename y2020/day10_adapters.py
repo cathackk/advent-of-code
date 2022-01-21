@@ -8,8 +8,8 @@ from collections import Counter
 from collections import defaultdict
 from typing import Iterable
 
-from common.iteration import zip1
 from common.file import relative_path
+from common.iteration import zip1
 
 
 def part_1(adapters: list[int]) -> int:

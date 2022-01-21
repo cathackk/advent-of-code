@@ -7,9 +7,9 @@ https://adventofcode.com/2020/day/3
 import math
 from typing import Iterable
 
+from common.file import relative_path
 from common.rect import Rect
 from common.text import join_and
-from common.file import relative_path
 
 
 def part_1(trees: 'TreesMap'):

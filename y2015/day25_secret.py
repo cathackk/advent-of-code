@@ -6,8 +6,8 @@ https://adventofcode.com/2015/day/25
 
 from tabulate import tabulate
 
-from common.text import parse_line
 from common.file import relative_path
+from common.text import parse_line
 
 
 def part_1(row: int, column: int) -> int:

@@ -4,8 +4,8 @@ from itertools import chain
 from typing import Iterable
 
 from common.iteration import minmax
-from common.math import sgn
 from common.iteration import unique
+from common.math import sgn
 
 Pos = tuple[int, int]
 

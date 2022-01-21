@@ -6,13 +6,13 @@ https://adventofcode.com/2021/day/17
 
 from typing import Iterable
 
-from common.rect import Rect
-from common.iteration import last
-from common.text import parse_line
 from common.file import relative_path
-from common.math import sgn
+from common.iteration import last
 from common.iteration import single_value
+from common.math import sgn
 from common.math import triangular_root
+from common.rect import Rect
+from common.text import parse_line
 
 
 def part_1(target: Rect) -> int:

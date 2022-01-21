@@ -4,16 +4,16 @@ Day 20: Jurassic Jigsaw
 https://adventofcode.com/2020/day/20
 """
 
+import itertools
 import math
 import re
-import itertools
 from typing import Iterable
 from typing import Optional
 
-from common.rect import Rect
-from common.text import parse_line
 from common.file import relative_path
 from common.iteration import single_value
+from common.rect import Rect
+from common.text import parse_line
 from common.text import string_builder
 
 

@@ -6,9 +6,9 @@ https://adventofcode.com/2021/day/15
 
 from typing import Iterable
 
+from common.file import relative_path
 from common.graph import shortest_path
 from common.rect import Rect
-from common.file import relative_path
 
 
 def part_1(risk_map: 'RiskMap') -> int:

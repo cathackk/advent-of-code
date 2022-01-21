@@ -7,10 +7,10 @@ https://adventofcode.com/2016/day/11
 from itertools import combinations
 from typing import Iterable
 
+from common.file import relative_path
 from common.graph import shortest_path
 from common.text import abc_rot
 from common.text import parse_line
-from common.file import relative_path
 
 
 def part_1(initial_state: 'State') -> int:

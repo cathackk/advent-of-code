@@ -6,8 +6,8 @@ https://adventofcode.com/2020/day/13
 
 from typing import Iterable
 
-from common.math import modular_inverse
 from common.file import relative_path
+from common.math import modular_inverse
 
 
 def part_1(start: int, bus_ids: Iterable[int]) -> int:

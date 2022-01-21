@@ -6,9 +6,9 @@ from typing import Iterator
 
 from common.heading import Heading
 from common.iteration import exhaust
-from common.logging import ilog
 from common.iteration import last
 from common.iteration import minmax
+from common.logging import ilog
 
 
 class NodeState(Enum):

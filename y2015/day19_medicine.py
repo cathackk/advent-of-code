@@ -8,9 +8,9 @@ from collections import defaultdict
 from typing import Generator
 from typing import Iterable
 
-from common.multibuffer import MultiBuffer
-from common.iteration import exhaust
 from common.file import relative_path
+from common.iteration import exhaust
+from common.multibuffer import MultiBuffer
 
 Rules = dict[str, list[str]]
 

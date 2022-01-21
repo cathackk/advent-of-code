@@ -7,9 +7,9 @@ https://adventofcode.com/2015/day/15
 import math
 from typing import Iterable
 
+from common.file import relative_path
 from common.iteration import maxk
 from common.text import parse_line
-from common.file import relative_path
 
 
 def part_1(ingredients: list['Ingredient']) -> int:

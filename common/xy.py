@@ -1,8 +1,8 @@
 import math
 
-from common.mixin import Orderable
 from common.math import gcd2
 from common.math import sgn
+from common.mixin import Orderable
 
 
 class XY(Orderable):

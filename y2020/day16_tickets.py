@@ -8,10 +8,10 @@ import math
 from typing import Callable
 from typing import Iterable
 
-from common.text import line_groups
-from common.text import parse_line
 from common.file import relative_path
 from common.iteration import single_value
+from common.text import line_groups
+from common.text import parse_line
 
 
 def part_1(rules: 'RuleList', nearby_tickets: list['Ticket']) -> int:

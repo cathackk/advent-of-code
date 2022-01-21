@@ -8,8 +8,8 @@ import re
 from functools import partial
 from typing import Iterable
 
-from common.text import line_groups
 from common.file import relative_path
+from common.text import line_groups
 
 
 def part_1(passports: list['Passport']) -> int:

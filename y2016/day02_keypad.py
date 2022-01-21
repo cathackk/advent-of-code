@@ -6,9 +6,9 @@ https://adventofcode.com/2016/day/2
 
 from typing import Iterable
 
+from common.file import relative_path
 from common.heading import Heading
 from common.rect import Rect
-from common.file import relative_path
 
 
 def part_1(instructions: Iterable['Steps']) -> str:

@@ -9,8 +9,9 @@ from abc import abstractmethod
 from enum import IntEnum
 from math import prod
 from typing import Iterable
-from common.utils import assert_single_not_none
+
 from common.file import relative_path
+from common.utils import assert_single_not_none
 
 
 def part_1(packet: 'Packet') -> int:

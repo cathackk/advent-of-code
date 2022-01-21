@@ -5,10 +5,10 @@ from typing import Iterable
 from typing import NamedTuple
 
 from common.heading import Heading
-from common.rect import Rect
 from common.iteration import exhaust
-from common.utils import ro
 from common.iteration import single_value
+from common.rect import Rect
+from common.utils import ro
 
 heading_chars = {
     Heading.NORTH: '^',

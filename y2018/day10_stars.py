@@ -6,7 +6,6 @@ from common.text import parse_line
 from common.xy import Point
 from common.xy import Vector
 
-
 Star = tuple[Point, Vector]
 
 

@@ -8,8 +8,8 @@ from itertools import islice
 from typing import Iterable
 from typing import Iterator
 
-from common.iteration import last
 from common.file import relative_path
+from common.iteration import last
 
 
 def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:

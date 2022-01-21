@@ -5,8 +5,9 @@ https://adventofcode.com/2020/day/25
 """
 
 from typing import Iterable
-from common.logging import eprint
+
 from common.file import relative_path
+from common.logging import eprint
 
 
 def part_1(card_public_key: int, door_public_key: int) -> int:

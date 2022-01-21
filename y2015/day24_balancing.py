@@ -12,9 +12,9 @@ from typing import Iterator
 from tabulate import tabulate
 from tqdm import tqdm
 
+from common.file import relative_path
 from common.iteration import following
 from common.iteration import mink
-from common.file import relative_path
 
 
 def part_1(weights: list[int]) -> int:

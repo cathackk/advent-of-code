@@ -7,8 +7,8 @@ https://adventofcode.com/2015/day/10
 from itertools import groupby
 from typing import Iterable
 
-from common.iteration import last
 from common.file import relative_path
+from common.iteration import last
 
 
 def part_1(starting_number: str, iterations: int = 40) -> str:

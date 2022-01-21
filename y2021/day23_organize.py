@@ -7,10 +7,10 @@ https://adventofcode.com/2021/day/23
 from itertools import chain
 from typing import Iterable
 
-from common.graph import shortest_path
-from common.text import parse_line
 from common.file import relative_path
+from common.graph import shortest_path
 from common.iteration import zip1
+from common.text import parse_line
 
 
 def part_1(initial_state: 'State') -> int:

@@ -6,8 +6,8 @@ https://adventofcode.com/2020/day/5
 
 from typing import Iterable
 
-from common.iteration import maxk
 from common.file import relative_path
+from common.iteration import maxk
 from common.iteration import single_value
 
 

@@ -13,11 +13,11 @@ from typing import Optional
 
 from tqdm import tqdm
 
-from common.rect import Rect
-from common.text import parse_line
 from common.file import relative_path
 from common.iteration import separate
 from common.iteration import zip1
+from common.rect import Rect
+from common.text import parse_line
 
 
 def part_1(steps: Iterable['Step']) -> int:

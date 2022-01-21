@@ -2,10 +2,10 @@ import string
 from collections import Counter
 from typing import Iterable
 
-from common.rect import Pos
-from common.rect import Rect
 from common.iteration import dgroupby_set
 from common.iteration import single_value
+from common.rect import Pos
+from common.rect import Rect
 
 
 def neighbors(pos: Pos) -> Iterable[Pos]:

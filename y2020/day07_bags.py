@@ -7,9 +7,9 @@ https://adventofcode.com/2020/day/7
 from functools import lru_cache
 from typing import Iterable
 
+from common.file import relative_path
 from common.iteration import dgroupby_pairs_set
 from common.text import parse_line
-from common.file import relative_path
 
 
 def part_1(rule_set: 'RuleSet', my_bag_color='shiny gold') -> int:

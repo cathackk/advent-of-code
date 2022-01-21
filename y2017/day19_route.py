@@ -2,7 +2,6 @@ from typing import Generator
 
 from common.heading import Heading
 
-
 Pos = tuple[int, int]
 Map = dict[Pos, str]
 Route = tuple[Pos, Heading, int, list[str]]

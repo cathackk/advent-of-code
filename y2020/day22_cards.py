@@ -8,8 +8,8 @@ from dataclasses import dataclass
 from typing import Iterable
 
 from common.chain import Link
-from common.text import line_groups
 from common.file import relative_path
+from common.text import line_groups
 
 
 def part_1(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:

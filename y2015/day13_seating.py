@@ -7,11 +7,10 @@ https://adventofcode.com/2015/day/13
 from itertools import permutations
 from typing import Iterable
 
-from common.text import parse_line
 from common.file import relative_path
 from common.iteration import slidingw
 from common.iteration import zip1
-
+from common.text import parse_line
 
 Rule = tuple[tuple[str, str], int]
 Rules = dict[tuple[str, str], int]

@@ -3,7 +3,6 @@ from typing import Iterable
 
 from common.iteration import minmax
 
-
 Pos = tuple[int, int]
 
 

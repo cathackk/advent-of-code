@@ -6,9 +6,9 @@ https://adventofcode.com/2015/day/14
 
 from typing import Iterable
 
+from common.file import relative_path
 from common.iteration import max_all
 from common.text import parse_line
-from common.file import relative_path
 
 
 def part_1(reindeer: list['Reindeer'], race_length_seconds: int = 2503) -> int:

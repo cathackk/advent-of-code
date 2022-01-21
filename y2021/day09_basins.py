@@ -6,8 +6,8 @@ https://adventofcode.com/2021/day/9
 
 from typing import Iterable
 
-from common.rect import Rect
 from common.file import relative_path
+from common.rect import Rect
 from common.utils import ro
 
 

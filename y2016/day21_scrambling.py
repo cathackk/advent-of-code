@@ -6,8 +6,8 @@ https://adventofcode.com/2016/day/21
 
 from typing import Iterable
 
-from common.text import parse_line
 from common.file import relative_path
+from common.text import parse_line
 
 
 def part_1(commands: Iterable['Command'], password: str = 'abcdefgh') -> str:

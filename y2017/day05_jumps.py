@@ -11,8 +11,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.iteration import exhaust
 from common.file import relative_path
+from common.iteration import exhaust
 
 
 def part_1(jumps: list[int]) -> int:

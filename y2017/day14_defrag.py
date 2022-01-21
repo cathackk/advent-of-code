@@ -2,7 +2,6 @@ from typing import Iterable
 
 from y2017.day10_knots import knot_hash
 
-
 Pos = tuple[int, int]
 
 

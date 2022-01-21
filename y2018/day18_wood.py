@@ -3,9 +3,8 @@ from itertools import count
 from typing import Iterable
 from typing import Optional
 
-from common.rect import Rect
 from common.iteration import single_value
-
+from common.rect import Rect
 
 Pos = tuple[int, int]
 Board = dict[Pos, str]

@@ -7,10 +7,10 @@ https://adventofcode.com/2016/day/24
 from itertools import permutations
 from typing import Iterable
 
-from common.rect import Rect
-from common.iteration import mink
 from common.file import relative_path
+from common.iteration import mink
 from common.iteration import slidingw
+from common.rect import Rect
 
 
 def part_1(maze: 'Maze') -> int:

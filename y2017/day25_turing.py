@@ -4,7 +4,6 @@ from typing import NamedTuple
 
 from common.text import strip_line
 
-
 RuleKey = tuple[str, int]
 
 

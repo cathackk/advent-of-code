@@ -8,7 +8,6 @@ from typing import Iterable
 
 from common.file import relative_path
 
-
 Dimension = tuple[int, int, int]
 
 

@@ -11,12 +11,12 @@ from typing import Iterator
 
 from tqdm import tqdm
 
-from common.rect import Rect
+from common.file import relative_path
 from common.iteration import dgroupby_pairs
 from common.iteration import maxk
-from common.text import parse_line
-from common.file import relative_path
 from common.math import sgn
+from common.rect import Rect
+from common.text import parse_line
 from common.xyz import Vector3
 
 

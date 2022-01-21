@@ -6,9 +6,9 @@ https://adventofcode.com/2015/day/17
 
 from typing import Iterable
 
+from common.file import relative_path
 from common.iteration import following
 from common.iteration import min_all
-from common.file import relative_path
 
 
 def part_1(containers: list[int], amount: int = 150) -> int:

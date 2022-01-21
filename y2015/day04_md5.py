@@ -8,8 +8,8 @@ from itertools import count
 
 from tqdm import tqdm
 
-from common.md5 import md5
 from common.file import relative_path
+from common.md5 import md5
 
 
 def part_1(key: str) -> int:

@@ -7,10 +7,9 @@ https://adventofcode.com/2015/day/9
 from itertools import permutations
 from typing import Iterable
 
-from common.text import parse_line
 from common.file import relative_path
 from common.iteration import zip1
-
+from common.text import parse_line
 
 Distances = dict[tuple[str, str], int]
 

@@ -6,11 +6,11 @@ https://adventofcode.com/2016/day/22
 
 from typing import Iterable
 
+from common.file import relative_path
 from common.graph import shortest_path
+from common.iteration import single_value
 from common.rect import Rect
 from common.text import parse_line
-from common.file import relative_path
-from common.iteration import single_value
 
 
 def part_1(grid: 'Grid') -> int:
