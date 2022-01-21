@@ -7,7 +7,6 @@ https://adventofcode.com/2020/day/25
 from typing import Iterable
 
 from common.file import relative_path
-from common.logging import eprint
 
 
 def part_1(card_public_key: int, door_public_key: int) -> int:
@@ -85,9 +84,7 @@ def part_1(card_public_key: int, door_public_key: int) -> int:
     """
 
     card_loop_size = crack_loop_size(public_key=card_public_key)
-    eprint(f"card loop size: {card_loop_size}")
     door_loop_size = crack_loop_size(public_key=door_public_key)
-    eprint(f"door loop size: {door_loop_size}")
     encryption_key_1 = transform(card_public_key, door_loop_size)
     encryption_key_2 = transform(door_public_key, card_loop_size)
     assert encryption_key_1 == encryption_key_2
