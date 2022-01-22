@@ -247,7 +247,7 @@ class Cuboid:
     def volume(self) -> int:
         return math.prod(self.shape)
 
-    def __iter__(self) -> Iterable[Pos3D]:
+    def __iter__(self) -> Iterator[Pos3D]:
         return (
             (x, y, z)
             for x in self.range_x
@@ -438,7 +438,7 @@ class Set3D:
     """
 
     def __init__(self, cuboids: Iterable[Cuboid] = ()):
-        self.cuboids = []  # is always kept disjunct
+        self.cuboids: list[Cuboid] = []  # is always kept disjunct
         self.update(cuboids)
 
     def __repr__(self) -> str:
@@ -539,7 +539,7 @@ def draw(cuboids: Iterable[Cuboid], axis_flat: str = 'z') -> None:
         for h in cuboid.get_range(axis_hor)
         for v in cuboid.get_range(axis_vert)
     )
-    total_depths = Counter()
+    total_depths: Counter[tuple[int, int]] = Counter()
     for h_v, depth in depths:
         total_depths[h_v] += depth
 

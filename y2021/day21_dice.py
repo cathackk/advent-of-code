@@ -11,6 +11,7 @@ from typing import Iterable
 
 from common.file import relative_path
 from common.text import parse_line
+from common.utils import some
 
 
 def part_1(player_1_start: int, player_2_start: int) -> int:
@@ -363,9 +364,9 @@ def play_quantum(
         universe_counts = new_universe_counts
 
     # evaluation
-    wins_count = Counter()
+    wins_count: Counter[int] = Counter()
     for universe, quantity in universe_counts.items():
-        wins_count[universe.winner] += quantity
+        wins_count[some(universe.winner)] += quantity
 
     assert len(wins_count) == 2
 

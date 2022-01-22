@@ -10,6 +10,7 @@ from typing import Iterator
 
 from common.file import relative_path
 from common.iteration import last
+from common.utils import some
 
 
 def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:
@@ -130,7 +131,7 @@ def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:
         1924
     """
 
-    first_winning_board = boards.mark(*numbers_drawn)
+    first_winning_board = some(boards.mark(*numbers_drawn))
     result = first_winning_board.winning_score()
 
     print(f"part 1: first winning board has score {result}")
@@ -142,7 +143,7 @@ def part_2(numbers_drawn: list[int], boards: 'Boards') -> int:
     Instructions for part 2.
     """
 
-    last_winning_board = boards.mark(*numbers_drawn, stop_at_first_win=False)
+    last_winning_board = some(boards.mark(*numbers_drawn, stop_at_first_win=False))
     result = last_winning_board.winning_score()
 
     print(f"part 2: last winning board has score {result}")
@@ -159,7 +160,7 @@ class Board:
         assert len(self.numbers) == BOARD_SIZE
         assert len(set(self.numbers)) == BOARD_SIZE  # numbers are unique
         self.marked_numbers: set[int] = set()
-        self.winning_number = None
+        self.winning_number: int | None = None
 
     def row(self, row_index: int) -> list[int]:
         assert 0 <= row_index < BOARD_HEIGHT
@@ -167,11 +168,8 @@ class Board:
         end = start + BOARD_WIDTH
         return self.numbers[start:end]
 
-    def row_with_number(self, number: int) -> list[int] | None:
-        try:
-            return self.row(self.numbers.index(number) // BOARD_WIDTH)
-        except ValueError:
-            return None
+    def row_with_number(self, number: int) -> list[int]:
+        return self.row(self.numbers.index(number) // BOARD_WIDTH)
 
     def rows(self) -> Iterable[list[int]]:
         return (self.row(rown) for rown in range(BOARD_HEIGHT))
@@ -180,11 +178,8 @@ class Board:
         assert 0 <= column_index < BOARD_WIDTH
         return self.numbers[column_index::BOARD_WIDTH]
 
-    def column_with_number(self, number: int) -> list[int] | None:
-        try:
-            return self.column(self.numbers.index(number) % BOARD_WIDTH)
-        except ValueError:
-            return None
+    def column_with_number(self, number: int) -> list[int]:
+        return self.column(self.numbers.index(number) % BOARD_WIDTH)
 
     def columns(self) -> Iterable[list[int]]:
         return (self.column(coln) for coln in range(BOARD_WIDTH))
@@ -219,7 +214,7 @@ class Board:
         return self.winning_number is not None
 
     def winning_score(self) -> int:
-        return sum(self.unmarked_numbers()) * self.winning_number
+        return sum(self.unmarked_numbers()) * some(self.winning_number)
 
     def reset(self) -> None:
         self.marked_numbers.clear()
@@ -319,5 +314,5 @@ def game_from_lines(lines: Iterable[str]) -> Game:
 if __name__ == '__main__':
     drawn_nums_, boards_ = game_from_file('data/04-input.txt')
     part_1(drawn_nums_, boards_)
-    boards_.reset()  # TODO: I don't like resetting
+    boards_.reset()  # TODO: I don't like resetting - rework with immutable classes
     part_2(drawn_nums_, boards_)

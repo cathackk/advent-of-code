@@ -462,6 +462,9 @@ def run(initial_map: Map, steps_limit: int = None, log: bool | Iterable[int] = F
         if steps_limit is not None and step >= steps_limit:
             break
 
+    # unreachable
+    assert False
+
 
 if __name__ == '__main__':
     initial_map_ = Map.from_file('data/25-input.txt')

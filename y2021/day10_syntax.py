@@ -18,7 +18,7 @@ def part_1(lines: Iterable[str]) -> int:
     separated by any delimiter; if one chunk stops, the next chunk (if any) can immediately start.
     Every chunk must **open** and **close** with one of four legal pairs of matching characters:
 
-        >>> CHUNK_PAIRS
+        >>> [left + right for left, right in CHUNK_PAIRS]
         ['()', '[]', '{}', '<>']
 
     So, `()` is a legal chunk that contains no other chunks, as is `[]`:
@@ -175,7 +175,7 @@ def part_2(lines: Iterable[str]) -> int:
     return result
 
 
-CHUNK_PAIRS = ['()', '[]', '{}', '<>']
+CHUNK_PAIRS = [('(', ')'), ('[', ']'), ('{', '}'), ('<', '>')]
 OPENING, CLOSING = zip(*CHUNK_PAIRS)
 O2C = dict(CHUNK_PAIRS)
 

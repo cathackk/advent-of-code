@@ -363,8 +363,10 @@ class Packet(ABC):
     def from_bits(cls, bits: BitStream) -> 'Packet':
         version = bits.pop(3)
         p_type = PacketType(bits.pop(3))
-        packet_cls = (ValuePacket if p_type is PacketType.VALUE else OperatorPacket)
-        return packet_cls.impl_from_bits(version, p_type, bits)
+        if p_type is PacketType.VALUE:
+            return ValuePacket.impl_from_bits(version, p_type, bits)
+        else:
+            return OperatorPacket.impl_from_bits(version, p_type, bits)
 
     def bits(self) -> BitStream:
         bits = BitStream()
@@ -543,6 +545,9 @@ class OperatorPacket(Packet):
             case _:
                 raise ValueError(f'unsupported packet type {self.p_type.name}')
 
+        # TODO: remove when mypy realizes this is unreachable
+        assert False
+
     def expression(self, with_result: bool = True) -> str:
         expr = self._expression_base()
         if with_result:
@@ -572,6 +577,9 @@ class OperatorPacket(Packet):
                 return '(' + a.expression(False) + ' == ' + b.expression(False) + ')'
             case _:
                 raise ValueError(f'unsupported packet type {self.p_type.name}')
+
+        # TODO: remove when mypy realizes this is unreachable
+        assert False
 
 
 def complement(value: int, n: int) -> int:

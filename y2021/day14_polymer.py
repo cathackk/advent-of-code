@@ -164,7 +164,7 @@ def part_2(template: str, rules: 'Rules', steps: int = 40) -> int:
     return result
 
 
-Rules = dict[[str, str], str]
+Rules = dict[tuple[str, str], str]
 
 
 def grow(polymer: str, rules: Rules, steps: int, log: bool = False) -> str:
@@ -186,7 +186,7 @@ def grow(polymer: str, rules: Rules, steps: int, log: bool = False) -> str:
     return polymer
 
 
-def grow_optimized(polymer: str, rules: Rules, steps: int) -> Counter[str, int]:
+def grow_optimized(polymer: str, rules: Rules, steps: int) -> Counter[str]:
     assert len(polymer) >= 2
 
     # instead of keeping track of the polymer itself, we'll watch only counts of its pairs
@@ -213,15 +213,15 @@ def grow_optimized(polymer: str, rules: Rules, steps: int) -> Counter[str, int]:
 T = TypeVar('T')
 
 
-def _total_counts(items: Iterable[tuple[T, int]]) -> Counter[T, int]:
+def _total_counts(items: Iterable[tuple[T, int]]) -> Counter[T]:
     # cannot use Counter(dict(items)) in case of reduplicated keys
-    counter = Counter()
+    counter: Counter[T] = Counter()
     for key, count in items:
         counter[key] += count
     return counter
 
 
-Input = tuple[str, dict[[str, str], str]]
+Input = tuple[str, dict[tuple[str, str], str]]
 
 
 def input_from_text(text: str) -> Input:
@@ -234,7 +234,8 @@ def input_from_file(fn: str) -> Input:
 
 def input_from_lines(lines: Iterable[str]) -> Input:
     def parse_rule(line: str) -> tuple[tuple[str, str], str]:
-        (input_1, input_2), output = parse_line(line, '$ -> $')
+        inputs, output = parse_line(line, '$ -> $')
+        input_1, input_2 = tuple(inputs)
         return (input_1, input_2), output
 
     lines_it = (sline for line in lines if (sline := line.strip()))

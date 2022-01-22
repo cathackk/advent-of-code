@@ -11,6 +11,7 @@ from common.file import relative_path
 from common.graph import shortest_path
 from common.iteration import zip1
 from common.text import parse_line
+from common.utils import some
 
 
 def part_1(initial_state: 'State') -> int:
@@ -654,7 +655,7 @@ class State:
             if pos == from_:
                 return old_room[:-1]
             elif pos == to:
-                return old_room + pawn_moved
+                return old_room + some(pawn_moved)
             else:
                 return old_room
 
@@ -663,7 +664,7 @@ class State:
             if pos == from_:
                 return '.'
             elif pos == to:
-                return pawn_moved
+                return some(pawn_moved)
             else:
                 return old_hw
 
@@ -751,7 +752,8 @@ def _generate_paths() -> dict[tuple[int, int], list[int | str]]:
     # "T0".."T3" = intermediate spaces that can be only traversed
 
     edges: set[Edge] = {(r, f'T{r}') for r in range(4)}
-    edges.update((a, b) for a, b in zip1([4, 5, 'T0', 6, 'T1', 7, 'T2', 8, 'T3', 9, 10]))
+    corridor: list[Node] = [4, 5, 'T0', 6, 'T1', 7, 'T2', 8, 'T3', 9, 10]
+    edges.update((a, b) for a, b in zip1(corridor))
     nodes = sorted(set(node for n1n2 in edges for node in n1n2), key=str)
     neighbors: dict[Node, list[Node]] = {
         node: [

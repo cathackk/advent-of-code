@@ -231,9 +231,9 @@ class StateOptimized:
         return type(self)(new_counts)
 
 
-def simulate(state: Iterable[int], days: int, log: bool = False) -> State:
-    state_cls = State if days < 100 else StateOptimized
-    state = state_cls(state)
+def simulate(state_numbers: Iterable[int], days: int, log: bool = False) -> State | StateOptimized:
+    state_cls: type[State | StateOptimized] = State if days < 100 else StateOptimized
+    state = state_cls(state_numbers)
 
     days_width = len(str(days))
 

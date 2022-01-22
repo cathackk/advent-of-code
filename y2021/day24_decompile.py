@@ -168,16 +168,19 @@ class Op(Enum):
 
 
 class Instr:
-    def __init__(self, op: Op, a: str, b: str | int | None):
+    def __init__(self, op: Op, a: str, b: Any):
         self.op = op
         self.a = a
-        if b is not None:
-            try:
-                self.b = int(b)
-            except ValueError:
-                self.b = str(b)
-        else:
-            self.b = None
+        self.b = Instr._parse_second_param(b)
+
+    @staticmethod
+    def _parse_second_param(val: Any) -> str | int | None:
+        if val is None:
+            return None
+        try:
+            return int(val)
+        except ValueError:
+            return str(val)
 
     def __repr__(self) -> str:
         return f'{type(self).__name__}({self.op!r}, {self.a!r}, {self.b!r})'
@@ -354,16 +357,19 @@ def extract_monad_variables(program: Program) -> Iterable[tuple[int, int, int]]:
         assert instr_a.op == Op.DIV
         assert instr_a.a == 'z'
         value_a = instr_a.b
+        assert isinstance(value_a, int)
         assert value_a in (1, 26)
         # add x B
         assert instr_b.op == Op.ADD
         assert instr_b.a == 'x'
         value_b = instr_b.b
+        assert isinstance(value_b, int)
         assert (value_a == 26) == (value_b < 9)
         # add y C
         assert instr_c.op == Op.ADD
         assert instr_c.a == 'y'
         value_c = instr_c.b
+        assert isinstance(value_c, int)
 
         yield value_a, value_b, value_c
 

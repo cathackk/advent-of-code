@@ -390,7 +390,7 @@ class Number:
 
     def __str__(self) -> str:
         def chars() -> Iterable[str]:
-            states = []
+            states: list[str] = []
             for value, level in self.value_levels:
                 # opening brackets
                 while level > len(states):
@@ -518,6 +518,9 @@ class Number:
                 stack.append(('L', 0))
             if (result := add_to_stack(value)) is not None:
                 return result
+
+        else:
+            raise ValueError(f"failed to compute magnitude of {self}")
 
 
 class Explain:

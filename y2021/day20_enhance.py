@@ -4,7 +4,6 @@ Day 20: Trench Map
 https://adventofcode.com/2021/day/20
 """
 
-from collections import defaultdict
 from typing import Iterable
 
 from tqdm import tqdm
@@ -282,37 +281,6 @@ class Algorithm:
             image = type(image)(
                 pixels=((pos, new_lit(image, pos)) for pos, lit in image.pixel_rows(context=1)),
                 others=self[511 if image.inverted else 0]
-            )
-
-        return image
-
-    def enhance_wrong(self, image: Image, runs: int = 1) -> Image:
-        assert runs >= 0
-
-        neighbors = {
-            (x - 1, y - 1): 1 << (x + 3 * y)
-            for x in range(3)
-            for y in range(3)
-        }
-
-        for _ in range(runs):
-
-            totals = defaultdict(int)
-            for (x, y), lit in image.pixel_rows():
-                if not lit:
-                    continue
-                for (dx, dy), multiplier in neighbors.items():
-                    totals[(x + dx, y + dy)] += multiplier
-
-            others = self[511 if image.others else 0]
-
-            image = type(image)(
-                pixels=(
-                    (pos, not others)
-                    for pos, total in totals.items()
-                    if self[total] != others
-                ),
-                others=others
             )
 
         return image
