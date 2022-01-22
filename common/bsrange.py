@@ -6,10 +6,10 @@ class BSRange:
         self._lower = lower
         self._upper = upper
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}({self.lower}, {self.upper})"
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.is_bounded():
             return f"[{self.lower} .. {self.upper}]"
         elif self.has_lower():
@@ -28,8 +28,8 @@ class BSRange:
 
     @lower.setter
     def lower(self, lower: int):
-        if self.has_upper():
-            assert lower < self.upper
+        if self._upper is not None:
+            assert lower < self._upper
         self._lower = lower
 
     def has_upper(self) -> bool:
@@ -41,12 +41,16 @@ class BSRange:
 
     @upper.setter
     def upper(self, upper: int):
-        if self.has_lower():
-            assert self.lower < upper
+        if self._lower is not None:
+            assert self._lower < upper
         self._upper = upper
 
     def has_single_value(self) -> bool:
-        return self.has_lower() and self.has_upper() and self.lower == self.upper - 1
+        return (
+            self._lower is not None and
+            self._upper is not None and
+            self._lower == self._upper - 1
+        )
 
     @property
     def single_value(self) -> Optional[int]:
@@ -57,4 +61,7 @@ class BSRange:
 
     @property
     def mid(self) -> Optional[int]:
-        return (self.lower + self.upper) // 2 if self.is_bounded() else None
+        if self._lower is not None and self._upper is not None:
+            return (self._lower + self._upper) // 2
+        else:
+            return None

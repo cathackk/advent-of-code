@@ -7,6 +7,8 @@ from typing import TypeVar
 
 from tqdm import tqdm
 
+from common.utils import some
+
 Node = TypeVar('Node')
 Edge = TypeVar('Edge')
 
@@ -74,9 +76,9 @@ def shortest_path(
     def backtrack(node: Node) -> Iterable[Edge]:
         while node != start:
             path = visited_nodes[node]
-            yield path.edge
-            node = path.prev_node
+            yield some(path.edge)
+            node = some(path.prev_node)
 
     final_cost = visited_nodes[target].total_cost
-    edges = list(backtrack(target))[::-1]
-    return final_cost, edges
+    final_edges = list(backtrack(target))[::-1]
+    return final_cost, final_edges

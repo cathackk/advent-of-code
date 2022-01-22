@@ -6,6 +6,7 @@ from typing import Iterable
 from typing import Sized
 from typing import TypeVar
 
+from common.utils import some
 
 T = TypeVar('T')
 K = TypeVar('K')
@@ -88,7 +89,7 @@ def exhaust(gen: Generator[Any, Any, T]) -> T:
 def dgroupby(
         items: Iterable[T],
         key: Callable[[T], K],
-        value: Callable[[T], V] = lambda t: t
+        value: Callable[[T], V]
 ) -> dict[K, list[V]]:
     d: dict[K, list[V]] = {}
 
@@ -104,7 +105,7 @@ def dgroupby(
 def dgroupby_set(
         items: Iterable[T],
         key: Callable[[T], K],
-        value: Callable[[T], V] = lambda t: t
+        value: Callable[[T], V]
 ) -> dict[K, set[V]]:
     d: dict[K, set[V]] = {}
 
@@ -153,7 +154,8 @@ def separate(values: Iterable[V], predicate: Callable[[V], bool]) -> tuple[list[
         >>> other_animals
         ['monkey', 'ox']
     """
-    matching_values, nonmatching_values = [], []
+    matching_values: list[V] = []
+    nonmatching_values: list[V] = []
 
     for value in values:
         (matching_values if predicate(value) else nonmatching_values).append(value)
@@ -187,7 +189,7 @@ def zip1(items: Iterable[T], wrap: bool = False) -> Iterable[tuple[T, T]]:
         last_item = item
 
     if wrap and yielded_count > 0:
-        yield last_item, first_item
+        yield some(last_item), some(first_item)
 
 
 def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[tuple[T, ...]]:
@@ -260,7 +262,7 @@ def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> tuple[T, T]:
         any_value = True
 
     if any_value:
-        return min_v, max_v
+        return some(min_v), some(max_v)
     else:
         raise ValueError("minmax() arg is an empty sequence")
 
@@ -287,7 +289,7 @@ def maxk(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
         any_value = True
 
     if any_value:
-        return max_v, max_k
+        return some(max_v), some(max_k)
     else:
         raise ValueError("maxk() arg is an empty sequence")
 
@@ -314,7 +316,7 @@ def mink(values: Iterable[T], key: Callable[[T], V]) -> tuple[T, V]:
         any_value = True
 
     if any_value:
-        return min_v, min_k
+        return some(min_v), some(min_k)
     else:
         raise ValueError("mink() arg is an empty sequence")
 
@@ -419,23 +421,6 @@ def following(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     items = list(items)
     for k, item in enumerate(items):
         yield item, items[k+1:]
-
-
-def subsequences(items: T) -> Iterable[T]:
-    """
-        >>> list(subsequences('AB'))
-        ['AB', 'B', 'A', '']
-        >>> list(subsequences([1,2,3]))
-        [[1, 2, 3], [2, 3], [1, 3], [3], [1, 2], [2], [1], []]
-        >>> list(subsequences(tuple(range(2))))
-        [(0, 1), (1,), (0,), ()]
-    """
-    if items:
-        for subseq in subsequences(items[1:]):
-            yield items[:1] + subseq
-            yield subseq
-    else:
-        yield items
 
 
 def powerset(items: Iterable[T]) -> Iterable[tuple[T, ...]]:

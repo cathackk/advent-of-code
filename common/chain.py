@@ -2,6 +2,8 @@ from typing import Any
 from typing import Iterable
 from typing import Optional
 
+from common.utils import some
+
 
 class Link:
     __slots__ = ['value', 'prev_link', 'next_link']
@@ -66,8 +68,13 @@ class Link:
 
     def follow(self, steps: int) -> 'Link':
         link = self
+
         for _ in range(abs(steps)):
-            link = link.next_link if steps > 0 else link.prev_link
+            new_link = link.next_link if steps > 0 else link.prev_link
+            if new_link is None:
+                raise ValueError("reached end of chain")
+            link = new_link
+
         return link
 
     def _sub_repr(self, sublink: Optional['Link']) -> str:
@@ -111,7 +118,7 @@ class Circle:
         return self._current_link.value
 
     def shift(self, steps: int):
-        self._current_link = self._current_link.follow(steps)
+        self._current_link = some(self._current_link.follow(steps))
 
     def insert(self, steps: int, value: Any):
         self.shift(steps)
@@ -121,6 +128,7 @@ class Circle:
     def pop(self, steps: int) -> Any:
         self.shift(steps + 1)
         removed_link = self._current_link.prev_link
+        assert removed_link is not None
         removed_link.disconnect()
         self._length -= 1
         return removed_link.value

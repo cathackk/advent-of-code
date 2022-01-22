@@ -1,8 +1,6 @@
 from typing import Any
 from typing import TypeVar
 
-from common.iteration import single_value
-
 T = TypeVar('T')
 
 
@@ -29,7 +27,7 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
     not_none_count = sum(v is not None for v in kwargs.values())
 
     if not_none_count == 1:
-        return single_value((k, v) for k, v in kwargs.items() if v is not None)
+        return [(k, v) for k, v in kwargs.items() if v is not None][0]
 
     elif not_none_count == 0:
         items_text = ", ".join(f"{k}=None" for k in kwargs)
@@ -38,6 +36,11 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
     else:  # not_none_count > 1
         items_text = ", ".join(f"{k}={v!r}" for k, v in kwargs.items() if v is not None)
         raise AssertionError(f"multiple keys were not None: {items_text}")
+
+
+def some(item: T | None) -> T:
+    assert item is not None
+    return item
 
 
 def sorted_keys(d: dict[str, Any]) -> dict[str, Any]:

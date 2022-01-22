@@ -1,10 +1,13 @@
 - [x] `.split('\n')` -> `.splitlines()`
 - [x] integrate [direnv](.envrc)
-- [ ] integrate black
-- [ ] integrate mypy
-- [ ] use [OCR](common/ocr.py) where applicable
+- [x] index in [readme](README.md)
+- [x] split [utils](common/utils.py)
+- [x] integrate **mypy**
+
+- [ ] include **mypy** release with `match` support
+- [ ] integrate **black**
+- [ ] use [ocr](common/ocr.py) where applicable
 - [ ] rework [2017](y2017)
 - [ ] rework and finish [2018](y2018)
 - [ ] rework [2019](y2019)
-- [x] index in [readme](README.md)
-- [x] split [utils](common/utils.py)
+- [ ] finish [linter integration TODOs](Makefile) for all packages

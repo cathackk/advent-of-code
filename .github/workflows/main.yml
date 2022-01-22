@@ -18,6 +18,8 @@ jobs:
           architecture: 'x64'
       - name: install
         run: make install
+      - name: mypy
+        run: make mypy
       - name: pylint
         run: make pylint
   tests:

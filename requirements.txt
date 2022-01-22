@@ -1,3 +1,5 @@
+# TODO: mypy==0.932 when released
+git+git://github.com/python/mypy.git@0cec4f7#egg=mypy
 pylint==2.12.2
 pytest==6.2.5
 PyYAML==6.0

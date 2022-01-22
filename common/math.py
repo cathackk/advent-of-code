@@ -4,20 +4,29 @@ from math import sqrt
 def gcd2(a: int, b: int) -> int:
     if a == 0 or b == 0:
         raise ZeroDivisionError("integer division or modulo by zero")
+
     a, b = abs(a), abs(b)
     if a == b:
         return a
+
     if a < b:
         a, b = b, a
+
     while a % b > 0:
         a, b = b, a % b
+
     return b
 
 
 def gcd(*xs: int) -> int | None:
     result = None
+
     for x in xs:
-        result = gcd2(result, x) if result is not None else x
+        if result is None:
+            result = x
+        else:
+            result = gcd2(result, x)
+
     return result
 
 
@@ -27,8 +36,13 @@ def lcm2(a: int, b: int) -> int:
 
 def lcm(*xs: int) -> int | None:
     result = None
+
     for x in xs:
-        result = lcm2(result, x) if result is not None else x
+        if result is None:
+            result = x
+        else:
+            result = lcm2(result, x)
+
     return result
 
 

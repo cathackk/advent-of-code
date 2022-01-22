@@ -130,15 +130,15 @@ def from_pos(pos: Pos) -> int:
 
 
 def drawn(values: Iterable) -> str:
-    values = [str(value) for value in values]
-    last_layer = layer_index(len(values) - 1)
-    max_width = max(len(value) for value in values)
+    values_str = [str(value) for value in values]
+    last_layer = layer_index(len(values_str) - 1)
+    max_width = max(len(value) for value in values_str)
     empty = " " * (max_width + 2)
 
     def num_f(pos) -> str:
         index = from_pos(pos)
-        if index < len(values):
-            value = values[index].rjust(max_width)
+        if index < len(values_str):
+            value = values_str[index].rjust(max_width)
             return f"[{value}]" if index == 0 else f" {value} "
         else:
             return empty
