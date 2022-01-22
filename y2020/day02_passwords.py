@@ -157,7 +157,7 @@ class PasswordRule:
 
 
 def data_from_file(fn: str) -> list[tuple[PasswordRule, str]]:
-    return list(data_from_lines(relative_path(__file__, fn)))
+    return list(data_from_lines(open(relative_path(__file__, fn))))
 
 
 def data_from_text(text: str) -> list[tuple[PasswordRule, str]]:

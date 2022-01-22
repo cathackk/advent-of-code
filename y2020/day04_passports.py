@@ -219,7 +219,7 @@ Passport = dict[str, str]
 
 
 def passports_from_file(fn: str) -> list[Passport]:
-    return list(passports_from_lines(relative_path(__file__, fn)))
+    return list(passports_from_lines(open(relative_path(__file__, fn))))
 
 
 def passports_from_text(text: str) -> list[Passport]:

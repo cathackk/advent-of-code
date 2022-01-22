@@ -309,7 +309,7 @@ class Expr:
 
     @classmethod
     def load_from_file(cls, fn: str) -> list['Expr']:
-        return list(cls.load_from_lines(relative_path(__file__, fn)))
+        return list(cls.load_from_lines(open(relative_path(__file__, fn))))
 
     @classmethod
     def load_from_text(cls, text: str) -> list['Expr']:

@@ -378,7 +378,7 @@ class SeatsMap:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(relative_path(__file__, fn))
+        return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
     def from_text(cls, text: str):

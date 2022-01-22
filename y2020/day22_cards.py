@@ -522,7 +522,7 @@ Decks = tuple[Deck, Deck]
 
 
 def decks_from_file(fn: str) -> Decks:
-    return decks_from_lines(relative_path(__file__, fn))
+    return decks_from_lines(open(relative_path(__file__, fn)))
 
 
 def decks_from_text(text: str) -> Decks:

@@ -265,7 +265,7 @@ class Walk:
 
     @classmethod
     def parse_file(cls, fn: str) -> list['Walk']:
-        return list(cls.parse_lines(relative_path(__file__, fn)))
+        return list(cls.parse_lines(open(relative_path(__file__, fn))))
 
     @classmethod
     def parse_text(cls, text: str) -> list['Walk']:

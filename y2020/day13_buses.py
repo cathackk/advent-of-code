@@ -206,7 +206,7 @@ def data_from_text(text: str) -> tuple[int, dict[int, int]]:
 
 
 def data_from_file(fn: str) -> tuple[int, dict[int, int]]:
-    return data_from_lines(relative_path(__file__, fn))
+    return data_from_lines(open(relative_path(__file__, fn)))
 
 
 def data_from_lines(lines: Iterable[str]) -> tuple[int, dict[int, int]]:

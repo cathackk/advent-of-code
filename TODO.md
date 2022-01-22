@@ -11,3 +11,4 @@
 - [ ] rework and finish [2018](y2018)
 - [ ] rework [2019](y2019)
 - [ ] finish [linter integration TODOs](Makefile) for all packages
+- [ ] `make run` to run all years all days

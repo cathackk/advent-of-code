@@ -561,7 +561,7 @@ def rules_from_lines(lines: Iterable[str]) -> dict[int, Rule]:
 
 
 def input_from_file(fn: str) -> tuple[dict[int, Rule], list[str]]:
-    return input_from_lines(relative_path(__file__, fn))
+    return input_from_lines(open(relative_path(__file__, fn)))
 
 
 def input_from_text(text: str) -> tuple[dict[int, Rule], list[str]]:

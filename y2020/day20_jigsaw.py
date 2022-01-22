@@ -409,7 +409,7 @@ class Tile:
 
 
 def tiles_from_file(fn: str) -> list[Tile]:
-    return list(tiles_from_lines(relative_path(__file__, fn)))
+    return list(tiles_from_lines(open(relative_path(__file__, fn))))
 
 
 def tiles_from_text(text: str) -> list[Tile]:

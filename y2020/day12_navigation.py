@@ -173,7 +173,7 @@ def instructions_from_text(text: str) -> list[Instruction]:
 
 
 def instructions_from_file(fn: str) -> list[Instruction]:
-    return list(instructions_from_lines(relative_path(__file__, fn)))
+    return list(instructions_from_lines(open(relative_path(__file__, fn))))
 
 
 def instructions_from_lines(lines: Iterable[str]) -> Iterable[Instruction]:

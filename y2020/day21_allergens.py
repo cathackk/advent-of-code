@@ -181,7 +181,7 @@ def match_allergens(foods: list[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
 
 
 def foods_from_file(fn: str) -> list[Food]:
-    return list(foods_from_lines(relative_path(__file__, fn)))
+    return list(foods_from_lines(open(relative_path(__file__, fn))))
 
 
 def foods_from_text(text: str) -> list[Food]:

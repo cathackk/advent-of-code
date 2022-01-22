@@ -90,7 +90,7 @@ def find_summation(numbers: list[int], *, total: int, count: int) -> tuple[int, 
 
 
 def values_from_file(fn: str) -> list[int]:
-    return list(values_from_lines(relative_path(__file__, fn)))
+    return list(values_from_lines(open(relative_path(__file__, fn))))
 
 
 def values_from_text(text: str) -> list[int]:

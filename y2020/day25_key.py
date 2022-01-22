@@ -116,7 +116,7 @@ def crack_loop_size(
 
 
 def public_keys_from_file(fn: str) -> tuple[int, int]:
-    return public_keys_from_lines(relative_path(__file__, fn))
+    return public_keys_from_lines(open(relative_path(__file__, fn)))
 
 
 def public_keys_from_lines(lines: Iterable[str]) -> tuple[int, int]:
