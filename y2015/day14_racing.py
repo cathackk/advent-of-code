@@ -8,6 +8,7 @@ from typing import Iterable
 
 from common.file import relative_path
 from common.iteration import max_all
+from common.iteration import maxk
 from common.text import parse_line
 
 
@@ -195,7 +196,8 @@ def race(reindeer: list[Reindeer], seconds: int) -> dict[str, int]:
 
 
 def race_winner(reindeer: list[Reindeer], seconds: int) -> tuple[str, int]:
-    return tuple(max(race(reindeer, seconds).items(), key=lambda p: p[1]))
+    race_results = race(reindeer, seconds)
+    return maxk(race_results, key=lambda r: race_results[r])
 
 
 def points_race(reindeer: list[Reindeer], seconds: int) -> dict[str, int]:
@@ -210,7 +212,8 @@ def points_race(reindeer: list[Reindeer], seconds: int) -> dict[str, int]:
 
 
 def points_race_winner(reindeer: list[Reindeer], seconds: int) -> tuple[str, int]:
-    return tuple(max(points_race(reindeer, seconds).items(), key=lambda p: p[1]))
+    race_results = points_race(reindeer, seconds)
+    return maxk(race_results, key=lambda r: race_results[r])
 
 
 def reindeer_from_text(text: str) -> list[Reindeer]:

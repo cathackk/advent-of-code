@@ -228,15 +228,15 @@ class Shop:
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Shop':
-        lines = (line.strip() for line in lines)
+        lines_it = (line.strip() for line in lines)
 
         def category_from_lines(cat_name: str) -> Iterable[Item]:
-            header = next(lines, None)
+            header = next(lines_it, None)
             if header is None:
                 raise ValueError(f"no more lines for {cat_name}")
 
             assert header.startswith(cat_name + ":")
-            for line in lines:
+            for line in lines_it:
                 if not line:
                     return
                 yield Item.from_line(line)

@@ -259,7 +259,7 @@ class Grid:
     def from_lines(cls, lines: Iterable[str]) -> 'Grid':
         width = None
         height = 0
-        lights_on = []
+        lights_on: list[Pos] = []
 
         for y, line in enumerate(lines):
             line = line.strip()
@@ -269,6 +269,9 @@ class Grid:
                 assert width == len(line)
             height += 1
             lights_on.extend((x, y) for x, c in enumerate(line) if c == '#')
+
+        if width is None:
+            raise ValueError("no lines")
 
         return cls(width=width, height=height, lights_on=lights_on)
 

@@ -3,7 +3,7 @@ Advent of Code 2015
 Day 23: Opening the Turing Lock
 https://adventofcode.com/2015/day/23
 """
-
+from typing import Final
 from typing import Iterable
 
 from common.file import relative_path
@@ -88,7 +88,7 @@ class Command:
         self.reg = reg
         self.offset = offset
 
-    __match_args__ = ('op', 'reg', 'offset')
+    __match_args__: Final[tuple] = ('op', 'reg', 'offset')
 
     def __repr__(self) -> str:
         reg_repr = f', reg={self.reg!r}' if self.reg is not None else ''
@@ -122,6 +122,8 @@ class Command:
             case _:
                 raise ValueError(line)
 
+        # TODO: remove when mypy realizes this is not reachable
+        raise ValueError("mypy")
 
 Tape = list[Command]
 

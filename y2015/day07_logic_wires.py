@@ -192,6 +192,7 @@ class Connection:
         elif self.command == Command.NOT:
             return val1 ^ 0xffff
 
+        assert self.arg2 is not None
         val2 = int(self.arg2) if self.arg2.isnumeric() else values[self.arg2]
         if self.command == Command.AND:
             return val1 & val2

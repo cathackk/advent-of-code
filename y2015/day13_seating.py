@@ -158,12 +158,12 @@ def rulelist_from_lines(lines: Iterable[str]) -> Iterable[Rule]:
 def rule_from_str(line: str) -> Rule:
     # 'Alice would gain 54 happiness units by sitting next to Bob.'
     # 'Alice would lose 79 happiness units by sitting next to Carol.'
-    name1, verb, amount, name2 = parse_line(
+    name1, verb, amount_str, name2 = parse_line(
         line,
         pattern="$ would $ $ happiness units by sitting next to $."
     )
 
-    amount = int(amount)
+    amount = int(amount_str)
     assert verb in ("lose", "gain")
     if verb == "lose":
         amount = -amount

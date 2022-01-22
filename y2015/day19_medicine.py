@@ -149,11 +149,16 @@ def traceback(start: str, rules: Rules, target: str) -> Generator[tuple[str, int
 
     rrules = reversed_rules(rules)
 
-    buffer = MultiBuffer(scoring=lambda ms: len(ms[0]), items=[(target, 0)])
+    def scoring(molecule_steps: tuple[str, int]) -> int:
+        molecule, _ = molecule_steps
+        return len(molecule)
+
+    buffer = MultiBuffer(scoring, items=[(target, 0)])
     known: dict[str, int] = {target: 0}
 
     while buffer:
-        molecule, steps = buffer.pop_min()
+        molecule_steps: tuple[str, int] = buffer.pop_min()
+        molecule, steps = molecule_steps
 
         for rfrom, rtos in rrules.items():
             length = len(rfrom)
@@ -164,10 +169,12 @@ def traceback(start: str, rules: Rules, target: str) -> Generator[tuple[str, int
                     molecule_after = molecule[:k] + rto + molecule[k + length:]
                     if molecule_after not in known:
                         known[molecule_after] = steps + 1
-                        buffer.append((molecule_after, steps+1))
+                        buffer.append((molecule_after, steps + 1))
                         yield molecule_after, steps + 1
                     if molecule_after == start:
                         return steps + 1
+
+    raise ValueError(f"molecule unsynthesizable: {start!r} -> {target!r}")
 
 
 def reversed_rules(rules: Rules) -> Rules:

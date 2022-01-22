@@ -125,7 +125,7 @@ def index_from_pos(row: int, column: int) -> int:
 
 
 def print_page(rows: int, columns: int) -> None:
-    header = list(range(1, columns + 1))
+    header = [str(n) for n in range(1, columns + 1)]
     data = (
         [row] + [code_from_pos(row, col) for col in range(1, columns + 1)]
         for row in range(1, rows + 1)

@@ -2,6 +2,7 @@ import itertools
 import math
 from itertools import chain
 from typing import Iterable
+from typing import Iterator
 
 from common.iteration import minmax
 from common.iteration import unique
@@ -115,7 +116,7 @@ class Rect:
             for y in range(self.bottom_y - 1, self.top_y, -1):
                 yield self.left_x, y
 
-    def __iter__(self) -> Iterable[Pos]:
+    def __iter__(self) -> Iterator[Pos]:
         return ((x, y) for y in self.range_y() for x in self.range_x())
 
     def __hash__(self) -> int:

@@ -145,16 +145,16 @@ class Ingredient:
 
 
 def recipe_score(amounts: Iterable[tuple[Ingredient, int]], required_calories: int = None) -> int:
-    amounts = dict(amounts)
+    amounts_dict = dict(amounts)
     score = math.prod(
-        max(sum(getattr(i, attr) * amount for i, amount in amounts.items()), 0)
+        max(sum(getattr(i, attr) * amount for i, amount in amounts_dict.items()), 0)
         for attr in ['capacity', 'durability', 'flavor', 'texture']
     )
 
     if required_calories is None:
         return score
 
-    calories = sum(i.calories * amount for i, amount in amounts.items())
+    calories = sum(i.calories * amount for i, amount in amounts_dict.items())
     return score if calories == required_calories else -1
 
 

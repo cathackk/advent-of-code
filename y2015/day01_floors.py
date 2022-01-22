@@ -8,6 +8,7 @@ from typing import Iterable
 
 from common.file import relative_path
 from common.iteration import last
+from common.utils import some
 
 
 def part_1(instructions: str) -> int:
@@ -71,7 +72,8 @@ def part_2(instructions: str) -> int:
 
 
 def floor_number(line: str) -> int:
-    return last(floors_from_str(line))
+    assert len(line) > 0
+    return some(last(floors_from_str(line)))
 
 
 def basement_at(line: str) -> int:

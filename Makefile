@@ -4,8 +4,8 @@ install:
 checks: mypy pylint doctests
 
 mypy:
-	# TODO: y2015 y2016 y2017 y2018 y2019 y2020 y2021
-	mypy -p common
+	# TODO: y2016 y2017 y2018 y2019 y2020 y2021
+	mypy -p common -p y2015
 
 pylint:
 	# TODO: y2017 y2018 y2019
