@@ -407,10 +407,13 @@ class RuleGroups(Rule):
     @staticmethod
     def _match_single_group(text: str, group: list[Rule]) -> str | None:
         remainder = text
+
         for rule in group:
-            remainder = rule.match_partial(remainder)
-            if remainder is None:
+            new_remainder = rule.match_partial(remainder)
+            if new_remainder is None:
                 return None
+            remainder = new_remainder
+
         return remainder
 
 
@@ -522,8 +525,8 @@ def rules_from_lines(lines: Iterable[str]) -> dict[int, Rule]:
     for line in lines:
         if '"' in line:
             # 1: "a"
-            number, text = parse_line(line.strip(), '$: "$"')
-            rule = RuleText(int(number), text)
+            number_str, text = parse_line(line.strip(), '$: "$"')
+            rule = RuleText(int(number_str), text)
             rules[rule.number] = rule
 
         else:
@@ -531,8 +534,8 @@ def rules_from_lines(lines: Iterable[str]) -> dict[int, Rule]:
             # 6: 12
             # 8: 14 | 15
             # 10: 2 4 | 8 16
-            number, rdef = parse_line(line.strip(), '$: $')
-            rule_refs[int(number)] = [
+            number_str, rdef = parse_line(line.strip(), '$: $')
+            rule_refs[int(number_str)] = [
                 [int(v) for v in group_text.split(' ')]
                 for group_text in rdef.split(' | ')
             ]

@@ -203,7 +203,7 @@ class Cups:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_line(next(relative_path(__file__, fn)))
+        return cls.from_line(open(relative_path(__file__, fn)).readline())
 
     def grown_to(self, count: int):
         return type(self)(chain(

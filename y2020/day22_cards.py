@@ -10,6 +10,7 @@ from typing import Iterable
 from common.chain import Link
 from common.file import relative_path
 from common.text import line_groups
+from common.utils import some
 
 
 def part_1(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
@@ -143,7 +144,7 @@ def part_1(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
         306
     """
 
-    victory = Game(deck_1, deck_2).play(print_progress=print_progress)
+    victory = some(Game(deck_1, deck_2).play(print_progress=print_progress))
     result = victory.final_score
 
     print(f"part 1: player {victory.winning_player} wins with score {result}")
@@ -404,17 +405,19 @@ def part_2(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
         291
     """
 
-    victory = Game(deck_1, deck_2, recursive=True).play(print_progress=print_progress)
+    victory = some(Game(deck_1, deck_2, recursive=True).play(print_progress=print_progress))
     result = victory.final_score
 
     print(f"part 2: player {victory.winning_player} wins with score {result}")
     return result
 
 
-# TODO: extract to reusable class Chain?
 class Deck:
     def __init__(self, cards: Iterable[int]):
-        self.top_card, self.bottom_card, self.length = Link.build_chain(cards)
+        top_card, bottom_card, length = Link.build_chain(cards)
+        self._top_card: Link | None = top_card
+        self._bottom_card: Link | None = bottom_card
+        self.length = length
 
     def __repr__(self):
         cards_repr = ", ".join(str(c) for c in self)
@@ -426,6 +429,20 @@ class Deck:
         else:
             return "(empty)"
 
+    @property
+    def top_card(self) -> Link:
+        try:
+            return some(self._top_card)
+        except AssertionError as exc:
+            raise IndexError("empty deck") from exc
+
+    @property
+    def bottom_card(self) -> Link:
+        try:
+            return some(self._bottom_card)
+        except AssertionError as exc:
+            raise IndexError("empty deck") from exc
+
     def state_hash(self) -> int:
         # it would take too long (O(N)) to iterate all values
         # -> instead let's hash only top & bottom value + length
@@ -435,24 +452,17 @@ class Deck:
         else:
             return hash((None, None, 0))
 
-    def _raise_if_empty(self):
-        if not self:
-            raise IndexError("empty deck")
-
     def peek_top(self) -> int:
-        self._raise_if_empty()
         return self.top_card.value
 
     def peek_bottom(self) -> int:
-        self._raise_if_empty()
         return self.bottom_card.value
 
     def draw_top(self) -> int:
-        self._raise_if_empty()
         drawn_card = self.top_card
-        self.top_card = drawn_card.next_link
+        self._top_card = drawn_card.next_link
         if not self.top_card:
-            self.bottom_card = None
+            self._bottom_card = None
 
         drawn_card.disconnect()
         self.length -= 1
@@ -463,9 +473,9 @@ class Deck:
             card = Link(value)
             if self.bottom_card:
                 card.connect_to(prev_link=self.bottom_card)
-            self.bottom_card = card
+            self._bottom_card = card
             if self.top_card is None:
-                self.top_card = self.bottom_card
+                self._top_card = self.bottom_card
             self.length += 1
 
     def __bool__(self):
@@ -484,8 +494,6 @@ class Deck:
             head = head.prev_link
 
     def __getitem__(self, item):
-        self._raise_if_empty()
-
         if isinstance(item, int):
             if item >= 0:
                 return self.top_card.follow(item).value
@@ -626,7 +634,7 @@ class Game:
                     level=self.level + 1
                 )
                 log("Playing a sub-game to determine the winner...")
-                subgame_winner = subgame.play(print_progress=print_progress)
+                subgame_winner = some(subgame.play(print_progress=print_progress))
 
                 log(f"...anyway, back to game {self.game_number}.")
                 self.next_subgame_number = subgame.next_subgame_number

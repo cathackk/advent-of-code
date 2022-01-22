@@ -119,7 +119,7 @@ def part_2(food_list: list['Food']) -> str:
     """
 
     i2a = dict(match_allergens(food_list))
-    result = ",".join(sorted(i2a.keys(), key=i2a.get))
+    result = ",".join(sorted(i2a.keys(), key=lambda i: i2a[i]))
 
     print(f"part 2: ingredient list: {result}")
     return result

@@ -8,6 +8,7 @@ from typing import Iterable
 
 from common.file import relative_path
 from common.heading import Heading
+from common.utils import assert_single_not_none
 
 
 def part_1(instructions: list['Instruction']) -> int:
@@ -188,8 +189,7 @@ Pos = tuple[int, int]
 
 class Ship:
     def __init__(self, pos: Pos = (0, 0), heading: Heading = None, waypoint: Pos = None):
-        assert (heading is None) != (waypoint is None),\
-            "exactly one of (heading, waypoint) must be given"
+        assert_single_not_none(heading=heading, waypoint=waypoint)
 
         self.pos = pos
         self.heading = heading
@@ -215,7 +215,7 @@ class Ship:
                     x, y = self.pos
                     dx, dy = self.waypoint
                     self.pos = (x + value * dx, y + value * dy)
-                else:
+                elif self.heading:
                     self.pos = self.heading.move(self.pos, distance=value)
 
             case ('L' | 'R' as action), (90 | 180 | 270 as angle):
@@ -225,7 +225,7 @@ class Ship:
                     for _ in range(right_turns):
                         wpx, wpy = self.waypoint
                         self.waypoint = (-wpy, wpx)
-                else:
+                elif self.heading:
                     for _ in range(right_turns):
                         self.heading = self.heading.right()
 

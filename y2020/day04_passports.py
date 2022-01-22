@@ -292,11 +292,11 @@ def is_valid_entry(field: str, value: str) -> bool:
         # unsupported field
         return False
 
-    if validators[field] is None:
+    if (validator := validators[field]) is None:
         # ignored field: always valid
         return True
 
-    return validators[field](value)
+    return validator(value)
 
 
 def is_valid_passport(passport: Passport) -> bool:

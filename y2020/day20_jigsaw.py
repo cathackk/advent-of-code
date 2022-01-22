@@ -14,7 +14,7 @@ from common.file import relative_path
 from common.iteration import single_value
 from common.rect import Rect
 from common.text import parse_line
-from common.text import string_builder
+from common.utils import some
 
 
 def part_1(tiles: list['Tile']) -> tuple[int, 'Image']:
@@ -119,7 +119,7 @@ def part_1(tiles: list['Tile']) -> tuple[int, 'Image']:
         >>> img = Image.assemble(example_tiles)
         >>> img.width, img.height, img.tiles_size
         (3, 3, 10)
-        >>> print(img.draw())
+        >>> print(img)
         #...##.#.. ..###..### #.#.#####.
         ..#.#..#.# ###...#.#. .#..######
         .###....#. ..#....#.. ..#.......
@@ -175,7 +175,7 @@ def part_1(tiles: list['Tile']) -> tuple[int, 'Image']:
         20899048083289
     """
 
-    image = Image.assemble(tiles)
+    image = some(Image.assemble(tiles))
     corner_tiles_ids = [corner_tile.tile_id for corner_tile in image.corner_tiles]
     result = math.prod(corner_tiles_ids)
 
@@ -463,20 +463,22 @@ class Image:
     def __str__(self) -> str:
         return str(self.draw())
 
-    @string_builder()
     def draw(self, borders: bool = True, gaps: bool = True) -> str:
         range_y = range(self.tiles_size) if borders else range(1, self.tiles_size-1)
         slice_x = slice(0, self.tiles_size) if borders else slice(1, self.tiles_size-1)
         gap_char = " " if gaps else ""
 
-        for tile_row_index, tile_row in enumerate(self.tile_rows):
-            if gaps and tile_row_index >= 1:
-                yield ""  # blank separator line
-            for pixel_y in range_y:
-                yield gap_char.join(
-                    tile.pixel_rows[pixel_y][slice_x]
-                    for tile in tile_row
-                )
+        def lines() -> Iterable[str]:
+            for tile_row_index, tile_row in enumerate(self.tile_rows):
+                if gaps and tile_row_index >= 1:
+                    yield ""  # blank separator line
+                for pixel_y in range_y:
+                    yield gap_char.join(
+                        tile.pixel_rows[pixel_y][slice_x]
+                        for tile in tile_row
+                    )
+
+        return "\n".join(lines())
 
     @property
     def corner_tiles(self) -> list[Tile]:

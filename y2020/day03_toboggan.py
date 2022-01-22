@@ -204,7 +204,7 @@ class TreesMap:
     @classmethod
     def from_lines(cls, lines: Iterable[str]):
         height, width = 0, None
-        trees = set()
+        trees: set[Pos] = set()
 
         for y, line in enumerate(lines):
             line = line.strip()
@@ -223,6 +223,9 @@ class TreesMap:
                 for x, ch in enumerate(line)
                 if ch == cls.TREE_CHAR
             )
+
+        if width is None:
+            raise ValueError("no lines")
 
         return cls(
             trees=trees,

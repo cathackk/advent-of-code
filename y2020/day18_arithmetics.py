@@ -166,7 +166,7 @@ class Operator(Enum):
 
 
 Value = Union[int, 'Expr']
-ExprPart = tuple[Operator, Value]
+ExprPart = tuple[Operator | None, Value]
 
 
 class Expr:
@@ -274,10 +274,10 @@ class Expr:
         return cls.from_symbols(iter(tokens))
 
     @classmethod
-    def from_symbols(cls, symbols: Iterator[str]):
+    def from_symbols(cls, symbols: Iterator[str]) -> 'Expr':
         parts: list[ExprPart] = []
 
-        op = Operator.ADD
+        op: Operator | None = Operator.ADD
 
         for symbol in symbols:
             match op, symbol:

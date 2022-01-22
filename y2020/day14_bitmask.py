@@ -5,9 +5,11 @@ https://adventofcode.com/2020/day/14
 """
 
 from typing import Iterable
+from typing import Union
 
 from common.file import relative_path
 from common.text import parse_line
+from common.utils import some
 
 
 def part_1(program: 'Program') -> int:
@@ -212,11 +214,7 @@ class BitMask:
         #
         #     X01X -> 0X10, 0X11, 1X10, 1X11
         submask_template = [
-            {
-                '0': 'X',
-                '1': '1',
-                'X': None
-            }[bit]
+            {'0': 'X', '1': '1', 'X': None}[bit]
             for bit in self.mask_string
         ]
 
@@ -228,11 +226,12 @@ class BitMask:
                 submask_template[fbit_at] = '1' if value_index & (1 << fbit_index) else '0'
 
             # Create current submask out of the template and apply it to the bvalue:
-            submask = BitMask(''.join(submask_template))
+            submask = BitMask(''.join(some(bit) for bit in submask_template))
             yield submask.apply(value)
 
 
-Instruction = tuple[str, BitMask] | tuple[str, int, int]
+# TODO: change `Union` to `|` (when mypy allows it)
+Instruction = Union[tuple[str, BitMask], tuple[str, int, int]]
 
 
 class Program:
@@ -263,7 +262,7 @@ class Program:
 
         return cls(instructions_from_lines())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.instructions)
 
     def __iter__(self):

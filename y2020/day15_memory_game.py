@@ -5,11 +5,14 @@ https://adventofcode.com/2020/day/15
 """
 
 from itertools import count
+from itertools import islice
 from typing import Iterator
 
 from tqdm import tqdm
 
 from common.file import relative_path
+from common.iteration import last
+from common.utils import some
 
 
 def part_1(numbers: list[int]) -> int:
@@ -154,13 +157,9 @@ def memory_game_it(starting_numbers: list[int]) -> Iterator[int]:
 
 
 def memory_game(numbers: list[int], turns: int) -> int:
-    game = memory_game_it(numbers)
-
-    last_number = None
-    for _ in tqdm(range(turns), unit=" turns", unit_scale=True, delay=1.0):
-        last_number = next(game)
-
-    return last_number
+    assert turns > 0
+    game = islice(memory_game_it(numbers), turns)
+    return some(last(tqdm(game, unit=" turns", total=turns, unit_scale=True, delay=1.0)))
 
 
 def load_numbers(fn: str) -> list[int]:

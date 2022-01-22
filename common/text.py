@@ -1,4 +1,3 @@
-import functools
 from typing import Any
 from typing import Iterable
 
@@ -48,29 +47,6 @@ def strip_line(line: str, prefix: str, suffix: str) -> str:
     'love'
     """
     return single_value(_parse_line_fixes(line, prefix, suffix))
-
-
-def string_builder(delimiter: str = "\n"):
-    """
-    >>> @string_builder(" + ")
-    ... def the_beatles():
-    ...     yield "John"
-    ...     yield "Paul"
-    ...     yield "George"
-    ...     for _ in range(3):
-    ...         yield "Ringo"
-    >>> the_beatles()
-    'John + Paul + George + Ringo + Ringo + Ringo'
-    """
-
-    def decorator(fn):
-        @functools.wraps(fn)
-        def wrapped(*args, **kwargs) -> str:
-            return delimiter.join(fn(*args, **kwargs))
-
-        return wrapped
-
-    return decorator
 
 
 def join_english(items: Iterable[Any], conj=" and "):
