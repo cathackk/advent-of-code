@@ -106,7 +106,7 @@ def triangles_from_lines(lines: Iterable[str], vertically: bool) -> Iterable[Tri
                 break
 
             t_1, t_2, t_3 = three_triangles
-            yield from (t_1, t_2, t_3)
+            yield from zip(t_1, t_2, t_3)
 
 
 if __name__ == '__main__':
