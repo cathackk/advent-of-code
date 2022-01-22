@@ -461,7 +461,7 @@ class Deck:
     def draw_top(self) -> int:
         drawn_card = self.top_card
         self._top_card = drawn_card.next_link
-        if not self.top_card:
+        if not self._top_card:
             self._bottom_card = None
 
         drawn_card.disconnect()
@@ -471,15 +471,15 @@ class Deck:
     def extend_bottom(self, values: Iterable[int]):
         for value in values:
             card = Link(value)
-            if self.bottom_card:
+            if self._bottom_card:
                 card.connect_to(prev_link=self.bottom_card)
             self._bottom_card = card
-            if self.top_card is None:
+            if self._top_card is None:
                 self._top_card = self.bottom_card
             self.length += 1
 
     def __bool__(self):
-        return self.top_card is not None
+        return self._top_card is not None
 
     def __iter__(self):
         head = self.top_card

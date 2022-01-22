@@ -460,7 +460,7 @@ def run(initial_map: Map, steps_limit: int = None, log: bool | Iterable[int] = F
                 last_step_logged = step
 
         if steps_limit is not None and step >= steps_limit:
-            break
+            return step
 
     # unreachable
     assert False
