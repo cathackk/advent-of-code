@@ -166,8 +166,8 @@ class Criterium:
             case _:
                 raise ValueError(self.op)
 
-        # TODO: remove when mypy realizes this is not reachable
-        raise ValueError("mypy")
+        # TODO: remove when mypy realizes this is unreachable
+        assert False
 
 
 def filter_aunts(aunts: Iterable[Aunt], criteria: Iterable[Criterium]) -> Iterable[Aunt]:

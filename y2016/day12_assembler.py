@@ -53,7 +53,7 @@ def part_1(tape: assembunny.Tape) -> int:
     `1`, and then skip the last `dec a` (because `a` is not zero, so the `jnz a 2` skips it),
     leaving register `a` at `42`. When you move past the last instruction, the program halts.
 
-        >>> assembunny.run(example_tape, return_from='a')
+        >>> assembunny.run(example_tape)['a']
         42
 
     After executing the assembunny code in your puzzle input, **what value is left in
@@ -63,7 +63,7 @@ def part_1(tape: assembunny.Tape) -> int:
         part 1: a = 42
         42
     """
-    result = assembunny.run(tape, return_from='a')
+    result = assembunny.run(tape)['a']
     print(f"part 1: a = {result}")
     return result
 
@@ -76,9 +76,9 @@ def part_2(tape: assembunny.Tape) -> int:
     If you instead **initialize register `c` to be `1`**, what value is now left in register `a`?
 
         >>> example_tape = assembunny.Tape.from_file('data/12-example.txt')
-        >>> assembunny.run(example_tape, return_from='a')
+        >>> assembunny.run(example_tape)['a']
         41
-        >>> assembunny.run(example_tape, c=1, return_from='a')
+        >>> assembunny.run(example_tape, c=1)['a']
         42
 
         >>> part_2(example_tape)
@@ -86,7 +86,7 @@ def part_2(tape: assembunny.Tape) -> int:
         42
     """
 
-    result = assembunny.run(tape, c=1, return_from='a', optimized=True)
+    result = assembunny.run(tape, c=1, optimized=True)['a']
     print(f"part 2: a = {result}")
     return result
 

@@ -82,6 +82,9 @@ def find_init_a(tape: assembunny.Tape, target_signal_length: int = 100) -> int:
         if length == target_signal_length:
             return a
 
+    # unreachable
+    assert False
+
 
 def clock_length(signal: Iterator[int], test_length: int) -> int:
     expected = 0

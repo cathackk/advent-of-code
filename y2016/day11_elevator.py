@@ -260,7 +260,7 @@ class State:
         # uses _key ^^ as optimization
         self._check_microchip_safety()
 
-    def _create_key(self) -> tuple[int, int, tuple[int, int], ...]:
+    def _create_key(self) -> tuple:
         """
         State is not changed by mere renaming or reordering of elements:
 
@@ -452,14 +452,14 @@ def extended_for_part_2(
     )
 ) -> 'State':
     new_items = list(new_items)
-    assert all(new_item not in state for new_item in new_items)
+    assert all(new_item not in state for new_item, _ in new_items)
     return type(state)(
         positions=state.positions | dict(new_items),
         top_floor=state.top_floor
     )
 
 
-Move = tuple[int, str, ...]
+Move = tuple[int, tuple[str, ...]]
 
 
 def generate_moves(state: State) -> Iterable[Move]:
@@ -477,13 +477,14 @@ def generate_moves(state: State) -> Iterable[Move]:
 
     for item_combination in item_combinations():
         for direction in directions():
-            yield (direction,) + item_combination
+            yield direction, item_combination
 
 
 def following_states(state: State) -> Iterable[tuple[State, Move, int]]:
     for move in generate_moves(state):
         try:
-            yield state.move(*move), move, 1
+            direction, carried_items = move
+            yield state.move(direction, *carried_items), move, 1
         except ValueError:
             pass
 

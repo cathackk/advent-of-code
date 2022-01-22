@@ -94,7 +94,7 @@ def part_1(tape: assembunny.Tape):
 
     In this example, the final value in register `a` is `3`.
 
-        >>> assembunny.run(example, return_from='a')
+        >>> assembunny.run(example)['a']
         3
 
     The rest of the electronics seem to place the keypad entry (the number of eggs, `7`) in register
@@ -107,7 +107,7 @@ def part_1(tape: assembunny.Tape):
         3
     """
 
-    result = assembunny.run(tape, a=7, return_from='a')
+    result = assembunny.run(tape, a=7)['a']
     print(f"part 1: result is a={result}")
     return result
 
@@ -131,7 +131,7 @@ def part_2(tape: assembunny.Tape):
         720
     """
 
-    result = assembunny.run(tape, a=12, return_from='a', optimized=True)
+    result = assembunny.run(tape, a=12, optimized=True)['a']
     print(f"part 2: result is a={result}")
     return result
 

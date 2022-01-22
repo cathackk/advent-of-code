@@ -175,7 +175,7 @@ def output_number(key: str) -> int:
 
 
 def watch_for_comparison(simulation: Simulation, watched_chips: tuple[int, int]) -> str:
-    watched_chips = sorted(watched_chips)
+    watched_chips_sorted = sorted(watched_chips)
 
     for state in simulation:
         matching_bots = (
@@ -183,7 +183,7 @@ def watch_for_comparison(simulation: Simulation, watched_chips: tuple[int, int])
             for key, chips in state.items()
             if is_bot(key)
             if len(chips) == 2
-            if sorted(chips) == watched_chips
+            if sorted(chips) == watched_chips_sorted
         )
 
         if (matching_bot := next(matching_bots, None)):

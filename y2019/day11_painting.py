@@ -1,5 +1,6 @@
 from collections import defaultdict
 from enum import Enum
+from itertools import count
 
 from common.iteration import minmax
 from common.xy import Point
@@ -73,10 +74,8 @@ class Robot:
         return Color(color_to_paint), Direction(direction_to_turn)
 
     def paint_on(self, grid: Grid):
-        cycle = 0
         try:
-            while True:
-                cycle += 1
+            for cycle in count(1):
                 color_seen = grid[self.pos]
                 self.log(
                     f"[T={cycle}] pos={self.pos}, head={self.heading.name}: "
@@ -103,6 +102,9 @@ class Robot:
 
         except StopIteration:
             return
+
+        # unreachable
+        assert False
 
 
 def draw_grid(grid: Grid):

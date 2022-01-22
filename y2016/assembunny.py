@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Final
 from typing import Generator
 from typing import Iterable
 from typing import Iterator
@@ -8,7 +9,7 @@ from common.iteration import exhaust
 
 
 class Command:
-    __match_args__ = ('instr', 'args')
+    __match_args__: Final[tuple] = ('instr', 'args')
 
     def __init__(self, instr: str, *args: str | int):
         self.instr = instr
@@ -29,16 +30,19 @@ class Command:
     def toggled(self) -> 'Command':
         cls = type(self)
         match self:
-            case cls('inc', (arg_1,)):
+            case Command('inc', (arg_1,)):
                 return cls('dec', arg_1)
-            case cls(_, (arg_1,)):
+            case Command(_, (arg_1,)):
                 return cls('inc', arg_1)
-            case cls('jnz', (arg_1, arg_2)):
+            case Command('jnz', (arg_1, arg_2)):
                 return cls('cpy', arg_1, arg_2)
-            case cls(_, (arg_1, arg_2)):
+            case Command(_, (arg_1, arg_2)):
                 return cls('jnz', arg_1, arg_2)
             case _:
                 raise ValueError(self)
+
+        # TODO: remove when mypy realizes this is unreachable
+        assert False
 
 
 def try_int(arg: str) -> str | int:
@@ -126,15 +130,10 @@ class RunState:
         )
 
 
-def run(
-    tape: Tape,
-    return_from: str | None = None,
-    optimized: bool = False,
-    **kwargs: int
-) -> Registers | int:
+def run(tape: Tape, optimized: bool = False, **kwargs: int) -> Registers:
     # pylint: disable=unpacking-non-sequence
     _, final_registers = exhaust(run_generator(tape, optimized=optimized, **kwargs))
-    return final_registers[return_from] if return_from else final_registers
+    return final_registers
 
 
 def run_out(tape: Tape, optimized: bool = False, **kwargs: int) -> Iterator[int]:
@@ -302,7 +301,7 @@ def _find_pattern(tape: Tape, *pattern: tuple) -> int:
 
 
 def _matches_pattern(cmds: Iterable[Command], pattern: Iterable[tuple]) -> bool:
-    bound: dict[str, str] = {}  # var to reg
+    bound: dict[str, str | int] = {}  # var to value
 
     cmds = list(cmds)
     pattern = list(pattern)

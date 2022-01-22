@@ -10,6 +10,7 @@ from common.file import relative_path
 from common.heading import Heading
 from common.iteration import first_repeat
 from common.iteration import last
+from common.utils import some
 
 
 def part_1(instructions: Iterable['Instr'] | str) -> int:
@@ -46,7 +47,7 @@ def part_1(instructions: Iterable['Instr'] | str) -> int:
         part 1: HQ is 12 blocks away at (10, -2)
         12
     """
-    hq_pos = last(walk(instructions))
+    hq_pos = some(last(walk(instructions)))
     distance = distance_from_origin(hq_pos)
     print(f"part 1: HQ is {distance} blocks away at {hq_pos}")
     return distance
@@ -69,7 +70,7 @@ def part_2(instructions: Iterable['Instr'] | str) -> int:
         part 2: HQ is 4 blocks away at (4, 0)
         4
     """
-    hq_pos = first_repeat(walk(instructions))
+    hq_pos = some(first_repeat(walk(instructions)))
     distance = distance_from_origin(hq_pos)
     print(f"part 2: HQ is {distance} blocks away at {hq_pos}")
     return distance

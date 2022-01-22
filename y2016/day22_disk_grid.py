@@ -388,27 +388,25 @@ class Grid:
         )
 
     def move_data(self, source: Pos | Node, target: Pos | Node) -> 'Grid':
-        if isinstance(source, tuple):
-            source = self[source]
-        if isinstance(target, tuple):
-            target = self[target]
+        source_node: Node = source if isinstance(source, Node) else self[source]
+        target_node: Node = target if isinstance(target, Node) else self[target]
 
-        assert source is self[source.pos], f"{source!r} != {self[source.pos]!r}"
-        assert target is self[target.pos]
+        assert source_node is self[source_node.pos], f"{source_node!r} != {self[source_node.pos]!r}"
+        assert target_node is self[target_node.pos]
 
-        assert source != target
-        assert target.used == 0  # target is empty
-        assert source.used > 0  # source is not empty
-        assert source.used <= target.size  # target can fit the data
-        assert target in self.adjacent(source)  # nodes are connected
+        assert source_node != target_node
+        assert target_node.used == 0  # target is empty
+        assert source_node.used > 0  # source is not empty
+        assert source_node.used <= target_node.size  # target can fit the data
+        assert target_node in self.adjacent(source_node)  # nodes are connected
 
         def new_used(node: Node) -> int:
-            if node == source:
+            if node == source_node:
                 assert node.used > 0
                 return 0  # data moved out of source
-            elif node == target:
-                assert node.used == 0, f"{node!r} == {target!r}"
-                return source.used  # data moved from source into target
+            elif node == target_node:
+                assert node.used == 0, f"{node!r} == {target_node!r}"
+                return source_node.used  # data moved from source into target
             else:
                 return node.used
 
@@ -416,7 +414,11 @@ class Grid:
             type(node)(node.pos, size=node.size, used=new_used(node))
             for node in self.nodes.values()
         )
-        new_data_pos = target.pos if self.target_data_pos == source.pos else self.target_data_pos
+
+        if self.target_data_pos == source_node.pos:
+            new_data_pos = target_node.pos
+        else:
+            new_data_pos = self.target_data_pos
 
         return type(self)(new_nodes, new_data_pos)
 
@@ -431,11 +433,11 @@ class Grid:
     def print_sizes_schema(self) -> None:
         def node_str(node: Node) -> str:
             if node == self.accessible_node:
-                p_l, p_r = "()"
+                p_l, p_r = "(", ")"
             elif node == self.target_data_node:
-                p_l, p_r = "[]"
+                p_l, p_r = "[", "]"
             else:
-                p_l, p_r = "  "
+                p_l, p_r = " ", " "
 
             return f"{p_l}{node.used:2}T/{node.size:2}T{p_r}"
 
@@ -452,9 +454,9 @@ class Grid:
 
         def node_str(node: Node) -> str:
             if node == self.accessible_node:
-                p_l, p_r = "()"
+                p_l, p_r = "(", ")"
             else:
-                p_l, p_r = "  "
+                p_l, p_r = " ", " "
 
             if not node.used:
                 char = "_"

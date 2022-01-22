@@ -105,8 +105,8 @@ def triangles_from_lines(lines: Iterable[str], vertically: bool) -> Iterable[Tri
             if not three_triangles:
                 break
 
-            assert len(three_triangles) == 3
-            yield from zip(*three_triangles)
+            t_1, t_2, t_3 = three_triangles
+            yield from (t_1, t_2, t_3)
 
 
 if __name__ == '__main__':

@@ -238,7 +238,7 @@ class RangeSet:
 
     @staticmethod
     def _simplify(ranges: Iterable[Range]) -> list[Range]:
-        simplified_ranges = []
+        simplified_ranges: list[Range] = []
         for range_ in ranges:
             # combine with as many other ranges as possible
             while True:

@@ -134,7 +134,7 @@ def find_abba(string: str) -> Iterable[str]:
         ['boob']
     """
     for k in range(len(string) - 3):
-        a_1, b_1, b_2, a_2 = string[k:k + 4]
+        a_1, b_1, b_2, a_2 = tuple(string[k:k + 4])
         if a_1 == a_2 and b_1 == b_2 and a_1 != b_1:
             yield string[k:k + 4]
 
@@ -157,7 +157,7 @@ def find_aba(string: str) -> Iterable[str]:
         []
     """
     for k in range(len(string) - 2):
-        a_1, b, a_2 = string[k:k + 3]
+        a_1, b, a_2 = tuple(string[k:k + 3])
         if a_1 == a_2 and a_1 != b:
             yield string[k:k + 3]
 

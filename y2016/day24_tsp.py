@@ -100,7 +100,7 @@ Path = tuple[str, ...]
 class Maze:
     def __init__(self, passages: Iterable[Pos], targets: Iterable[Target] | dict[Pos, str]):
         self.passages = set(passages)
-        self.targets = dict(targets)
+        self.targets: dict[Pos, str] = dict(targets)
 
         self.bounds = Rect.with_all(self.passages).grow_by(+1, +1)
 
@@ -120,7 +120,7 @@ class Maze:
             for path in permutations(other_codes)
         )
 
-    def closed_paths(self, start_code: str == '0') -> Iterable[Path]:
+    def closed_paths(self, start_code: str = '0') -> Iterable[Path]:
         other_codes = set(self.targets.values()) - {start_code}
         return (
             (start_code,) + path + (start_code,)

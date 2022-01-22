@@ -3,7 +3,7 @@ Advent of Code 2016
 Day 21: Scrambled Letters and Hash
 https://adventofcode.com/2016/day/21
 """
-
+from typing import Final
 from typing import Iterable
 
 from common.file import relative_path
@@ -234,7 +234,7 @@ class Command:
         self.arg1 = arg1
         self.arg2 = arg2
 
-    __match_args__ = ('instr', 'arg1', 'arg2')
+    __match_args__: Final[tuple] = ('instr', 'arg1', 'arg2')
 
     def __repr__(self):
         args = f'{self.arg1!r}, {self.arg2!r}' if self.arg2 is not None else repr(self.arg1)
@@ -258,6 +258,9 @@ class Command:
             case _:
                 raise ValueError(self)
 
+        # TODO: remove when mypy realizes this is unreachable
+        assert False
+
     # pylint: disable=too-many-return-statements
     def apply(self, string: str) -> str:
         match self:
@@ -277,6 +280,9 @@ class Command:
                 return move(string, pos_1, pos_2)
             case _:
                 raise ValueError(self)
+
+        # TODO: remove when mypy realizes this is unreachable
+        assert False
 
     # pylint: disable=too-many-return-statements
     def unapply(self, string: str) -> str:
@@ -309,6 +315,9 @@ class Command:
                 return move(string, pos_2, pos_1)
             case _:
                 raise ValueError(repr(self))
+
+        # TODO: remove when mypy realizes this is unreachable
+        assert False
 
     @classmethod
     def from_str(cls, line: str) -> 'Command':

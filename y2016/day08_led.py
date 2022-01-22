@@ -169,7 +169,7 @@ class Screen:
         return format(self)
 
     def __format__(self, format_spec: str) -> str:
-        char_off, char_on = format_spec or "·#"
+        char_off, char_on = tuple(format_spec) or ("·", "#")
 
         def char(pos: Pos) -> str:
             return char_on if pos in self.pixels_on else char_off

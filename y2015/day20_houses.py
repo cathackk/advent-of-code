@@ -5,6 +5,7 @@ https://adventofcode.com/2015/day/20
 """
 
 import math
+from itertools import count
 from typing import Callable
 from typing import Iterable
 
@@ -131,8 +132,7 @@ def first_house_to_receive(
 ) -> tuple[int, int]:
     max_gifts = 0
     with tqdm(total=target_gifts, unit="gifts", delay=1.0) as progress:
-        house_no = 1
-        while True:
+        for house_no in count(1):
             current_gifts = gifts_func(house_no)
             if current_gifts > max_gifts:
                 progress.update(min(current_gifts, target_gifts) - max_gifts)
@@ -140,7 +140,8 @@ def first_house_to_receive(
                 if current_gifts >= target_gifts:
                     return house_no, current_gifts
 
-            house_no += 1
+    # unreachable
+    assert False
 
 
 def target_gifts_from_file(fn: str) -> int:
