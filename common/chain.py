@@ -66,14 +66,14 @@ class Link:
             count += 1
         return count
 
-    def follow(self, steps: int) -> 'Link':
-        link = self
+    def follow(self, steps: int) -> Optional['Link']:
+        link: Optional['Link'] = self
 
         for _ in range(abs(steps)):
-            new_link = link.next_link if steps > 0 else link.prev_link
-            if new_link is None:
+            if link is None:
                 raise ValueError("reached end of chain")
-            link = new_link
+
+            link = link.next_link if steps > 0 else link.prev_link
 
         return link
 
