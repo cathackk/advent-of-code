@@ -86,6 +86,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 4. ([aoc](https://adventofcode.com/2017/day/4)) Day 4: [High-Entropy Passphrases](y2017/day04_passphrase.py)
 5. ([aoc](https://adventofcode.com/2017/day/5)) Day 5: [A Maze of Twisty Trampolines, All Alike](y2017/day05_jumps.py)
 6. ([aoc](https://adventofcode.com/2017/day/6)) Day 6: [Memory Reallocation](y2017/day06_realloc.py)
+7. ([aoc](https://adventofcode.com/2017/day/7)) Day 7: [Recursive Circus](y2017/day07_tower.py)
 ...
 
 

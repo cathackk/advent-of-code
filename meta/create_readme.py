@@ -3,19 +3,29 @@ import os.path
 from dataclasses import dataclass
 from typing import Iterable
 
+from common.file import relative_path
 from common.logging import eprint
 from common.text import parse_line
 
 
-def write_index(fn: str):
+def write_readme(readme_fn: str):
+    template_lines = load_template()
+
     _set_current_path_to_root()
 
-    with open(fn, 'w') as file:
-        file.write(
-            "# advent-of-code\n\n"
-            "My solutions for [Advent of Code](https://adventofcode.com/) events.\n\n\n"
-        )
-        file.writelines(line + "\n" for line in index_lines())
+    with open(readme_fn, 'w') as file_out:
+
+        for template_line in template_lines:
+            if template_line == '{index}\n':
+                file_out.writelines(line + "\n" for line in index_lines())
+            else:
+                file_out.write(template_line)
+
+    print(f"readme text written to {readme_fn}")
+
+
+def load_template(template_fn: str = 'readme-template') -> list[str]:
+    return open(relative_path(__file__, template_fn)).readlines()
 
 
 def _set_current_path_to_root() -> None:
@@ -113,4 +123,5 @@ class DayDescription:
 
 
 if __name__ == '__main__':
-    write_index("README.md")
+    # TODO: use click
+    write_readme("README.md")

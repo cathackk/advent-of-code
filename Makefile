@@ -13,3 +13,6 @@ pylint:
 
 doctests:
 	py.test --doctest-modules
+
+create-readme:
+	python3 -m meta.create_readme
