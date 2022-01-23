@@ -35,7 +35,7 @@ def part_1(jumps: list[int]) -> int:
     Positive jumps ("forward") move right; negative jumps move left. The current instruction is
     marked in parentheses. The following steps would be taken before an exit is found:
 
-        >>> jumping = go(example_jumps, yield_states=True)
+        >>> jumping = run(example_jumps, yield_states=True)
 
       - **Before** we have taken any steps:
 
@@ -78,7 +78,7 @@ def part_1(jumps: list[int]) -> int:
         5
     """
 
-    steps = exhaust(go(jumps))
+    steps = exhaust(run(jumps))
     print(f"part 1: it takes {steps} steps to reach the exit")
     return steps
 
@@ -89,10 +89,10 @@ def part_2(jumps: list[int]) -> int:
     **decrease** it by `1`. Otherwise, increase it by `1` as before.
 
         >>> example_jumps = [0, 3, 0, 1, -3]
-        >>> exhaust(go(example_jumps, inc=inc_2))
+        >>> exhaust(run(example_jumps, inc=inc_2))
         10
         >>> from common.iteration import last
-        >>> print_jump(last(go(example_jumps, inc=inc_2, yield_states=True)))
+        >>> print_jump(last(run(example_jumps, inc=inc_2, yield_states=True)))
         2  3  2  3  -1
 
     **How many steps** does it now take to reach the exit?
@@ -102,7 +102,7 @@ def part_2(jumps: list[int]) -> int:
         10
     """
 
-    steps = exhaust(go(jumps, inc=inc_2))
+    steps = exhaust(run(jumps, inc=inc_2))
     print(f"part 2: it takes {steps} steps to reach the exit")
     return steps
 
@@ -110,7 +110,7 @@ def part_2(jumps: list[int]) -> int:
 Jump = tuple[int, Iterable[int]]
 
 
-def go(
+def run(
     jumps: Iterable[int],
     inc: Callable[[int], int] = lambda x: x + 1,
     yield_states: bool = False
@@ -133,6 +133,9 @@ def go(
         if yield_states:
             yield pos, list(jumps)
 
+    # unreachable
+    assert False
+
 
 def inc_2(num: int) -> int:
     return num - 1 if num >= 3 else num + 1
@@ -141,10 +144,10 @@ def inc_2(num: int) -> int:
 def print_jump(jump: Jump) -> None:
     pos, state = jump
 
-    def val_f(v: int, active: bool) -> str:
-        return f"({v})" if active else f" {v} "
+    def val_f(val: int, active: bool) -> str:
+        return f"({val})" if active else f" {val} "
 
-    print("".join(val_f(val, index == pos) for index, val in enumerate(state)).strip())
+    print("".join(val_f(value, index == pos) for index, value in enumerate(state)).strip())
 
 
 def jumps_from_file(fn: str) -> list[int]:

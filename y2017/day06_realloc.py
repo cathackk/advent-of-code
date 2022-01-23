@@ -3,7 +3,7 @@ Advent of Code 2017
 Day 6: Memory Reallocation
 https://adventofcode.com/2017/day/6
 """
-
+from typing import Any
 from typing import Iterable
 from typing import Iterator
 
@@ -107,28 +107,28 @@ def part_2(initial_state: Iterable[int]) -> int:
 
 
 def realloc(nums: Iterable[int]) -> Iterator[tuple[int, ...]]:
-    nums = list(nums)
-    assert len(nums) > 0
+    nums_list = list(nums)
+    assert len(nums_list) > 0
 
-    yield tuple(nums)
+    yield tuple(nums_list)
 
     while True:
 
-        max_index = max(range(len(nums)), key=lambda n: nums[n])
-        count = nums[max_index]
-        nums[max_index] = 0
+        max_index = max(range(len(nums_list)), key=lambda n: nums_list[n])
+        count = nums_list[max_index]
+        nums_list[max_index] = 0
 
         head = max_index
         while count > 0:
-            head = (head + 1) % len(nums)
-            nums[head] += 1
+            head = (head + 1) % len(nums_list)
+            nums_list[head] += 1
             count -= 1
 
-        yield tuple(nums)
+        yield tuple(nums_list)
 
 
 def wait_for_repeat(states: Iterable) -> tuple[int, int]:
-    seen_states = dict()
+    seen_states: dict[Any, int] = {}
 
     for state in states:
         if state not in seen_states:

@@ -119,8 +119,8 @@ def sum_spiral_sequence(start: int = 1) -> Iterable[int]:
 
     for index in count(1):
         current_pos = spiral.to_pos(index)
-        ns = list(neighbors(current_pos))
-        new_num = sum(ns)
+        neighboring = list(neighbors(current_pos))
+        new_num = sum(neighboring)
         yield new_num
         spiral_grid[current_pos] = new_num
 

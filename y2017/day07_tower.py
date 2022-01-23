@@ -10,6 +10,7 @@ from typing import Optional
 
 from common.file import relative_path
 from common.text import parse_line
+from common.utils import some
 
 
 def part_1(tower: 'Tower') -> str:
@@ -150,7 +151,7 @@ def part_2(tower: 'Tower') -> int:
         60
     """
 
-    unbalanced, target_total_weight = tower.find_unbalanced()
+    unbalanced, target_total_weight = some(tower.find_unbalanced())
     target_weight = target_total_weight - unbalanced.sub_towers_weight
     print(
         f"part 2: to weigh total {target_total_weight} and balance the tower, "
@@ -223,9 +224,9 @@ class Tower:
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Tower':
         # name -> weight, names of subtowers
-        protos: dict[str, tuple[int, list[str]]] = dict()
+        protos: dict[str, tuple[int, list[str]]] = {}
         # name -> parent (tower it stands on)
-        depends_on: dict[str, str] = dict()
+        depends_on: dict[str, str] = {}
 
         for line in lines:
             line = line.strip()
@@ -261,12 +262,12 @@ class Tower:
 
     def __format__(self, format_spec: str) -> str:
         return "\n".join(
-            self._str_lines(
+            self.str_lines(
                 include_weights='weights' in format_spec
             )
         )
 
-    def _str_lines(self, include_weights: bool) -> Iterable[str]:
+    def str_lines(self, include_weights: bool) -> Iterable[str]:
         if not include_weights:
             yield self.name
         elif self.sub_towers:
@@ -277,7 +278,7 @@ class Tower:
         for sub_ix, sub in enumerate(self.sub_towers):
             is_last = (sub_ix == len(self.sub_towers) - 1)
             branch, trunk = ("└── ", "    ") if is_last else ("├── ", "│   ")
-            for line_ix, sub_line in enumerate(sub._str_lines(include_weights)):
+            for line_ix, sub_line in enumerate(sub.str_lines(include_weights)):
                 prefix = branch if line_ix == 0 else trunk
                 yield prefix + sub_line
 

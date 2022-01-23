@@ -1,3 +1,78 @@
+"""
+Advent of Code 2017
+Day 11: Hex Ed
+https://adventofcode.com/2017/day/11
+"""
+
+from typing import Iterable
+
+from common.file import relative_path
+from common.iteration import last
+from common.iteration import maxk
+from common.utils import some
+
+
+def part_1(directions: Iterable[str]) -> int:
+    r"""
+    Crossing the bridge, you've barely reached the other side of the stream when a program comes up
+    to you, clearly in distress. "It's my child process," she says, "he's gotten lost in an infinite
+    grid!"
+
+    Fortunately for her, you have plenty of experience with infinite grids.
+
+    Unfortunately for you, it's a hex grid.
+
+    The hexagons ("hexes") in this grid are aligned such that adjacent hexes can be found to the
+    north, northeast, southeast, south, southwest, and northwest:
+
+          \ n  /
+        nw +--+ ne
+          /    \
+        -+      +-
+          \    /
+        sw +--+ se
+          / s  \
+
+    You have the path the child process took. Starting where he started, you need to determine the
+    fewest number of steps required to reach him. (A "step" means to move from the hex you are in to
+    any adjacent hex.)
+
+    For example:
+
+        >>> distance_after_steps(['ne', 'ne', 'ne'])
+        3
+        >>> distance_after_steps(['ne', 'ne', 'sw', 'sw'])
+        0
+        >>> distance_after_steps(['ne', 'ne', 's', 's'])
+        2
+
+        >>> part_1(['se', 'sw', 'se', 'sw', 'sw'])
+        part 1: distance to the program is 3
+        3
+    """
+    result = distance_after_steps(directions)
+    print(f"part 1: distance to the program is {result}")
+    return result
+
+
+def part_2(directions: Iterable[str]) -> int:
+    """
+    **How many steps away** is the **furthest** he ever got from his starting position?
+
+        >>> part_2(['n', 'ne', 'n', 'ne', 'se', 's', 'nw', 'sw', 'sw'])
+        part 2: max distance was 4
+        4
+    """
+
+    origin = (0, 0)
+    _, max_distance = maxk(steps(origin, directions), lambda pos: distance(origin, pos))
+    print(f"part 2: max distance was {max_distance}")
+    return max_distance
+
+
+Pos = tuple[int, int]
+
+
 #   +--+      +--+      +--+      +--+
 #  /    \    /    \    /    \    /    \
 # + 0, 0 +--+ 2, 0 +--+ 4, 0 +--+ 6, 0 +--+
@@ -15,36 +90,21 @@
 # + 0, 6 +--+ 2, 6 +--+ 4, 6 +--+ 6, 6 +--+
 #  \    /    \    /    \    /    \    /
 #   +--+      +--+      +--+      +--+
-#
-#   N  = ( 0, -2)
-#   S  = ( 0, +2)
-#
-#   NW = (-1, -1)
-#   SE = (+1, +1)
-#
-#   SW = (-1, +1)
-#   NE = (+1, -1)
-#
-from functools import reduce
-from typing import Iterable
 
-from common.iteration import maxk
-
-Pos = tuple[int, int]
+STEPS = {
+    'n':  (+0, -2),
+    's':  (+0, +2),
+    'nw': (-1, -1),
+    'se': (+1, +1),
+    'sw': (-1, +1),
+    'ne': (+1, -1),
+}
 
 
-def step(pos: Pos, direction: str) -> Pos:
-    x, y = pos
-    dx, dy = {
-        'n':  (+0, -2),
-        'ne': (+1, -1),
-        'se': (+1, +1),
-        's':  (+0, +2),
-        'sw': (-1, +1),
-        'nw': (-1, -1),
-    }[direction.lower()]
-
-    return x + dx, y + dy
+def distance_after_steps(directions: Iterable[str]) -> int:
+    origin = (0, 0)
+    target = some(last(steps(origin, directions)))
+    return distance(origin, target)
 
 
 def steps(start: Pos, directions: Iterable[str]) -> Iterable[Pos]:
@@ -54,25 +114,15 @@ def steps(start: Pos, directions: Iterable[str]) -> Iterable[Pos]:
         yield pos
 
 
-def distance(pos1: Pos, pos2: Pos) -> int:
-    """
-    >>> all(distance((1, 3), p) == 1 for p in [(1, 1), (2, 2), (2, 4), (1, 5), (0, 4), (0, 2)])
-    True
-    >>> all(distance((4, 4), p) == 2 for p in [(4, 0), (5, 1), (6, 2), (6, 4), (6, 6), (5, 7)])
-    True
-    >>> all(distance((4, 4), p) == 2 for p in [(4, 8), (3, 7), (2, 6), (2, 4), (2, 2), (3, 1)])
-    True
-    >>> distance((0, 4), (5, 3))
-    5
-    >>> distance((0, 0), (2, 6))
-    4
-    >>> distance((0, 0), (6, 2))
-    6
-    >>> distance((0, 0), (5, 3))
-    5
-    """
-    x1, y1 = pos1
-    x2, y2 = pos2
+def step(pos: Pos, direction: str) -> Pos:
+    x, y = pos
+    dx, dy = STEPS[direction.lower()]
+    return x + dx, y + dy
+
+
+def distance(pos_1: Pos, pos_2: Pos) -> int:
+    x1, y1 = pos_1
+    x2, y2 = pos_2
     dx, dy = abs(x2 - x1), abs(y2 - y1)
     assert (dx + dy) % 2 == 0
 
@@ -82,29 +132,11 @@ def distance(pos1: Pos, pos2: Pos) -> int:
         return dx
 
 
-def load_steps(fn: str) -> Iterable[str]:
-    return open(fn).readline().strip().split(',')
-
-
-def part_1(fn: str) -> int:
-    start = (0, 0)
-    end = reduce(step, load_steps(fn), start)
-    d = distance(start, end)
-    print(f"part 1: distance is {d} {end}")
-    return d
-
-
-def part_2(fn: str) -> int:
-    start = (0, 0)
-    max_pos, max_d = maxk(
-        steps(start, load_steps(fn)),
-        key=lambda p: distance(start, p)
-    )
-    print(f"part 2: max distance is {max_d} {max_pos}")
-    return max_d
+def directions_from_file(fn: str) -> list[str]:
+    return open(relative_path(__file__, fn)).readline().strip().split(',')
 
 
 if __name__ == '__main__':
-    fn_ = "data/11-input.txt"
-    part_1(fn_)
-    part_2(fn_)
+    directions_ = directions_from_file('data/11-input.txt')
+    part_1(directions_)
+    part_2(directions_)

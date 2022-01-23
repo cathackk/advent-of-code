@@ -87,6 +87,10 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 5. ([aoc](https://adventofcode.com/2017/day/5)) Day 5: [A Maze of Twisty Trampolines, All Alike](y2017/day05_jumps.py)
 6. ([aoc](https://adventofcode.com/2017/day/6)) Day 6: [Memory Reallocation](y2017/day06_realloc.py)
 7. ([aoc](https://adventofcode.com/2017/day/7)) Day 7: [Recursive Circus](y2017/day07_tower.py)
+8. ([aoc](https://adventofcode.com/2017/day/8)) Day 8: [I Heard You Like Registers](y2017/day08_registers.py)
+9. ([aoc](https://adventofcode.com/2017/day/9)) Day 9: [Stream Processing](y2017/day09_garbage.py)
+10. ([aoc](https://adventofcode.com/2017/day/10)) Day 10: [Knot Hash](y2017/day10_knots.py)
+11. ([aoc](https://adventofcode.com/2017/day/11)) Day 11: [Hex Ed](y2017/day11_hex.py)
 ...
 
 
