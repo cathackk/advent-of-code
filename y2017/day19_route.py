@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Iterator
 
 from common.heading import Heading
 
@@ -16,8 +16,12 @@ def load_map(fn: str) -> Map:
     }
 
 
-def routes(rmap: Map) -> Generator[Route, None, None]:
-    pos = next((x, y) for (x, y), c in rmap.items() if y == 0 and c == '|')
+def routes(rmap: Map) -> Iterator[Route]:
+    try:
+        pos = next((x, y) for (x, y), c in rmap.items() if y == 0 and c == '|')
+    except StopIteration as stop:
+        raise ValueError("unable to find first position") from stop
+
     heading = Heading.SOUTH
 
     while True:
@@ -43,28 +47,28 @@ def routes(rmap: Map) -> Generator[Route, None, None]:
                 raise ValueError(f"unsupported char! c={c!r}, at={pos}")
 
         # turn
-        hr, hl = heading.right(), heading.left()
-        if (hr.move(pos)) in rmap:
+        h_r, h_l = heading.right(), heading.left()
+        if h_r.move(pos) in rmap:
             # turn right
-            heading = hr
-        elif (hl.move(pos)) in rmap:
+            heading = h_r
+        elif h_l.move(pos) in rmap:
             # turn left
-            heading = hl
+            heading = h_l
         else:
             raise ValueError(f"nowhere to turn! pos={pos}, heading={heading.name}")
 
 
 def test_routes():
-    rs = routes(load_map("data/19-example.txt"))
-    assert next(rs) == ((5, 5), Heading.SOUTH, 5, ['A'])
-    assert next(rs) == ((8, 5), Heading.EAST, 3, ['B'])
-    assert next(rs) == ((8, 1), Heading.NORTH, 4, [])
-    assert next(rs) == ((11, 1), Heading.EAST, 3, [])
-    assert next(rs) == ((11, 5), Heading.SOUTH, 4, ['C'])
-    assert next(rs) == ((14, 5), Heading.EAST, 3, [])
-    assert next(rs) == ((14, 3), Heading.NORTH, 2, ['D'])
-    assert next(rs) == ((1, 3), Heading.WEST, 13, ['E', 'F'])
-    assert list(rs) == []
+    routes_ = routes(load_map("data/19-example.txt"))
+    assert next(routes_) == ((5, 5), Heading.SOUTH, 5, ['A'])
+    assert next(routes_) == ((8, 5), Heading.EAST, 3, ['B'])
+    assert next(routes_) == ((8, 1), Heading.NORTH, 4, [])
+    assert next(routes_) == ((11, 1), Heading.EAST, 3, [])
+    assert next(routes_) == ((11, 5), Heading.SOUTH, 4, ['C'])
+    assert next(routes_) == ((14, 5), Heading.EAST, 3, [])
+    assert next(routes_) == ((14, 3), Heading.NORTH, 2, ['D'])
+    assert next(routes_) == ((1, 3), Heading.WEST, 13, ['E', 'F'])
+    assert not list(routes_)
 
 
 def test_collect():
@@ -96,6 +100,6 @@ def part_2(fn: str) -> int:
 
 
 if __name__ == '__main__':
-    fn_ = "data/19-input.txt"
-    part_1(fn_)
-    part_2(fn_)
+    FILENAME = "data/19-input.txt"
+    part_1(FILENAME)
+    part_2(FILENAME)

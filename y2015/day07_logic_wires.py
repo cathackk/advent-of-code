@@ -71,8 +71,8 @@ def part_1(circuit: 'Circuit') -> int:
 
     After it is run, these are the signals on the wires:
 
-        >>> from common.utils import sorted_keys
-        >>> sorted_keys(evaluate_circuit(example))
+        >>> from common.iteration import sorted_dict
+        >>> sorted_dict(evaluate_circuit(example))
         {'d': 72, 'e': 507, 'f': 492, 'g': 114, 'h': 65412, 'i': 65079, 'x': 123, 'y': 456}
 
     In little Bobby's kit's instructions booklet (provided as your puzzle input), what signal is

@@ -91,6 +91,11 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 9. ([aoc](https://adventofcode.com/2017/day/9)) Day 9: [Stream Processing](y2017/day09_garbage.py)
 10. ([aoc](https://adventofcode.com/2017/day/10)) Day 10: [Knot Hash](y2017/day10_knots.py)
 11. ([aoc](https://adventofcode.com/2017/day/11)) Day 11: [Hex Ed](y2017/day11_hex.py)
+12. ([aoc](https://adventofcode.com/2017/day/12)) Day 12: [Digital Plumber](y2017/day12_pipes.py)
+13. ([aoc](https://adventofcode.com/2017/day/13)) Day 13: [Packet Scanners](y2017/day13_scanners.py)
+14. ([aoc](https://adventofcode.com/2017/day/14)) Day 14: [Disk Defragmentation](y2017/day14_defrag.py)
+15. ([aoc](https://adventofcode.com/2017/day/15)) Day 15: [Dueling Generators](y2017/day15_generators.py)
+16. ([aoc](https://adventofcode.com/2017/day/16)) Day 16: [Permutation Promenade](y2017/day16_dance.py)
 ...
 
 

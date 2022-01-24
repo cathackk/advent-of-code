@@ -1,6 +1,7 @@
 import math
 
 
+# pylint: disable=invalid-name)
 def program_part1():
     h = 0
     mul = 0

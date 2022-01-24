@@ -4,6 +4,8 @@ from typing import Iterable
 from typing import Iterator
 from typing import Optional
 
+from common.utils import some
+
 
 class Link:
     def __init__(self, *ports: int):
@@ -16,14 +18,15 @@ class Link:
         return f'{type(self).__name__}({", ".join(str(p) for p in self.ports)})'
 
     def __str__(self):
-        def delimiter(i):
-            if i == 0:
+        def delimiter(index):
+            if index == 0:
                 return ''
-            elif i % 2 == 0:
+            elif index % 2 == 0:
                 return '--'
             else:
                 return '/'
-        return ''.join(delimiter(i) + str(p).zfill(2) for i, p in enumerate(self.ports))
+
+        return ''.join(delimiter(ix) + str(p).zfill(2) for ix, p in enumerate(self.ports))
 
     def __len__(self):
         return len(self.ports) // 2
@@ -82,51 +85,52 @@ class Link:
 
 
 def load_links(fn: str) -> Iterable[Link]:
-    for line in open(fn):
-        a, b = line.strip().split('/')
-        a, b = int(a), int(b)
-        if a > b:
-            a, b = b, a
-        yield Link(a, b)
+    with open(fn) as file:
+        for line in file:
+            a_str, b_str = line.strip().split('/')
+            a, b = int(a_str), int(b_str)
+            if a > b:
+                a, b = b, a
+            yield Link(a, b)
 
 
 def preprocessed_links(links: Iterable[Link]) -> set[Link]:
-    links: set[Link] = set(links)
+    links_set = set(links)
     port_to_links: dict[int, set[Link]] = defaultdict(set)
-    for link in links:
+    for link in links_set:
         for port in set(link.outer_ports()):
             port_to_links[port].add(link)
 
     # (1) remove orphaned links
     orphaned_links = [
-        link for link in links if
+        link for link in links_set if
         all(len(port_to_links[p]) == 1 for p in link.outer_ports())
     ]
     for link in orphaned_links:
-        for p in set(link.outer_ports()):
-            del port_to_links[p]
-    links.difference_update(orphaned_links)
+        for port in set(link.outer_ports()):
+            del port_to_links[port]
+    links_set.difference_update(orphaned_links)
 
     # (2) pre-join
     while True:
         # find a pair
-        pp = next((
+        port_plinks = next((
             (port, plinks)
             for port, plinks in port_to_links.items()
             if len(plinks) == 2 and port != 0
         ), None)
 
         # no more pairs -> we are done
-        if pp is None:
-            return links
+        if port_plinks is None:
+            return links_set
 
         # join links
-        common_port, (link_left, link_right) = pp
+        common_port, (link_left, link_right) = port_plinks
         link_joined = link_left.oriented_right(common_port) + link_right.oriented_left(common_port)
 
         # remove the two links
-        links.remove(link_left)
-        links.remove(link_right)
+        links_set.remove(link_left)
+        links_set.remove(link_right)
         del port_to_links[common_port]
         port_to_links[link_joined.left_port].discard(link_left)
         port_to_links[link_joined.right_port].discard(link_right)
@@ -134,7 +138,7 @@ def preprocessed_links(links: Iterable[Link]) -> set[Link]:
         # add the new joined link
         if link_joined.left_port > link_joined.right_port:
             link_joined = link_joined.reversed()
-        links.add(link_joined)
+        links_set.add(link_joined)
         port_to_links[link_joined.left_port].add(link_joined)
         port_to_links[link_joined.right_port].add(link_joined)
 
@@ -144,7 +148,7 @@ def max_bridge(
         links: set[Link],
         key: Callable[[Link], int]
 ) -> Optional[Link]:
-    return max((
+    bridges: Iterable[Link] = (
         link.oriented_left(from_port) + max_bridge(
             from_port=link.other_port(from_port),
             links=links.difference([link]),
@@ -152,11 +156,12 @@ def max_bridge(
         )
         for link in links
         if from_port in link.outer_ports()
-    ), key=key, default=None)
+    )
+    return max(bridges, key=key, default=None)  # type: ignore
 
 
 def part_1(links: set[Link]) -> int:
-    strongest_bridge = max_bridge(0, links, key=lambda b: b.strength)
+    strongest_bridge = some(max_bridge(0, links, key=lambda b: b.strength))
     print(
         f"part 1: strength of the strongest bridge is {strongest_bridge.strength} "
         f"(length={len(strongest_bridge)})"
@@ -165,7 +170,7 @@ def part_1(links: set[Link]) -> int:
 
 
 def part_2(links: set[Link]) -> int:
-    longest_bridge = max_bridge(0, links, key=lambda b: len(b))
+    longest_bridge = some(max_bridge(0, links, key=len))
     print(
         f"part 2: strength of longest bridge is {longest_bridge.strength} "
         f"(length={len(longest_bridge)})"

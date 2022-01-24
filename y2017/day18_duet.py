@@ -4,23 +4,24 @@ from typing import Iterable
 from typing import Optional
 
 StrInt = str | int
-Command = tuple[str, StrInt, StrInt]
+Command = tuple[str, StrInt, StrInt | None]
 Tape = list[Command]
 
 
 def load_tape(fn: str) -> list[Command]:
-    def p(s: str) -> StrInt:
-        return s if s.isalpha() else int(s)
+    def parse(string: str) -> StrInt:
+        return string if string.isalpha() else int(string)
 
-    def g() -> Iterable[Command]:
-        for line in open(fn):
-            instr, *args = line.strip().split(' ')
-            if len(args) == 1:
-                yield instr, p(args[0]), None
-            elif len(args) == 2:
-                yield instr, p(args[0]), p(args[1])
+    def commands() -> Iterable[Command]:
+        with open(fn) as file:
+            for line in file:
+                instr, *args = line.strip().split(' ')
+                if len(args) == 1:
+                    yield instr, parse(args[0]), None
+                elif len(args) == 2:
+                    yield instr, parse(args[0]), parse(args[1])
 
-    return list(g())
+    return list(commands())
 
 
 def run_program(program_id: int, tape: Tape) -> Generator[Optional[int], Optional[int], None]:
@@ -29,8 +30,8 @@ def run_program(program_id: int, tape: Tape) -> Generator[Optional[int], Optiona
 
     head = 0
 
-    def val(v) -> int:
-        return v if isinstance(v, int) else regs[v]
+    def val(value) -> int:
+        return value if isinstance(value, int) else regs[value]
 
     while True:
         instr, arg1, arg2 = tape[head]
@@ -75,10 +76,10 @@ def run_program(program_id: int, tape: Tape) -> Generator[Optional[int], Optiona
 
 
 def run_single_program(tape: Tape) -> Optional[int]:
-    p = run_program(0, tape)
+    program = run_program(0, tape)
     last_sig = None
     while True:
-        sig = next(p)
+        sig = next(program)
         if sig is not None:
             last_sig = sig
         else:
@@ -86,10 +87,10 @@ def run_single_program(tape: Tape) -> Optional[int]:
 
 
 def run_dual_program(tape: Tape) -> tuple[int, int]:
-    p0 = run_program(0, tape)
-    p1 = run_program(1, tape)
+    program_0 = run_program(0, tape)
+    program_1 = run_program(1, tape)
 
-    sig0, sig1 = next(p0), next(p1)
+    sig0, sig1 = next(program_0), next(program_1)
     queue0 = []
     send_cnt0, send_cnt1 = 0, 0
 
@@ -97,18 +98,18 @@ def run_dual_program(tape: Tape) -> tuple[int, int]:
         if sig0 is not None:
             # p0 out -> buffer in queue0
             queue0.append(sig0)
-            sig0 = next(p0)
+            sig0 = next(program_0)
 
         elif sig1 is not None:
             # send p1 -> p0 directly
-            sig0 = p0.send(sig1)
-            sig1 = next(p1)
+            sig0 = program_0.send(sig1)
+            sig1 = next(program_1)
             send_cnt1 += 1
 
         elif len(queue0) > 0:
             # send p0 -> p1 via queue0
-            v = queue0.pop(0)
-            sig1 = p1.send(v)
+            val = queue0.pop(0)
+            sig1 = program_1.send(val)
             send_cnt0 += 1
 
         else:
@@ -133,7 +134,7 @@ def part_1(tape: Tape):
 
 
 def part_2(tape: Tape):
-    sent0, sent1 = run_dual_program(tape)
+    _, sent1 = run_dual_program(tape)
     print(f"part 2: program 1 sent {sent1} times before deadlock")
     return sent1
 

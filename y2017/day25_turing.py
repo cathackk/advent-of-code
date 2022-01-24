@@ -27,48 +27,59 @@ class Rule(NamedTuple):
 
 
 def load(fn: str) -> tuple[str, int, dict[RuleKey, Rule]]:
-    jd = {"left": -1, "right": +1}
+    jumps = {"left": -1, "right": +1}
 
-    f = open(fn)
+    with open(fn) as file:
 
-    def load_rules() -> Iterable[Rule]:
-        while True:
-            assert len(f.readline().strip()) == 0
-            # 'In state A:'
-            state_line = f.readline()
-            if not state_line:
-                return
-            current_state = strip_line(state_line.strip(), "In state ", ":")
-            for _ in range(2):
-                yield Rule(
-                    current_state=current_state,
-                    # 'If the current value is 0:'
-                    current_value=int(
-                        strip_line(f.readline().strip(), "If the current value is ", ":")
-                    ),
-                    # '- Write the value 1.'
-                    next_value=int(strip_line(f.readline().strip(), "- Write the value ", ".")),
-                    # '- Move one slot to the right.'
-                    jump=jd[strip_line(f.readline().strip(), "- Move one slot to the ", ".")],
-                    # '- Continue with state B.'
-                    next_state=strip_line(f.readline().strip(), "- Continue with state ", "."),
+        def load_rules() -> Iterable[Rule]:
+            while True:
+                assert len(file.readline().strip()) == 0
+                # 'In state A:'
+                state_line = file.readline()
+                if not state_line:
+                    return
+                current_state = strip_line(state_line.strip(), "In state ", ":")
+                for _ in range(2):
+                    yield Rule(
+                        current_state=current_state,
+                        # 'If the current value is 0:'
+                        current_value=int(
+                            strip_line(file.readline().strip(), "If the current value is ", ":")
+                        ),
+                        # '- Write the value 1.'
+                        next_value=int(
+                            strip_line(file.readline().strip(), "- Write the value ", ".")
+                        ),
+                        # '- Move one slot to the right.'
+                        jump=jumps[
+                            strip_line(file.readline().strip(), "- Move one slot to the ", ".")
+                        ],
+                        # '- Continue with state B.'
+                        next_state=strip_line(
+                            file.readline().strip(), "- Continue with state ", "."
+                        ),
+                    )
+
+        return (
+            # 'Begin in state A.'
+            strip_line(file.readline().strip(), "Begin in state ", "."),
+            # 'Perform a diagnostic checksum after 12919244 steps.'
+            int(
+                strip_line(
+                    file.readline().strip(),
+                    "Perform a diagnostic checksum after ", " steps."
                 )
-
-    return (
-        # 'Begin in state A.'
-        strip_line(f.readline().strip(), "Begin in state ", "."),
-        # 'Perform a diagnostic checksum after 12919244 steps.'
-        int(strip_line(f.readline().strip(), "Perform a diagnostic checksum after ", " steps.")),
-        # (rules)
-        {r.key: r for r in load_rules()}
-    )
+            ),
+            # (rules)
+            {r.key: r for r in load_rules()}
+        )
 
 
 def run(fn: str) -> int:
     state, ticks, rules = load(fn)
     tape: dict[int, int] = defaultdict(int)
     head = 0
-    for tick in range(ticks):
+    for _ in range(ticks):
         value = tape[head]
         state, tape[head], jump = rules[(state, value)].value
         head += jump

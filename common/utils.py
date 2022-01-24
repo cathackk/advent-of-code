@@ -1,4 +1,3 @@
-from typing import Any
 from typing import TypeVar
 
 T = TypeVar('T')
@@ -41,14 +40,3 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
 def some(item: T | None) -> T:
     assert item is not None
     return item
-
-
-def sorted_keys(d: dict[str, Any]) -> dict[str, Any]:
-    """
-    Useful in doctests:
-
-        >>> sorted_keys({'x': 1, 'a': 2, 'y': 3, 'b': 4, 'w':5})
-        {'a': 2, 'b': 4, 'w': 5, 'x': 1, 'y': 3}
-    """
-
-    return dict(sorted((k, v) for k, v in d.items()))

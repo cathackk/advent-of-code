@@ -467,3 +467,19 @@ def unique(values: Iterable[T]) -> Iterable[T]:
         if value not in seen:
             seen.add(value)
             yield value
+
+
+def sorted_dict(items: dict[K, V] | Iterable[tuple[K ,V]]) -> dict[K, V]:
+    """
+    Can be useful in doctests where you need to have the dict in a deterministic order:
+
+        >>> sorted_dict({'x': 1, 'a': 2, 'y': 3, 'b': 4, 'w':5})
+        {'a': 2, 'b': 4, 'w': 5, 'x': 1, 'y': 3}
+        >>> sorted_dict([(1, 'x'), (10, 'y'), (5, 'z'), (3, 'q')])
+        {1: 'x', 3: 'q', 5: 'z', 10: 'y'}
+        >>> sorted_dict([])
+        {}
+    """
+
+    items_iterable = items.items() if isinstance(items, dict) else items
+    return dict(sorted((k, v) for k, v in items_iterable))

@@ -37,18 +37,19 @@ class Particle:
 
 
 def load_particles(fn: str) -> Iterable[Particle]:
-    for num, line in enumerate(open(fn)):
-        # 'p=<-201,-1266,-2683>, v=<-29,-181,-382>, a=<2,13,31>'
-        pos_part, vel_part, acc_part = line.strip().split(', ')
+    with open(fn) as file:
+        for num, line in enumerate(file):
+            # 'p=<-201,-1266,-2683>, v=<-29,-181,-382>, a=<2,13,31>'
+            pos_part, vel_part, acc_part = line.strip().split(', ')
 
-        pos = Point3(*(int(v) for v in pos_part[3:-1].split(',')))
-        vel = Vector3(*(int(v) for v in vel_part[3:-1].split(',')))
-        acc = Vector3(*(int(v) for v in acc_part[3:-1].split(',')))
+            pos = Point3(*(int(v) for v in pos_part[3:-1].split(',')))
+            vel = Vector3(*(int(v) for v in vel_part[3:-1].split(',')))
+            acc = Vector3(*(int(v) for v in acc_part[3:-1].split(',')))
 
-        yield Particle(num, pos, vel, acc)
+            yield Particle(num, pos, vel, acc)
 
 
-def md(pos: Point3) -> int:
+def manhattan(pos: Point3) -> int:
     return sum(abs(d) for d in pos)
 
 
@@ -57,14 +58,18 @@ def pos_closest_to_origin(particle: Particle) -> tuple[Point3, int]:
     vel = particle.vel
     min_pos = pos
     min_pos_step = 0
+
     for step in count(1):
         vel += particle.acc
         pos += vel
-        if md(pos) < md(min_pos):
+        if manhattan(pos) < manhattan(min_pos):
             min_pos = pos
             min_pos_step = step
         else:
             return min_pos, min_pos_step
+
+    # unreachable
+    assert False
 
 
 def simulate(
@@ -98,6 +103,9 @@ def simulate(
                 if idle_steps >= idle_steps_limit:
                     return len(particles)
 
+    # unreachable
+    assert False
+
 
 def part_1(fn: str) -> int:
     min_ps = min_all(load_particles(fn), key=lambda p: sum(abs(a) for a in p.acc))
@@ -114,6 +122,6 @@ def part_2(fn: str):
 
 
 if __name__ == '__main__':
-    fn_ = "data/20-input.txt"
-    part_1(fn_)
-    part_2(fn_)
+    FILENAME = 'data/20-input.txt'
+    part_1(FILENAME)
+    part_2(FILENAME)

@@ -9,6 +9,7 @@ from common.iteration import exhaust
 from common.iteration import last
 from common.iteration import minmax
 from common.logging import ilog
+from common.utils import some
 
 
 class NodeState(Enum):
@@ -64,9 +65,9 @@ class Grid:
         return range(min_y, max_y)
 
     def middle_pos(self) -> Pos:
-        rx = self.range_x()
-        ry = self.range_y()
-        return rx.start + len(rx)//2, ry.start + len(ry)//2
+        r_x = self.range_x()
+        r_y = self.range_y()
+        return r_x.start + len(r_x) // 2, r_y.start + len(r_y) // 2
 
     def draw(self):
         print('\n'.join(
@@ -80,7 +81,7 @@ class Grid:
             ((x, y), NodeState.from_char(c))
             for y, line in enumerate(open(fn))
             for x, c in enumerate(line.strip())
-            if c != NodeState.CLEAN.char
+            if c != NodeState.CLEAN.char  # pylint: disable=no-member
         ))
 
 
@@ -106,8 +107,11 @@ def run_virus(
         pos = heading.move(pos)
         yield pos
 
-        if step >= steps_limit:
+        if steps_limit and step >= steps_limit:
             return infected_count
+
+    # unreachable
+    assert False
 
 
 def run_virus_2(
@@ -135,7 +139,7 @@ def run_virus_2(
         pos = heading.move(pos)
         yield infected_count
 
-        if step >= steps_limit:
+        if steps_limit and step >= steps_limit:
             return
 
 
@@ -172,11 +176,11 @@ def part_1(fn: str, steps: int = 10_000) -> int:
 
 def part_2(fn: str, steps: int = 10_000_000) -> int:
     grid = Grid.load(fn)
-    infected_count = last(ilog(
+    infected_count = some(last(ilog(
         run_virus_2(grid, steps_limit=steps),
         every=10_000,
         formatter=lambda step, infected: f"> {step//1_000}K -> {infected} infected"
-    ))
+    )))
     print(f"part 2: {infected_count} infected nodes after {steps} bursts")
     return infected_count
 
@@ -184,6 +188,6 @@ def part_2(fn: str, steps: int = 10_000_000) -> int:
 
 
 if __name__ == '__main__':
-    fn_ = "data/22-input.txt"
-    part_1(fn_)
-    part_2(fn_)
+    FILENAME = "data/22-input.txt"
+    part_1(FILENAME)
+    part_2(FILENAME)

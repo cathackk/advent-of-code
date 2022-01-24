@@ -1,3 +1,6 @@
+from common.utils import some
+
+
 def spin(count: int, steps: int) -> tuple[int, list[int]]:
     """
     >>> spin(0, 3)
@@ -36,19 +39,20 @@ def spin(count: int, steps: int) -> tuple[int, list[int]]:
 
 def spin1(count: int, steps: int) -> int:
     head = 0
-    last_k1 = None
+    last_k1: int | None = None
 
     for k in range(1, count + 1):
         head = ((head + steps) % k) + 1
         if head == 1:
             last_k1 = k
-    return last_k1
+
+    return some(last_k1)
 
 
 def part_1(steps: int) -> int:
-    h, b = spin(2017, steps)
-    assert b[h] == 2017
-    result = b[h+1]
+    hhh, bbb = spin(2017, steps)
+    assert bbb[hhh] == 2017
+    result = bbb[hhh + 1]
     print(f"part 1: value after 2017 is {result}")
     return result
 
@@ -60,6 +64,6 @@ def part_2(steps: int):
 
 
 if __name__ == '__main__':
-    steps_ = 301
-    part_1(steps_)
-    part_2(steps_)
+    STEPS = 301
+    part_1(STEPS)
+    part_2(STEPS)
