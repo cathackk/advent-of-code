@@ -13,9 +13,9 @@ def eprint(*args, **kwargs):
 
 
 def ilog(
-        items: Iterable[T],
-        formatter: Callable[[int, T], str] = None,
-        every: int = 1
+    items: Iterable[T],
+    formatter: Callable[[int, T], str] = None,
+    every: int = 1
 ) -> Iterable[T]:
     for index, item in enumerate(items):
         if index % every == 0:

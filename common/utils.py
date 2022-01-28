@@ -37,6 +37,6 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
         raise AssertionError(f"multiple keys were not None: {items_text}")
 
 
-def some(item: T | None) -> T:
-    assert item is not None
+def some(item: T | None, description: str = "") -> T:
+    assert item is not None, description
     return item

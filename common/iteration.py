@@ -17,6 +17,8 @@ def first(items: Iterable[T], default: T = None) -> T | None:
     return next(iter(items), default)
 
 
+# TODO: do not yield None by default, instead raise StopIteration
+# (this means removing changing `some(last(...))` everywhere to `last(...)`)
 def last(items: Iterable[T], default: T = None) -> T | None:
     last_item = default
     for item in items:

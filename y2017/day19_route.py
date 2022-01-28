@@ -1,105 +1,240 @@
+"""
+Advent of Code 2017
+Day 19: A Series of Tubes
+https://adventofcode.com/2017/day/19
+"""
+
+from dataclasses import dataclass
+from typing import Iterable
 from typing import Iterator
 
+from common.file import relative_path
 from common.heading import Heading
 
-Pos = tuple[int, int]
-Map = dict[Pos, str]
-Route = tuple[Pos, Heading, int, list[str]]
 
+def part_1(diagram: 'Diagram') -> str:
+    """
+    Somehow, a network packet got lost and ended up here. It's trying to follow a routing diagram
+    (your puzzle input), but it's confused about where to go.
 
-def load_map(fn: str) -> Map:
-    return {
-        (x, y): c
-        for y, line in enumerate(open(fn))
-        for x, c in enumerate(line.rstrip())
-        if c != ' '
-    }
+    Its starting point is just off the top of the diagram. Lines (drawn with `|`, `-`, and `+`) show
+    the path it needs to take, starting by going down onto the only line connected to the top of the
+    diagram. It needs to follow this path until it reaches the end (located somewhere within the
+    diagram) and stop there.
 
+    Sometimes, the lines cross over each other; in these cases, it needs to continue going the same
+    direction, and only turn left or right when there's no other option. In addition, someone has
+    left **letters** on the line; these also don't change its direction, but it can use them to keep
+    track of where it's been. For example:
 
-def routes(rmap: Map) -> Iterator[Route]:
-    try:
-        pos = next((x, y) for (x, y), c in rmap.items() if y == 0 and c == '|')
-    except StopIteration as stop:
-        raise ValueError("unable to find first position") from stop
+        >>> example_diagram = Diagram.from_text('''
+        ...      |
+        ...      |  +--+
+        ...      A  |  C
+        ...  F---|----E|--+
+        ...      |  |  |  D
+        ...      +B-+  +--+
+        ... ''')
 
-    heading = Heading.SOUTH
+    Given this diagram, the packet needs to take the following path:
 
-    while True:
-        dist = 0
-        collected: list[str] = []
+        >>> routes = example_diagram.routes()
 
-        # follow route
-        while True:
-            pos = heading.move(pos)
-            dist += 1
-            c = rmap.get(pos)
-            if c is None:
-                yield heading.move(pos, -1), heading, dist-1, collected
-                return
-            elif c == '+':
-                yield pos, heading, dist, collected
-                break
-            elif c.isalpha():
-                collected.append(c)
-            elif c in ('-', '|'):
-                pass
-            else:
-                raise ValueError(f"unsupported char! c={c!r}, at={pos}")
+      - Starting at the only line touching the top of the diagram, it must go down, pass through
+        `A`, and continue onward to the first `+`:
 
-        # turn
-        h_r, h_l = heading.right(), heading.left()
-        if h_r.move(pos) in rmap:
-            # turn right
-            heading = h_r
-        elif h_l.move(pos) in rmap:
-            # turn left
-            heading = h_l
-        else:
-            raise ValueError(f"nowhere to turn! pos={pos}, heading={heading.name}")
+        >>> next(routes)
+        Route(start=(5, 0), heading=Heading.SOUTH, length=5, letters=['A'])
 
+      - Travel right, up, and right, passing through `B` in the process:
 
-def test_routes():
-    routes_ = routes(load_map("data/19-example.txt"))
-    assert next(routes_) == ((5, 5), Heading.SOUTH, 5, ['A'])
-    assert next(routes_) == ((8, 5), Heading.EAST, 3, ['B'])
-    assert next(routes_) == ((8, 1), Heading.NORTH, 4, [])
-    assert next(routes_) == ((11, 1), Heading.EAST, 3, [])
-    assert next(routes_) == ((11, 5), Heading.SOUTH, 4, ['C'])
-    assert next(routes_) == ((14, 5), Heading.EAST, 3, [])
-    assert next(routes_) == ((14, 3), Heading.NORTH, 2, ['D'])
-    assert next(routes_) == ((1, 3), Heading.WEST, 13, ['E', 'F'])
-    assert not list(routes_)
+        >>> next(routes)
+        Route(start=(5, 5), heading=Heading.EAST, length=3, letters=['B'])
+        >>> next(routes)
+        Route(start=(8, 5), heading=Heading.NORTH, length=4, letters=[])
+        >>> next(routes)
+        Route(start=(8, 1), heading=Heading.EAST, length=3, letters=[])
 
+      - Continue down (collecting `C`), right, and up (collecting `D`):
 
-def test_collect():
-    assert ''.join(
+        >>> next(routes)
+        Route(start=(11, 1), heading=Heading.SOUTH, length=4, letters=['C'])
+        >>> next(routes)
+        Route(start=(11, 5), heading=Heading.EAST, length=3, letters=[])
+        >>> next(routes)
+        Route(start=(14, 5), heading=Heading.NORTH, length=2, letters=['D'])
+
+      - Finally, go all the way left through `E` and stopping at `F`:
+
+        >>> next(routes)
+        Route(start=(14, 3), heading=Heading.WEST, length=14, letters=['E', 'F'])
+        >>> next(routes)
+        Traceback (most recent call last):
+        ...
+        StopIteration
+
+    Following the path to the end, the letters it sees on its path are `ABCDEF`.
+
+    The little packet looks up at you, hoping you can help it find the way. **What letters will it
+    see (in the order it would see them) if it follows the path? (The routing diagram is very wide;
+    make sure you view it without line wrapping.)
+
+        >>> part_1(example_diagram)
+        part 1: letters seen: ABCDEF
+        'ABCDEF'
+    """
+
+    letters_seen = ''.join(
         letter
-        for _, _, _, letters in routes(load_map("data/19-example.txt"))
-        for letter in letters
-    ) == 'ABCDEF'
-
-
-def test_distance():
-    assert sum(dist for _, _, dist, _ in routes(load_map("data/19-example.txt"))) + 1 == 38
-
-
-def part_1(fn: str) -> str:
-    collected = ''.join(
-        letter
-        for _, _, _, letters in routes(load_map(fn))
-        for letter in letters
+        for route in diagram.routes()
+        for letter in route.letters
     )
-    print(f"part 1: {collected}")
-    return collected
+
+    print(f"part 1: letters seen: {letters_seen}")
+    return letters_seen
 
 
-def part_2(fn: str) -> int:
-    steps = sum(dist for _, _, dist, _ in routes(load_map(fn))) + 1
-    print(f"part 2: {steps} steps total")
+def part_2(diagram: 'Diagram') -> int:
+    r"""
+    The packet is curious how many steps it needs to go.
+
+    For example, using the same routing diagram from the example above, the packet would go:
+
+        >>> example_diagram = Diagram.from_file('data/19-example.txt')
+        >>> print("\n".join(f"- {route}" for route in example_diagram.routes()))
+        - 5 steps down
+        - 3 steps right
+        - 4 steps up
+        - 3 steps right
+        - 4 steps down
+        - 3 steps right
+        - 2 steps up
+        - 14 steps left
+
+    This would result in a total of `38` steps.
+
+    **How many steps** does the packet need to go?
+
+        >>> part_2(example_diagram)
+        part 2: traversal is 38 steps long
+        38
+    """
+
+    steps = sum(route.length for route in diagram.routes())
+    print(f"part 2: traversal is {steps} steps long")
     return steps
 
 
+Pos = tuple[int, int]
+
+
+@dataclass(frozen=True)
+class Route:
+    start: Pos
+    heading: Heading
+    length: int
+    letters: list[str]
+
+    @property
+    def heading_name(self) -> str:
+        return {
+            Heading.NORTH: "up",
+            Heading.EAST: "right",
+            Heading.SOUTH: "down",
+            Heading.WEST: "left"
+        }[self.heading]
+
+    def __str__(self) -> str:
+        steps_noun = "step" if self.length == 1 else "steps"
+        return f"{self.length} {steps_noun} {self.heading_name}"
+
+
+class Diagram:
+    def __init__(self, locations: Iterable[tuple[Pos, str]] | dict[Pos, str]):
+        self.locations: dict[Pos, str] = dict(locations)
+
+    def __repr__(self) -> str:
+        return f'{type(self).__name__}({self.locations!r})'
+
+    def entrance(self) -> tuple[Pos, Heading]:
+        # entrance is always on the top, so don't bother scanning the other sides for entrances
+        heading = Heading.SOUTH
+        try:
+            start = next(
+                (x, y)
+                for (x, y), char in self.locations.items()
+                if y == 0
+                if char == '|'
+            )
+            return start, heading
+
+        except StopIteration as stop:
+            raise ValueError("unable to find entrance") from stop
+
+    def routes(self) -> Iterator[Route]:
+
+        pos, heading = self.entrance()
+
+        while True:
+            # start of one route - a straight line traversed
+            route_start = pos
+            route_length = 0
+            route_letters: list[str] = []
+
+            while True:
+                # follow the route step-by-step
+                pos = heading.move(pos)
+                route_length += 1
+                char = self.locations.get(pos)
+
+                if char is None:
+                    # end of traversal!
+                    yield Route(route_start, heading, route_length, route_letters)
+                    return
+
+                elif char == '+':
+                    # end of route!
+                    yield Route(route_start, heading, route_length, route_letters)
+                    break
+
+                elif char.isalpha():
+                    # collect a letter
+                    route_letters.append(char)
+
+                elif char in ('-', '|'):
+                    # go on ...
+                    pass
+
+                else:
+                    raise ValueError(f"unsupported char! char={char!r}, at={pos!r}")
+
+            # after each route, we need to turn right or left
+            if (turn_right := heading.right()).move(pos) in self.locations:
+                heading = turn_right
+            elif (turn_left := heading.left()).move(pos) in self.locations:
+                heading = turn_left
+            else:
+                raise ValueError(f"nowhere to turn! pos={pos!r}, heading={heading!r}")
+
+    @classmethod
+    def from_text(cls, text: str) -> 'Diagram':
+        return cls.from_lines(text.strip('\n').splitlines())
+
+    @classmethod
+    def from_file(cls, fn: str) -> 'Diagram':
+        return cls.from_lines(open(relative_path(__file__, fn)))
+
+    @classmethod
+    def from_lines(cls, lines: Iterable[str]) -> 'Diagram':
+        return cls(
+            ((x, y), char)
+            for y, line in enumerate(lines)
+            for x, char in enumerate(line.rstrip())
+            if char != ' '
+        )
+
+
 if __name__ == '__main__':
-    FILENAME = "data/19-input.txt"
-    part_1(FILENAME)
-    part_2(FILENAME)
+    diagram_ = Diagram.from_file('data/19-input.txt')
+    part_1(diagram_)
+    part_2(diagram_)

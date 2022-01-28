@@ -96,6 +96,12 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 14. ([aoc](https://adventofcode.com/2017/day/14)) Day 14: [Disk Defragmentation](y2017/day14_defrag.py)
 15. ([aoc](https://adventofcode.com/2017/day/15)) Day 15: [Dueling Generators](y2017/day15_generators.py)
 16. ([aoc](https://adventofcode.com/2017/day/16)) Day 16: [Permutation Promenade](y2017/day16_dance.py)
+17. ([aoc](https://adventofcode.com/2017/day/17)) Day 17: [Spinlock](y2017/day17_spinlock.py)
+18. ([aoc](https://adventofcode.com/2017/day/18)) Day 18: [Duet](y2017/day18_duet.py)
+19. ([aoc](https://adventofcode.com/2017/day/19)) Day 19: [A Series of Tubes](y2017/day19_route.py)
+20. ([aoc](https://adventofcode.com/2017/day/20)) Day 20: [Particle Swarm](y2017/day20_particles.py)
+21. ([aoc](https://adventofcode.com/2017/day/21)) Day 21: [Fractal Art](y2017/day21_fractal.py)
+22. ([aoc](https://adventofcode.com/2017/day/22)) Day 22: [Sporifica Virus](y2017/day22_virus.py)
 ...
 
 

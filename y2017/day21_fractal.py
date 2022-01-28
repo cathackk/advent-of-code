@@ -1,10 +1,212 @@
-from collections import defaultdict
-from itertools import zip_longest
+"""
+Advent of Code 2017
+Day 21: Fractal Art
+https://adventofcode.com/2017/day/21
+"""
+
 from typing import Callable
 from typing import Iterable
+from typing import Iterator
 
+from common.file import relative_path
+from common.iteration import dgroupby_pairs
 from common.iteration import single_value
-from common.logging import create_logger
+from common.text import parse_line
+
+
+def part_1(rulebook: 'RuleBook', iterations: int = 5) -> int:
+    """
+    You find a program trying to generate some art. It uses a strange process that involves
+    repeatedly enhancing the detail of an image through a set of rules.
+
+    The image consists of a two-dimensional square grid of pixels that are either on (`#`) or off
+    (`·`). The program always begins with this pattern:
+
+        >>> print(STARTING_PATTERN)
+        ·#·
+        ··#
+        ###
+
+    Because the pattern is both `3` pixels wide and `3` pixels tall, it is said to have a **size**
+    of `3`.
+
+    Then, the program repeats the following process:
+
+      - If the size is evenly divisible by `2`, break the pixels up into `2x2` squares, and convert
+        each `2x2` square into a `3x3` square by following the corresponding **enhancement rule**.
+      - Otherwise, the size is evenly divisible by `3`; break the pixels up into `3x3` squares, and
+        convert each `3x3` square into a `4x4` square by following the corresponding **enhancement
+        rule**.
+
+    Because each square of pixels is replaced by a larger one, the image gains pixels and so its
+    **size** increases.
+
+    The artist's book of enhancement rules is nearby (your puzzle input); however, it seems to be
+    missing rules. The artist explains that sometimes, one must **rotate** or **flip** the input
+    pattern to find a match. (Never rotate or flip the output pattern, though.) Each pattern is
+    written concisely: rows are listed as single units, ordered top-down, and separated by slashes.
+    For example, the following rules correspond to the adjacent patterns:
+
+        ··/·#  =  ··
+                  ·#
+
+                        ·#·
+        ·#·/··#/###  =  ··#
+                        ###
+
+                                #··#
+        #··#/····/#··#/·##·  =  ····
+                                #··#
+                                ·##·
+
+    When searching for a rule to use, rotate and flip the pattern as necessary. For example, all of
+    the following patterns match the same rule:
+
+        >>> print(STARTING_PATTERN)
+        ·#·
+        ··#
+        ###
+        >>> print(STARTING_PATTERN.flipped_x())
+        ·#·
+        #··
+        ###
+        >>> print(STARTING_PATTERN.rotated(1))
+        #··
+        #·#
+        ##·
+        >>> print(STARTING_PATTERN.flipped_y())
+        ###
+        ··#
+        ·#·
+
+    Suppose the book contained the following two rules:
+
+        >>> example_rules = RuleBook.from_text('''
+        ...     ../.# => ##./#../...
+        ...     .#./..#/### => #..#/..../..../#..#
+        ... ''')
+        >>> example_rules  # doctest: +NORMALIZE_WHITESPACE
+        RuleBook([Rule(grid_from=Grid(size=2, pixels=[(1, 1)]),
+                         grid_to=Grid(size=3, pixels=[(0, 0), (0, 1), (1, 0)])),
+                  Rule(grid_from=Grid(size=3, pixels=[(0, 2), (1, 0), (1, 2), (2, 1), (2, 2)]),
+                         grid_to=Grid(size=4, pixels=[(0, 0), (0, 3), (3, 0), (3, 3)]))])
+
+
+    As before, the program begins with this pattern:
+
+        >>> pattern_0 = STARTING_PATTERN
+        >>> print(pattern_0)
+        ·#·
+        ··#
+        ###
+        >>> pattern_0.size
+        3
+
+    The size of the grid (`3`) is not divisible by `2`, but it is divisible by `3`. It divides
+    evenly into a single square:
+
+        >>> subgrids_0 = list(pattern_0.divide())
+        >>> len(subgrids_0)
+        1
+        >>> subgrids_0[0][1] == pattern_0
+        True
+
+    The square matches the second rule:
+
+        >>> example_rules.matching_rule(pattern_0)  # doctest: +ELLIPSIS
+        Rule(grid_from=Grid(size=3, ...))
+
+    Which produces:
+
+        >>> print(pattern_1 := example_rules.expand(pattern_0))
+        #··#
+        ····
+        ····
+        #··#
+        >>> pattern_1.size
+        4
+
+    The size of this enhanced grid (`4`) is evenly divisible by `2`, so that rule is used.
+    It divides evenly into four squares:
+
+        >>> print_subgrids(subgrids_1 := list(pattern_1.divide()))
+        #·|·#
+        ··|··
+        --+--
+        ··|··
+        #·|·#
+
+    Each of these squares matches the same rule:
+
+        >>> rule_1 = single_value(set(example_rules.matching_rule(grid) for _, grid in subgrids_1))
+        >>> rule_1  # doctest: +ELLIPSIS
+        Rule(grid_from=Grid(size=2, ...))
+
+    ... three of which require some flipping and rotation to line up with the rule. The output for
+    the rule is the same in all four cases:
+
+        >>> print_subgrids(((x, y), rule_1.grid_to) for x in (0, 3) for y in (0, 3))
+        ##·|##·
+        #··|#··
+        ···|···
+        ---+---
+        ##·|##·
+        #··|#··
+        ···|···
+
+    Finally, the squares are joined into a new grid:
+
+        >>> print(pattern_2 := example_rules.expand(pattern_1))
+        ##·##·
+        #··#··
+        ······
+        ##·##·
+        #··#··
+        ······
+
+    Which could be further split into:
+
+        >>> print_subgrids(pattern_2.divide())
+        ##|·#|#·
+        #·|·#|··
+        --+--+--
+        ··|··|··
+        ##|·#|#·
+        --+--+--
+        #·|·#|··
+        ··|··|··
+
+    Thus, after 2 iterations, the grid contains 12 pixels that are on:
+
+        >>> len(pattern_2.pixels)
+        12
+
+    **How many pixels stay on** after 5 iterations?
+
+        >>> part_1(example_rules, iterations=2)
+        part 1: after 2 iterations, there will be 12 pixels on
+        12
+    """
+
+    pattern = STARTING_PATTERN
+    for _ in range(iterations):
+        pattern = rulebook.expand(pattern)
+
+    pixels_on = len(pattern.pixels)
+
+    print(f"part 1: after {iterations} iterations, there will be {pixels_on} pixels on")
+    return pixels_on
+
+
+def part_2(rulebook: 'RuleBook', iterations: int = 18) -> int:
+    """
+    **How many pixels stay on** after 18 iterations?
+    """
+
+    pixels_on = count_pixels(STARTING_PATTERN, rulebook, iterations)
+    print(f"part 2: after {iterations} iterations, there will be {pixels_on} pixels on")
+    return pixels_on
+
 
 Pos = tuple[int, int]
 Transformation = Callable[[int, int], Pos]
@@ -15,17 +217,33 @@ class Grid:
         self.size = size
         self.pixels = set(pixels)
         for x, y in self.pixels:
-            assert 0 <= x < self.size
-            assert 0 <= y < self.size
+            assert x in range(self.size)
+            assert y in range(self.size)
+
+    def __repr__(self) -> str:
+        return f'{type(self).__name__}(size={self.size}, pixels={sorted(self.pixels)!r})'
 
     def str_lines(self) -> Iterable[str]:
         return (
-            ''.join('#' if (x, y) in self.pixels else '.' for x in range(self.size))
+            ''.join('#' if (x, y) in self.pixels else '·' for x in range(self.size))
             for y in range(self.size)
         )
 
     def __str__(self):
-        return '\n'.join(self.str_lines())
+        return format(self)
+
+    def __format__(self, format_spec: str) -> str:
+        return (format_spec or "\n").join(self.str_lines())
+
+    @classmethod
+    def from_line(cls, line: str) -> 'Grid':
+        rows = line.split('/')
+        size = len(rows)
+        assert all(len(row) == size for row in rows), line
+        return cls(
+            size,
+            ((x, y) for y, row in enumerate(rows) for x, char in enumerate(row) if char == '#')
+        )
 
     def __int__(self):
         return sum(
@@ -48,7 +266,7 @@ class Grid:
             x, y = trans(x, y)
             return x % self.size, y % self.size
 
-        return Grid(
+        return type(self)(
             size=self.size,
             pixels=(trm(x, y) for x, y in self.pixels)
         )
@@ -87,7 +305,7 @@ class Grid:
     def normalized(self) -> 'Grid':
         return min(self.variants(), key=int)
 
-    def split(self) -> Iterable[tuple[Pos, 'Grid']]:
+    def divide(self) -> Iterable[tuple[Pos, 'Grid']]:
         if self.size % 2 == 0:
             return self.subgrids(2)
         elif self.size % 3 == 0:
@@ -99,20 +317,23 @@ class Grid:
         assert self.size % subsize == 0
 
         if self.size == subsize:
-            yield (0, 0), self
-            return
+            return [((0, 0), self)]
 
-        subpixels: dict[Pos, list[Pos]] = defaultdict(list)
-        for x, y in self.pixels:
-            # top-left corner of the subgrid
-            c_x, c_y = ((x // subsize) * subsize), ((y // subsize) * subsize)
-            # position in the new subgrid
-            d_x, d_y = x - c_x, y - c_y
-            subpixels[(c_x, c_y)].append((d_x, d_y))
+        subpixels = dgroupby_pairs(
+            (
+                # top-left corner of the subgrid
+                (sub_x := (x // subsize) * subsize, sub_y := (y // subsize) * subsize),
+                # position in the new subgrid
+                (x - sub_x, y - sub_y)
+            )
+            for x, y in self.pixels
+        )
 
-        for c_y in range(0, self.size, subsize):
-            for c_x in range(0, self.size, subsize):
-                yield (c_x, c_y), Grid(subsize, subpixels[(c_x, c_y)])
+        return (
+            ((sub_pos := (sub_x, sub_y)), type(self)(subsize, subpixels.get(sub_pos, ())))
+            for sub_y in range(0, self.size, subsize)
+            for sub_x in range(0, self.size, subsize)
+        )
 
     @classmethod
     def join(cls, subgrids: Iterable[tuple[Pos, 'Grid']]) -> 'Grid':
@@ -133,57 +354,27 @@ class Grid:
             )
         )
 
-    @classmethod
-    def create_starting(cls):
-        #  .#.
-        #  ..#
-        #  ###
-        return cls(3, [(1, 0), (2, 1), (0, 2), (1, 2), (2, 2)])
+
+STARTING_PATTERN = Grid.from_line('.#./..#/###')
 
 
 class Rule:
-    def __init__(self, num: int, grid_from: Grid, grid_to: Grid):
+    def __init__(self, grid_from: Grid, grid_to: Grid):
         assert grid_from.size + 1 == grid_to.size
-        self.num = num
         self.grid_from = grid_from
         self.grid_to = grid_to
 
-    def str_lines(self):
-        l_1_pad = ' ' * self.grid_from.size
-        lines = zip_longest(self.grid_from.str_lines(), self.grid_to.str_lines())
-        for l_i, (l_1, l_2) in enumerate(lines):
-            yield f"{l_1 or l_1_pad} {'=>' if l_i == 1 else '  '} {l_2}"
+    def __repr__(self) -> str:
+        return f'{type(self).__name__}(grid_from={self.grid_from!r}, grid_to={self.grid_to!r})'
 
     def __str__(self):
-        # return '\n'.join(self.str_lines())
-        g_f = '/'.join(self.grid_from.str_lines())
-        g_t = '/'.join(self.grid_to.str_lines())
-        return f"({self.num}) {g_f} => {g_t}"
+        return f"{self.grid_from:/} => {self.grid_to:/}"
 
-
-def load_rules(fn: str) -> Iterable[Rule]:
-    # '##/## => #.#/#../###'
-    # '###/#../... => #..#/...#/..#./##.#'
-
-    def create_grid(string: str) -> Grid:
-        return Grid(
-            size=string.count('/') + 1,
-            pixels=(
-                (x, y)
-                for y, row in enumerate(string.split('/'))
-                for x, c in enumerate(row)
-                if c == '#'
-            )
-        )
-
-    with open(fn) as file:
-        for num, line in enumerate(file):
-            gfrom, gto = line.strip().split(' => ')
-            yield Rule(
-                num=num + 1,
-                grid_from=create_grid(gfrom),
-                grid_to=create_grid(gto)
-            )
+    @classmethod
+    def from_str(cls, line: str) -> 'Rule':
+        # "../.# => ##./#../..."
+        g_from, g_to = parse_line(line.strip(), "$ => $")
+        return cls(Grid.from_line(g_from), Grid.from_line(g_to))
 
 
 class RuleBook:
@@ -193,20 +384,26 @@ class RuleBook:
             for rule in rules
         }
 
-    def __len__(self):
+    def __repr__(self) -> str:
+        return f'{type(self).__name__}({list(self)!r})'
+
+    def __len__(self) -> int:
         return len(self.rdict)
+
+    def __iter__(self) -> Iterator[Rule]:
+        return iter(self.rdict.values())
 
     def matching_rule(self, grid: Grid) -> Rule:
         grid_id = hash(grid.normalized())
         if grid_id not in self.rdict:
-            raise KeyError(f"no rule for\n{grid}")
+            raise KeyError(f"no rule for {grid!r}")
         return self.rdict[grid_id]
 
     def expand(self, grid: Grid) -> Grid:
-        return grid.join(self._expanded_subgrids(grid))
+        return Grid.join(self._expanded_subgrids(grid))
 
     def _expanded_subgrids(self, grid: Grid) -> Iterable[tuple[Pos, Grid]]:
-        for (c_x, c_y), subgrid in grid.split():
+        for (c_x, c_y), subgrid in grid.divide():
             matching_rule = self.matching_rule(subgrid)
             expanded_subgrid = matching_rule.grid_to
             assert expanded_subgrid.size == subgrid.size + 1
@@ -215,20 +412,27 @@ class RuleBook:
             yield (ecx, ecy), expanded_subgrid
 
     @classmethod
-    def load(cls, fn: str):
-        return cls(load_rules(fn))
+    def from_file(cls, fn: str) -> 'RuleBook':
+        return cls.from_lines(open(relative_path(__file__, fn)))
+
+    @classmethod
+    def from_text(cls, text: str) -> 'RuleBook':
+        return cls.from_lines(text.strip().splitlines())
+
+    @classmethod
+    def from_lines(cls, lines: Iterable[str]) -> 'RuleBook':
+        return cls(Rule.from_str(line) for line in lines)
 
 
-def count_pixels(grid: Grid, rulebook: RuleBook, steps: int, debug: bool = False) -> int:
+def count_pixels(grid: Grid, rulebook: RuleBook, steps: int) -> int:
     """
     Optimized method for recursively calculating pixels count
     after large number of expansion steps (tested up to 900).
 
     Note: Working only for starting grids 3x3 and steps divisible by 3.
     """
-    log = create_logger(debug)
 
-    # currently optimized only for these values:
+    # optimized only for these values:
     assert grid.size == 3
     assert steps % 3 == 0
 
@@ -238,7 +442,6 @@ def count_pixels(grid: Grid, rulebook: RuleBook, steps: int, debug: bool = False
     expand_cache: dict[int, list[int]] = {}
     # (code, steps) -> pixels_count
     pixels_count_cache: dict[tuple[int, int], int] = {(int(grid), 0): len(grid.pixels)}
-    log(f">>> pxl: {int(grid)} -> {len(grid.pixels)}")
 
     def _expand_to_nine_subgrids(grid3: Grid) -> list[Grid]:
         key = int(grid3)
@@ -252,21 +455,19 @@ def count_pixels(grid: Grid, rulebook: RuleBook, steps: int, debug: bool = False
             grid9 = rulebook.expand(grid6)
             assert grid9.size == 9
             # ... yielding nine 3x3 subresults
-            subgrids = list(sg for _, sg in grid9.split())
+            subgrids = list(sg for _, sg in grid9.divide())
             assert len(subgrids) == 9
 
             # store subresults codes
             subgrids_codes = [int(sg) for sg in subgrids]
             # ... into expansion cache,
             expand_cache[key] = subgrids_codes
-            log(f">>> exp: {key} -> {subgrids_codes}")
             for subgrid_code, subgrid in zip(subgrids_codes, subgrids):
                 if subgrid_code not in code_to_grid:
                     # ... dictionary,
                     code_to_grid[subgrid_code] = subgrid
                     # ... and pixels count cache
                     pixels_count_cache[(subgrid_code, 0)] = len(subgrid.pixels)
-                    log(f">>> pxl: {(subgrid_code, 0)} -> {len(subgrid.pixels)}")
 
         return [code_to_grid[h] for h in expand_cache[key]]
 
@@ -279,322 +480,26 @@ def count_pixels(grid: Grid, rulebook: RuleBook, steps: int, debug: bool = False
                 _pixels_count(sg, in_steps - 3)
                 for sg in _expand_to_nine_subgrids(grid3)
             )
-            log(f">>> pxl: {key} -> {pixels_count_cache[key]}")
         return pixels_count_cache[key]
 
     return _pixels_count(grid, steps)
 
 
-def test_grid_rotated():
-    grid = Grid.create_starting()
-    assert grid.size == 3
-    assert grid.pixels == {(0, 2), (1, 0), (1, 2), (2, 1), (2, 2)}
+def print_subgrids(subgrids: Iterable[tuple[Pos, Grid]]) -> None:
+    subgrids_dict = dict(subgrids)
+    super_xs = sorted(set(x for x, _ in subgrids_dict.keys()))
+    super_ys = sorted(set(y for _, y in subgrids_dict.keys()))
+    subgrid_size = single_value(set(subgrid.size for subgrid in subgrids_dict.values()))
+    separator = "+".join("-" * subgrid_size for _ in super_xs)
 
-    grid_cw = grid.rotated(1)
-    assert grid_cw.size == grid.size
-    assert grid_cw.pixels == {(0, 0), (0, 1), (0, 2), (1, 2), (2, 1)}
-
-    grid_180 = grid.rotated(2)
-    assert grid_180.size == grid.size
-    assert grid_180.pixels == {(0, 0), (0, 1), (1, 0), (1, 2), (2, 0)}
-
-    grid_ccw = grid.rotated(3)
-    assert grid_ccw.size == grid.size
-    assert grid_ccw.pixels == {(0, 1), (1, 0), (2, 0), (2, 1), (2, 2)}
-
-
-def test_grid_flipped():
-    grid = Grid.create_starting()
-    assert grid.size == 3
-    assert grid.pixels == {(0, 2), (1, 0), (1, 2), (2, 1), (2, 2)}
-
-    grid_fx = grid.flipped_x()
-    assert grid_fx.size == grid.size
-    assert grid_fx.pixels == {(0, 1), (0, 2), (1, 0), (1, 2), (2, 2)}
-
-    grid_fy = grid.flipped_y()
-    assert grid_fy.size == grid.size
-    assert grid_fy.pixels == {(0, 0), (1, 0), (1, 2), (2, 0), (2, 1)}
-
-
-def test_grid_to_int():
-    grid = Grid.create_starting()
-    # .#.
-    # ..#
-    # ###
-    #
-    # 1, 5, 6, 7, 8 -> 2 + 32 + 64 + 128 + 256 = 482
-    assert int(grid) == 482
-    # #..
-    # #.#
-    # ##.
-    #
-    # 0, 3, 5, 6, 7 -> 1 + 8 + 32 + 64 + 128 = 233
-    assert int(grid.rotated(1)) == 233
-
-
-def test_grid_split_4x4():
-    #  #.|.#
-    #  .#|..
-    #  --+--
-    #  #.|..
-    #  #.|##
-    grid = Grid(4, [(0, 0), (0, 2), (0, 3), (1, 1), (2, 3), (3, 0), (3, 3)])
-    subgrids = dict(grid.split())
-    assert len(subgrids) == 4
-    assert all(subgrid.size == 2 for subgrid in subgrids.values())
-
-    # (0, 0)  #.
-    # NW      .#
-    assert subgrids[(0, 0)].pixels == {(0, 0), (1, 1)}
-
-    # (2, 0)  .#
-    # NE      ..
-    assert subgrids[(2, 0)].pixels == {(1, 0)}
-
-    # (0, 2)  #.
-    # SW      #.
-    assert subgrids[(0, 2)].pixels == {(0, 0), (0, 1)}
-
-    # (2, 2)  ..
-    # SE      ##
-    assert subgrids[(2, 2)].pixels == {(0, 1), (1, 1)}
-
-
-def test_grid_split_9x9():
-    #  #..|.#.|..#
-    #  .##|.##|.#.
-    #  ...|.#.|...
-    #  ---+---+---
-    #  ...|.#.|...
-    #  ##.|.#.|.##
-    #  ..#|...|..#
-    #  ---+---+---
-    #  ...|#..|##.
-    #  .##|.##|.#.
-    #  #..|.#.|..#
-    grid = Grid(9, [
-        (0, 0), (4, 0), (8, 0),
-        (1, 1), (2, 1), (4, 1), (5, 1), (7, 1),
-        (4, 2),
-        (4, 3),
-        (0, 4), (1, 4), (4, 4), (7, 4), (8, 4),
-        (2, 5), (8, 5),
-        (3, 6), (6, 6), (7, 6),
-        (1, 7), (2, 7), (4, 7), (5, 7), (7, 7),
-        (0, 8), (4, 8), (8, 8)
-    ])
-    assert len(grid.pixels) == 28
-
-    subgrids = dict(grid.split())
-    assert len(subgrids) == 9
-    assert sum(len(sg.pixels) for sg in subgrids.values()) == len(grid.pixels)
-
-    assert subgrids[(0, 0)].pixels == {(0, 0), (1, 1), (2, 1)}          # NW
-    assert subgrids[(0, 3)].pixels == {(0, 1), (1, 1), (2, 2)}          # W
-    assert subgrids[(0, 6)].pixels == {(1, 1), (2, 1), (0, 2)}          # SW
-    assert subgrids[(3, 0)].pixels == {(1, 0), (1, 1), (2, 1), (1, 2)}  # N
-    assert subgrids[(3, 3)].pixels == {(1, 0), (1, 1)}                  # central
-    assert subgrids[(3, 6)].pixels == {(0, 0), (1, 1), (2, 1), (1, 2)}  # S
-    assert subgrids[(6, 0)].pixels == {(2, 0), (1, 1)}                  # NE
-    assert subgrids[(6, 3)].pixels == {(1, 1), (2, 1), (2, 2)}          # E
-    assert subgrids[(6, 6)].pixels == {(0, 0), (1, 0), (1, 1), (2, 2)}  # SE
-
-
-def test_grid_join():
-    #  ###|#..
-    #  ...|...
-    #  .##|##.
-    #  ---+---
-    #  ...|...
-    #  ..#|###
-    #  ...|...
-    subgrids = {
-        (0, 0): Grid(3, [(0, 0), (1, 0), (2, 0), (1, 2), (2, 2)]),  # NW
-        (3, 0): Grid(3, [(0, 0), (0, 2), (1, 2)]),                  # NE
-        (0, 3): Grid(3, [(2, 1)]),                                  # SW
-        (3, 3): Grid(3, [(0, 1), (1, 1), (2, 1)])                   # SE
-    }
-    assert sum(len(sg.pixels) for sg in subgrids.values()) == 12
-
-    grid = Grid.join((pos, sg) for pos, sg in subgrids.items())
-    assert grid.size == 6
-    assert len(grid.pixels) == 12
-    assert grid.pixels == {
-        (0, 0), (1, 0), (2, 0), (3, 0),
-        (1, 2), (2, 2), (3, 2), (4, 2),
-        (2, 4), (3, 4), (4, 4), (5, 4)
-    }
-
-
-def test_expand_3x3():
-    #
-    #  ##.    #..#
-    #  #.# => ....
-    #  #..    ....
-    #         #..#
-    #
-    # first is a variant of the starting grid
-    rule = Rule(
-        num=0,
-        grid_from=Grid(3, [(0, 0), (1, 0), (0, 1), (2, 1), (0, 2)]),
-        grid_to=Grid(4, [(0, 0), (0, 3), (3, 0), (3, 3)])
-    )
-    rulebook = RuleBook([rule])
-
-    grid1 = Grid.create_starting()
-    assert grid1 != rule.grid_from
-
-    grid2 = rulebook.expand(grid1)
-    assert grid2 == rule.grid_to
-
-
-def test_expand_4x4():
-    # first rule:
-    #
-    #  ..    ##.
-    #  #. => #..
-    #        ...
-    rule1 = Rule(
-        num=1,
-        grid_from=Grid(2, [(0, 1)]),
-        grid_to=Grid(3, [(0, 0), (1, 0), (0, 1)])
-    )
-    # second rule:
-    #
-    #  ..    .#.
-    #  ## => #.#
-    #        ..#
-    #
-    rule2 = Rule(
-        num=2,
-        grid_from=Grid(2, [(1, 0), (1, 1)]),
-        grid_to=Grid(3, [(1, 0), (0, 1), (2, 1), (2, 2)])
-    )
-    # plus one bogus rule that won't be used:
-    #
-    #  .#    ...
-    #  #. => .#.
-    #        ...
-    #
-    rule3 = Rule(
-        num=3,
-        grid_from=Grid(2, [(1, 0), (0, 1)]),
-        grid_to=Grid(3, [(1, 1)])
-    )
-
-    rulebook = RuleBook([rule1, rule2, rule3])
-
-    # will be applied like this:
-    #
-    # #..#    #.|.#    ##.|.#.    ##..#.
-    # ...#    ..|.#    #..|#.#    #..#.#
-    # .... => --+-- => ...|..# => .....#
-    # #..#    ..|..    ---+---    ##.##.
-    #         #.|.#    ##.|##.    #..#..
-    #                  #..|#..    ......
-    #                  ...|...
-
-    grid1 = Grid(4, [(0, 0), (3, 0), (3, 1), (0, 3), (3, 3)])
-    assert len(grid1.pixels) == 5
-
-    grid2 = rulebook.expand(grid1)
-    assert grid2.size == 6
-    assert len(grid2.pixels) == 13
-    assert grid2.pixels == {
-        (0, 0), (1, 0), (4, 0),
-        (0, 1), (3, 1), (5, 1),
-        (5, 2),
-        (0, 3), (1, 3), (3, 3), (4, 3),
-        (0, 4), (3, 4)
-    }
-
-
-def test_expand_4x4_with_empty_subgrids():
-    # first rule:
-    #
-    # #.    ...
-    # .. => .#.
-    #       ...
-    #
-    rule1 = Rule(
-        num=1,
-        grid_from=Grid(2, [(0, 0)]),
-        grid_to=Grid(3, [(1, 1)])
-    )
-
-    # second rule:
-    #
-    # ##    ...
-    # .. => #.#
-    #       ...
-    #
-    rule2 = Rule(
-        num=2,
-        grid_from=Grid(2, [(0, 0), (1, 0)]),
-        grid_to=Grid(3, [(0, 1), (2, 1)])
-    )
-
-    # and third rule, matching empty subgrid
-    #
-    # ..    #.#
-    # .. => .#.
-    #       #.#
-    rule3 = Rule(
-        num=3,
-        grid_from=Grid(2, []),
-        grid_to=Grid(3, [(0, 0), (2, 0), (1, 1), (0, 2), (2, 2)])
-    )
-
-    rulebook = RuleBook([rule1, rule2, rule3])
-
-    # apply rules on the grid like this:
-    #
-    #  ....    ..|..    ...|#.#    ...#.#
-    #  .#.. => .#|.. => .#.|.#. => .#..#.
-    #  ..##    --+--    ...|#.#    ...#.#
-    #  ....    ..|##    ---+---    #.#...
-    #          ..|..    #.#|...    .#.#.#
-    #                   .#.|#.#    #.#...
-    #                   #.#|...
-
-    grid1 = Grid(4, [(1, 1), (2, 2), (3, 2)])
-    grid2 = rulebook.expand(grid1)
-    assert grid2.size == 6
-    assert len(grid2.pixels) == 13
-
-
-def part_1(fn: str, steps: int = 5, debug: bool = False) -> int:
-    log = create_logger(debug)
-
-    rulebook = RuleBook.load(fn)
-    grid = Grid.create_starting()
-
-    log("==== Initial ====")
-    log(grid)
-    log("")
-
-    for step in range(1, steps + 1):
-        grid = rulebook.expand(grid)
-        log(f"==== Expansion # {step} ====")
-        log(f"size: {grid.size}, pixels: {len(grid.pixels)}")
-        log(grid)
-        log("")
-
-    print(f"part 1: {len(grid.pixels)} pixels after {steps} steps")
-    return len(grid.pixels)
-
-
-def part_2(fn: str, steps: int = 18, debug: bool = False) -> int:
-    rulebook = RuleBook.load(fn)
-    grid = Grid.create_starting()
-    pixels = count_pixels(grid, rulebook, steps, debug)
-    print(f"part 2: {pixels} pixels after {steps} steps")
-    return pixels
+    for y in super_ys:
+        if y > 0:
+            print(separator)
+        for rows in zip(*(subgrids_dict[x, y].str_lines() for x in super_xs)):
+            print("|".join(rows))
 
 
 if __name__ == '__main__':
-    FILENAME = 'data/21-input.txt'
-    DEBUG = False
-    part_1(FILENAME, debug=DEBUG)
-    part_2(FILENAME, debug=DEBUG)
+    rulebook_ = RuleBook.from_file('data/21-input.txt')
+    part_1(rulebook_)
+    part_2(rulebook_)
