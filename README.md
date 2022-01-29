@@ -102,7 +102,9 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 20. ([aoc](https://adventofcode.com/2017/day/20)) Day 20: [Particle Swarm](y2017/day20_particles.py)
 21. ([aoc](https://adventofcode.com/2017/day/21)) Day 21: [Fractal Art](y2017/day21_fractal.py)
 22. ([aoc](https://adventofcode.com/2017/day/22)) Day 22: [Sporifica Virus](y2017/day22_virus.py)
-...
+23. ([aoc](https://adventofcode.com/2017/day/23)) Day 23: [Coprocessor Conflagration](y2017/day23_optim.py)
+24. ([aoc](https://adventofcode.com/2017/day/24)) Day 24: [Electromagnetic Moat](y2017/day24_bridge.py)
+25. ([aoc](https://adventofcode.com/2017/day/25)) Day 25: [The Halting Problem](y2017/day25_turing.py)
 
 
 ### 2018

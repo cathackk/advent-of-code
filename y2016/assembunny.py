@@ -195,6 +195,8 @@ def run_generator(
 
             case Command('add', (source, target)):
                 regs[target] += val(source)
+            case Command('sub', (source, target)):
+                regs[target] -= val(source)
             case Command('mul', (source, target)):
                 regs[target] *= val(source)
             case Command('nop', ()):
