@@ -47,7 +47,7 @@ def part_1(instructions: Iterable['Instr'] | str) -> int:
         part 1: HQ is 12 blocks away at (10, -2)
         12
     """
-    hq_pos = some(last(walk(instructions)))
+    hq_pos = last(walk(instructions))
     distance = distance_from_origin(hq_pos)
     print(f"part 1: HQ is {distance} blocks away at {hq_pos}")
     return distance

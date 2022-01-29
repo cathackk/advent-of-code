@@ -13,7 +13,6 @@ from typing import Iterator
 from common.file import relative_path
 from common.iteration import last
 from common.text import parse_line
-from common.utils import some
 
 
 def part_1(instructions: Iterable['Instruction']) -> int:
@@ -78,7 +77,7 @@ def part_1(instructions: Iterable['Instruction']) -> int:
         1
     """
 
-    final_registers = some(last(run_instructions(instructions))).registers
+    final_registers = last(run_instructions(instructions)).registers
     max_value, max_reg = max((val, reg) for reg, val in final_registers.items())
 
     print(f"part 1: largest value in registers is {max_reg}={max_value}")

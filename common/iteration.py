@@ -13,16 +13,50 @@ K = TypeVar('K')
 V = TypeVar('V')
 
 
-def first(items: Iterable[T], default: T = None) -> T | None:
-    return next(iter(items), default)
+NotSet = object()
 
 
-# TODO: do not yield None by default, instead raise StopIteration
-# (this means removing changing `some(last(...))` everywhere to `last(...)`)
-def last(items: Iterable[T], default: T = None) -> T | None:
+def first(items: Iterable[T], default: T = NotSet) -> T:  # type: ignore
+    """
+        >>> first(x for x in range(40, 100) if x % 13 == 9)
+        48
+        >>> first("hello!")
+        'h'
+        >>> first((x for x in range(10) if x % 11 == 10))
+        Traceback (most recent call last):
+        ...
+        ValueError: first() arg is an empty sequence
+        >>> first((x for x in range(10) if x % 11 == 10), -1)
+        -1
+    """
+    first_item = next(iter(items), default)
+
+    if first_item is NotSet:
+        raise ValueError("first() arg is an empty sequence")
+
+    return first_item
+
+
+def last(items: Iterable[T], default: T = NotSet) -> T:  # type: ignore
+    """
+        >>> last(x for x in range(100) if x % 3 == x % 5)
+        92
+        >>> last("hello!")
+        '!'
+        >>> last((x for x in range(10) if x % 11 == 10))
+        Traceback (most recent call last):
+        ...
+        ValueError: last() arg is an empty sequence
+        >>> last((x for x in range(10) if x % 11 == 10), default=-1)
+        -1
+    """
     last_item = default
     for item in items:
         last_item = item
+
+    if last_item is NotSet:
+        raise ValueError("last() arg is an empty sequence")
+
     return last_item
 
 

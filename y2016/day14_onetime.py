@@ -15,7 +15,6 @@ from tqdm import tqdm
 from common.file import relative_path
 from common.iteration import last
 from common.md5 import md5 as plain_md5
-from common.utils import some
 
 
 def part_1(salt: str, nth: int = 64) -> int:
@@ -241,7 +240,7 @@ def generate_keys(salt: str, hasher: Hasher) -> Iterable[tuple[int, str]]:
 def generate_nth_key(salt: str, hasher: Hasher, nth: int) -> tuple[int, str]:
     keys = islice(generate_keys(salt, hasher), nth)
     desc = f"generating keys with {hasher.__name__}"
-    return some(last(tqdm(keys, desc=desc, total=nth, unit=" keys", delay=1.0)))
+    return last(tqdm(keys, desc=desc, total=nth, unit=" keys", delay=1.0))
 
 
 def salt_from_file(fn: str) -> str:

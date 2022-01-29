@@ -9,7 +9,6 @@ from typing import Iterable
 from common.file import relative_path
 from common.iteration import last
 from common.iteration import maxk
-from common.utils import some
 
 
 def part_1(directions: Iterable[str]) -> int:
@@ -103,7 +102,7 @@ STEPS = {
 
 def distance_after_steps(directions: Iterable[str]) -> int:
     origin = (0, 0)
-    target = some(last(steps(origin, directions)))
+    target = last(steps(origin, directions))
     return distance(origin, target)
 
 

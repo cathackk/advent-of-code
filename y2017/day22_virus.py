@@ -16,7 +16,6 @@ from common.heading import Heading
 from common.iteration import last
 from common.iteration import single_value
 from common.rect import Rect
-from common.utils import some
 
 
 def part_1(grid: 'Grid', bursts: int = 10_000) -> int:
@@ -154,7 +153,7 @@ def part_1(grid: 'Grid', bursts: int = 10_000) -> int:
     become infected**? (Do not count nodes that begin infected.)
     """
 
-    last_state = some(last(run_virus(grid, bursts)))
+    last_state = last(run_virus(grid, bursts))
     print(f"part 1: after {last_state.bursts} bursts, {last_state.infections} nodes got infected")
     return last_state.infections
 
@@ -272,7 +271,7 @@ def part_2(grid: 'Grid', bursts: int = 10_000_000) -> int:
     become infected**? (Do not count nodes that begin infected.)
     """
 
-    last_state = some(last(run_virus(grid, bursts, extended_states=True)))
+    last_state = last(run_virus(grid, bursts, extended_states=True))
     print(f"part 2: after {last_state.bursts} bursts, {last_state.infections} nodes got infected")
     return last_state.infections
 
@@ -409,7 +408,7 @@ def run_virus(
                 heading = heading.left()
                 new_state = NodeState.WEAKENED if extended_states else NodeState.INFECTED
             case NodeState.WEAKENED:
-                # no change in heading
+                # (no change in heading)
                 new_state = NodeState.INFECTED
             case NodeState.INFECTED:
                 heading = heading.right()

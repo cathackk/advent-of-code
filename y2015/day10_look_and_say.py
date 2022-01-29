@@ -9,7 +9,6 @@ from typing import Iterable
 
 from common.file import relative_path
 from common.iteration import last
-from common.utils import some
 
 
 def part_1(starting_number: str, iterations: int = 40) -> str:
@@ -39,7 +38,7 @@ def part_1(starting_number: str, iterations: int = 40) -> str:
         '111312211312111322212321121113121112131112132112311321322112111312212321121113122112131...'
     """
 
-    seq = some(last(las_sequence(starting_number, iterations)))
+    seq = last(las_sequence(starting_number, iterations))
     result = len(seq)
     print(f"part 1: after {iterations} iterations, sequence has length {result}")
     return seq
@@ -55,7 +54,7 @@ def part_2(starting_number: str, iterations: int = 50) -> str:
         '311311222113111231133211121312211231131112311211133112111312211213211312111322211231131...'
     """
 
-    seq = some(last(las_sequence(starting_number, iterations)))
+    seq = last(las_sequence(starting_number, iterations))
     result = len(seq)
     more = " more" if len(starting_number) >= 100 else ""
     print(f"part 2: after {iterations}{more} iterations, sequence has length {result}")

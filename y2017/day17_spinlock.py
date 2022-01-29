@@ -91,7 +91,7 @@ def part_1(step_size: int, count: int = 2017) -> int:
         638
     """
 
-    current_pos, numbers = some(last(spinlock(step_size, count)))
+    current_pos, numbers = last(spinlock(step_size, count))
     assert numbers[current_pos] == count
     result = numbers[current_pos + 1]
     print(f"part 1: value after 2017 is {result}")
