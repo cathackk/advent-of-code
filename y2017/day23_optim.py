@@ -64,6 +64,8 @@ def part_1(tape: Tape):
     return result
 
 
+# TODO: use tape
+# pylint: disable=unused-argument
 def part_2(tape: Tape):
     """
     Now, it's time to fix the problem.
