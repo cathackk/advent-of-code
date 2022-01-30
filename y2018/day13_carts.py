@@ -67,7 +67,7 @@ class Map:
 
     @staticmethod
     def _place_carts(carts: Iterable[Cart]) -> tuple[dict[Pos, Cart], set[Pos]]:
-        by_pos: dict[Pos, Cart] = dict()
+        by_pos: dict[Pos, Cart] = {}
         collisions: set[Pos] = set()
 
         for cart in carts:
@@ -91,6 +91,9 @@ class Map:
             for col in self.step():
                 yield tick, col
 
+        # unreachable
+        assert False
+
     def step(self) -> Iterable[Pos]:
         """ :return: collisions """
         carts_order = sorted(self.carts.values(), key=lambda c: ro(c.pos))
@@ -109,25 +112,25 @@ class Map:
                 # TODO: multiple collisions?
 
     def _move_cart(self, cart: Cart) -> Cart:
-        h = cart.heading
-        new_pos = h.move(cart.pos)
+        heading = cart.heading
+        new_pos = heading.move(cart.pos)
 
         track = self.tracks[new_pos]
         if track == '|':
-            assert h in north_south
+            assert heading in north_south
             return cart.moved(pos=new_pos)
         elif track == '-':
-            assert h in east_west
+            assert heading in east_west
             return cart.moved(pos=new_pos)
         elif track == '+':
-            new_heading = cart.next_turn.turn(h)
+            new_heading = cart.next_turn.turn(heading)
             new_next_turn = cart.next_turn.following()
             return cart.moved(pos=new_pos, heading=new_heading, next_turn=new_next_turn)
         elif track == '/':
-            new_heading = h.right() if h in north_south else h.left()
+            new_heading = heading.right() if heading in north_south else heading.left()
             return cart.moved(pos=new_pos, heading=new_heading)
         elif track == '\\':
-            new_heading = h.left() if h in north_south else h.right()
+            new_heading = heading.left() if heading in north_south else heading.right()
             return cart.moved(pos=new_pos, heading=new_heading)
         else:
             raise ValueError(track)
@@ -150,21 +153,22 @@ class Map:
 
     @classmethod
     def load(cls, fn: str):
-        tracks: dict[Pos, str] = dict()
-        carts: list[Cart] = list()
+        tracks: dict[Pos, str] = {}
+        carts: list[Cart] = []
 
-        for y, line in enumerate(open(fn)):
-            for x, c in enumerate(line.rstrip()):
-                pos = (x, y)
-                if c in '^>v<':
-                    carts.append(Cart(pos, heading=c2h[c]))
-                    tracks[pos] = '|' if c in '^v' else '-'
-                elif c in '|-/\\+':
-                    tracks[pos] = c
-                elif c == ' ':
-                    pass
-                else:
-                    raise ValueError(c)
+        with open(fn) as file:
+            for y, line in enumerate(file):
+                for x, c in enumerate(line.rstrip()):
+                    pos = (x, y)
+                    if c in '^>v<':
+                        carts.append(Cart(pos, heading=c2h[c]))
+                        tracks[pos] = '|' if c in '^v' else '-'
+                    elif c in '|-/\\+':
+                        tracks[pos] = c
+                    elif c == ' ':
+                        pass
+                    else:
+                        raise ValueError(c)
 
         return Map(tracks, carts)
 
@@ -201,6 +205,6 @@ def part_2(fn: str) -> Pos:
 
 
 if __name__ == '__main__':
-    fn_ = 'data/13-input.txt'
-    part_1(fn_)
-    part_2(fn_)
+    FILENAME = 'data/13-input.txt'
+    part_1(FILENAME)
+    part_2(FILENAME)

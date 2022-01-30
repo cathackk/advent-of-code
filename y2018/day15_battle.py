@@ -4,6 +4,7 @@ from typing import Iterable
 from typing import Optional
 
 from common.utils import ro
+from common.utils import some
 
 Pos = tuple[int, int]
 Path = list[Pos]
@@ -20,6 +21,9 @@ class Team:
         self.code = code or name[0]
         self.attack = attack
         self.hp = hp
+
+    def __str__(self) -> str:
+        return "TODO"
 
     def __repr__(self):
         return (
@@ -107,6 +111,8 @@ class Game:
     def final_score(self) -> Optional[int]:
         if self.winning_team:
             return self.full_rounds_completed * sum(u.hp for u in self.active_units())
+        else:
+            return None
 
     def active_units(self) -> Iterable[Unit]:
         return sorted(self.units_by_pos.values(), key=lambda u: ro(u.pos))
@@ -118,12 +124,12 @@ class Game:
             include_units: bool = False
     ) -> Iterable[Pos]:
         x, y = pos
-        for nx, ny in [(x, y-1), (x-1, y), (x+1, y), (x, y+1)]:
-            if not include_walls and (nx, ny) not in self.floors:
+        for n_x, n_y in [(x, y-1), (x-1, y), (x+1, y), (x, y+1)]:
+            if not include_walls and (n_x, n_y) not in self.floors:
                 continue
-            if not include_units and (nx, ny) in self.units_by_pos:
+            if not include_units and (n_x, n_y) in self.units_by_pos:
                 continue
-            yield nx, ny
+            yield n_x, n_y
 
     def do_round(self) -> Optional[Team]:
         assert self.winning_team is None
@@ -139,8 +145,7 @@ class Game:
                 self.do_unit_combat(unit)
             else:
                 self.full_rounds_completed += 1
-                if self.winning_team:
-                    return self.winning_team
+                return self.winning_team
         finally:
             self.round += 1
 
@@ -183,7 +188,7 @@ class Game:
     def weakest_enemy_in_range(self, unit: Unit) -> Optional[Unit]:
         return min(
             self.enemies_in_range(unit),
-            key=lambda t: (t.hp, ro(t.pos)),
+            key=lambda enemy: (enemy.hp, ro(enemy.pos)),  # type: ignore
             default=None
         )
 
@@ -242,6 +247,8 @@ class Game:
         if len(active_teams) == 1:
             self.winning_team = active_teams[0]
             return self.winning_team
+        else:
+            return None
 
     def draw(self):
         if self.round == 0:
@@ -278,31 +285,32 @@ class Game:
 
     @classmethod
     def load(cls, fn: str, teams: Iterable[Team]) -> 'Game':
-        teams: dict[str, Team] = {team.code: team for team in teams}
-        team_unit_count: dict[str, int] = {c: 0 for c in teams}
+        teams_dict: dict[str, Team] = {team.code: team for team in teams}
+        team_unit_count: dict[str, int] = {c: 0 for c in teams_dict}
         floors: list[Pos] = []
         units: list[Unit] = []
 
-        for y, line in enumerate(open(fn)):
-            for x, c in enumerate(line.strip()):
-                if c == '.':
-                    floors.append((x, y))
-                elif c == '#':
-                    pass
-                elif c in teams:
-                    floors.append((x, y))
-                    team = teams[c]
-                    num = team_unit_count[c] = team_unit_count[c] + 1
-                    units.append(
-                        Unit(code=c, num=num, pos=(x, y), attack=team.attack, hp=team.hp)
-                    )
-                else:
-                    raise KeyError(c)
+        with open(fn) as file:
+            for y, line in enumerate(file):
+                for x, c in enumerate(line.strip()):
+                    if c == '.':
+                        floors.append((x, y))
+                    elif c == '#':
+                        pass
+                    elif c in teams_dict:
+                        floors.append((x, y))
+                        team = teams_dict[c]
+                        num = team_unit_count[c] = team_unit_count[c] + 1
+                        units.append(
+                            Unit(code=c, num=num, pos=(x, y), attack=team.attack, hp=team.hp)
+                        )
+                    else:
+                        raise KeyError(c)
 
         return cls(
             width=max(x for x, _ in floors) + 2,
             height=max(y for _, y in floors) + 2,
-            teams=teams.values(),
+            teams=teams_dict.values(),
             floors=floors,
             units=units
         )
@@ -364,6 +372,7 @@ def test_movement_all_units():
     assert set(game.units_by_pos) == last_positions
 
 
+# pylint: disable=too-many-statements
 def test_combat():
     game = Game.load("data/15-test-combat.txt", default_teams())
     elves = [unit for unit in game.active_units() if unit.code == 'E']
@@ -567,7 +576,7 @@ def part_1(fn: str) -> int:
     print(f"{game.winning_team.name} win with {winning_hps} total hit points left")
     print(f"part 1: Outcome is {game.final_score()}")
     print()
-    return game.final_score()
+    return some(game.final_score())
 
 
 def part_2(fn: str) -> int:
@@ -578,21 +587,24 @@ def part_2(fn: str) -> int:
         while game.winning_team is None:
             game.do_round()
 
-        e = game.teams_unit_count['E']
-        g = game.teams_unit_count['G']
-        print(f"attack={elves_attack} -> E: {e}, G: {g}")
+        elves = game.teams_unit_count['E']
+        goblins = game.teams_unit_count['G']
+        print(f"attack={elves_attack} -> E: {elves}, G: {goblins}")
         game.draw()
 
-        if game.winning_team.name == "Elves" and e == initial_elves_count:
+        if game.winning_team.name == "Elves" and elves == initial_elves_count:
             winning_hps = sum(u.hp for u in game.active_units())
             print(f"Combat ends after {game.full_rounds_completed} full rounds")
             print(f"Elves win with no losses, {winning_hps} total hit points left")
             print(f"part 2: Outcome is {game.final_score()}")
             print()
-            return game.final_score()
+            return some(game.final_score())
+
+    # unreachable
+    assert False
 
 
 if __name__ == '__main__':
-    fn_ = "data/15-input.txt"
-    part_1(fn_)
-    part_2(fn_)
+    FILENAME = "data/15-input.txt"
+    part_1(FILENAME)
+    part_2(FILENAME)

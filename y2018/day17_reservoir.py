@@ -17,19 +17,20 @@ SPACE = ' '
 
 
 def load_walls(fn: str) -> Iterable[Pos]:
-    for line in open(fn):
-        if line.startswith('x='):
-            # x=651, y=334..355
-            x, y1, y2 = (int(v) for v in parse_line(line, 'x=$, y=$..$\n'))
-            assert y1 <= y2
-            yield from ((x, y) for y in range(y1, y2 + 1))
-        elif line.startswith('y='):
-            # y=1708, x=505..523
-            y, x1, x2 = (int(v) for v in parse_line(line, 'y=$, x=$..$\n'))
-            assert x1 <= x2
-            yield from ((x, y) for x in range(x1, x2 + 1))
-        else:
-            raise ValueError(line)
+    with open(fn) as file:
+        for line in file:
+            if line.startswith('x='):
+                # x=651, y=334..355
+                x, y1, y2 = (int(v) for v in parse_line(line, 'x=$, y=$..$\n'))
+                assert y1 <= y2
+                yield from ((x, y) for y in range(y1, y2 + 1))
+            elif line.startswith('y='):
+                # y=1708, x=505..523
+                y, x1, x2 = (int(v) for v in parse_line(line, 'y=$, x=$..$\n'))
+                assert x1 <= x2
+                yield from ((x, y) for x in range(x1, x2 + 1))
+            else:
+                raise ValueError(line)
 
 
 class State:
@@ -74,12 +75,12 @@ class State:
             return {pos: FALLING}, []
 
         (tile_left, x_left), (tile_right, x_right) = floor
-        px, py = pos
+        p_x, p_y = pos
 
         #   ...+...        ...+...
         #   .......   ->   ...+...
         if x_left == x_right and tile_left == tile_right == '.':
-            return dict(), [(px, py), (px, py+1)]
+            return {}, [(p_x, p_y), (p_x, p_y + 1)]
 
         #   ...+...        ...|...
         #   ...|...   ->   ...|...
@@ -103,25 +104,25 @@ class State:
 
         overflows = []
         if tile_left == '.':
-            overflows.append((x_left, py))
+            overflows.append((x_left, p_y))
         if tile_right == '.':
-            overflows.append((x_right, py))
+            overflows.append((x_right, p_y))
 
         water_tile = RUNNING if overflows else STILL
-        return {(x, py): water_tile for x in range(x_left+1, x_right)}, overflows
+        return {(x, p_y): water_tile for x in range(x_left + 1, x_right)}, overflows
 
     def _scan_floor(self, pos: Pos) -> Optional[tuple[tuple[str, int], tuple[str, int]]]:
-        px, py = pos
-        if py >= self.drawing_bounds.bottom_y:
+        p_x, p_y = pos
+        if p_y >= self.drawing_bounds.bottom_y:
             return None
 
         def walk(dx) -> tuple[str, int]:
-            for x in count(px, dx):
-                tile_current = self.board.get((x, py))
+            for x in count(p_x, dx):
+                tile_current = self.board.get((x, p_y))
                 if tile_current == WALL:
                     # wall on current level
                     return WALL, x
-                tile_below = self.board.get((x, py+1))
+                tile_below = self.board.get((x, p_y + 1))
                 if tile_below is None:
                     # empty space below
                     return '.', x
@@ -129,6 +130,9 @@ class State:
                     # falling or running water below
                     return FALLING, x
                 # otherwise continue ...
+
+            # unreachable
+            assert False
 
         return walk(-1), walk(+1)
 
@@ -158,13 +162,13 @@ class State:
 
 
 def both_parts(fn: str) -> tuple[int, int]:
-    s = State.load(fn).run()
-    s.draw()
+    state = State.load(fn).run()
+    state.draw()
 
-    score_1 = s.water_score(include_running=True)
+    score_1 = state.water_score(include_running=True)
     print(f"part 1: water reaches {score_1} tiles")
 
-    score_2 = s.water_score(include_running=False)
+    score_2 = state.water_score(include_running=False)
     print(f"part 1: water remains at {score_2} tiles")
 
     return score_1, score_2

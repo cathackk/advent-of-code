@@ -11,9 +11,10 @@ Dependency = tuple[str, str]
 
 
 def load_dependencies(fn: str) -> Iterable[Dependency]:
-    # Step Y must be finished before step M can begin.
-    for line in open(fn):
-        yield parse_line(line, "Step $ must be finished before step $ can begin.\n")
+    with open(fn) as file:
+        for line in file:
+            step_0, step_1 = parse_line(line, "Step $ must be finished before step $ can begin.\n")
+            yield step_0, step_1
 
 
 def step_length(step: str) -> int:
@@ -21,9 +22,9 @@ def step_length(step: str) -> int:
 
 
 def build(
-        dependencies: Iterable[Dependency],
-        workers_count: int,
-        debug: bool = False
+    dependencies: Iterable[Dependency],
+    workers_count: int,
+    debug: bool = False
 ) -> Generator[str, None, int]:
     requirements: dict[str, set[str]] = dgroupby_set(
         dependencies,
@@ -35,6 +36,8 @@ def build(
     steps_count = len(steps_unprocessed)
     steps_in_progress: dict[int, set[str]] = defaultdict(set)
     steps_finished: set[str] = set()
+
+    tick = -1
 
     def log(msg: str = ""):
         if debug:
@@ -67,6 +70,9 @@ def build(
                 steps_in_progress[step_finished_tick].add(step)
                 log(f"started working on {step}, will finish at {step_finished_tick}")
             steps_unprocessed.difference_update(selected_steps)
+
+    # unreachable
+    assert False
 
 
 def part_1(dependencies: set[Dependency], debug=False) -> str:

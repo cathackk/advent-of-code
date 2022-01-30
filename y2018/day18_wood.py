@@ -5,6 +5,7 @@ from typing import Optional
 
 from common.iteration import single_value
 from common.rect import Rect
+from common.utils import some
 
 Pos = tuple[int, int]
 Board = dict[Pos, str]
@@ -22,14 +23,15 @@ class State:
 
         self.minute = 0
 
-        self.hash_to_board: dict[int, Board] = dict()
-        self.next_hash: dict[int, int] = dict()
-        self.current_hash = None
+        self.hash_to_board: dict[int, Board] = {}
+        self.next_hash: dict[int, int] = {}
+        self.current_hash: int | None = None
         self._capture_history()
 
     @classmethod
     def load(cls, fn: str):
-        lines = list(line.rstrip() for line in open(fn))
+        with open(fn) as file:
+            lines = [line.rstrip() for line in file]
 
         height = len(lines)
         assert height > 0
@@ -55,13 +57,16 @@ class State:
         self.hash_to_board[self.current_hash] = self.board
 
     def _detect_cycle(self) -> Optional[int]:
-        h = self.current_hash
+        hash_ = self.current_hash
         for step in count(1):
-            h = self.next_hash.get(h)
-            if h is None:
+            hash_ = self.next_hash.get(some(hash_))
+            if hash_ is None:
                 return None
-            elif h == self.current_hash:
+            elif hash_ == self.current_hash:
                 return step
+
+        # unreachable
+        assert False
 
     def current_score(self) -> int:
         """
@@ -88,23 +93,29 @@ class State:
             return True
 
         def new_acre(current_acre: str, neighbors: Iterable[str]) -> str:
-            nc = Counter(neighbors)
+            neighbors_count = Counter(neighbors)
 
             # An open acre will become filled with trees if  three or more adjacent acres
             # contained trees. Otherwise, nothing happens.
             if current_acre == SPACE:
-                return TREES if nc[TREES] >= 3 else SPACE
+                return TREES if neighbors_count[TREES] >= 3 else SPACE
 
             # An acre filled with trees will become a lumberyard if three or more adjacent acres
             # were lumberyards. Otherwise, nothing happens.
             elif current_acre == TREES:
-                return LUMBER if nc[LUMBER] >= 3 else TREES
+                return LUMBER if neighbors_count[LUMBER] >= 3 else TREES
 
             # An acre containing a lumberyard will remain a lumberyard if it was adjacent to at
             # least one other lumberyard and at least one acre containing trees. Otherwise, it
             # becomes open.
             elif current_acre == LUMBER:
-                return LUMBER if nc[LUMBER] >= 1 and nc[TREES] >= 1 else SPACE
+                if neighbors_count[LUMBER] >= 1 and neighbors_count[TREES] >= 1:
+                    return LUMBER
+                else:
+                    return SPACE
+
+            else:
+                raise ValueError(current_acre)
 
         self.board = {
             (x, y): new_acre(
@@ -134,9 +145,9 @@ class State:
                 cycle_length = self._detect_cycle()
                 assert cycle_length is not None
                 for _ in range((minutes - self.minute) % cycle_length):
-                    self.current_hash = self.next_hash[self.current_hash]
+                    self.current_hash = self.next_hash[some(self.current_hash)]
 
-                self.board = self.hash_to_board[self.current_hash]
+                self.board = self.hash_to_board[some(self.current_hash)]
                 self.minute = minutes
                 break
 
@@ -158,6 +169,6 @@ def part(part_n: int, minutes: int, fn: str) -> int:
 
 
 if __name__ == '__main__':
-    filename = "data/18-input.txt"
-    part(1, 10, filename)
-    part(2, 1_000_000_000, filename)
+    FILENAME = "data/18-input.txt"
+    part(1, 10, FILENAME)
+    part(2, 1_000_000_000, FILENAME)

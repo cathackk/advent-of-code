@@ -22,24 +22,26 @@ def load_events(fn: str) -> Iterable[Event]:
     guard_no: Optional[int] = None
     asleep_since: Optional[int] = None
 
-    for line in sorted(open(fn)):
-        # [1518-03-06 23:47] Guard #1009 begins shift
-        dt, what = parse_line(line, '[$] $\n')
-        minute = int(dt.split(':')[1])
+    with open(fn) as file:
+        for line in sorted(file):
+            # [1518-03-06 23:47] Guard #1009 begins shift
+            date_time, what = parse_line(line, '[$] $\n')
+            minute = int(date_time.split(':')[1])
 
-        if what.startswith("Guard #"):
-            assert asleep_since is None
-            guard_no = int(strip_line(what, "Guard #", " begins shift"))
-        elif what == "falls asleep":
-            assert guard_no is not None
-            asleep_since = minute
-        elif what == "wakes up":
-            assert guard_no is not None
-            assert asleep_since < minute
-            yield Event(guard_no, range(asleep_since, minute))
-            asleep_since = None
-        else:
-            raise KeyError(what)
+            if what.startswith("Guard #"):
+                assert asleep_since is None
+                guard_no = int(strip_line(what, "Guard #", " begins shift"))
+            elif what == "falls asleep":
+                assert guard_no is not None
+                asleep_since = minute
+            elif what == "wakes up":
+                assert guard_no is not None
+                assert asleep_since is not None
+                assert asleep_since < minute
+                yield Event(guard_no, range(asleep_since, minute))
+                asleep_since = None
+            else:
+                raise KeyError(what)
 
 
 def part_1(events: list[Event]) -> int:

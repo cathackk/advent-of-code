@@ -51,9 +51,9 @@ def game(players_count: int, last_marble: int, log_each: int = 1_000_000) -> int
 
 
 if __name__ == '__main__':
-    players_count_ = 426
-    last_marble_ = 72058
-    high_score_1 = game(players_count_, last_marble_)
+    PLAYERS_COUNT_ = 426
+    LAST_MARBLE_ = 72058
+    high_score_1 = game(PLAYERS_COUNT_, LAST_MARBLE_)
     print(f"part 1: high score is {high_score_1}")
-    high_score_2 = game(players_count_, last_marble_ * 100)
+    high_score_2 = game(PLAYERS_COUNT_, LAST_MARBLE_ * 100)
     print(f"part 2: high score is {high_score_2}")

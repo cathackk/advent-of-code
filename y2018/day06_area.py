@@ -16,27 +16,27 @@ def neighbors(pos: Pos) -> Iterable[Pos]:
     yield x, y-1
 
 
-def md(pos1: Pos, pos2: Pos):
+def manhattan(pos1: Pos, pos2: Pos):
     x1, y1 = pos1
     x2, y2 = pos2
     return abs(x1 - x2) + abs(y1 - y2)
 
 
 def load_points(fn: str) -> Iterable[Pos]:
-    for line in open(fn):
-        x, y = line.strip().split(', ')
-        yield int(x), int(y)
+    with open(fn) as file:
+        for line in file:
+            x, y = line.strip().split(', ')
+            yield int(x), int(y)
 
 
 def claim(points: set[Pos]) -> int:
     # name the original points for easier debugging
-    names: dict[Pos, str] = {
-        pos: name
-        for pos, name in zip(
+    names: dict[Pos, str] = dict(
+        zip(
             sorted(points),
             string.ascii_uppercase + string.ascii_lowercase
         )
-    }
+    )
     # determine boundaries
     bounds = Rect.with_all(points).grow_by(+3, +3)
     # pos -> claimant
@@ -82,17 +82,17 @@ def claim(points: set[Pos]) -> int:
 
 
 def draw_claims(points: set[Pos], claims: dict[Pos, str], bounds: Rect):
-    def t(tx: int, ty: int) -> str:
-        return '#' if (tx, ty) in points else claims.get((tx, ty), ' ')
+    def t(point: Pos) -> str:
+        return '#' if point in points else claims.get(point, ' ')
     for y in bounds.range_y():
-        print(''.join(t(x, y) for x in bounds.range_x()))
+        print(''.join(t((x, y)) for x in bounds.range_x()))
     print()
 
 
 def closest(points: set[Pos], limit: int) -> int:
     bounds = Rect.with_all(points)
     dists = {
-        (x, y): sum(md((x, y), p) for p in points)
+        (x, y): sum(manhattan((x, y), p) for p in points)
         for x in bounds.range_x()
         for y in bounds.range_y()
     }

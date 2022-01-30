@@ -1,4 +1,5 @@
 import math
+from typing import Iterator
 
 from common.math import gcd2
 from common.math import sgn
@@ -8,20 +9,20 @@ from common.mixin import Orderable
 class XY(Orderable):
     __slots__ = ['x', 'y']
 
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
 
-    def __repr__(self):
-        return f'{type(self).__name__}({self.x}, {self.y})'
+    def __repr__(self) -> str:
+        return f'{type(self).__name__}({self.x!r}, {self.y!r})'
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[int]:
         yield self.x
         yield self.y
 
 
 class Vector(XY):
-    def __str__(self):
+    def __str__(self) -> str:
         return f'({self.x}, {self.y})'
 
     def __add__(self, other: 'Vector') -> 'Vector':
@@ -48,12 +49,12 @@ class Vector(XY):
     def angle(self) -> float:
         angle = math.atan2(self.x, -self.y)
         if angle < 0:
-            angle += 2*math.pi
+            angle += 2 * math.pi
         return angle
 
 
 class Point(XY):
-    def __str__(self):
+    def __str__(self) -> str:
         return f'[{self.x}, {self.y}]'
 
     def __add__(self, other: Vector) -> 'Point':

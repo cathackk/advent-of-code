@@ -41,12 +41,12 @@ def square_sum(x: int, y: int, size: int, val: Callable[[int, int], int]) -> int
         # AABB
         # CCDD
         # CCDD
-        h = size // 2
+        hgh = size // 2
         return (
-            square_sum(x, y, h, val)        # A
-            + square_sum(x+h, y, h, val)    # B
-            + square_sum(x, y+h, h, val)    # C
-            + square_sum(x+h, y+h, h, val)  # D
+            square_sum(x, y, hgh, val)            # A
+            + square_sum(x+hgh, y, hgh, val)      # B
+            + square_sum(x, y+hgh, hgh, val)      # C
+            + square_sum(x+hgh, y+hgh, hgh, val)  # D
         )
 
     else:
@@ -55,21 +55,21 @@ def square_sum(x: int, y: int, size: int, val: Callable[[int, int], int]) -> int
         # AAXDD
         # CCDDD
         # CCDDD
-        h2 = size // 2
-        h1 = size - h2
+        h_2 = size // 2
+        h_1 = size - h_2
         return (
-            square_sum(x, y, h1, val)          # A
-            + square_sum(x+h1, y, h2, val)     # B
-            + square_sum(x, y+h1, h2, val)     # C
-            + square_sum(x+h2, y+h2, h1, val)  # D
-            - square_sum(x+h2, y+h2, 1, val)   # X
+            square_sum(x, y, h_1, val)            # A
+            + square_sum(x+h_1, y, h_2, val)      # B
+            + square_sum(x, y+h_1, h_2, val)      # C
+            + square_sum(x+h_2, y+h_2, h_1, val)  # D
+            - square_sum(x+h_2, y+h_2, 1, val)    # X
         )
 
 
 def max_square(
-        serial: int,
-        square_size: range = range(3, 4),
-        grid_size: int = 300
+    serial: int,
+    square_size: range = range(3, 4),
+    grid_size: int = 300
 ) -> tuple[tuple[int, int, int], int]:
     """
     >>> max_square(18)
@@ -88,19 +88,19 @@ def max_square(
 
 
 def part_1(serial: int) -> tuple[int, int]:
-    (x, y, s), total_power = max_square(serial)
-    assert s == 3
+    (x, y, size), total_power = max_square(serial)
+    assert size == 3
     print(f"part 1: square at {(x, y)} with total power {total_power}")
     return x, y
 
 
 def part_2(serial: int) -> tuple[int, int, int]:
-    (x, y, s), total_power = max_square(serial=serial, square_size=range(1, 30))
-    print(f"part 2: square at {(x, y)} of size {s} with total power {total_power}")
-    return x, y, s
+    (x, y, size), total_power = max_square(serial=serial, square_size=range(1, 30))
+    print(f"part 2: square at {(x, y)} of size {size} with total power {total_power}")
+    return x, y, size
 
 
 if __name__ == '__main__':
-    serial_ = 1308
-    part_1(serial_)
-    part_2(serial_)
+    SERIAL = 1308
+    part_1(SERIAL)
+    part_2(SERIAL)

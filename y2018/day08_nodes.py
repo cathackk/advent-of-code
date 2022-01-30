@@ -11,12 +11,16 @@ def load_data(fn: str) -> Iterable[int]:
 
 
 def read_metadata(data: Iterator[int]) -> Iterable[int]:
-    nodes_count = next(data)
-    metadata_count = next(data)
-    for _ in range(nodes_count):
-        yield from read_metadata(data)
-    for _ in range(metadata_count):
-        yield next(data)
+    try:
+        nodes_count = next(data)
+        metadata_count = next(data)
+        for _ in range(nodes_count):
+            yield from read_metadata(data)
+        for _ in range(metadata_count):
+            yield next(data)
+
+    except StopIteration as stop:
+        raise ValueError("unexpected end of stream") from stop
 
 
 def read_value(data: Iterator[int]) -> int:

@@ -28,8 +28,8 @@ all_ops = {
 FourInts = tuple[int, int, int, int]
 
 
-def four_ints(xs) -> FourInts:
-    a, b, c, d = xs
+def four_ints(values) -> FourInts:
+    a, b, c, d = values
     return int(a), int(b), int(c), int(d)
 
 
@@ -40,14 +40,14 @@ class Sample(NamedTuple):
 
     @classmethod
     def load(cls, fn: str) -> Iterable['Sample']:
-        with open(fn) as f:
+        with open(fn) as file:
             while True:
                 before = four_ints(
-                    v for v in strip_line(f.readline().rstrip(), 'Before: [', ']').split(', ')
+                    v for v in strip_line(file.readline().rstrip(), 'Before: [', ']').split(', ')
                 )
-                instructions = four_ints(int(v) for v in f.readline().rstrip().split(' '))
+                instructions = four_ints(int(v) for v in file.readline().rstrip().split(' '))
                 after = four_ints(
-                    v for v in strip_line(f.readline().rstrip(), 'After:  [', ']').split(', ')
+                    v for v in strip_line(file.readline().rstrip(), 'After:  [', ']').split(', ')
                 )
 
                 yield Sample(
@@ -56,7 +56,7 @@ class Sample(NamedTuple):
                     regs_after=after
                 )
 
-                empty_line = f.readline()
+                empty_line = file.readline()
                 if empty_line == '':
                     return
 
@@ -83,11 +83,15 @@ def map_opnums_to_opcodes(samples: Iterable[Sample]) -> Iterable[tuple[int, str]
         possible_n2c[sample.opnum].intersection_update(sample.possible_opcodes())
 
     while possible_n2c:
-        opnum, opcode = next(
-            (n, single_value(cs))
-            for n, cs in possible_n2c.items()
-            if len(cs) == 1
-        )
+        try:
+            opnum, opcode = next(
+                (n, single_value(cs))
+                for n, cs in possible_n2c.items()
+                if len(cs) == 1
+            )
+        except StopIteration as stop:
+            raise ValueError("no more matches") from stop
+
         yield opnum, opcode
         del possible_n2c[opnum]
         for opcodes in possible_n2c.values():
@@ -95,8 +99,9 @@ def map_opnums_to_opcodes(samples: Iterable[Sample]) -> Iterable[tuple[int, str]
 
 
 def load_program(fn: str) -> Iterable[FourInts]:
-    for line in open(fn):
-        yield four_ints(line.split(' '))
+    with open(fn) as file:
+        for line in file:
+            yield four_ints(line.split(' '))
 
 
 def part_1(fn_samples: str) -> int:
@@ -123,8 +128,5 @@ def part_2(fn_samples: str, fn_program: str):
 
 
 if __name__ == '__main__':
-    filename_samples = "data/16-input-samples.txt"
-    filename_program = "data/16-input-program.txt"
-
-    part_1(filename_samples)
-    part_2(filename_samples, filename_program)
+    part_1("data/16-input-samples.txt")
+    part_2("data/16-input-samples.txt", "data/16-input-program.txt")

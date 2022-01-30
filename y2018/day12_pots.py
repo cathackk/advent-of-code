@@ -50,18 +50,18 @@ class State:
 
 
 def load(fn: str) -> tuple[State, Rules]:
-    f = open(fn)
-    initial_state = State.from_line(strip_line(next(f), "initial state: ", "\n"))
-    assert next(f) == "\n"
+    with open(fn) as file:
+        initial_state = State.from_line(strip_line(next(file), "initial state: ", "\n"))
+        assert next(file) == "\n"
 
-    rules: Rules = set()
-    for line in f:
-        line_from, line_to = line.strip().split(" => ")
-        if line_to == '#':
-            assert len(line_from) == 5
-            rules.add(sum(1 << (4-x) for x, c in enumerate(line_from) if c == '#'))
+        rules: Rules = set()
+        for line in file:
+            line_from, line_to = line.strip().split(" => ")
+            if line_to == '#':
+                assert len(line_from) == 5
+                rules.add(sum(1 << (4-x) for x, c in enumerate(line_from) if c == '#'))
 
-    return initial_state, rules
+        return initial_state, rules
 
 
 def part_1(fn: str, generations: int = 20) -> int:
@@ -73,9 +73,9 @@ def part_1(fn: str, generations: int = 20) -> int:
 
 
 def run_until_constant_score_delta(
-        state: State,
-        rules: Rules,
-        const_length: int = 10
+    state: State,
+    rules: Rules,
+    const_length: int = 10
 ) -> tuple[int, int, int]:
     deltas = []
     for gen in count(1):
@@ -84,6 +84,9 @@ def run_until_constant_score_delta(
         if len(deltas) >= const_length and len(set(deltas[-const_length:])) == 1:
             return gen, new_state.score(), deltas[-1]
         state = new_state
+
+    # unreachable
+    assert False
 
 
 def part_2(fn: str, generations: int = 50_000_000_000) -> int:
@@ -97,6 +100,6 @@ def part_2(fn: str, generations: int = 50_000_000_000) -> int:
 
 
 if __name__ == '__main__':
-    fn_ = "data/12-input.txt"
-    part_1(fn_)
-    part_2(fn_)
+    FILENAME = "data/12-input.txt"
+    part_1(FILENAME)
+    part_2(FILENAME)
