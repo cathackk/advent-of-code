@@ -111,6 +111,8 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 
 ([aoc 2018 event](https://adventofcode.com/2018))
 
+1. ([aoc](https://adventofcode.com/2018/day/1)) Day 1: [Chronal Calibration](y2018/day01_freq.py)
+2. ([aoc](https://adventofcode.com/2018/day/2)) Day 2: [Inventory Management System](y2018/day02_tags.py)
 ...
 
 
