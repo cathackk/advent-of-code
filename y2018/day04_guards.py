@@ -259,6 +259,53 @@ class NightRecord:
         return f"{self.date:m-d}  #{self.guard_id:02}  {sleep}"
 
 
+def print_schedule(records: Iterable[NightRecord]) -> None:
+    print("Date   ID   Minute")
+    print("            000000000011111111112222222222333333333344444444445555555555")
+    print("            012345678901234567890123456789012345678901234567890123456789")
+    print("\n".join(str(record) for record in records))
+
+
+def slept_per_guard(records: Iterable[NightRecord]) -> Counter[int]:
+    guard_sleep: Counter[int] = Counter()
+    for record in records:
+        guard_sleep[record.guard_id] += record.sleep_time
+    return guard_sleep
+
+
+def slept_per_minute(records: Iterable[NightRecord], guard_id: int) -> Counter[int]:
+    return Counter(
+        minute
+        for record in records
+        if record.guard_id == guard_id
+        for minute in record.minutes_asleep()
+    )
+
+
+def slept_per_guard_minute(records: Iterable[NightRecord]) -> Counter[tuple[int, int]]:
+    return Counter(
+        (record.guard_id, minute)
+        for record in records
+        for minute in record.minutes_asleep()
+    )
+
+
+def events_from_text(text: str) -> list[Event]:
+    return sorted(events_from_lines(text.strip().splitlines()))
+
+
+def events_from_file(fn: str) -> list[Event]:
+    return sorted(events_from_lines(open(relative_path(__file__, fn))))
+
+
+def events_from_lines(lines: Iterable[str]) -> Iterable[Event]:
+    return (Event.from_str(line.strip()) for line in lines)
+
+
+def records_from_file(fn: str) -> list[NightRecord]:
+    return list(records_from_events(events_from_file(fn)))
+
+
 def records_from_events(events: Iterable[Event]) -> Iterable[NightRecord]:
     current_date: Date | None = None
     current_guard_id: int | None = None
@@ -298,53 +345,6 @@ def records_from_events(events: Iterable[Event]) -> Iterable[NightRecord]:
 
     if current_sleeps:
         yield NightRecord(some(current_date), some(current_guard_id), current_sleeps)
-
-
-def slept_per_guard(records: Iterable[NightRecord]) -> Counter[int]:
-    guard_sleep: Counter[int] = Counter()
-    for record in records:
-        guard_sleep[record.guard_id] += record.sleep_time
-    return guard_sleep
-
-
-def slept_per_minute(records: Iterable[NightRecord], guard_id: int) -> Counter[int]:
-    return Counter(
-        minute
-        for record in records
-        if record.guard_id == guard_id
-        for minute in record.minutes_asleep()
-    )
-
-
-def slept_per_guard_minute(records: Iterable[NightRecord]) -> Counter[tuple[int, int]]:
-    return Counter(
-        (record.guard_id, minute)
-        for record in records
-        for minute in record.minutes_asleep()
-    )
-
-
-def print_schedule(records: Iterable[NightRecord]) -> None:
-    print("Date   ID   Minute")
-    print("            000000000011111111112222222222333333333344444444445555555555")
-    print("            012345678901234567890123456789012345678901234567890123456789")
-    print("\n".join(str(record) for record in records))
-
-
-def events_from_text(text: str) -> list[Event]:
-    return sorted(events_from_lines(text.strip().splitlines()))
-
-
-def events_from_file(fn: str) -> list[Event]:
-    return sorted(events_from_lines(open(relative_path(__file__, fn))))
-
-
-def events_from_lines(lines: Iterable[str]) -> Iterable[Event]:
-    return (Event.from_str(line.strip()) for line in lines)
-
-
-def records_from_file(fn: str) -> list[NightRecord]:
-    return list(records_from_events(events_from_file(fn)))
 
 
 if __name__ == '__main__':

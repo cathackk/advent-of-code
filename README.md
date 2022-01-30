@@ -115,6 +115,8 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 2. ([aoc](https://adventofcode.com/2018/day/2)) Day 2: [Inventory Management System](y2018/day02_tags.py)
 3. ([aoc](https://adventofcode.com/2018/day/3)) Day 3: [No Matter How You Slice It](y2018/day03_claims.py)
 4. ([aoc](https://adventofcode.com/2018/day/4)) Day 4: [Repose Record](y2018/day04_guards.py)
+5. ([aoc](https://adventofcode.com/2018/day/5)) Day 5: [Alchemical Reduction](y2018/day05_polymer.py)
+6. ([aoc](https://adventofcode.com/2018/day/6)) Day 6: [Chronal Coordinates](y2018/day06_area.py)
 ...
 
 
