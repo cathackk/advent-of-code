@@ -147,7 +147,7 @@ def part_2(coordinates: Iterable[Pos], distance_limit: int = 10_000) -> int:
         16
     """
 
-    result = safe_region_size(coordinates, distance_limit)
+    result = len(safe_region(coordinates, distance_limit))
     print(f"part 2: region closer than {distance_limit} to every point has size {result}")
     return result
 
@@ -209,14 +209,16 @@ def manhattan_distance(pos_1: Pos, pos_2: Pos):
     return abs(x_1 - x_2) + abs(y_1 - y_2)
 
 
-def safe_region_size(points: Iterable[Pos], distance_limit: int) -> int:
-    bounds = Rect.with_all(points)
-    dists = {
-        (x, y): sum(manhattan_distance((x, y), p) for p in points)
-        for (x, y) in bounds
+def safe_region(coordinates: Iterable[Pos], distance_limit: int) -> set[Pos]:
+    # note that this wouldn't work with distance_limit large enough
+    # for the safe region to overflow the bounds
+    coordinates_list = list(coordinates)
+    bounds = Rect.with_all(coordinates_list)
+    return {
+        pos
+        for pos in bounds
+        if sum(manhattan_distance(pos, coor) for coor in coordinates_list) < distance_limit
     }
-    assert all(dists[border_pos] >= distance_limit for border_pos in bounds.border_ps())
-    return sum(1 for d in dists.values() if d < distance_limit)
 
 
 def draw_coordinates(
@@ -244,11 +246,11 @@ def draw_coordinates(
 
     elif distance_limit is not None:
         # draw safe region for part 2
+        region = safe_region(coordinates_list, distance_limit)
         canvas.update(
             (pos, safe_char)
-            for pos in bounds
+            for pos in region
             if pos not in canvas
-            if sum(manhattan_distance(pos, coor) for coor in coordinates_list) < distance_limit
         )
 
     for y in bounds.range_y():
