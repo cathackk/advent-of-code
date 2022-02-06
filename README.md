@@ -117,6 +117,10 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 4. ([aoc](https://adventofcode.com/2018/day/4)) Day 4: [Repose Record](y2018/day04_guards.py)
 5. ([aoc](https://adventofcode.com/2018/day/5)) Day 5: [Alchemical Reduction](y2018/day05_polymer.py)
 6. ([aoc](https://adventofcode.com/2018/day/6)) Day 6: [Chronal Coordinates](y2018/day06_area.py)
+7. ([aoc](https://adventofcode.com/2018/day/7)) Day 7: [The Sum of Its Parts](y2018/day07_building.py)
+8. ([aoc](https://adventofcode.com/2018/day/8)) Day 8: [Memory Maneuver](y2018/day08_nodes.py)
+9. ([aoc](https://adventofcode.com/2018/day/9)) Day 9: [Marble Mania](y2018/day09_marbles.py)
+10. ([aoc](https://adventofcode.com/2018/day/10)) Day 10: [The Stars Align](y2018/day10_stars.py)
 ...
 
 

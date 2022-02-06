@@ -6,8 +6,8 @@ https://adventofcode.com/2016/day/8
 
 from typing import Iterable
 
+from common import ocr
 from common.file import relative_path
-from common.ocr import read_string
 from common.rect import Rect
 from common.text import parse_line
 
@@ -146,7 +146,7 @@ def part_2(commands: list[str]) -> str:
 
     screen = Screen()
     screen.commands(*commands)
-    result = read_string(str(screen))
+    result = ocr.FONT_6X5.read_string(str(screen))
 
     print(f"part 2: the screen shows {result!r}")
     print(format(screen, " █"))

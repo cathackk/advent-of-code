@@ -1,5 +1,6 @@
 from typing import Any
 from typing import Iterable
+from typing import Iterator
 from typing import Optional
 
 from common.utils import some
@@ -133,15 +134,16 @@ class Circle:
         self._length -= 1
         return removed_link.value
 
+    def __iter__(self) -> Iterator:
+        link = self._current_link
+        while True:
+            yield link
+            link = some(link.next_link)
+            if link == self._current_link:
+                break
+
     def __str__(self):
-        def gen_links():
-            link = self._current_link
-            yield str(link)
-            link = link.next_link
-            while link != self._current_link:
-                yield str(link)
-                link = link.next_link
-        return ' -> '.join(gen_links()) + ' -> ...'
+        return ' -> '.join(str(link) for link in self) + ' -> ...'
 
     def __len__(self):
         return self._length
