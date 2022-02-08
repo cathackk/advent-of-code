@@ -203,6 +203,34 @@ def ilen(items: Iterable) -> int:
     return sum(1 for _ in items)
 
 
+def ifind(values: Iterable[T], sub: Iterable[T]) -> int:
+    """
+        >>> ifind([1, 1, 1, 1, 2, 1, 1, 2, 3, 1, 1, 2, 1, 2, 3], (1, 2, 3))
+        6
+        >>> ifind((0, 5, 3, 5, 4, 2, 1, 8), [5, 4])
+        3
+        >>> ifind((0, 5, 3, 5, 4, 2, 1, 8), [9, 4])
+        -1
+        >>> from itertools import count
+        >>> ifind((x * x for x in count(0)), [100, 121, 144])
+        10
+    """
+
+    sub_list = list(sub)
+    matched_count = 0
+    for pos, value in enumerate(values):
+        if value == sub_list[matched_count]:
+            matched_count += 1
+        elif value == sub_list[0]:
+            matched_count = 1
+        else:
+            matched_count = 0
+        if matched_count == len(sub_list):
+            return pos - matched_count + 1
+    else:
+        return -1
+
+
 def zip1(items: Iterable[T], wrap: bool = False) -> Iterable[tuple[T, T]]:
     """
         >>> list(zip1([1, 2, 3, 4]))

@@ -1,14 +1,292 @@
+"""
+Advent of Code 2018
+Day 13: Mine Cart Madness
+https://adventofcode.com/2018/day/13
+"""
+
 from enum import Enum
 from itertools import count
-from typing import Generator
 from typing import Iterable
+from typing import Iterator
 from typing import NamedTuple
 
+from common.file import relative_path
 from common.heading import Heading
-from common.iteration import exhaust
 from common.iteration import single_value
+from common.rect import Pos
 from common.rect import Rect
 from common.utils import ro
+
+
+def part_1(carts_map: 'Map') -> str:
+    r"""
+    A crop of this size requires significant logistics to transport produce, soil, fertilizer, and
+    so on. The Elves are very busy pushing things around in **carts** on some kind of rudimentary
+    system of tracks they've come up with.
+
+    Seeing as how cart-and-track systems don't appear in recorded history for another 1000 years,
+    the Elves seem to be making this up as they go along. They haven't even figured out how to avoid
+    collisions yet.
+
+    You map out the tracks (your puzzle input) and see where you can help.
+
+    Tracks consist of straight paths (`|` and `-`), curves (`/` and `\`), and intersections (`+`).
+    Curves connect exactly two perpendicular pieces of track; for example, this is a closed loop:
+
+        /----\
+        |    |
+        |    |
+        \----/
+
+    Intersections occur when two perpendicular paths cross. At an intersection, a cart is capable of
+    turning left, turning right, or continuing straight. Here are two loops connected by two
+    intersections:
+
+        /-----\
+        |     |
+        |  /--+--\
+        |  |  |  |
+        \--+--/  |
+           |     |
+           \-----/
+
+    Several **carts** are also on the tracks. Carts always face either up (`^`), down (`v`), left
+    (`<`), or right (`>`). (On your initial map, the track under each cart is a straight path
+    matching the direction the cart is facing.)
+
+    Each time a cart has the option to turn (by arriving at any intersection), it turns **left** the
+    first time, goes **straight** the second time, turns **right** the third time, and then repeats
+    those directions starting again with left the fourth time, straight the fifth time, and so on.
+    This process is independent of the particular intersection at which the cart has arrived - that
+    is, the cart has no per-intersection memory.
+
+    Carts all move at the same speed; they take turns moving a single step at a time. They do this
+    based on their **current location**: carts on the top row move first (acting from left to
+    right), then carts on the second row move (again from left to right), then carts on the third
+    row, and so on. Once each cart has moved one step, the process repeats; each of these loops is
+    called a **tick**.
+
+    For example, suppose there are two carts on a straight track:
+
+        |  |  |  |  |
+        v  |  |  |  |
+        |  v  v  |  |
+        |  |  |  v  X
+        |  |  ^  ^  |
+        ^  ^  |  |  |
+        |  |  |  |  |
+
+    First, the top cart moves. It is facing down (`v`), so it moves down one square. Second, the
+    bottom cart moves. It is facing up (`^`), so it moves up one square. Because all carts have
+    moved, the first tick ends. Then, the process repeats, starting with the first cart. The first
+    cart moves down, then the second cart moves up - right into the first cart, colliding with it!
+    (The location of the crash is marked with an `X`.) This ends the second and last tick.
+
+    Here is a longer example:
+
+        >>> example_map = Map.from_file('data/13-example-1.txt')
+        >>> example_map.run(draw=True)
+        /->-\
+        |   |  /----\
+        | /-+--+-\  |
+        | | |  | v  |
+        \-+-/  \-+--/
+          \------/
+        <BLANKLINE>
+        /-->\
+        |   |  /----\
+        | /-+--+-\  |
+        | | |  | |  |
+        \-+-/  \->--/
+          \------/
+        <BLANKLINE>
+        /---v
+        |   |  /----\
+        | /-+--+-\  |
+        | | |  | |  |
+        \-+-/  \-+>-/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   v  /----\
+        | /-+--+-\  |
+        | | |  | |  |
+        \-+-/  \-+->/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /----\
+        | /->--+-\  |
+        | | |  | |  |
+        \-+-/  \-+--^
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /----\
+        | /-+>-+-\  |
+        | | |  | |  ^
+        \-+-/  \-+--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /----\
+        | /-+->+-\  ^
+        | | |  | |  |
+        \-+-/  \-+--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /----<
+        | /-+-->-\  |
+        | | |  | |  |
+        \-+-/  \-+--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /---<\
+        | /-+--+>\  |
+        | | |  | |  |
+        \-+-/  \-+--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /--<-\
+        | /-+--+-v  |
+        | | |  | |  |
+        \-+-/  \-+--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /-<--\
+        | /-+--+-\  |
+        | | |  | v  |
+        \-+-/  \-+--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /<---\
+        | /-+--+-\  |
+        | | |  | |  |
+        \-+-/  \-<--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  v----\
+        | /-+--+-\  |
+        | | |  | |  |
+        \-+-/  \<+--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /----\
+        | /-+--v-\  |
+        | | |  | |  |
+        \-+-/  ^-+--/
+          \------/
+        <BLANKLINE>
+        /---\
+        |   |  /----\
+        | /-+--+-\  |
+        | | |  X |  |
+        \-+-/  \-+--/
+          \------/
+
+    After following their respective paths for a while, the carts eventually crash. To help prevent
+    crashes, you'd like to know **the location of the first crash**. Locations are given in `X,Y`
+    coordinates, where the furthest left column is `X=0` and the furthest top row is `Y=0`:
+
+        >>> example_map.draw(collisions=[(7, 3)], coordinates=True)
+                   111
+         0123456789012
+        0/---\
+        1|   |  /----\
+        2| /-+--+-\  |
+        3| | |  X |  |
+        4\-+-/  \-+--/
+        5  \------/
+
+    In this example, the location of the first crash is **`7,3`**.
+
+        >>> part_1(Map.from_file('data/13-example-1.txt'))
+        part 1: first collision happens after 14 ticks at 7,3
+        '7,3'
+    """
+
+    carts_map = carts_map.copy()
+    tick, (collision_x, collision_y) = next(carts_map.collisions())
+    result = f"{collision_x},{collision_y}"
+
+    print(f"part 1: first collision happens after {tick} ticks at {result}")
+    return result
+
+
+def part_2(carts_map: 'Map') -> str:
+    r"""
+    There isn't much you can do to prevent crashes in this ridiculous system. However, by predicting
+    the crashes, the Elves know where to be in advance and **instantly remove the two crashing
+    carts** the moment any crash occurs.
+
+    They can proceed like this for a while, but eventually, they're going to run out of carts. It
+    could be useful to figure out where the last cart that **hasn't** crashed will end up.
+
+    For example:
+
+        >>> example_map = Map.from_file('data/13-example-2.txt')
+        >>> example_map.run(draw=True)
+        />-<\
+        |   |
+        | /<+-\
+        | | | v
+        \>+</ |
+          |   ^
+          \<->/
+        <BLANKLINE>
+        /-X-\
+        |   |
+        | v-+-\
+        | | | |
+        \-X-/ X
+          |   |
+          ^---^
+        <BLANKLINE>
+        /---\
+        |   |
+        | /-+-\
+        | v | |
+        \-+-/ |
+          ^   ^
+          \---/
+        <BLANKLINE>
+        /---\
+        |   |
+        | /-+-\
+        | | | |
+        \-X-/ ^
+          |   |
+          \---/
+
+    After four very expensive crashes, a tick ends with only one cart remaining; its final location
+    is 6,4.
+
+        >>> single_value(example_map.carts)
+        (6, 4)
+
+    **What is the location of the last cart** at the end of the first tick where it is the only cart
+    left?
+
+        >>> part_2(Map.from_file('data/13-example-2.txt'))
+        part 2: last remaining cart is at 6,4
+        '6,4'
+    """
+
+    carts_map = carts_map.copy()
+    carts_map.run()  # run until last cart remains
+    last_cart_x, last_cart_y = single_value(carts_map.carts)
+    result = f"{last_cart_x},{last_cart_y}"
+
+    print(f"part 2: last remaining cart is at {result}")
+    return result
+
 
 heading_chars = {
     Heading.NORTH: '^',
@@ -40,9 +318,6 @@ class Turn(Enum):
             raise KeyError(self)
 
 
-Pos = tuple[int, int]
-
-
 class Cart(NamedTuple):
     pos: Pos
     heading: Heading
@@ -65,6 +340,9 @@ class Map:
         self.carts, collisions = Map._place_carts(carts)
         assert not collisions
 
+    def copy(self) -> 'Map':
+        return type(self)(self.tracks, self.carts.values())
+
     @staticmethod
     def _place_carts(carts: Iterable[Cart]) -> tuple[dict[Pos, Cart], set[Pos]]:
         by_pos: dict[Pos, Cart] = {}
@@ -84,32 +362,44 @@ class Map:
 
         return by_pos, collisions
 
-    def run(self, min_carts: int = 2) -> Generator[tuple[int, Pos], None, int]:
+    def collisions(self, min_carts: int = 2) -> Iterator[tuple[int, Pos]]:
         for tick in count(1):
+            step_collisions = self.step()
+            for collision in step_collisions:
+                yield tick, collision
             if len(self.carts) < min_carts:
-                return tick
-            for col in self.step():
-                yield tick, col
+                break
 
-        # unreachable
-        assert False
+    def run(self, min_carts: int = 2, draw: bool = False) -> None:
+        if draw:
+            self.draw()
 
-    def step(self) -> Iterable[Pos]:
+        while len(self.carts) >= min_carts:
+            collisions = self.step()
+            if draw:
+                print()
+                self.draw(collisions)
+
+    def step(self) -> list[Pos]:
         """ :return: collisions """
         carts_order = sorted(self.carts.values(), key=lambda c: ro(c.pos))
-        for cart in carts_order:
-            if cart.pos not in self.carts:
-                # already collided
-                continue
-            del self.carts[cart.pos]
-            new_cart = self._move_cart(cart)
-            if new_cart.pos not in self.carts:
-                self.carts[new_cart.pos] = new_cart
-            else:
-                # collision! kill both
-                del self.carts[new_cart.pos]
-                yield new_cart.pos
-                # TODO: multiple collisions?
+
+        def collisions() -> Iterable[Pos]:
+            for cart in carts_order:
+                if cart.pos not in self.carts:
+                    # already collided
+                    continue
+                del self.carts[cart.pos]
+                new_cart = self._move_cart(cart)
+                if new_cart.pos not in self.carts:
+                    self.carts[new_cart.pos] = new_cart
+                else:
+                    # collision! kill both
+                    del self.carts[new_cart.pos]
+                    yield new_cart.pos
+                    # TODO: multiple collisions?
+
+        return list(collisions())
 
     def _move_cart(self, cart: Cart) -> Cart:
         heading = cart.heading
@@ -135,11 +425,16 @@ class Map:
         else:
             raise ValueError(track)
 
-    def draw(self, collisions: set[Pos] = None):
-        def t(pos: Pos) -> str:
+    def __str__(self) -> str:
+        return self.drawn()
+
+    def drawn(self, collisions: Iterable[Pos] = None, coordinates: bool = False) -> str:
+        collisions_set = set(collisions or ())
+
+        def char(pos: Pos) -> str:
             if pos in self.carts:
                 return str(self.carts[pos])
-            elif collisions and pos in collisions:
+            elif pos in collisions_set:
                 return 'X'
             elif pos in self.tracks:
                 return self.tracks[pos]
@@ -147,64 +442,50 @@ class Map:
                 return ' '
 
         bounds = Rect.with_all(self.tracks.keys())
-        for y in bounds.range_y():
-            print(''.join(t((x, y)) for x in bounds.range_x()))
-        print()
+
+        def lines() -> Iterable[str]:
+            if coordinates:
+                for coordinates_row in zip(*(str(x).rjust(2) for x in bounds.range_x())):
+                    yield " " + "".join(coordinates_row)
+            for y in bounds.range_y():
+                y_coor = str(y) if coordinates else ""
+                yield y_coor + "".join(char((x, y)) for x in bounds.range_x()).rstrip()
+
+        return "\n".join(lines())
+
+    def draw(self, collisions: Iterable[Pos] = None, coordinates: bool = False) -> None:
+        print(self.drawn(collisions, coordinates))
 
     @classmethod
-    def load(cls, fn: str):
+    def from_text(cls, text: str) -> 'Map':
+        return cls.from_lines(text.strip().splitlines())
+
+    @classmethod
+    def from_file(cls, fn: str) -> 'Map':
+        return cls.from_lines(open(relative_path(__file__, fn)))
+
+    @classmethod
+    def from_lines(cls, lines: Iterable[str]) -> 'Map':
         tracks: dict[Pos, str] = {}
         carts: list[Cart] = []
 
-        with open(fn) as file:
-            for y, line in enumerate(file):
-                for x, c in enumerate(line.rstrip()):
-                    pos = (x, y)
-                    if c in '^>v<':
-                        carts.append(Cart(pos, heading=c2h[c]))
-                        tracks[pos] = '|' if c in '^v' else '-'
-                    elif c in '|-/\\+':
-                        tracks[pos] = c
-                    elif c == ' ':
-                        pass
-                    else:
-                        raise ValueError(c)
+        for y, line in enumerate(lines):
+            for x, c in enumerate(line.rstrip()):
+                pos = (x, y)
+                if c in '^>v<':
+                    carts.append(Cart(pos, heading=c2h[c]))
+                    tracks[pos] = '|' if c in '^v' else '-'
+                elif c in '|-/\\+':
+                    tracks[pos] = c
+                elif c == ' ':
+                    pass
+                else:
+                    raise ValueError(c)
 
         return Map(tracks, carts)
 
 
-def test_first_collision():
-    m = Map.load('data/13-example-1.txt')
-    tick, col = next(m.run())
-    assert tick == 14
-    assert col == (7, 3)
-
-
-def test_last_remaining():
-    m = Map.load('data/13-example-2.txt')
-    ticks = exhaust(m.run())
-    assert ticks == 4
-    last_cart = single_value(m.carts.values())
-    assert last_cart.pos == (6, 4)
-    assert last_cart.heading == Heading.NORTH
-
-
-def part_1(fn: str) -> Pos:
-    m = Map.load(fn)
-    tick, col = next(m.run())
-    print(f"part 1: first collision on tick {tick} at pos {col}")
-    return col
-
-
-def part_2(fn: str) -> Pos:
-    m = Map.load(fn)
-    ticks = exhaust(m.run())
-    last_cart = single_value(m.carts.values())
-    print(f"part 2: last cart after {ticks} ticks is at {last_cart.pos}")
-    return last_cart.pos
-
-
 if __name__ == '__main__':
-    FILENAME = 'data/13-input.txt'
-    part_1(FILENAME)
-    part_2(FILENAME)
+    carts_map_ = Map.from_file('data/13-input.txt')
+    part_1(carts_map_)
+    part_2(carts_map_)

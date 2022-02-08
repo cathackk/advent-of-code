@@ -121,6 +121,11 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 8. ([aoc](https://adventofcode.com/2018/day/8)) Day 8: [Memory Maneuver](y2018/day08_nodes.py)
 9. ([aoc](https://adventofcode.com/2018/day/9)) Day 9: [Marble Mania](y2018/day09_marbles.py)
 10. ([aoc](https://adventofcode.com/2018/day/10)) Day 10: [The Stars Align](y2018/day10_stars.py)
+11. ([aoc](https://adventofcode.com/2018/day/11)) Day 11: [Chronal Charge](y2018/day11_grid_sum.py)
+12. ([aoc](https://adventofcode.com/2018/day/12)) Day 12: [Subterranean Sustainability](y2018/day12_pots.py)
+13. ([aoc](https://adventofcode.com/2018/day/13)) Day 13: [Mine Cart Madness](y2018/day13_carts.py)
+14. ([aoc](https://adventofcode.com/2018/day/14)) Day 14: [Chocolate Charts](y2018/day14_recipes.py)
+15. ([aoc](https://adventofcode.com/2018/day/15)) Day 15: [Beverage Bandits](y2018/day15_battle.py)
 ...
 
 

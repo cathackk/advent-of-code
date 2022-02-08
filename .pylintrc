@@ -4,6 +4,7 @@ disable=
     missing-class-docstring,
     missing-function-docstring,
     missing-module-docstring,
+    no-else-break,
     no-else-return,
     unbalanced-tuple-unpacking,
     unspecified-encoding,
