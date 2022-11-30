@@ -1,3 +1,9 @@
+"""
+Advent of Code 2018
+Day 17: Reservoir Research
+https://adventofcode.com/2018/day/17
+"""
+
 from itertools import count
 from typing import Iterable
 from typing import Optional
@@ -5,8 +11,187 @@ from typing import Optional
 from common.rect import Rect
 from common.text import parse_line
 
+
+def part_1() -> int:
+    """
+    You arrive in the year 18. If it weren't for the coat you got in 1018, you would be very cold:
+    the North Pole base hasn't even been constructed.
+
+    Rather, it hasn't been constructed **yet**. The Elves are making a little progress, but there's
+    not a lot of liquid water in this climate, so they're getting very dehydrated. Maybe there's
+    more underground?
+
+    You scan a two-dimensional vertical slice of the ground nearby and discover that it is mostly
+    **sand** with veins of **clay**. The scan only provides data with a granularity of **square
+    meters**, but it should be good enough to determine how much water is trapped there. In the
+    scan, `x` represents the distance to the right, and `y` represents the distance down. There is
+    also a **spring of water** near the surface at `x=500, y=0`. The scan identifies **which square
+    meters are clay** (your puzzle input).
+
+    For example, suppose your scan shows the following veins of clay:
+
+        >>> example_walls = walls_from_text('''
+        ...     x=495, y=2..7
+        ...     y=7, x=495..501
+        ...     x=501, y=3..7
+        ...     x=498, y=2..4
+        ...     x=506, y=1..2
+        ...     x=498, y=10..13
+        ...     x=504, y=10..13
+        ...     y=13, x=498..504
+        ... ''')
+        >>> len(example_walls)
+        55
+        >>> example_walls[:9]
+        [(495, 2), (495, 3), (495, 4), (495, 5), (495, 6), (495, 7), (495, 7), (496, 7), (497, 7)]
+
+    Rendering clay as `#`, sand as `·`, and the water spring as `+`, and with x increasing to the
+    right and y increasing downward, this becomes:
+
+        >>> example_state = State.from_walls(example_walls)
+        >>> print(format(example_state), 'coors')
+           44444455555555
+           99999900000000
+           45678901234567
+         0 ······+·······
+         1 ············#·
+         2 ·#··#·······#·
+         3 ·#··#··#······
+         4 ·#··#··#······
+         5 ·#·····#······
+         6 ·#·····#······
+         7 ·#######······
+         8 ··············
+         9 ··············
+        10 ····#·····#···
+        11 ····#·····#···
+        12 ····#·····#···
+        13 ····#######···
+
+    The spring of water will produce water **forever**. Water can move through sand, but is blocked
+    by clay. Water **always moves down** when possible, and spreads to the left and right otherwise,
+    filling space that has clay on both sides and falling out otherwise.
+
+    For example, if five squares of water are created, they will flow downward until they reach the
+    clay and settle there. Water that has come to rest is shown here as `~`, while sand through
+    which water has passed (but which is now dry again) is shown as `|`:
+
+        >>> example_state.step()
+        >>> print(example_state)
+        ······+·······
+        ······|·····#·
+        ·#··#·|·····#·
+        ·#··#·|#······
+        ·#··#·|#······
+        ·#····|#······
+        ·#~~~~~#······
+        ·#######······
+        ··············
+        ··············
+        ····#·····#···
+        ····#·····#···
+        ····#·····#···
+        ····#######···
+
+    Two squares of water can't occupy the same location. If another five squares of water are
+    created, they will settle on the first five, filling the clay reservoir a little more:
+
+    ......+.......
+    ......|.....#.
+    .#..#.|.....#.
+    .#..#.|#......
+    .#..#.|#......
+    .#~~~~~#......
+    .#~~~~~#......
+    .#######......
+    ..............
+    ..............
+    ....#.....#...
+    ....#.....#...
+    ....#.....#...
+    ....#######...
+    Water pressure does not apply in this scenario. If another four squares of water are created, they will stay on the right side of the barrier, and no water will reach the left side:
+
+    ......+.......
+    ......|.....#.
+    .#..#.|.....#.
+    .#..#~~#......
+    .#..#~~#......
+    .#~~~~~#......
+    .#~~~~~#......
+    .#######......
+    ..............
+    ..............
+    ....#.....#...
+    ....#.....#...
+    ....#.....#...
+    ....#######...
+    At this point, the top reservoir overflows. While water can reach the tiles above the surface of the water, it cannot settle there, and so the next five squares of water settle like this:
+
+    ......+.......
+    ......|.....#.
+    .#..#||||...#.
+    .#..#~~#|.....
+    .#..#~~#|.....
+    .#~~~~~#|.....
+    .#~~~~~#|.....
+    .#######|.....
+    ........|.....
+    ........|.....
+    ....#...|.#...
+    ....#...|.#...
+    ....#~~~~~#...
+    ....#######...
+    Note especially the leftmost |: the new squares of water can reach this tile, but cannot stop there. Instead, eventually, they all fall to the right and settle in the reservoir below.
+
+    After 10 more squares of water, the bottom reservoir is also full:
+
+    ......+.......
+    ......|.....#.
+    .#..#||||...#.
+    .#..#~~#|.....
+    .#..#~~#|.....
+    .#~~~~~#|.....
+    .#~~~~~#|.....
+    .#######|.....
+    ........|.....
+    ........|.....
+    ....#~~~~~#...
+    ....#~~~~~#...
+    ....#~~~~~#...
+    ....#######...
+    Finally, while there is nowhere left for the water to settle, it can reach a few more tiles before overflowing beyond the bottom of the scanned data:
+
+    ......+.......    (line not counted: above minimum y value)
+    ......|.....#.
+    .#..#||||...#.
+    .#..#~~#|.....
+    .#..#~~#|.....
+    .#~~~~~#|.....
+    .#~~~~~#|.....
+    .#######|.....
+    ........|.....
+    ...|||||||||..
+    ...|#~~~~~#|..
+    ...|#~~~~~#|..
+    ...|#~~~~~#|..
+    ...|#######|..
+    ...|.......|..    (line not counted: below maximum y value)
+    ...|.......|..    (line not counted: below maximum y value)
+    ...|.......|..    (line not counted: below maximum y value)
+    How many tiles can be reached by the water? To prevent counting forever, ignore tiles with a y coordinate smaller than the smallest y coordinate in your scan data or larger than the largest one. Any x coordinate is valid. In this example, the lowest y coordinate given is 1, and the highest is 13, causing the water spring (in row 0) and the water falling off the bottom of the render (in rows 14 through infinity) to be ignored.
+
+    So, in the example above, counting both water at rest (~) and other sand tiles the water can hypothetically reach (|), the total number of tiles the water can reach is 57.
+
+    How many tiles can the water reach within the range of y values in your scan?
+
+
+    """
+
+    return 1
+
 Pos = tuple[int, int]
-Board = dict[Pos, str]
+Tiles = dict[Pos, str]
 
 WALL = '#'
 STILL = '='
@@ -34,15 +219,15 @@ def load_walls(fn: str) -> Iterable[Pos]:
 
 
 class State:
-    @classmethod
-    def load(cls, fn: str, sources=((500, 0),)):
-        return cls(
-            board={pos: WALL for pos in load_walls(fn)},
-            sources=sources
-        )
+    # @classmethod
+    # def load(cls, fn: str, sources=((500, 0),)):
+    #     return cls(
+    #         board={pos: WALL for pos in load_walls(fn)},
+    #         sources=sources
+    #     )
 
-    def __init__(self, board: Board, sources: Iterable[Pos]):
-        self.board = board
+    def __init__(self, tiles: Tiles, sources: Iterable[Pos]):
+        self.tiles = tiles
         self.sources = list(sources)
         self.scoring_bounds = Rect.with_all(self.board.keys())
         self.drawing_bounds = self.scoring_bounds.grow_to_fit(self.sources).grow_by(dx=2)
@@ -61,13 +246,13 @@ class State:
         # pour water (down or left/right)
         poured, new_sources = self._pour(current_source)
         # draw poured
-        self.board.update(poured)
+        self.tiles.update(poured)
         # push new overflows
         self.sources.extend(new_sources)
 
         return self
 
-    def _pour(self, pos: Pos) -> tuple[Board, Iterable[Pos]]:
+    def _pour(self, pos: Pos) -> tuple[Tiles, Iterable[Pos]]:
         floor = self._scan_floor(pos)
 
         #   ...+...   ->   ...|...
@@ -118,11 +303,11 @@ class State:
 
         def walk(dx) -> tuple[str, int]:
             for x in count(p_x, dx):
-                tile_current = self.board.get((x, p_y))
+                tile_current = self.tiles.get((x, p_y))
                 if tile_current == WALL:
                     # wall on current level
                     return WALL, x
-                tile_below = self.board.get((x, p_y + 1))
+                tile_below = self.tiles.get((x, p_y + 1))
                 if tile_below is None:
                     # empty space below
                     return '.', x
@@ -150,8 +335,8 @@ class State:
         def c(pos):
             if pos in self.sources:
                 return SOURCE
-            elif pos in self.board:
-                return self.board[pos]
+            elif pos in self.tiles:
+                return self.tiles[pos]
             else:
                 return SPACE
 
@@ -169,7 +354,7 @@ def both_parts(fn: str) -> tuple[int, int]:
     print(f"part 1: water reaches {score_1} tiles")
 
     score_2 = state.water_score(include_running=False)
-    print(f"part 1: water remains at {score_2} tiles")
+    print(f"part 2: water remains at {score_2} tiles")
 
     return score_1, score_2
 
