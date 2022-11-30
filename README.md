@@ -126,6 +126,9 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 13. ([aoc](https://adventofcode.com/2018/day/13)) Day 13: [Mine Cart Madness](y2018/day13_carts.py)
 14. ([aoc](https://adventofcode.com/2018/day/14)) Day 14: [Chocolate Charts](y2018/day14_recipes.py)
 15. ([aoc](https://adventofcode.com/2018/day/15)) Day 15: [Beverage Bandits](y2018/day15_battle.py)
+16. ([aoc](https://adventofcode.com/2018/day/16)) Day 16: [Chronal Classification](y2018/day16_opcodes.py)
+17. ([aoc](https://adventofcode.com/2018/day/17)) Day 17: [Reservoir Research](y2018/day17_reservoir.py)
+18. ([aoc](https://adventofcode.com/2018/day/18)) Day 18: [Settlers of The North Pole](y2018/day18_wood.py)
 ...
 
 
