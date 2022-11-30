@@ -5,6 +5,10 @@ from common.iteration import single_value
 from common.iteration import slidingw
 
 
+class ParseError(Exception):
+    pass
+
+
 def parse_line(line: str, pattern: str) -> tuple[str, ...]:
     r"""
         >>> parse_line("Dogs have four paws.", "Dogs have $ paws.")
@@ -27,7 +31,11 @@ def _parse_line_fixes(line: str, *fixes: str) -> tuple[str, ...]:
     results = []
 
     for fix1, fix2 in slidingw(fixes, 2):
-        assert line.startswith(fix1), (line, fix1)
+        if not line.startswith(fix1):
+            raise ParseError(
+                f"expected input to start with {fix1!r}, instead starts with {line[:len(fix1)]!r}"
+            )
+
         line = line[len(fix1):]
         if fix2:
             pos2 = line.index(fix2)
@@ -37,7 +45,9 @@ def _parse_line_fixes(line: str, *fixes: str) -> tuple[str, ...]:
             results.append(line)
             line = ''
 
-    assert line == fixes[-1], f"{line!r} != {fixes[-1]!r}"
+    if line != fixes[-1]:
+        raise ParseError(f"expected: {fixes[-1]!r}, got: {line!r}")
+
     return tuple(results)
 
 
