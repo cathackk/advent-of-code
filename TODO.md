@@ -1,6 +1,5 @@
 ## To Be Done
 
-- [ ] include the **mypy** release with `match` support
 - [ ] integrate **black**
 - [ ] use [ocr](common/ocr.py) where applicable
 - [ ] rework [2017](y2017)
@@ -19,3 +18,4 @@
 - [x] automatic [creation](meta/create_readme.py) of [readme](README.md) via git [hooks](.hooks/pre-commit)
 - [x] split [utils](common/utils.py)
 - [x] integrate **mypy**
+- [x] include the **mypy** release with `match` support
