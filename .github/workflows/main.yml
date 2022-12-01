@@ -19,9 +19,9 @@ jobs:
       - name: install
         run: make install
       - name: mypy
-        run: make mypy
+        run: make mypy-current
       - name: pylint
-        run: make pylint
+        run: make pylint-current
   tests:
     runs-on: ubuntu-latest
     steps:
@@ -33,4 +33,4 @@ jobs:
       - name: install
         run: make install
       - name: doctests
-        run: make doctests
+        run: make doctests-current

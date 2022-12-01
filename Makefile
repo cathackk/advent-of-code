@@ -15,5 +15,18 @@ pylint:
 doctests:
 	py.test --doctest-modules
 
+
+checks-current: mypy-current pylint-current doctests-current
+
+mypy-current:
+	mypy -p common -p meta -p y2022
+
+pylint-current:
+	pylint --rcfile=.pylintrc common meta y2022
+
+doctests-current:
+	py.test --doctest-modules common meta y2022
+
+
 create-readme:
 	python3 -m meta.create_readme
