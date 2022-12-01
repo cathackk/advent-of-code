@@ -12,6 +12,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - [2019](#2019)
 - [2020](#2020)
 - [2021](#2021)
+- [2022](#2022)
 
 
 ### 2015
@@ -126,9 +127,6 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 13. ([aoc](https://adventofcode.com/2018/day/13)) Day 13: [Mine Cart Madness](y2018/day13_carts.py)
 14. ([aoc](https://adventofcode.com/2018/day/14)) Day 14: [Chocolate Charts](y2018/day14_recipes.py)
 15. ([aoc](https://adventofcode.com/2018/day/15)) Day 15: [Beverage Bandits](y2018/day15_battle.py)
-16. ([aoc](https://adventofcode.com/2018/day/16)) Day 16: [Chronal Classification](y2018/day16_opcodes.py)
-17. ([aoc](https://adventofcode.com/2018/day/17)) Day 17: [Reservoir Research](y2018/day17_reservoir.py)
-18. ([aoc](https://adventofcode.com/2018/day/18)) Day 18: [Settlers of The North Pole](y2018/day18_wood.py)
 ...
 
 
@@ -199,3 +197,11 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 23. ([aoc](https://adventofcode.com/2021/day/23)) Day 23: [Amphipod](y2021/day23_organize.py)
 24. ([aoc](https://adventofcode.com/2021/day/24)) Day 24: [Arithmetic Logic Unit](y2021/day24_decompile.py)
 25. ([aoc](https://adventofcode.com/2021/day/25)) Day 25: [Sea Cucumber](y2021/day25_cucumbers.py)
+
+
+### 2022
+
+([aoc 2022 event](https://adventofcode.com/2022))
+
+1. ([aoc](https://adventofcode.com/2022/day/1)) Day 1: [Calorie Counting](y2022/day01_calories.py)
+...
