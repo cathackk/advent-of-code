@@ -7,6 +7,7 @@ https://adventofcode.com/2022/day/1
 from typing import Iterable
 
 from common.file import relative_path
+from common.text import line_groups
 
 
 def part_1(calories: list[list[int]]):
@@ -151,16 +152,10 @@ def calories_from_text(text: str) -> list[list[int]]:
 
 
 def calories_from_lines(lines: Iterable[str]) -> Iterable[list[int]]:
-    single_elf = []
-    for line in lines:
-        if line:
-            single_elf.append(int(line))
-        elif single_elf:
-            yield single_elf
-            single_elf = []
-
-    if single_elf:
-        yield single_elf
+    yield from (
+        [int(line) for line in group]
+        for group in line_groups(lines)
+    )
 
 
 if __name__ == '__main__':
