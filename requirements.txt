@@ -1,5 +1,5 @@
 mypy==0.940
-pylint==2.12.2
+pylint==2.15.7
 pytest==6.2.5
 PyYAML==6.0
 tabulate==0.8.9

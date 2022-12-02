@@ -383,7 +383,6 @@ class Packet(ABC):
         bits.push(self.p_type.value, rpad=3)
         return bits
 
-    # pylint: disable=no-self-use
     def bits_labels(self) -> str:
         return 'VVVTTT'
 
