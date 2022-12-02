@@ -25,20 +25,20 @@ def part_1(calories: list[list[int]]):
     the following list:
 
         >>> elves = calories_from_text('''
-        ... 1000
-        ... 2000
-        ... 3000
+        ...     1000
+        ...     2000
+        ...     3000
         ...
-        ... 4000
+        ...     4000
         ...
-        ... 5000
-        ... 6000
+        ...     5000
+        ...     6000
         ...
-        ... 7000
-        ... 8000
-        ... 9000
+        ...     7000
+        ...     8000
+        ...     9000
         ...
-        ... 10000
+        ...     10000
         ... ''')
 
     This list represents the Calories of the food carried by five Elves:
@@ -144,16 +144,16 @@ def max_n_totals(calories: list[list[int]], n: int) -> list[int]:
 
 
 def calories_from_file(fn: str) -> list[list[int]]:
-    return list(calories_from_lines(line.strip() for line in open(relative_path(__file__, fn))))
+    return list(calories_from_lines(open(relative_path(__file__, fn))))
 
 
 def calories_from_text(text: str) -> list[list[int]]:
-    return list(calories_from_lines(line.strip() for line in text.strip().split('\n')))
+    return list(calories_from_lines(text.strip().splitlines()))
 
 
 def calories_from_lines(lines: Iterable[str]) -> Iterable[list[int]]:
     yield from (
-        [int(line) for line in group]
+        [int(line.strip()) for line in group]
         for group in line_groups(lines)
     )
 
