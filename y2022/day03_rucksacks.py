@@ -179,14 +179,14 @@ def part_2(rucksacks: Iterable[str]) -> int:
 
 def compartments(rucksack: str) -> tuple[str, str]:
     mid = len(rucksack) // 2
-    c1, c2 = rucksack[:mid], rucksack[mid:]
-    assert len(c1) == len(c2)
-    return c1, c2
+    comp_1, comp_2 = rucksack[:mid], rucksack[mid:]
+    assert len(comp_1) == len(comp_2)
+    return comp_1, comp_2
 
 
 def common_item(rucksack: str) -> str:
-    c1, c2 = compartments(rucksack)
-    (common,) = set(c1) & set(c2)
+    comp_1, comp_2 = compartments(rucksack)
+    (common,) = set(comp_1) & set(comp_2)
     return common
 
 
