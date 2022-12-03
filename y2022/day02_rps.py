@@ -3,15 +3,13 @@ Advent of Code 2022
 Day 2: Rock Paper Scissors
 https://adventofcode.com/2022/day/2
 """
-from enum import Enum
+
 from typing import Iterable
 
 from common.file import relative_path
 
-Round = tuple[str, str]
 
-
-def part_1(rounds: Iterable[Round]) -> int:
+def part_1(rounds: Iterable[str]) -> int:
     """
     The Elves begin to set up camp on the beach. To decide whose tent gets to be closest to
     the snack storage, a giant Rock Paper Scissors tournament is already in progress.
@@ -51,10 +49,10 @@ def part_1(rounds: Iterable[Round]) -> int:
       - In the first round, your opponent will choose Rock (`A`), and you should choose Paper (`Y`).
 
         >>> rnds[0]
-        ('A', 'Y')
+        'A Y'
 
-        This ends in a win for you with a score of **8** (2 because you chose Paper
-        + 6 because you won).
+        This ends in a win for you with a score of **8** (2 because you chose Paper + 6 because
+        you won).
 
         >>> round_score(rnds[0])
         8
@@ -63,7 +61,7 @@ def part_1(rounds: Iterable[Round]) -> int:
         This ends in a loss for you with a score of **1** (1 + 0).
 
         >>> rnds[1]
-        ('B', 'X')
+        'B X'
         >>> round_score(rnds[1])
         1
 
@@ -71,7 +69,7 @@ def part_1(rounds: Iterable[Round]) -> int:
         giving you a score of 3 + 3 = **6**.
 
         >>> rnds[2]
-        ('C', 'Z')
+        'C Z'
         >>> round_score(rnds[2])
         6
 
@@ -94,7 +92,7 @@ def part_1(rounds: Iterable[Round]) -> int:
     return result
 
 
-def part_2(rounds: Iterable[Round]) -> int:
+def part_2(rounds: Iterable[str]) -> int:
     """
     The Elf finishes helping with the tent and sneaks back over to you. "Anyway, the second column
     says how the round needs to end: `X` means you need to lose, `Y` means you need to end the round
@@ -106,25 +104,25 @@ def part_2(rounds: Iterable[Round]) -> int:
       - In the first round, your opponent will choose Rock (`A`), and you need the round to end in
         a draw (`Y`), so you also choose Rock. This gives you a score of 1 + 3 = **4**:
 
-        >>> round_score(('A', 'Y'), part=2)
+        >>> round_score(('A Y'), part=2)
         4
 
       - In the second round, your opponent will choose Paper (`B`), and you choose Rock, so you lose
         (`X`) with a score of 1 + 0 = **1**:
 
-        >>> round_score(('B', 'X'), part=2)
+        >>> round_score(('B X'), part=2)
         1
 
       - In the third round, you will defeat your opponent's Scissors with Rock for a score of
         1 + 6 = **7**:
 
-        >>> round_score(('C', 'Z'), part=2)
+        >>> round_score(('C Z'), part=2)
         7
 
     Now that you're correctly decrypting the ultra top secret strategy guide, you would get a total
     score of **12**.
 
-        >>> total_score(rnds := [('A', 'Y'), ('B', 'X'), ('C', 'Z')], part=2)
+        >>> total_score(rnds := [('A Y'), ('B X'), ('C Z')], part=2)
         12
 
     Following the Elf's instructions for the second column, **what would your total score be if
@@ -141,87 +139,51 @@ def part_2(rounds: Iterable[Round]) -> int:
     return result
 
 
-class Outcome(Enum):
-    LOSS = 0
-    DRAW = 3
-    WIN = 6
+OUTCOMES_PART_1 = {
+    # (opp vs you)
+    'A X': 4,  # R vs R -> draw -> 1 + 3 = 4
+    'A Y': 8,  # R vs P -> win  -> 2 + 6 = 8
+    'A Z': 3,  # R vs S -> loss -> 3 + 0 = 3
+    'B X': 1,  # P vs R -> loss -> 1 + 0 = 1
+    'B Y': 5,  # P vs P -> draw -> 2 + 3 = 5
+    'B Z': 9,  # P vs S -> win  -> 3 + 6 = 9
+    'C X': 7,  # S vs R -> win  -> 1 + 6 = 7
+    'C Y': 2,  # S vs P -> loss -> 2 + 0 = 2
+    'C Z': 6,  # S vs S -> draw -> 3 + 3 = 6
+}
+OUTCOMES_PART_2 = {
+    # (opp vs outcome)
+    'A X': 3,  # R vs loss -> S -> 3 + 0 = 3
+    'A Y': 4,  # R vs draw -> R -> 1 + 3 = 4
+    'A Z': 8,  # R vs win  -> P -> 2 + 6 = 8
+    'B X': 1,  # P vs loss -> R -> 1 + 0 = 1
+    'B Y': 5,  # P vs draw -> P -> 2 + 3 = 5
+    'B Z': 9,  # P vs win  -> S -> 3 + 6 = 9
+    'C X': 2,  # S vs loss -> P -> 2 + 0 = 2
+    'C Y': 6,  # S vs draw -> S -> 3 + 3 = 6
+    'C Z': 7,  # S vs win  -> R -> 1 + 6 = 7
+}
 
 
-class Move(Enum):
-    ROCK = 1
-    PAPER = 2
-    SCISSORS = 3
-
-    def outcome(self, other: 'Move') -> Outcome:
-        match self, other:
-            case (x, y) if x == y:  # pylint: disable=used-before-assignment
-                return Outcome.DRAW
-            case (Move.ROCK, Move.SCISSORS) | (Move.PAPER, Move.ROCK) | (Move.SCISSORS, Move.PAPER):
-                return Outcome.WIN
-            case _:
-                return Outcome.LOSS
-
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
-
-    def for_outcome(self, outcome: Outcome) -> 'Move':
-        # return such a move that YOU need to play against `self` to have given outcome
-        match self, outcome:
-            case (_, Outcome.DRAW):
-                return self
-            case (Move.SCISSORS, Outcome.WIN) | (Move.PAPER, Outcome.LOSS):
-                return Move.ROCK
-            case (Move.ROCK, Outcome.WIN) | (Move.SCISSORS, Outcome.LOSS):
-                return Move.PAPER
-            case (Move.PAPER, Outcome.WIN) | (Move.ROCK, Outcome.LOSS):
-                return Move.SCISSORS
-            case _:
-                raise ValueError((self, outcome))
-
-        # alternatively:
-        # return next(other for other in Move if other.outcome(self) is outcome)
+def round_score(round_: str, part: int = 1) -> int:
+    if part == 1:
+        return OUTCOMES_PART_1[round_]
+    elif part == 2:
+        return OUTCOMES_PART_2[round_]
+    else:
+        raise ValueError('part must be 1 or 2')
 
 
-def round_score(rnd: Round, part: int = 1) -> int:
-    opponent_char, your_char = rnd
-
-    opponent = {'A': Move.ROCK, 'B': Move.PAPER, 'C': Move.SCISSORS}[opponent_char]
-
-    match part:
-        case 1:
-            # part 1: second round value interpreted as your move
-            you = {'X': Move.ROCK, 'Y': Move.PAPER, 'Z': Move.SCISSORS}[your_char]
-            outcome = you.outcome(opponent)
-
-        case 2:
-            # part 2: second round value interpreted as the round's outcome
-            outcome = {'X': Outcome.LOSS, 'Y': Outcome.DRAW, 'Z': Outcome.WIN}[your_char]
-            you = opponent.for_outcome(outcome)
-
-        case _:
-            raise ValueError('part must be 1 or 2')
-
-    return you.value + outcome.value
+def total_score(rounds: Iterable[str], part: int = 1) -> int:
+    return sum(round_score(round_, part) for round_ in rounds)
 
 
-def total_score(rounds: Iterable[Round], part: int = 1) -> int:
-    return sum(round_score(rnd, part) for rnd in rounds)
+def rounds_from_file(fn: str) -> list[str]:
+    return [line.strip() for line in open(relative_path(__file__, fn))]
 
 
-def rounds_from_file(fn: str) -> list[Round]:
-    return list(rounds_from_lines(open(relative_path(__file__, fn))))
-
-
-def rounds_from_text(text: str) -> list[Round]:
-    return list(rounds_from_lines(text.strip().splitlines()))
-
-
-def rounds_from_lines(lines: Iterable[str]) -> Iterable[Round]:
-    def to_round(line: str) -> Round:
-        opponent, you = line.strip().split(' ')
-        return opponent, you
-
-    return (to_round(line) for line in lines)
+def rounds_from_text(text: str) -> list[str]:
+    return [line.strip() for line in text.strip().splitlines()]
 
 
 if __name__ == '__main__':
