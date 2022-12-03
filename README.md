@@ -205,4 +205,5 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 
 1. ([aoc](https://adventofcode.com/2022/day/1)) Day 1: [Calorie Counting](y2022/day01_calories.py)
 2. ([aoc](https://adventofcode.com/2022/day/2)) Day 2: [Rock Paper Scissors](y2022/day02_rps.py)
+3. ([aoc](https://adventofcode.com/2022/day/3)) Day 3: [Rucksack Reorganization](y2022/day03_rucksacks.py)
 ...

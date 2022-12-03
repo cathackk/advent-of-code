@@ -296,6 +296,32 @@ def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[tupl
             del buffer[0]
 
 
+def chunks(
+    values: Iterable[T],
+    chunk_size: int,
+    include_leftover: bool = True
+) -> Iterable[list[T]]:
+    """
+        >>> list(chunks(range(10), chunk_size=3))
+        [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
+        >>> list(chunks(range(10), chunk_size=3, include_leftover=False))
+        [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    """
+
+    if chunk_size < 1:
+        raise ValueError("chunk_size must be at least 1")
+
+    current_chunk = []
+    for value in values:
+        current_chunk.append(value)
+        if len(current_chunk) >= chunk_size:
+            yield current_chunk
+            current_chunk = []
+
+    if include_leftover and current_chunk:
+        yield current_chunk
+
+
 def minmax(values: Iterable[T], key: Callable[[T], K] = None) -> tuple[T, T]:
     """
         >>> minmax([1, 4, 8, 10, 4, -4, 15, -2])
