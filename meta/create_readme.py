@@ -67,12 +67,13 @@ def index_lines() -> Iterable[str]:
 
 
 def year_dirs() -> Iterable[tuple[int, str]]:
-    return sorted(
+    dirs = (
         (int(fn[1:]), fn)
         for fn in os.listdir()
         if os.path.isdir(fn)
         if fn.startswith('y')
     )
+    return sorted(dirs, reverse=True)
 
 
 def day_files(path: str) -> Iterable[tuple[int, str]]:
