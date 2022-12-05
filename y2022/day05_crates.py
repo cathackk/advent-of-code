@@ -30,7 +30,7 @@ def part_1(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     procedure (your puzzle input). For example:
 
 
-        >>> state_0, moves_ = input_from_text('''
+        >>> state_0, movez = input_from_text('''
         ...         [D]
         ...     [N] [C]
         ...     [Z] [M] [P]
@@ -64,19 +64,19 @@ def part_1(stacks: list['Stack'], moves: Iterable['Move']) -> str:
 
     Then, the rearrangement procedure is given.
 
-        >>> len(moves_)
+        >>> len(movez)
         4
 
     In each step of the procedure, a quantity of crates is moved from one stack to a different
     stack. In the first step of the above rearrangement procedure, one crate is moved from stack 2
     to stack 1:
 
-        >>> moves_[0]
+        >>> movez[0]
         Move(count=1, stack_from=2, stack_to=1)
 
     ... resulting in this configuration:
 
-        >>> state_1 = move(state_0, moves_[0])
+        >>> state_1 = rearrange(state_0, movez[0])
         >>> state_1
         [['Z', 'N', 'D'], ['M', 'C'], ['P']]
         >>> draw_stacks(state_1)
@@ -88,7 +88,7 @@ def part_1(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     In the second step, three crates are moved from stack 1 to stack 3. Crates are moved **one at
     a time**, so the first crate to be moved (`D`) ends up below the second and third crates:
 
-        >>> draw_stacks(state_2 := move(state_1, moves_[1]))
+        >>> draw_stacks(state_2 := rearrange(state_1, movez[1]))
                 [Z]
                 [N]
             [C] [D]
@@ -98,7 +98,7 @@ def part_1(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     Then, both crates are moved from stack 2 to stack 1. Again, because crates are moved **one at
     a time**, crate `C` ends up below crate M:
 
-        >>> draw_stacks(state_3 := move(state_2, moves_[2]))
+        >>> draw_stacks(state_3 := rearrange(state_2, movez[2]))
                 [Z]
                 [N]
         [M]     [D]
@@ -108,7 +108,7 @@ def part_1(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     Finally, one crate is moved from stack 1 to stack 2:
 
 
-        >>> draw_stacks(state_4 := move(state_3, moves_[3]))
+        >>> draw_stacks(state_4 := rearrange(state_3, movez[3]))
                 [Z]
                 [N]
                 [D]
@@ -124,12 +124,12 @@ def part_1(stacks: list['Stack'], moves: Iterable['Move']) -> str:
 
     **After the rearrangement procedure completes, what crate ends up on top of each stack?**
 
-        >>> part_1(state_0, moves_)
+        >>> part_1(state_0, movez)
         part 1: after rearrangement, the top crates are 'CMZ'
         'CMZ'
     """
 
-    result = top_crates(move(stacks, *moves))
+    result = top_crates(rearrange(stacks, *moves))
 
     print(f"part 1: after rearrangement, the top crates are {result!r}")
     return result
@@ -148,7 +148,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
 
     Again considering the example above, the crates begin in the same configuration:
 
-        >>> state_0, moves_ = input_from_file('data/05-example.txt')
+        >>> state_0, movez = input_from_file('data/05-example.txt')
         >>> draw_stacks(state_0)
             [D]
         [N] [C]
@@ -157,7 +157,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
 
     Moving a single crate from stack 2 to stack 1 behaves the same as before:
 
-        >>> draw_stacks(state_1 := move(state_0, moves_[0], part=2))
+        >>> draw_stacks(state_1 := rearrange(state_0, movez[0], part=2))
         [D]
         [N] [C]
         [Z] [M] [P]
@@ -166,7 +166,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     However, the action of moving three crates from stack 1 to stack 3 means that those three moved
     crates **stay in the same order**, resulting in this new configuration:
 
-        >>> draw_stacks(state_2 := move(state_1, moves_[1], part=2))
+        >>> draw_stacks(state_2 := rearrange(state_1, movez[1], part=2))
                 [D]
                 [N]
             [C] [Z]
@@ -175,7 +175,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
 
     Next, as both crates are moved from stack 2 to stack 1, they **retain their order** as well:
 
-        >>> draw_stacks(state_3 := move(state_2, moves_[2], part=2))
+        >>> draw_stacks(state_3 := rearrange(state_2, movez[2], part=2))
                 [D]
                 [N]
         [C]     [Z]
@@ -185,7 +185,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     Finally, a single crate is still moved from stack 1 to stack 2, but now it's crate `C` that gets
     moved:
 
-        >>> draw_stacks(state_4 := move(state_3, moves_[3], part=2))
+        >>> draw_stacks(state_4 := rearrange(state_3, movez[3], part=2))
                 [D]
                 [N]
                 [Z]
@@ -201,12 +201,12 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     they should stand to be ready to unload the final supplies. **After the rearrangement procedure
     completes, what crate ends up on top of each stack?**
 
-        >>> part_2(state_0, moves_)
+        >>> part_2(state_0, movez)
         part 2: after rearrangement, the top crates are 'MCD'
         'MCD'
     """
 
-    result = top_crates(move(stacks, *moves, part=2))
+    result = top_crates(rearrange(stacks, *moves, part=2))
 
     print(f"part 2: after rearrangement, the top crates are {result!r}")
     return result
@@ -230,7 +230,7 @@ class Move:
         return cls(int(count), int(stack_from), int(stack_to))
 
 
-def move(stacks: list[Stack], *moves: Move, part: int = 1) -> list[Stack]:
+def rearrange(stacks: list[Stack], *moves: Move, part: int = 1) -> list[Stack]:
     # work with a copy
     stacks = [list(stack) for stack in stacks]
 
@@ -295,6 +295,8 @@ def input_from_lines(lines: Iterable[str]) -> tuple[list[Stack], list[Move]]:
                     ]
                     for stack_index in range(len(positions))
                 ]
+
+        assert False
 
     # (1) parse stacks
     stacks = create_stacks()
