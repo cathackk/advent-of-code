@@ -157,7 +157,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
 
     Moving a single crate from stack 2 to stack 1 behaves the same as before:
 
-        >>> draw_stacks(state_1 := rearrange(state_0, movez[0], part=2))
+        >>> draw_stacks(state_1 := rearrange(state_0, movez[0], reverse_order=False))
         [D]
         [N] [C]
         [Z] [M] [P]
@@ -166,7 +166,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     However, the action of moving three crates from stack 1 to stack 3 means that those three moved
     crates **stay in the same order**, resulting in this new configuration:
 
-        >>> draw_stacks(state_2 := rearrange(state_1, movez[1], part=2))
+        >>> draw_stacks(state_2 := rearrange(state_1, movez[1], reverse_order=False))
                 [D]
                 [N]
             [C] [Z]
@@ -175,7 +175,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
 
     Next, as both crates are moved from stack 2 to stack 1, they **retain their order** as well:
 
-        >>> draw_stacks(state_3 := rearrange(state_2, movez[2], part=2))
+        >>> draw_stacks(state_3 := rearrange(state_2, movez[2], reverse_order=False))
                 [D]
                 [N]
         [C]     [Z]
@@ -185,7 +185,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
     Finally, a single crate is still moved from stack 1 to stack 2, but now it's crate `C` that gets
     moved:
 
-        >>> draw_stacks(state_4 := rearrange(state_3, movez[3], part=2))
+        >>> draw_stacks(state_4 := rearrange(state_3, movez[3], reverse_order=False))
                 [D]
                 [N]
                 [Z]
@@ -206,7 +206,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
         'MCD'
     """
 
-    result = top_crates(rearrange(stacks, *moves, part=2))
+    result = top_crates(rearrange(stacks, *moves, reverse_order=False))
 
     print(f"part 2: after rearrangement, the top crates are {result!r}")
     return result
@@ -230,7 +230,7 @@ class Move:
         return cls(int(count), int(stack_from), int(stack_to))
 
 
-def rearrange(stacks: list[Stack], *moves: Move, part: int = 1) -> list[Stack]:
+def rearrange(stacks: list[Stack], *moves: Move, reverse_order: bool = True) -> list[Stack]:
     # work with a copy
     stacks = [list(stack) for stack in stacks]
 
@@ -239,8 +239,7 @@ def rearrange(stacks: list[Stack], *moves: Move, part: int = 1) -> list[Stack]:
         crates_moved = stack_from[-move.count:]
         del stack_from[-move.count:]
 
-        if part == 1:
-            # crates are moved one at a time, order is reversed
+        if reverse_order:
             crates_moved.reverse()
 
         stack_to = stacks[move.stack_to - 1]
@@ -308,7 +307,12 @@ def input_from_lines(lines: Iterable[str]) -> tuple[list[Stack], list[Move]]:
     return stacks, moves
 
 
+def main(input_fn: str = 'data/05-input.txt') -> tuple[str, str]:
+    initial_stacks, moves = input_from_file(input_fn)
+    result_1 = part_1(initial_stacks, moves)
+    result_2 = part_2(initial_stacks, moves)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    initial_stacks_, moves_ = input_from_file('data/05-input.txt')
-    part_1(initial_stacks_, moves_)
-    part_2(initial_stacks_, moves_)
+    main()

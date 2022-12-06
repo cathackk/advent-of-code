@@ -186,7 +186,12 @@ def rounds_from_text(text: str) -> list[str]:
     return [line.strip() for line in text.strip().splitlines()]
 
 
+def main(input_fn: str = 'data/02-input.txt') -> tuple[int, int]:
+    rounds = rounds_from_file(input_fn)
+    result_1 = part_1(rounds)
+    result_2 = part_2(rounds)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    rounds_ = rounds_from_file('data/02-input.txt')
-    part_1(rounds_)
-    part_2(rounds_)
+    main()

@@ -152,13 +152,15 @@ def calories_from_text(text: str) -> list[list[int]]:
 
 
 def calories_from_lines(lines: Iterable[str]) -> Iterable[list[int]]:
-    yield from (
-        [int(line.strip()) for line in group]
-        for group in line_groups(lines)
-    )
+    return ([int(line.strip()) for line in group] for group in line_groups(lines))
+
+
+def main(input_fn: str = 'data/01-input.txt') -> tuple[int, int]:
+    calories = calories_from_file(input_fn)
+    result_1 = part_1(calories)
+    result_2 = part_2(calories)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    calories_ = calories_from_file('data/01-input.txt')
-    part_1(calories_)
-    part_2(calories_)
+    main()

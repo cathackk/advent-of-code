@@ -126,7 +126,12 @@ def data_from_file(fn: str) -> str:
     return open(relative_path(__file__, fn)).read().strip()
 
 
+def main(input_fn: str = 'data/06-input.txt') -> tuple[int, int]:
+    data = data_from_file(input_fn)
+    result_1 = part_1(data)
+    result_2 = part_2(data)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    data_ = data_from_file('data/06-input.txt')
-    part_1(data_)
-    part_2(data_)
+    main()

@@ -79,18 +79,18 @@ def part_1(assignments: list[Pair]) -> int:
     Some of the pairs have noticed that one of their assignments **fully contains** the other. For
     example, `2-8` fully contains `3-7`, and `6-6` is fully contained by `4-6`.
 
-        >>> is_fully_contained(((2, 8), (3, 7)))
+        >>> has_full_overlap(((2, 8), (3, 7)))
         True
-        >>> is_fully_contained(((6, 6), (4, 6)))
+        >>> has_full_overlap(((6, 6), (4, 6)))
         True
-        >>> is_fully_contained(((2, 4), (3, 5)))
+        >>> has_full_overlap(((2, 4), (3, 5)))
         False
 
     In pairs where one assignment fully contains the other, one Elf in the pair would be exclusively
     cleaning sections their partner will already be cleaning, so these seem like the most in need of
     reconsideration. In this example, there are **2** such pairs.
 
-        >>> [pair for pair in work if is_fully_contained(pair)]
+        >>> [pair for pair in work if has_full_overlap(pair)]
         [((2, 8), (3, 7)), ((6, 6), (4, 6))]
 
     **In how many assignment pairs does one range fully contain the other?**
@@ -100,7 +100,7 @@ def part_1(assignments: list[Pair]) -> int:
         2
     """
 
-    result = sum(1 for pair in assignments if is_fully_contained(pair))
+    result = sum(1 for pair in assignments if has_full_overlap(pair))
 
     print(f"part 1: one pair fully contains the other in {result} assignments")
     return result
@@ -141,12 +141,12 @@ def part_2(assignments: Iterable[Pair]) -> int:
     return result
 
 
-def is_fully_contained(pair: Pair) -> bool:
-    def is_within(range_1: Range, range_2: Range) -> bool:
-        return range_1[0] <= range_2[0] <= range_2[1] <= range_1[1]
-
-    elf_1, elf_2 = pair
-    return is_within(elf_1, elf_2) or is_within(elf_2, elf_1)
+def has_full_overlap(pair: Pair) -> bool:
+    (elf_1_start, elf_1_stop), (elf_2_start, elf_2_stop) = pair
+    return (
+        (elf_1_start <= elf_2_start and elf_2_stop <= elf_1_stop) or
+        (elf_2_start <= elf_1_start and elf_1_stop <= elf_2_stop)
+    )
 
 
 def has_overlap(pair: Pair) -> bool:
@@ -188,7 +188,12 @@ def assignments_from_lines(lines: Iterable[str]) -> Iterable[Pair]:
     return (to_pair(line) for line in lines)
 
 
+def main(input_fn: str = 'data/04-input.txt') -> tuple[int, int]:
+    assignments = assignments_from_file(input_fn)
+    result_1 = part_1(assignments)
+    result_2 = part_2(assignments)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    assignments_ = assignments_from_file('data/04-input.txt')
-    part_1(assignments_)
-    part_2(assignments_)
+    main()

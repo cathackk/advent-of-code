@@ -210,7 +210,12 @@ def rucksacks_from_file(fn: str) -> list[str]:
     return [line.strip() for line in open(relative_path(__file__, fn))]
 
 
+def main(input_fn: str = 'data/03-input.txt') -> tuple[int, int]:
+    rucksacks_ = rucksacks_from_file(input_fn)
+    result_1 = part_1(rucksacks_)
+    result_2 = part_2(rucksacks_)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    rucksacks_ = rucksacks_from_file('data/03-input.txt')
-    part_1(rucksacks_)
-    part_2(rucksacks_)
+    main()
