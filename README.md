@@ -24,6 +24,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 3. ([aoc](https://adventofcode.com/2022/day/3)) Day 3: [Rucksack Reorganization](y2022/day03_rucksacks.py)
 4. ([aoc](https://adventofcode.com/2022/day/4)) Day 4: [Camp Cleanup](y2022/day04_overlaps.py)
 5. ([aoc](https://adventofcode.com/2022/day/5)) Day 5: [Supply Stacks](y2022/day05_crates.py)
+6. ([aoc](https://adventofcode.com/2022/day/6)) Day 6: [Tuning Trouble](y2022/day06_signal.py)
 ...
 
 
