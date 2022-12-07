@@ -4,14 +4,14 @@ Day 7: No Space Left On Device
 https://adventofcode.com/2022/day/7
 """
 
-from dataclasses import dataclass
+from functools import lru_cache
 from typing import Iterable
 from typing import Union
 
 from common.file import relative_path
 
 
-def part_1(dir_sizes: dict[str, int], size_limit: int = 100_000) -> int:
+def part_1(filesystem: 'Directory', size_limit: int = 100_000) -> int:
     """
     You can hear birds chirping and raindrops hitting leaves as the expedition proceeds.
     Occasionally, you can even hear much louder sounds in the distance; how big do the animals get
@@ -30,7 +30,7 @@ def part_1(dir_sizes: dict[str, int], size_limit: int = 100_000) -> int:
     You browse around the filesystem to assess the situation and save the resulting terminal output
     (your puzzle input). For example:
 
-        >>> cmds = commands_from_text('''
+        >>> fs = Directory.from_text('''
         ...     $ cd /
         ...     $ ls
         ...     dir a
@@ -55,24 +55,6 @@ def part_1(dir_sizes: dict[str, int], size_limit: int = 100_000) -> int:
         ...     5626152 d.ext
         ...     7214296 k
         ... ''')
-        >>> len(cmds)
-        10
-        >>> cmds[0]
-        cd('/')
-        >>> cmds[1]
-        ls([Dir('a'), File('b.txt', 14848514), File('c.dat', 8504156), Dir('d')])
-        >>> cmds[2]
-        cd('a')
-        >>> cmds[3]
-        ls([Dir('e'), File('f', 29116), File('g', 2557), File('h.lst', 62596)])
-        >>> cmds[4]
-        cd('e')
-        >>> cmds[5]
-        ls([File('i', 584)])
-        >>> cmds[6:9]
-        [cd('..'), cd('..'), cd('d')]
-        >>> cmds[9]
-        ls([File('j', 4060174), File('d.log', 8033020), File('d.ext', 5626152), File('k', 7214296)])
 
     The filesystem consists of a tree of files (plain data) and directories (which can contain other
     directories or files). The outermost directory is called `/`. You can navigate around the
@@ -97,12 +79,7 @@ def part_1(dir_sizes: dict[str, int], size_limit: int = 100_000) -> int:
     Given the commands and output in the example above, you can determine that the filesystem looks
     like this:
 
-        >>> fs = create_filesystem(cmds)
-        >>> fs  # doctest: +NORMALIZE_WHITESPACE
-        {'a': {'e': {'i': 584}, 'f': 29116, 'g': 2557, 'h.lst': 62596},
-         'b.txt': 14848514, 'c.dat': 8504156,
-         'd': {'j': 4060174, 'd.log': 8033020, 'd.ext': 5626152, 'k': 7214296}}
-        >>> draw_filesystem(fs)
+        >>> fs.draw()
         - / (dir)
           - a (dir)
             - e (dir)
@@ -126,32 +103,30 @@ def part_1(dir_sizes: dict[str, int], size_limit: int = 100_000) -> int:
     The total size of a directory is the sum of the sizes of the files it contains, directly or
     indirectly. (Directories themselves do not count as having any intrinsic size.)
 
-        >>> sizes = total_sizes(fs)
-
     The total sizes of the directories above can be found as follows:
 
       - The total size of directory `e` is **584** because it contains a single file `i` of size 584
         and no other directories:
 
-        >>> sizes['/a/e']
+        >>> fs.at_path('/a/e').total_size()
         584
 
       - The directory `a` has total size **94_853** because it contains files `f` (size 29_116),
         `g` (size 2_557), and `h.lst` (size 62_596), plus file `i` indirectly (`a` contains `e`
         which contains `i`):
 
-        >>> sizes['/a']
+        >>> fs.at_path('/a').total_size()
         94853
 
       - Directory `d` has total size 24_933_642:
 
-        >>> sizes['/d']
+        >>> fs.at_path('/d').total_size()
         24933642
 
       - As the outermost directory, `/` contains every file. Its total size is 48_381_165,
         the sum of the size of every file:
 
-        >>> sizes['/']
+        >>> fs.total_size()
         48381165
 
     To begin, find all of the directories with a **total size of at most 100_000**, then calculate
@@ -159,7 +134,7 @@ def part_1(dir_sizes: dict[str, int], size_limit: int = 100_000) -> int:
     of their total sizes is **95_437** (94_853 + 584). (As in this example, this process can count
     files more than once!)
 
-        >>> {d: size for d, size in sizes.items() if size <= 100_000}
+        >>> {path: size for path, dir_ in fs.walkdirs() if (size := dir_.total_size()) <= 100_000}
         {'/a': 94853, '/a/e': 584}
         >>> sum(_.values())
         95437
@@ -167,19 +142,23 @@ def part_1(dir_sizes: dict[str, int], size_limit: int = 100_000) -> int:
     Find all of the directories with a total size of at most 100_000.
     **What is the sum of the total sizes of those directories?**
 
-        >>> part_1(sizes)
+        >>> part_1(fs)
         part 1: total size of dirs with size less than 100000 is 95437
         95437
     """
 
-    result = sum(size for size in dir_sizes.values() if size <= size_limit)
+    result = sum(
+        size
+        for _, dir_ in filesystem.walkdirs()
+        if (size := dir_.total_size()) <= size_limit
+    )
 
     print(f"part 1: total size of dirs with size less than {size_limit} is {result}")
     return result
 
 
 def part_2(
-    dir_sizes: dict[str, int],
+    filesystem: 'Directory',
     disk_size: int = 70_000_000,
     update_size: int = 30_000_000
 ) -> int:
@@ -194,16 +173,16 @@ def part_2(
     used space) is 48381165; this means that the size of the unused space must currently be
     21618835, which isn't quite the 30000000 required by the update.
 
-        >>> sizes = total_sizes(create_filesystem(commands_from_file('data/07-example.txt')))
-        >>> sizes['/']
+        >>> fs = Directory.from_file('data/07-example.txt')
+        >>> fs.total_size()
         48381165
-        >>> 70_000_000 - sizes['/']
+        >>> 70_000_000 - fs.total_size()
         21618835
 
     Therefore, the update still requires a directory with total size of at least 8381165 to be
     deleted before it can run.
 
-        >>> need_to_free = sizes['/'] + 30_000_000 - 70_000_000
+        >>> need_to_free = fs.total_size() + 30_000_000 - 70_000_000
         >>> need_to_free
         8381165
 
@@ -217,7 +196,7 @@ def part_2(
     Directories `e` and `a` are both too small; deleting them would not free up enough space.
     However, directories `d` and `/` are both big enough!
 
-        >>> {d: size for d, size in sizes.items() if size >= need_to_free}
+        >>> {path: size for path, d in fs.walkdirs() if (size := d.total_size()) >= need_to_free}
         {'/': 48381165, '/d': 24933642}
 
     Between these, choose the smallest: `d`, increasing unused space by **24_933_642**.
@@ -228,174 +207,134 @@ def part_2(
     Find the smallest directory that, if deleted, would free up enough space on the filesystem to
     run the update. **What is the total size of that directory?**
 
-        >>> part_2(sizes)
+        >>> part_2(fs)
         part 2: delete dir /d with size 24933642
         24933642
     """
 
-    need_to_free = dir_sizes['/'] + update_size - disk_size
-    assert need_to_free > 0
+    size_to_free = filesystem.total_size() + update_size - disk_size
+    assert size_to_free > 0
 
     deleted_size, deleted_path = min(
-        (size, name)
-        for name, size in dir_sizes.items()
-        if size >= need_to_free
+        (size, dirname)
+        for dirname, dir_ in filesystem.walkdirs()
+        if (size := dir_.total_size()) >= size_to_free
     )
 
     print(f"part 2: delete dir {deleted_path} with size {deleted_size}")
     return deleted_size
 
 
-FilesystemDict = dict[str, Union[int, 'FilesystemDict']]
+# subfilesystem or int of given size
+FileSystemItem = Union['Directory', int]
+PathLike = Union[str, list[str]]
 
 
-def create_filesystem(commands: Iterable['Command']) -> FilesystemDict:
-    filesystem: FilesystemDict = {}
-    current_path: list[str] = []
+class Directory:
 
-    def cd_into(files: FilesystemDict, path: list[str]) -> FilesystemDict:
-        if not path:
-            return files
+    def __init__(self, subitems: Iterable[tuple[str, FileSystemItem]] = ()):
+        self.subitems = dict(subitems)
 
-        subfs = files[path[0]]
-        assert isinstance(subfs, dict)
-        return cd_into(subfs, path[1:])
+    def __getitem__(self, key: str) -> FileSystemItem:
+        return self.subitems[key]
 
+    def __setitem__(self, key: str, value: FileSystemItem) -> None:
+        self.subitems[key] = value
 
-    for command in commands:
-        if isinstance(command, CD):
-            if command.dir_name == '/':
-                current_path = []
-            elif command.dir_name == '..':
-                assert current_path
-                current_path.pop()
+    def at_path(self, path: PathLike) -> FileSystemItem:
+        if isinstance(path, str):
+            assert path.startswith('/')
+            path = path[1:].split('/')
+
+        if len(path) == 0:
+            return self
+        elif len(path) == 1:
+            return self.subitems[path[0]]
+        else:
+            subitem = self.subitems[path[0]]
+            assert isinstance(subitem, Directory)
+            return subitem.at_path(path[1:])
+
+    def walkdirs(self, current_path: str = '/') -> Iterable[tuple[str, 'Directory']]:
+        yield current_path, self
+        yield from (
+            (path, subdir)
+            for dirname, dir_ in self.subitems.items()
+            if isinstance(dir_, Directory)
+            for path, subdir in dir_.walkdirs(current_path.rstrip('/') + '/' + dirname)
+        )
+
+    @lru_cache()
+    def total_size(self) -> int:
+        def sizeof(item: FileSystemItem) -> int:
+            if isinstance(item, int):
+                return item
+            elif isinstance(item, Directory):
+                return item.total_size()
             else:
-                current_path.append(command.dir_name)
+                raise TypeError(type(item))
 
-        elif isinstance(command, LS):
-            current_dir = cd_into(filesystem, current_path)
+        return sum(sizeof(item) for item in self.subitems.values())
 
-            for item in command.listing:
-                if isinstance(item, File):
-                    current_dir[item.name] = item.size
-                elif isinstance(item, Dir):
-                    current_dir[item.name] = {}
+    def draw(self, level: int = 0) -> None:
+        if level == 0:
+            print('- / (dir)')
+            self.draw(level=1)
+            return
 
-        else:
-            raise TypeError(type(command))
+        indent = '  ' * level
 
-    return filesystem
-
-
-def draw_filesystem(filesystem: FilesystemDict, level: int = 0) -> None:
-    if level == 0:
-        print('- / (dir)')
-        draw_filesystem(filesystem, 1)
-        return
-
-    indent = '  ' * level
-
-    for key, value in filesystem.items():
-        if isinstance(value, dict):
-            print(f'{indent}- {key} (dir)')
-            draw_filesystem(value, level + 1)
-        elif isinstance(value, int):
-            print(f'{indent}- {key} (file, size={value})')
-        else:
-            raise TypeError(type(value))
-
-
-def total_sizes(filesystem: FilesystemDict, path: str = '/') -> dict[str, int]:
-    def joinpath(path_1: str, path_2: str) -> str:
-        return path_1.rstrip('/') + '/' + path_2
-
-    sizes = {path: 0}
-
-    for key, value in filesystem.items():
-        if isinstance(value, dict):
-            subpath = joinpath(path, key)
-            subdir_sizes = total_sizes(value, subpath)
-            sizes.update(subdir_sizes)
-            sizes[path] += subdir_sizes[subpath]
-        elif isinstance(value, int):
-            sizes[path] += value
-        else:
-            raise TypeError(type(value))
-
-    return sizes
-
-
-@dataclass(frozen=True)
-class CD:
-    dir_name: str
-
-    def __repr__(self) -> str:
-        return f'cd({self.dir_name!r})'
-
-
-@dataclass(frozen=True)
-class File:
-    name: str
-    size: int
-
-    def __repr__(self) -> str:
-        return f'{type(self).__name__}({self.name!r}, {self.size!r})'
-
-
-@dataclass(frozen=True)
-class Dir:
-    name: str
-
-    def __repr__(self) -> str:
-        return f'{type(self).__name__}({self.name!r})'
-
-
-@dataclass(frozen=True)
-class LS:
-    listing: list[File | Dir]
-
-    def __repr__(self) -> str:
-        return f'ls({self.listing!r})'
+        for key, value in self.subitems.items():
+            if isinstance(value, Directory):
+                print(f'{indent}- {key} (dir)')
+                value.draw(level + 1)
+            elif isinstance(value, int):
+                print(f'{indent}- {key} (file, size={value})')
+            else:
+                raise TypeError(type(value))
 
     @classmethod
-    def from_output(cls, output: Iterable[str]) -> 'LS':
-        def parse_fd(line: str) -> File | Dir:
-            # dir a
-            # 14848514 b.txt
-            size, name = line.split()
-            if size == 'dir':
-                return Dir(name)
+    def from_text(cls, text: str) -> 'Directory':
+        return cls.from_lines(text.strip().splitlines())
+
+    @classmethod
+    def from_file(cls, fn: str) -> 'Directory':
+        return cls.from_lines(open(relative_path(__file__, fn)))
+
+    @classmethod
+    def from_lines(cls, lines: Iterable[str]) -> 'Directory':
+        root = cls()
+        current_path: list[str] = []
+
+        for command, output in group_command_lines(lines):
+            if command.startswith('cd '):
+                assert not output
+
+                target = command.removeprefix('cd ')
+                if target == '/':
+                    current_path = []
+                elif target == '..':
+                    current_path.pop()
+                else:
+                    assert '/' not in target
+                    current_path.append(target)
+
+            elif command == 'ls':
+                sub_fs = root.at_path(current_path)
+                assert isinstance(sub_fs, cls)
+                for item in output:
+                    size, name = item.split(' ')
+                    sub_fs[name] = cls() if size == 'dir' else int(size)
+
             else:
-                return File(name, int(size))
+                raise KeyError(command)
 
-        return cls([parse_fd(line) for line in output])
-
-
-Command = CD | LS
-
-
-def commands_from_file(fn: str) -> list[Command]:
-    return list(commands_from_lines(open(relative_path(__file__, fn))))
-
-
-def commands_from_text(text: str) -> list[Command]:
-    return list(commands_from_lines(text.strip().splitlines()))
-
-
-def commands_from_lines(lines: Iterable[str]) -> Iterable[Command]:
-    for command, output in group_command_lines(lines):
-        if command.startswith('cd '):
-            assert not output
-            yield CD(dir_name=command.removeprefix('cd '))
-        elif command == 'ls':
-            yield LS.from_output(output)
-        else:
-            raise ValueError(command)
+        return root
 
 
 def group_command_lines(lines: Iterable[str]) -> Iterable[tuple[str, list[str]]]:
+    """ Returns input lines grouped into tuples (command: str, output: list[str]) """
     command, output = None, []
-
     for line in lines:
         line = line.strip()
         if line.startswith('$ '):
@@ -407,18 +346,15 @@ def group_command_lines(lines: Iterable[str]) -> Iterable[tuple[str, list[str]]]
         else:
             output.append(line)
 
+    # flush leftovers
     if command:
         yield command, output
 
 
 def main(input_fn: str = 'data/07-input.txt') -> tuple[int, int]:
-    # TODO: join the first two steps into one?
-    commands = commands_from_file(input_fn)
-    filesystem = create_filesystem(commands)
-    dir_sizes = total_sizes(filesystem)
-
-    result_1 = part_1(dir_sizes)
-    result_2 = part_2(dir_sizes)
+    filesystem = Directory.from_file(input_fn)
+    result_1 = part_1(filesystem)
+    result_2 = part_2(filesystem)
     return result_1, result_2
 
 
