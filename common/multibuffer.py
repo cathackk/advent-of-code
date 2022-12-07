@@ -78,16 +78,16 @@ class MultiBuffer:
     def min_key(self) -> int:
         return min(self._buffers.keys())
 
-    def pop(self, index: int = -1) -> T:
+    def pop(self, index: int = -1) -> T:  # type: ignore
         return self.pop_max(index)
 
-    def pop_max(self, index: int = -1) -> T:
+    def pop_max(self, index: int = -1) -> T:  # type: ignore
         return self.pop_by_score(self.max_key(), index)
 
-    def pop_min(self, index: int = -1) -> T:
+    def pop_min(self, index: int = -1) -> T:  # type: ignore
         return self.pop_by_score(self.min_key(), index)
 
-    def pop_by_score(self, score: int, index: int = -1) -> T:
+    def pop_by_score(self, score: int, index: int = -1) -> T:  # type: ignore
         buffer = self._buffers[score]
         item = buffer.pop(index)
         if not buffer:
