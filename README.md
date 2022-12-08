@@ -26,6 +26,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 5. ([aoc](https://adventofcode.com/2022/day/5)) Day 5: [Supply Stacks](y2022/day05_crates.py)
 6. ([aoc](https://adventofcode.com/2022/day/6)) Day 6: [Tuning Trouble](y2022/day06_signal.py)
 7. ([aoc](https://adventofcode.com/2022/day/7)) Day 7: [No Space Left On Device](y2022/day07_filesystem.py)
+8. ([aoc](https://adventofcode.com/2022/day/8)) Day 8: [Treetop Tree House](y2022/day08_trees.py)
 ...
 
 
