@@ -16,7 +16,7 @@ class Rect:
         x1, y1 = corner1
         x2, y2 = corner2
         self.top_left = min(x1, x2), min(y1, y2)
-        self.bottom_right = max(x1, x2), max(y2, y2)
+        self.bottom_right = max(x1, x2), max(y1, y2)
 
     def __repr__(self):
         return f'{type(self).__name__}({self.top_left!r}, {self.bottom_right!r})'
