@@ -28,6 +28,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 7. ([aoc](https://adventofcode.com/2022/day/7)) Day 7: [No Space Left On Device](y2022/day07_filesystem.py)
 8. ([aoc](https://adventofcode.com/2022/day/8)) Day 8: [Treetop Tree House](y2022/day08_trees.py)
 9. ([aoc](https://adventofcode.com/2022/day/9)) Day 9: [Rope Bridge](y2022/day09_rope.py)
+10. ([aoc](https://adventofcode.com/2022/day/10)) Day 10: [Cathode-Ray Tube](y2022/day10_crt.py)
 ...
 
 
