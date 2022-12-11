@@ -18,7 +18,7 @@ def gcd2(a: int, b: int) -> int:
     return b
 
 
-def gcd(*xs: int) -> int | None:
+def gcd(*xs: int) -> int:
     result = None
 
     for x in xs:
@@ -27,6 +27,9 @@ def gcd(*xs: int) -> int | None:
         else:
             result = gcd2(result, x)
 
+    if result is None:
+        raise ValueError("no values given to gcd()")
+
     return result
 
 
@@ -34,7 +37,7 @@ def lcm2(a: int, b: int) -> int:
     return abs(a * b) // gcd2(a, b)
 
 
-def lcm(*xs: int) -> int | None:
+def lcm(*xs: int) -> int:
     result = None
 
     for x in xs:
@@ -42,6 +45,9 @@ def lcm(*xs: int) -> int | None:
             result = x
         else:
             result = lcm2(result, x)
+
+    if result is None:
+        raise ValueError("no values given to lcm()")
 
     return result
 
