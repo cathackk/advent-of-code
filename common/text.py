@@ -118,8 +118,8 @@ def line_groups(lines: Iterable[str]) -> Iterable[list[str]]:
     buffer = []
 
     for line in lines:
-        if line.strip():
-            buffer.append(line.strip())
+        if (line_stripped := line.strip()):
+            buffer.append(line_stripped)
         else:
             yield buffer
             buffer = []

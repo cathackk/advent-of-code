@@ -31,6 +31,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 10. ([aoc](https://adventofcode.com/2022/day/10)) Day 10: [Cathode-Ray Tube](y2022/day10_crt.py)
 11. ([aoc](https://adventofcode.com/2022/day/11)) Day 11: [Monkey in the Middle](y2022/day11_monkeys.py)
 12. ([aoc](https://adventofcode.com/2022/day/12)) Day 12: [Hill Climbing Algorithm](y2022/day12_climb.py)
+13. ([aoc](https://adventofcode.com/2022/day/13)) Day 13: [Distress Signal](y2022/day13_signal.py)
 ...
 
 

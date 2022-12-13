@@ -137,10 +137,8 @@ def part_2(heightmap: 'HeightMap') -> int:
             return 1_000_000  # no path
 
     # TODO: optimize! find path between `E` and any `a`
-    best_starting_position, steps = mink(
-        (start for start in tqdm(heightmap.rect, total=heightmap.rect.area) if heightmap.elevations[start] == 0),
-        key=path
-    )
+    starting_positions = [pos for pos in heightmap.rect if heightmap.elevations[pos] == 0]
+    _, steps = mink(tqdm(starting_positions), key=path)
 
     print(f"part 2: target can be reached in {steps} steps")
     return steps
