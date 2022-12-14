@@ -279,11 +279,10 @@ class State:
             else:
                 return '·'
 
-        def lines() -> Iterable[str]:
-            for y in bounds.range_y():
-                yield ''.join(char((x, y)) for x in bounds.range_x())
-
-        return '\n'.join(lines())
+        return '\n'.join(
+            ''.join(char((x, y)) for x in bounds.range_x())
+            for y in bounds.range_y()
+        )
 
     @property
     def bottom_floor(self) -> bool:
