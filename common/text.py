@@ -38,7 +38,10 @@ def _parse_line_fixes(line: str, *fixes: str) -> tuple[str, ...]:
 
         line = line[len(fix1):]
         if fix2:
-            pos2 = line.index(fix2)
+            try:
+                pos2 = line.index(fix2)
+            except ValueError as exc:
+                raise ValueError(f"substring {fix2!r} not found in {line!r}") from exc
             results.append(line[:pos2])
             line = line[pos2:]
         else:

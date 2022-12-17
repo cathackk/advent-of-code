@@ -33,6 +33,8 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 12. ([aoc](https://adventofcode.com/2022/day/12)) Day 12: [Hill Climbing Algorithm](y2022/day12_climb.py)
 13. ([aoc](https://adventofcode.com/2022/day/13)) Day 13: [Distress Signal](y2022/day13_signal.py)
 14. ([aoc](https://adventofcode.com/2022/day/14)) Day 14: [Regolith Reservoir](y2022/day14_sand.py)
+15. ([aoc](https://adventofcode.com/2022/day/15)) Day 15: [Beacon Exclusion Zone](y2022/day15_beacons.py)
+17. ([aoc](https://adventofcode.com/2022/day/17)) Day 17: [Pyroclastic Flow](y2022/day17_tetris.py)
 ...
 
 
