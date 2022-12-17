@@ -730,7 +730,7 @@ def final_height(moves: list[Move], target_shapes_count: int) -> int:
             continue
 
         # ... we'll check if the height delta is the same among these three:
-        state_1, state_2, state_3 = (state for state in similar_states[-3:])
+        state_1, state_2, state_3 = similar_states[-3:]
         height_per_cycle = state_3.height - state_2.height
         if height_per_cycle != state_2.height - state_1.height:
             continue
