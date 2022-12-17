@@ -59,7 +59,7 @@ def index_lines() -> Iterable[str]:
             else:
                 assert desc.year == year
                 assert desc.day == day
-                yield f"{day}. ([aoc]({desc.aoc_url})) Day {desc.day}: [{desc.title}]({desc.path})"
+                yield f"- ([aoc]({desc.aoc_url})) Day {desc.day}: [{desc.title}]({desc.path})"
                 complete_days_count += 1
 
         if complete_days_count < 25:
