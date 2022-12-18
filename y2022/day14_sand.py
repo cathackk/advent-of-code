@@ -264,7 +264,7 @@ class State:
 
         if self.bottom_floor:
             left_x, right_x = bounds.left_x - 2, bounds.right_x + 2
-            floor_y = self.bottom_floor_y
+            floor_y = some(self.bottom_floor_y)
             bounds = bounds.grow_to_fit([(left_x, floor_y), (right_x, floor_y)])
 
         def char(pos: Pos) -> str:
