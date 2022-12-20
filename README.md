@@ -36,6 +36,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2022/day/15)) Day 15: [Beacon Exclusion Zone](y2022/day15_beacons.py)
 - ([aoc](https://adventofcode.com/2022/day/17)) Day 17: [Pyroclastic Flow](y2022/day17_tetris.py)
 - ([aoc](https://adventofcode.com/2022/day/18)) Day 18: [Boiling Boulders](y2022/day18_lava.py)
+- ([aoc](https://adventofcode.com/2022/day/20)) Day 20: [Grove Positioning System](y2022/day20_encryption.py)
 ...
 
 

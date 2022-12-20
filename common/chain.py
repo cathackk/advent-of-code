@@ -48,7 +48,7 @@ class Link:
     def disconnect(self) -> 'Link':
         if self.prev_link is not None:
             self.prev_link.next_link = self.next_link
-        elif self.next_link is not None:
+        if self.next_link is not None:
             self.next_link.prev_link = self.prev_link
         self.prev_link = self.next_link = None
         return self
@@ -109,41 +109,54 @@ class Link:
 
 
 class Circle:
-    def __init__(self, items: list[Any]):
-        assert len(items) > 0
-        self._current_link, last_link, _ = Link.build_chain(items)
-        self._current_link.connect_to(prev_link=last_link)
-        self._length = len(items)
+    def __init__(self, items: Iterable[Any]):
+        self.current_link, last_link, self.length = Link.build_chain(items)
+        self.current_link.connect_to(prev_link=last_link)
 
     def current(self) -> Any:
-        return self._current_link.value
+        return self.current_link.value
+
+    def __getitem__(self, steps: int) -> Any:
+        # TODO: len(circle) == 1000, circle[-1] -> takes 999 steps, but only 1 is needed (max 500)
+        return some(self.current_link.follow(steps % self.length)).value
 
     def shift(self, steps: int):
-        self._current_link = some(self._current_link.follow(steps))
+        # TODO: len(circle) == 1000, circle[-1] -> takes 999 steps, but only 1 is needed (max 500)
+        self.current_link = some(self.current_link.follow(steps % self.length))
+
+    def shift_to_value(self, value: Any):
+        try:
+            self.current_link = next(link for link in self.links() if link.value == value)
+        except StopIteration as not_found:
+            raise ValueError(f"{value} is not in the circle") from not_found
 
     def insert(self, steps: int, value: Any):
         self.shift(steps)
-        self._current_link = self._current_link.insert_after(value)
-        self._length += 1
+        self.current_link = self.current_link.insert_after(value)
+        self.length += 1
 
     def pop(self, steps: int) -> Any:
         self.shift(steps + 1)
-        removed_link = self._current_link.prev_link
-        assert removed_link is not None
+        removed_link = some(self.current_link.prev_link)
         removed_link.disconnect()
-        self._length -= 1
+        self.length -= 1
         return removed_link.value
 
-    def __iter__(self) -> Iterator:
-        link = self._current_link
+    def links(self) -> Iterator[Link]:
+        link = self.current_link
         while True:
             yield link
+            if link.next_link is None:
+                raise ValueError(f"broken link: {link}, next=None, prev={link.prev_link}")
             link = some(link.next_link)
-            if link == self._current_link:
+            if link is self.current_link:
                 break
 
+    def __iter__(self) -> Iterator:
+        return (link.value for link in self.links())
+
     def __str__(self):
-        return ' -> '.join(str(link) for link in self) + ' -> ...'
+        return ' -> '.join(str(value) for value in self) + ' -> ...'
 
     def __len__(self):
-        return self._length
+        return self.length
