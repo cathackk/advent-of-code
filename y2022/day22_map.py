@@ -361,7 +361,7 @@ class Board:
             highlight.update((pos, heading.arrow) for pos, heading in self.trace_path(path))
 
         def char(pos: Pos) -> str:
-            assert highlight
+            assert highlight is not None
             if pos in highlight:
                 return highlight[pos]
             if pos not in self.tiles:
