@@ -38,6 +38,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2022/day/18)) Day 18: [Boiling Boulders](y2022/day18_lava.py)
 - ([aoc](https://adventofcode.com/2022/day/20)) Day 20: [Grove Positioning System](y2022/day20_encryption.py)
 - ([aoc](https://adventofcode.com/2022/day/21)) Day 21: [Monkey Math](y2022/day21_math_tree.py)
+- ([aoc](https://adventofcode.com/2022/day/22)) Day 22: [Monkey Map](y2022/day22_map.py)
 ...
 
 

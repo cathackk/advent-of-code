@@ -102,7 +102,7 @@ def join_or(items: Iterable[Any], oxford_comma=False) -> str:
     return join_english(items, conj=", or " if oxford_comma else " or ")
 
 
-def line_groups(lines: Iterable[str]) -> Iterable[list[str]]:
+def line_groups(lines: Iterable[str], lstrip: bool = True) -> Iterable[list[str]]:
     r"""
     Separate stream of lines into groups of whitespace-stripped lines.
     Empty line (containing only whitespace) serves as separator.
@@ -122,7 +122,7 @@ def line_groups(lines: Iterable[str]) -> Iterable[list[str]]:
 
     for line in lines:
         if (line_stripped := line.strip()):
-            buffer.append(line_stripped)
+            buffer.append(line_stripped if lstrip else line)
         else:
             yield buffer
             buffer = []
