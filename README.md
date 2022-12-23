@@ -24,7 +24,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2022/day/3)) Day 3: [Rucksack Reorganization](y2022/day03_rucksacks.py)
 - ([aoc](https://adventofcode.com/2022/day/4)) Day 4: [Camp Cleanup](y2022/day04_overlaps.py)
 - ([aoc](https://adventofcode.com/2022/day/5)) Day 5: [Supply Stacks](y2022/day05_crates.py)
-- ([aoc](https://adventofcode.com/2022/day/6)) Day 6: [Tuning Trouble](y2022/day06_signal.py)
+- ([aoc](https://adventofcode.com/2022/day/6)) Day 6: [Tuning Trouble](y2022/day06_tuning.py)
 - ([aoc](https://adventofcode.com/2022/day/7)) Day 7: [No Space Left On Device](y2022/day07_filesystem.py)
 - ([aoc](https://adventofcode.com/2022/day/8)) Day 8: [Treetop Tree House](y2022/day08_trees.py)
 - ([aoc](https://adventofcode.com/2022/day/9)) Day 9: [Rope Bridge](y2022/day09_rope.py)
@@ -38,7 +38,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2022/day/18)) Day 18: [Boiling Boulders](y2022/day18_lava.py)
 - ([aoc](https://adventofcode.com/2022/day/20)) Day 20: [Grove Positioning System](y2022/day20_encryption.py)
 - ([aoc](https://adventofcode.com/2022/day/21)) Day 21: [Monkey Math](y2022/day21_math_tree.py)
-- ([aoc](https://adventofcode.com/2022/day/22)) Day 22: [Monkey Map](y2022/day22_map.py)
+- ([aoc](https://adventofcode.com/2022/day/22)) Day 22: [Monkey Map](y2022/day22_cube.py)
 - ([aoc](https://adventofcode.com/2022/day/23)) Day 23: [Unstable Diffusion](y2022/day23_diffusion.py)
 ...
 
