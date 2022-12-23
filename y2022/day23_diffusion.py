@@ -367,11 +367,11 @@ def neighbors(pos: Pos, direction: Direction = None) -> Iterable[Pos]:
     x, y = pos
 
     if direction is None:
-        # all 8 neighbors
+        # all eight neighbors
         return ((x + dx, y + dy) for dx in ADJ for dy in ADJ if dx or dy)
 
     if direction.dx != 0:
-        # only three WEST or EAST neighbors
+        # only the three WEST or EAST neighbors
         assert direction.dy == 0
         return ((x + direction.dx, y + dy) for dy in ADJ)
 
@@ -397,7 +397,7 @@ class State:
         directions = list(Direction)[dir_offset:] + list(Direction)[:dir_offset]
 
         def proposal(elf: Pos) -> Pos | None:
-            # no other elves are in one of the adjacent positions -> does not do anything
+            # no other elves are in one of the adjacent positions -> does not move
             if not any(npos in self.elves for npos in neighbors(elf)):
                 return None
 
