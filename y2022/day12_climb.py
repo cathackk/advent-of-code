@@ -4,15 +4,14 @@ Day 12: Hill Climbing Algorithm
 https://adventofcode.com/2022/day/12
 """
 
+import functools
 import string
+from typing import Callable
 from typing import Iterable
-
-from tqdm import tqdm
 
 from common.file import relative_path
 from common.graph import shortest_path
 from common.heading import Heading
-from common.iteration import mink
 from common.rect import Rect
 
 
@@ -65,7 +64,7 @@ def part_1(heightmap: 'HeightMap') -> int:
     down or right, but eventually you'll need to head toward the `e` at the bottom. From there, you
     can spiral around to the goal:
 
-        >>> length, path = hm.find_shortest_path()
+        >>> path = hm.find_shortest_path_to_top()
         >>> path  # doctest: +ELLIPSIS
         [Heading.EAST, Heading.SOUTH, Heading.SOUTH, Heading.EAST, Heading.SOUTH, ...]
         >>> hm.draw_path(path)
@@ -81,7 +80,7 @@ def part_1(heightmap: 'HeightMap') -> int:
 
     This path reaches the goal in **31** steps, the fewest possible.
 
-        >>> length
+        >>> len(path)
         31
 
     **What is the fewest steps required to move from your current position to the location that
@@ -92,7 +91,7 @@ def part_1(heightmap: 'HeightMap') -> int:
         31
     """
 
-    result, _ = heightmap.find_shortest_path()
+    result = len(heightmap.find_shortest_path_to_top())
 
     print(f"part 1: target can be reached in {result} steps")
     return result
@@ -116,8 +115,9 @@ def part_2(heightmap: 'HeightMap') -> int:
     that counts as being at elevation `a`). If you start at the bottom-left square, you can reach
     the goal most quickly:
 
-        TODO
-
+        >>> path = hm.find_shortest_path_down()
+        >>> path_reversed = [step.opposite() for step in reversed(path)]
+        >>> hm.draw_path(path_reversed, start=(0, 4))
         ···↓←←←←
         ···↓↓←←↑
         ···↓→E↑↑
@@ -126,25 +126,25 @@ def part_2(heightmap: 'HeightMap') -> int:
 
     This path reaches the goal in only 29 steps, the fewest possible.
 
+        >>> len(path)
+        29
+
     **What is the fewest steps required to move starting from any square with elevation `a` to the
     location that should get the best signal?**
+
+        >>> part_2(hm)
+        part 2: lowest elevation can be reached in 29 steps
+        29
     """
 
-    def path(start: Pos) -> int:
-        try:
-            return heightmap.find_shortest_path(start)[0]
-        except ValueError:
-            return 1_000_000  # no path
+    result = len(heightmap.find_shortest_path_down())
 
-    # TODO: optimize! find path between `E` and any `a`
-    starting_positions = [pos for pos in heightmap.rect if heightmap.elevations[pos] == 0]
-    _, steps = mink(tqdm(starting_positions), key=path)
-
-    print(f"part 2: target can be reached in {steps} steps")
-    return steps
+    print(f"part 2: lowest elevation can be reached in {result} steps")
+    return result
 
 
 Pos = tuple[int, int]
+Path = list[Heading]
 
 
 class HeightMap:
@@ -156,33 +156,46 @@ class HeightMap:
 
         self.rect = Rect.with_all(self.elevations)
 
-    def neighbors(self, pos: Pos) -> Iterable[tuple[Pos, Heading, int]]:
+    def neighbors(
+        self,
+        pos: Pos,
+        can_climb: Callable[[int, int], bool],
+    ) -> Iterable[tuple[Pos, Heading, int]]:
         x, y = pos
         elevation = self.elevations[pos]
 
         for heading in Heading:
-            neighbor_pos = x + heading.dx, y + heading.dy
-            if neighbor_pos not in self.elevations:
+            npos = x + heading.dx, y + heading.dy
+            if npos not in self.elevations:
                 continue
-            neighbor_elevation = self.elevations[neighbor_pos]
-            if neighbor_elevation - elevation <= 1:
-                yield neighbor_pos, heading, 1
+            if can_climb(elevation, self.elevations[npos]):
+                yield npos, heading, 1
 
-    def find_shortest_path(self, start: Pos = None) -> tuple[int, list[Heading]]:
-        return shortest_path(
+    def find_shortest_path_to_top(self, start: Pos = None) -> Path:
+        _, path = shortest_path(
             start=start or self.start,
             target=self.target,
-            edges=self.neighbors,
+            edges=functools.partial(self.neighbors, can_climb=lambda old, new: new - old <= 1),
             nodes_count=self.rect.area,
         )
+        return path
 
-    def draw_path(self, path: list[Heading]) -> None:
+    def find_shortest_path_down(self, start: Pos = None) -> Path:
+        _, path = shortest_path(
+            start=start or self.target,
+            target=lambda pos: self.elevations[pos] == 0,
+            edges=functools.partial(self.neighbors, can_climb=lambda old, new: old - new <= 1),
+            nodes_count=self.rect.area,
+        )
+        return path
+
+    def draw_path(self, path: Path, start: Pos = None) -> None:
         chars: dict[Pos, str] = {self.target: 'E'}
-        pos = self.start
+        x, y = start or self.start
 
         for heading in path:
-            chars[pos] = heading.arrow
-            pos = pos[0] + heading.dx, pos[1] + heading.dy
+            chars[x, y] = heading.arrow
+            x, y = x + heading.dx, y + heading.dy
 
         lines = (
             ''.join(chars.get((x, y), '·') for x in self.rect.range_x())

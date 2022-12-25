@@ -1,3 +1,4 @@
+from typing import Any
 from typing import TypeVar
 
 T = TypeVar('T')
@@ -40,3 +41,7 @@ def assert_single_not_none(**kwargs: T) -> tuple[str, T]:
 def some(item: T | None, description: str = "") -> T:
     assert item is not None, description
     return item
+
+
+def is_callable(obj: Any) -> bool:
+    return hasattr(obj, '__call__')

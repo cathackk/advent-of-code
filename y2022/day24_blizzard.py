@@ -8,7 +8,7 @@ from functools import lru_cache
 from typing import Iterable
 
 from common.file import relative_path
-from common.graph import shortest_path2
+from common.graph import shortest_path
 from common.iteration import dgroupby_pairs
 from common.math import mod1
 from common.rect import Rect
@@ -410,9 +410,9 @@ class Map:
                 if npos not in blizzards
             )
 
-        _, path = shortest_path2(
+        _, path = shortest_path(
             start=(start, minute_offset),
-            is_target=lambda pos_minute: pos_minute[0] == target,
+            target=lambda pos_minute: pos_minute[0] == target,
             edges=neighbors,
             description=description,
         )
