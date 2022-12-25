@@ -116,13 +116,18 @@ class Circle:
     def current(self) -> Any:
         return self.current_link.value
 
+    def _follow(self, steps: int) -> Link | None:
+        steps = steps % self.length
+        if steps > self.length // 2:
+            steps -= self.length
+
+        return self.current_link.follow(steps)
+
     def __getitem__(self, steps: int) -> Any:
-        # TODO: len(circle) == 1000, circle[-1] -> takes 999 steps, but only 1 is needed (max 500)
-        return some(self.current_link.follow(steps % self.length)).value
+        return some(self._follow(steps)).value
 
     def shift(self, steps: int):
-        # TODO: len(circle) == 1000, circle[-1] -> takes 999 steps, but only 1 is needed (max 500)
-        self.current_link = some(self.current_link.follow(steps % self.length))
+        self.current_link = some(self._follow(steps))
 
     def shift_to_value(self, value: Any):
         try:

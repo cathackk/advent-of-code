@@ -146,7 +146,7 @@ def game(players_count: int, last_marble: int, log: bool | int = False) -> int:
             player_scores[current_player] += removed_marble
 
         if log and turn % int(log) == 0:
-            marbles_str = " ".join(f"{m.value:2}" for m in marbles)
+            marbles_str = " ".join(f"{m:2}" for m in marbles)
             print(f"[{current_player + 1}] {marbles_str}")
 
         current_player = (current_player + 1) % players_count
