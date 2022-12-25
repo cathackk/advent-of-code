@@ -134,3 +134,11 @@ def constrained(value, min_value, max_value):
         return max_value
     else:
         return value
+
+
+def mod1(a: int, b: int) -> int:
+    """
+    >>> [mod1(x, 3) for x in range(10)]
+    [3, 1, 2, 3, 1, 2, 3, 1, 2, 3]
+    """
+    return (a % b) or b

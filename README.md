@@ -40,6 +40,8 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2022/day/21)) Day 21: [Monkey Math](y2022/day21_math_tree.py)
 - ([aoc](https://adventofcode.com/2022/day/22)) Day 22: [Monkey Map](y2022/day22_cube.py)
 - ([aoc](https://adventofcode.com/2022/day/23)) Day 23: [Unstable Diffusion](y2022/day23_diffusion.py)
+- ([aoc](https://adventofcode.com/2022/day/24)) Day 24: [Blizzard Basin](y2022/day24_blizzard.py)
+- ([aoc](https://adventofcode.com/2022/day/25)) Day 25: [Full of Hot Air](y2022/day25_snafu.py)
 ...
 
 
