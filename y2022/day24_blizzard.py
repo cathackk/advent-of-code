@@ -311,7 +311,7 @@ def part_2(map_: 'Map') -> int:
     **54** minutes.
 
         >>> map_complex = Map.from_file('data/24-example.txt')
-        >>> path_1, path_2, path_3 = map_complex.shortest_path_three_trips()
+        >>> path_1, path_2, path_3 = map_complex.shortest_trip(rounds=3)
         >>> len(path_1), len(path_2), len(path_3)
         (18, 23, 13)
         >>> sum(_)
@@ -325,7 +325,7 @@ def part_2(map_: 'Map') -> int:
         54
     """
 
-    result = sum(len(path) for path in map_.shortest_path_three_trips())
+    result = sum(len(path) for path in map_.shortest_trip(rounds=3))
 
     print(f"part 2: goal, start, and goal can be reached in {result} steps")
     return result
@@ -418,11 +418,16 @@ class Map:
         )
         return path
 
-    def shortest_path_three_trips(self) -> tuple[Path, Path, Path]:
-        path_1 = self.shortest_path(description="trip #1")
-        path_2 = self.shortest_path(minute_offset=len(path_1), reverse=True, description="trip #2")
-        path_3 = self.shortest_path(minute_offset=len(path_1) + len(path_2), description="trip #3")
-        return path_1, path_2, path_3
+    def shortest_trip(self, rounds: int = 3) -> Iterable[Path]:
+        minute = 0
+        for round_no in range(rounds):
+            path = self.shortest_path(
+                minute_offset=minute,
+                reverse=round_no % 2 == 1,
+                description=f"round #{round_no + 1}"
+            )
+            yield path
+            minute += len(path)
 
     def current_blizzards_set(self, minute: int) -> set[Pos]:
         return (
@@ -446,22 +451,21 @@ class Map:
             if d.is_vertical()
         }
 
-    # TODO: move into draw
-    def current_blizzards(self, minute: int) -> dict[Pos, list[Direction]]:
-        def new_blizzard_pos(init_pos: Pos, d: Direction) -> Pos:
-            x, y = init_pos
-            return (mod1(x + d.dx * minute, self.width), mod1(y + d.dy * minute, self.height))
-
-        return dgroupby_pairs(
-            (new_blizzard_pos(pos, heading), heading)
-            for pos, heading in self.init_blizzards.items()
+    def new_blizzard_pos(self, init_pos: Pos, direction: Direction, minute: int) -> Pos:
+        x, y = init_pos
+        return (
+            mod1(x + direction.dx * minute, self.width),
+            mod1(y + direction.dy * minute, self.height)
         )
 
     def draw(self, minute: int = 0, highlight: dict[Pos, str] = None) -> None:
         if highlight is None:
             highlight = {}
 
-        blizzards = self.current_blizzards(minute)
+        blizzards = dgroupby_pairs(
+            (self.new_blizzard_pos(init_pos, dir_, minute), dir_)
+            for init_pos, dir_ in self.init_blizzards.items()
+        )
 
         def char(pos: Pos) -> str:
             assert highlight is not None
@@ -475,12 +479,11 @@ class Map:
                 return '·'
 
             local_blizzards = blizzards[pos]
-            if len(local_blizzards) > 1:
-                assert len(local_blizzards) < 10
+            if len(local_blizzards) == 1:
+                return local_blizzards[0].char
+            else:
+                assert len(local_blizzards) <= 4
                 return str(len(local_blizzards))
-
-            (only_blizzard,) = local_blizzards
-            return only_blizzard.char
 
         draw_bounds = self.bounds.grow_by(1, 1)
         for y in draw_bounds.range_y():
