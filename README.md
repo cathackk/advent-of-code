@@ -133,6 +133,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2018/day/13)) Day 13: [Mine Cart Madness](y2018/day13_carts.py)
 - ([aoc](https://adventofcode.com/2018/day/14)) Day 14: [Chocolate Charts](y2018/day14_recipes.py)
 - ([aoc](https://adventofcode.com/2018/day/15)) Day 15: [Beverage Bandits](y2018/day15_battle.py)
+- ([aoc](https://adventofcode.com/2018/day/22)) Day 22: [Mode Maze](y2018/day22_cave_maze.py)
 - ([aoc](https://adventofcode.com/2018/day/23)) Day 23: [Experimental Emergency Teleportation](y2018/day23_nanobots.py)
 ...
 
