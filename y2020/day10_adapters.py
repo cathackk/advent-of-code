@@ -160,14 +160,19 @@ def arrangements_count(adapters: list[int]) -> int:
 def load_data(fn: str) -> list[int]:
     return [
         int(line_stripped)
-        for line in relative_path(__file__, fn)
+        for line in open(relative_path(__file__, fn))
         if (line_stripped := line.strip())
     ]
 
 
-if __name__ == '__main__':
-    adapters_ = load_data('data/10-input.txt')
-    assert len(adapters_) == 106
+def main(fn: str = 'data/10-input.txt') -> tuple[int, int]:
+    adapters = load_data(fn)
+    assert len(adapters) == 106
 
-    part_1(adapters_)
-    part_2(adapters_)
+    result_1 = part_1(adapters)
+    result_2 = part_2(adapters)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

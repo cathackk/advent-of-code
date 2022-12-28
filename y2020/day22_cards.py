@@ -694,9 +694,14 @@ class Game:
         return self.victory
 
 
-if __name__ == '__main__':
-    deck_1_, deck_2_ = decks_from_file("data/22-input.txt")
-    assert len(deck_1_) == len(deck_2_) == 25
+def main(fn: str = 'data/22-input.txt') -> tuple[int, int]:
+    deck_1, deck_2 = decks_from_file(fn)
+    assert len(deck_1) == len(deck_2) == 25
 
-    part_1(deck_1_, deck_2_)
-    part_2(deck_1_, deck_2_)
+    result_1 = part_1(deck_1, deck_2)
+    result_2 = part_2(deck_1, deck_2)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

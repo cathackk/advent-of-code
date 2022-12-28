@@ -320,7 +320,12 @@ def input_from_lines(lines: Iterable[str], light_char: str = '#', dark_char: str
     return algorithm, image
 
 
+def main(fn: str = 'data/20-input.txt') -> tuple[int, int]:
+    algorithm, image = input_from_file(fn)
+    result_1 = part_1(algorithm, image)
+    result_2 = part_2(algorithm, image)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    algorithm_, image_ = input_from_file('data/20-input.txt')
-    part_1(algorithm_, image_)
-    part_2(algorithm_, image_)
+    main()

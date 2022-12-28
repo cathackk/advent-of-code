@@ -797,7 +797,12 @@ _MAZE_PATHS = _generate_paths()
 assert len(_MAZE_PATHS) == 110, len(_MAZE_PATHS)
 
 
+def main(fn: str = 'data/23-input.txt') -> tuple[int, int]:
+    initial_state = State.from_file(fn)
+    result_1 = part_1(initial_state)
+    result_2 = part_2(initial_state.extended())
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    initial_state_ = State.from_file('data/23-input.txt')
-    part_1(initial_state_)
-    part_2(initial_state_.extended())
+    main()

@@ -223,7 +223,12 @@ def values_from_file(fn: str) -> list[str]:
     return values
 
 
+def main(fn: str = 'data/03-input.txt') -> tuple[int, int]:
+    values = values_from_file(fn)
+    result_1 = part_1(values)
+    result_2 = part_2(values)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    values_ = values_from_file('data/03-input.txt')
-    part_1(values_)
-    part_2(values_)
+    main()

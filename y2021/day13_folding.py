@@ -6,6 +6,7 @@ https://adventofcode.com/2021/day/13
 
 from typing import Iterable
 
+from common import ocr
 from common.file import relative_path
 from common.rect import Rect
 from common.text import parse_line
@@ -169,7 +170,7 @@ def part_1(dots: set['Pos'], first_instruction: 'Instruction') -> int:
     return result
 
 
-def part_2(dots: set['Pos'], instructions: Iterable['Instruction']) -> None:
+def part_2(dots: set['Pos'], instructions: Iterable['Instruction']) -> str:
     """
     Finish folding the transparent paper according to the instructions. The manual says the code is
     always eight capital letters.
@@ -177,17 +178,20 @@ def part_2(dots: set['Pos'], instructions: Iterable['Instruction']) -> None:
     **What code do you use to activate the infrared thermal imaging camera system?**
 
         >>> example_dots, example_instructions = input_from_file('data/13-example.txt')
+        >>> draw(fold(example_dots, *example_instructions))
+        █████
+        █···█
+        █···█
+        █···█
+        █████
         >>> part_2(example_dots, example_instructions)
-        part 2:
-        █████
-        █   █
-        █   █
-        █   █
-        █████
+        part 2: activation code is ☐
+        '☐'
     """
 
-    print('part 2:')
-    draw(fold(dots, *instructions), empty_char=' ')
+    result = ocr.FONT_6X5.read_string(drawn(fold(dots, *instructions)))
+    print(f"part 2: activation code is {result}")
+    return result
 
 
 Pos = tuple[int, int]
@@ -234,6 +238,9 @@ class Instruction:
 
 
 def draw(dots: set[Pos], instruction: Instruction = None, full_char='█', empty_char='·') -> None:
+    print(drawn(dots, instruction, full_char, empty_char))
+
+def drawn(dots: set[Pos], instruction: Instruction = None, full_char='█', empty_char='·') -> str:
     def char(pos: Pos) -> str:
         if pos in dots:
             return full_char
@@ -243,8 +250,10 @@ def draw(dots: set[Pos], instruction: Instruction = None, full_char='█', empty
             return empty_char
 
     bounds = Rect.with_all(dots)
-    for y in bounds.range_y():
-        print(''.join(char((x, y)) for x in bounds.range_x()))
+    return '\n'.join(
+        ''.join(char((x, y)) for x in bounds.range_x())
+        for y in bounds.range_y()
+    )
 
 
 def fold(dots: set[Pos], *instructions: Instruction) -> set[Pos]:
@@ -284,7 +293,12 @@ def input_from_lines(lines: Iterable[str]) -> Input:
     return dots, instructions
 
 
+def main(fn: str = 'data/13-input.txt') -> tuple[int, str]:
+    dots, instructions = input_from_file(fn)
+    result_1 = part_1(dots, instructions[0])
+    result_2 = part_2(dots, instructions)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    dots_, instructions_ = input_from_file('data/13-input.txt')
-    part_1(dots_, instructions_[0])
-    part_2(dots_, instructions_)
+    main()

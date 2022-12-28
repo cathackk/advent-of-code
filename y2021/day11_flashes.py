@@ -515,7 +515,12 @@ class Map:
         return current_step, total_flashes
 
 
+def main(fn: str = 'data/11-input.txt') -> tuple[int, int]:
+    octopuses = Map.from_file(fn)
+    result_1 = part_1(octopuses)
+    result_2 = part_2(octopuses)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    octopuses_ = Map.from_file('data/11-input.txt')
-    part_1(octopuses_)
-    part_2(octopuses_)
+    main()

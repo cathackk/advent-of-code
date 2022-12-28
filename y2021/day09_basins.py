@@ -250,8 +250,12 @@ def adjacent(pos: Pos) -> Iterable[Pos]:
     yield x, y - 1
 
 
+def main(fn: str = 'data/09-input.txt') -> tuple[int, int]:
+    heights = HeightMap.from_file(fn)
+    result_1 = part_1(heights)
+    result_2 = part_2(heights)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    heights_ = HeightMap.from_file('data/09-input.txt')
-    part_1(heights_)
-    part_2(heights_)
-    # print(heights_.draw_basins(*sorted(heights_.basins(), key=len, reverse=True)[:3]))
+    main()

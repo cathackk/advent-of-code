@@ -539,7 +539,12 @@ class Explain:
         return False
 
 
+def main(fn: str = 'data/18-input.txt') -> tuple[int, int]:
+    numbers = Number.many_from_file(fn)
+    result_1 = part_1(numbers)
+    result_2 = part_2(numbers)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    numbers_ = Number.many_from_file('data/18-input.txt')
-    part_1(numbers_)
-    part_2(numbers_)
+    main()

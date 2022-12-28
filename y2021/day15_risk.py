@@ -307,7 +307,12 @@ class RiskMap:
         )
 
 
+def main(fn: str = 'data/15-input.txt') -> tuple[int, int]:
+    risk_map = RiskMap.from_file(fn)
+    result_1 = part_1(risk_map)
+    result_2 = part_2(risk_map)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    risk_map_ = RiskMap.from_file('data/15-input.txt')
-    part_1(risk_map_)
-    part_2(risk_map_)
+    main()

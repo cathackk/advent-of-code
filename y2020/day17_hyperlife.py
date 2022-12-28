@@ -394,7 +394,7 @@ def state_from_text(dimensions: int, text: str) -> set[Pos]:
 
 
 def state_from_file(dimensions: int, fn: str) -> set[Pos]:
-    return set(active_positions_from_lines(dimensions, relative_path(__file__, fn)))
+    return set(active_positions_from_lines(dimensions, open(relative_path(__file__, fn))))
 
 
 def active_positions_from_lines(dimensions: int, lines: Iterable[str]) -> Iterable[Pos]:
@@ -447,7 +447,11 @@ def print_state(state: set[Pos], cycle: int):
                 print(pad_2 + line)
 
 
+def main(fn: str = 'data/17-input.txt') -> tuple[int, int]:
+    result_1 = part_1(state_from_file(3, fn))
+    result_2 = part_2(state_from_file(4, fn))
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    FILENAME = 'data/17-input.txt'
-    part_1(state_from_file(3, FILENAME))
-    part_2(state_from_file(4, FILENAME))
+    main()

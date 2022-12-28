@@ -248,9 +248,14 @@ class Ship:
         return abs(x) + abs(y)
 
 
-if __name__ == '__main__':
-    instructions_ = instructions_from_file('data/12-input.txt')
-    assert len(instructions_) == 747
+def main(fn: str = 'data/12-input.txt') -> tuple[int, int]:
+    instructions = instructions_from_file(fn)
+    assert len(instructions) == 747
 
-    part_1(instructions_)
-    part_2(instructions_)
+    result_1 = part_1(instructions)
+    result_2 = part_2(instructions)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

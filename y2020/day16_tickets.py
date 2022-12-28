@@ -328,11 +328,18 @@ def data_from_lines(lines: Iterable[str]) -> tuple[RuleList, Ticket, list[Ticket
     return rules, my_ticket, nearby_tickets
 
 
-if __name__ == '__main__':
-    rules_, my_ticket_, nearby_tickets_ = data_from_file('data/16-input.txt')
-    assert len(rules_) == 20
-    assert len(my_ticket_) == 20
-    assert len(nearby_tickets_) == 240
+def main(fn: str = 'data/16-input.txt') -> tuple[int, int]:
+    rules, my_ticket, nearby_tickets = data_from_file(fn)
+    assert len(rules) == 20
+    assert len(my_ticket) == 20
+    assert len(nearby_tickets) == 240
 
-    part_1(rules_, nearby_tickets_)
-    part_2(rules_, my_ticket_, nearby_tickets_, consider_field=lambda f: f.startswith("departure"))
+    result_1 = part_1(rules, nearby_tickets)
+    result_2 = part_2(
+        rules, my_ticket, nearby_tickets, consider_field=lambda f: f.startswith("departure")
+    )
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

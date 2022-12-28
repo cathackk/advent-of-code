@@ -184,7 +184,12 @@ def answers_everyone(group: Group) -> list[str]:
     return sorted(set.intersection(*group))
 
 
+def main(fn: str = 'data/06-input.txt') -> tuple[int, int]:
+    groups = groups_from_file(fn)
+    result_1 = part_1(groups)
+    result_2 = part_2(groups)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    groups_ = groups_from_file('data/06-input.txt')
-    part_1(groups_)
-    part_2(groups_)
+    main()

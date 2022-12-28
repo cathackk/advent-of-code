@@ -304,7 +304,12 @@ def is_valid_passport(passport: Passport) -> bool:
            and all(is_valid_entry(*entry) for entry in passport.items())
 
 
+def main(fn: str = 'data/04-input.txt') -> tuple[int, int]:
+    passports = passports_from_file(fn)
+    result_1 = part_1(passports)
+    result_2 = part_2(passports)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    passports_ = passports_from_file('data/04-input.txt')
-    part_1(passports_)
-    part_2(passports_)
+    main()

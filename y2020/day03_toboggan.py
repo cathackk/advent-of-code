@@ -274,10 +274,15 @@ class TreesMap:
         return self.trees == other.trees and self.bounds == other.bounds
 
 
-if __name__ == '__main__':
-    trees_map = TreesMap.from_file('data/03-input.txt')
+def main(fn: str = 'data/03-input.txt') -> tuple[int, int]:
+    trees_map = TreesMap.from_file(fn)
     assert trees_map.x_period == 31
     assert trees_map.height == 323
 
-    part_1(trees_map)
-    part_2(trees_map)
+    result_1 = part_1(trees_map)
+    result_2 = part_2(trees_map)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

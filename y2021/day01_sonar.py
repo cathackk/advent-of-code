@@ -85,7 +85,12 @@ def values_from_file(fn: str) -> list[int]:
     return [int(line.strip()) for line in open(relative_path(__file__, fn))]
 
 
+def main(fn: str = 'data/01-input.txt') -> tuple[int, int]:
+    values = list(values_from_file(fn))
+    result_1 = part_1(values)
+    result_2 = part_2(values)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    values_ = list(values_from_file('data/01-input.txt'))
-    part_1(values_)
-    part_2(values_)
+    main()

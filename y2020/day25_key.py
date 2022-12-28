@@ -124,6 +124,11 @@ def public_keys_from_lines(lines: Iterable[str]) -> tuple[int, int]:
     return int(card_key_line), int(door_key_line)
 
 
+def main(fn: str = 'data/25-input.txt') -> tuple[int]:
+    card_public_key, door_public_key = public_keys_from_file(fn)
+    result_1 = part_1(card_public_key, door_public_key)
+    return (result_1,)
+
+
 if __name__ == '__main__':
-    card_public_key_, door_public_key_ = public_keys_from_file("data/25-input.txt")
-    part_1(card_public_key_, door_public_key_)
+    main()

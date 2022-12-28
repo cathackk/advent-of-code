@@ -140,7 +140,12 @@ def passes_from_file(fn: str) -> list[str]:
     return [line.strip() for line in open(relative_path(__file__, fn))]
 
 
+def main(fn: str = 'data/05-input.txt') -> tuple[int, int]:
+    passes = passes_from_file(fn)
+    result_1 = part_1(passes)
+    result_2 = part_2(passes)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    passes_ = passes_from_file('data/05-input.txt')
-    part_1(passes_)
-    part_2(passes_)
+    main()

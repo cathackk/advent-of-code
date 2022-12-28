@@ -192,9 +192,14 @@ def foods_from_lines(lines: Iterable[str]) -> Iterable[Food]:
     return (Food.from_line(line.strip()) for line in lines)
 
 
-if __name__ == '__main__':
-    food_list_ = foods_from_file("data/21-input.txt")
-    assert len(food_list_) == 42
+def main(fn: str = 'data/21-input.txt') -> tuple[int, str]:
+    food_list = foods_from_file(fn)
+    assert len(food_list) == 42
 
-    part_1(food_list_)
-    part_2(food_list_)
+    result_1 = part_1(food_list)
+    result_2 = part_2(food_list)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

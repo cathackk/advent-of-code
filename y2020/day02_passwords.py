@@ -171,9 +171,14 @@ def data_from_lines(lines: Iterable[str]) -> Iterable[tuple[PasswordRule, str]]:
         yield PasswordRule(int(min_count), int(max_count), character), password
 
 
-if __name__ == '__main__':
-    data_ = data_from_file("data/02-input.txt")
-    assert len(data_) == 1000
+def main(fn: str = 'data/02-input.txt') -> tuple[int, int]:
+    data = data_from_file(fn)
+    assert len(data) == 1000
 
-    part_1(data_)
-    part_2(data_)
+    result_1 = part_1(data)
+    result_2 = part_2(data)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

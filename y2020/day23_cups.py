@@ -282,9 +282,14 @@ class Cups:
         return f'{type(self).__name__}({list(self)!r})'
 
 
-if __name__ == '__main__':
-    cups_ = Cups.from_file("data/23-input.txt")
-    assert len(cups_) == 9
+def main(fn: str = 'data/23-input.txt') -> tuple[str, int]:
+    cups = Cups.from_file(fn)
+    assert len(cups) == 9
 
-    part_1(cups_)
-    part_2(cups_)
+    result_1 = part_1(cups)
+    result_2 = part_2(cups)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

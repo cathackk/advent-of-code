@@ -387,9 +387,14 @@ class Program:
             raise ValueError("program cannot be repaired")
 
 
-if __name__ == '__main__':
-    program_ = Program.from_file('data/08-input.txt')
-    assert len(program_) == 605
+def main(fn: str = 'data/08-input.txt') -> tuple[int, int]:
+    program = Program.from_file(fn)
+    assert len(program) == 605
 
-    part_1(program_)
-    part_2(program_)
+    result_1 = part_1(program)
+    result_2 = part_2(program)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

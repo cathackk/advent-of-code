@@ -510,10 +510,15 @@ class SeatsMap:
         )
 
 
-if __name__ == '__main__':
-    seats_ = SeatsMap.from_file('data/11-input.txt')
-    assert seats_.width == 92
-    assert seats_.height == 94
+def main(fn: str = 'data/11-input.txt') -> tuple[int, int]:
+    seats = SeatsMap.from_file(fn)
+    assert seats.width == 92
+    assert seats.height == 94
 
-    part_1(seats_)
-    part_2(seats_)
+    result_1 = part_1(seats)
+    result_2 = part_2(seats)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

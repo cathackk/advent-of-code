@@ -101,7 +101,12 @@ def values_from_lines(lines: Iterable[str]) -> Iterable[int]:
     return [int(line.strip()) for line in lines]
 
 
+def main(fn: str = 'data/01-input.txt') -> tuple[int, int]:
+    numbers = values_from_file(fn)
+    result_1 = part_1(numbers)
+    result_2 = part_2(numbers)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    numbers_ = values_from_file("data/01-input.txt")
-    part_1(numbers_)
-    part_2(numbers_)
+    main()

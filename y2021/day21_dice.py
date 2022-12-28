@@ -393,7 +393,12 @@ def _rolls_str(die_rolls: Iterable[int]) -> str:
     return "+".join(str(v) for v in die_rolls)
 
 
+def main(fn: str = 'data/21-input.txt') -> tuple[int, int]:
+    p1_start, p2_start = start_from_file(fn)
+    result_1 = part_1(p1_start, p2_start)
+    result_2 = part_2(p1_start, p2_start)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    p1_start_, p2_start_ = start_from_file('data/21-input.txt')
-    part_1(p1_start_, p2_start_)
-    part_2(p1_start_, p2_start_)
+    main()

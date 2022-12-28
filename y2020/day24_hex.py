@@ -359,9 +359,14 @@ class HexGrid:
         )
 
 
-if __name__ == '__main__':
-    walks_ = Walk.parse_file("data/24-input.txt")
-    assert len(walks_) == 430
+def main(fn: str = 'data/24-input.txt') -> tuple[int, int]:
+    walks = Walk.parse_file(fn)
+    assert len(walks) == 430
 
-    _, hex_grid_1 = part_1(walks_)
-    part_2(hex_grid_1)
+    result_1, hex_grid_1 = part_1(walks)
+    result_2, _ = part_2(hex_grid_1)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

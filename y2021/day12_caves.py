@@ -298,7 +298,12 @@ class Graph:
         )
 
 
+def main(fn: str = 'data/12-input.txt') -> tuple[int, int]:
+    caves = Graph.from_file(fn)
+    result_1 = part_1(caves)
+    result_2 = part_2(caves)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    caves_ = Graph.from_file('data/12-input.txt')
-    part_1(caves_)
-    part_2(caves_)
+    main()

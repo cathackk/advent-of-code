@@ -29,8 +29,6 @@ def part_1(rule_set: 'RuleSet', my_bag_color='shiny gold') -> int:
         ...     faded blue bags contain no other bags.
         ...     dotted black bags contain no other bags.
         ... ''')
-        >>> rules == example_rule_set()
-        True
 
     These rules specify the required contents for 9 bag types.
 
@@ -92,7 +90,7 @@ def part_2(rule_set: 'RuleSet', my_bag_color: str = 'shiny gold') -> int:
     """
     Consider again your `shiny gold` bag and the rules from the above example:
 
-        >>> rules = example_rule_set()
+        >>> rules = RuleSet.from_file('data/07-example.txt')
 
         - both `faded blue` and `dotted black` bags contain 0 other bags.
 
@@ -255,26 +253,14 @@ def parse_rule(text: str) -> Rule:
     return color, inside
 
 
-def example_rule_set() -> RuleSet:
-    """
-    Example set from the instructions so it doesn't have to be repeated in part_2's docstring.
-    """
-    return RuleSet.from_text('''
-        light red bags contain 1 bright white bag, 2 muted yellow bags.
-        dark orange bags contain 3 bright white bags, 4 muted yellow bags.
-        bright white bags contain 1 shiny gold bag.
-        muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
-        shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
-        dark olive bags contain 3 faded blue bags, 4 dotted black bags.
-        vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
-        faded blue bags contain no other bags.
-        dotted black bags contain no other bags.
-    ''')
+def main(fn: str = 'data/07-input.txt') -> tuple[int, int]:
+    rules = RuleSet.from_file(fn)
+    assert len(rules) == 594
+
+    result_1 = part_1(rules)
+    result_2 = part_2(rules)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    rules_ = RuleSet.from_file('data/07-input.txt')
-    assert len(rules_) == 594
-
-    part_1(rules_)
-    part_2(rules_)
+    main()

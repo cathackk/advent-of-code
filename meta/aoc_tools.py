@@ -37,7 +37,7 @@ class DayDescription:
     aoc_url: str
 
     def __str__(self) -> str:
-        return f"AoC {self.year} Day {self.day}: {self.title}"
+        return f"{self.path} -- AoC {self.year} Day {self.day}: {self.title}"
 
     @classmethod
     def from_file(cls, path: str) -> 'DayDescription':

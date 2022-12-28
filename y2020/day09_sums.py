@@ -244,14 +244,19 @@ def load_nums(fn: str) -> list[int]:
     """ Load numbers from file, one per line. """
     return [
         int(line_stripped)
-        for line in relative_path(__file__, fn)
+        for line in open(relative_path(__file__, fn))
         if (line_stripped := line.strip())
     ]
 
 
-if __name__ == '__main__':
-    nums_ = load_nums('data/09-input.txt')
-    assert len(nums_) == 1000
+def main(fn: str = 'data/09-input.txt') -> tuple[int, int]:
+    nums = load_nums(fn)
+    assert len(nums) == 1000
 
-    first_invalid = part_1(nums_)
-    part_2(first_invalid, nums_)
+    result_1 = part_1(nums)
+    result_2 = part_2(result_1, nums)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

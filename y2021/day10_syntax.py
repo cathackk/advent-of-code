@@ -266,7 +266,12 @@ def lines_from_file(fn: str) -> list[str]:
     return [line.strip() for line in open(relative_path(__file__, fn))]
 
 
+def main(fn: str = 'data/10-input.txt') -> tuple[int, int]:
+    lines = lines_from_file(fn)
+    result_1 = part_1(lines)
+    result_2 = part_2(lines)
+    return  result_1, result_2
+
+
 if __name__ == '__main__':
-    lines_ = lines_from_file('data/10-input.txt')
-    part_1(lines_)
-    part_2(lines_)
+    main()

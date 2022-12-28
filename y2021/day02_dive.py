@@ -199,7 +199,12 @@ class Submarine2:
         return self
 
 
+def main(fn: str = 'data/02-input.txt') -> tuple[int, int]:
+    commands = commands_from_file(fn)
+    result_1 = part_1(commands)
+    result_2 = part_2(commands)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    commands_ = commands_from_file('data/02-input.txt')
-    part_1(commands_)
-    part_2(commands_)
+    main()

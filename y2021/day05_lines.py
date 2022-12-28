@@ -242,7 +242,12 @@ def vents_from_text(text: str) -> list[Vent]:
     return [Vent.parse(line.strip()) for line in text.strip().splitlines()]
 
 
+def main(fn: str = 'data/05-input.txt') -> tuple[int, int]:
+    vents = vents_from_file(fn)
+    result_1 = part_1(vents)
+    result_2 = part_2(vents)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    vents_ = vents_from_file('data/05-input.txt')
-    part_1(vents_)
-    part_2(vents_)
+    main()

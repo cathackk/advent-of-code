@@ -162,7 +162,12 @@ def positions_from_file(fn: str) -> list[int]:
     return [int(v) for v in next(open(relative_path(__file__, fn))).strip().split(',')]
 
 
+def main(fn: str = 'data/07-input.txt') -> tuple[int, int]:
+    positions = positions_from_file(fn)
+    result_1 = part_1(positions)
+    result_2 = part_2(positions)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    positions_ = positions_from_file('data/07-input.txt')
-    part_1(positions_)
-    part_2(positions_)
+    main()

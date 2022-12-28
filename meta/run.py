@@ -70,6 +70,7 @@ def run(year_dir: str, day_paths: list[str], input_path: str, show_description: 
 
         except AttributeError as exc:
             click.echo(f">> {exc}", err=True)
+            raise Exit(1)
 
 
 if __name__ == '__main__':

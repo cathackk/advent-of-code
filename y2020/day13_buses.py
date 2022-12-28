@@ -296,9 +296,14 @@ def divide(x, y, base) -> int:
     return (x * modular_inverse(y, base)) % base
 
 
-if __name__ == '__main__':
-    start_, buses_offsets_ = data_from_file("data/13-input.txt")
-    assert len(buses_offsets_) == 9
+def main(fn: str = 'data/13-input.txt') -> tuple[int, int]:
+    start, buses_offsets = data_from_file(fn)
+    assert len(buses_offsets) == 9
 
-    part_1(start_, buses_offsets_.keys())
-    part_2(buses_offsets_)
+    result_1 = part_1(start, buses_offsets.keys())
+    result_2 = part_2(buses_offsets)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

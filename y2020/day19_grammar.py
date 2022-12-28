@@ -574,10 +574,15 @@ def input_from_lines(lines: Iterable[str]) -> tuple[dict[int, Rule], list[str]]:
     return rules, messages
 
 
-if __name__ == '__main__':
-    rules_, messages_ = input_from_file("data/19-input.txt")
-    assert len(rules_) == 130
-    assert len(messages_) == 458
+def main(fn: str = 'data/19-input.txt') -> tuple[int, int]:
+    rules, messages = input_from_file(fn)
+    assert len(rules) == 130
+    assert len(messages) == 458
 
-    part_1(rules_, messages_)
-    part_2(rules_, messages_)
+    result_1 = part_1(rules, messages)
+    result_2 = part_2(rules, messages)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

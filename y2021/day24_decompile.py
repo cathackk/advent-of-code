@@ -484,7 +484,12 @@ def all_monad_solutions(monad_variables: Iterable[tuple[int, int, int]]) -> Iter
         yield int(''.join(str(digit) for digit in digits))
 
 
+def main(fn: str = 'data/24-input.txt') -> tuple[int, int]:
+    program = Program.from_file(fn)
+    result_1 = part_1(program)
+    result_2 = part_2(program)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    program_ = Program.from_file('data/24-input.txt')
-    part_1(program_)
-    part_2(program_)
+    main()

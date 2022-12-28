@@ -335,7 +335,12 @@ def entries_from_lines(lines: Iterable[str]) -> Iterable[Entry]:
     return (Entry.from_line(line.strip()) for line in lines)
 
 
+def main(fn: str = 'data/08-input.txt') -> tuple[int, int]:
+    entries = entries_from_file(fn)
+    result_1 = part_1(entries)
+    result_2 = part_2(entries)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    entries_ = entries_from_file('data/08-input.txt')
-    part_1(entries_)
-    part_2(entries_)
+    main()

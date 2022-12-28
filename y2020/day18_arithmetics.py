@@ -320,7 +320,12 @@ class Expr:
         return (cls.parse(line.strip()) for line in lines)
 
 
+def main(fn: str = 'data/18-input.txt') -> tuple[int, int]:
+    exprs = Expr.load_from_file(fn)
+    result_1 = part_1(exprs)
+    result_2 = part_2(exprs)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    exprs_ = Expr.load_from_file('data/18-input.txt')
-    part_1(exprs_)
-    part_2(exprs_)
+    main()

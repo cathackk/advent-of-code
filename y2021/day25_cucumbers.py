@@ -466,6 +466,11 @@ def run(initial_map: Map, steps_limit: int = None, log: bool | Iterable[int] = F
     assert False
 
 
+def main(fn: str = 'data/25-input.txt') -> tuple[int]:
+    initial_map = Map.from_file(fn)
+    result_1 = part_1(initial_map)
+    return (result_1,)
+
+
 if __name__ == '__main__':
-    initial_map_ = Map.from_file('data/25-input.txt')
-    part_1(initial_map_)
+    main()

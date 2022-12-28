@@ -20,7 +20,7 @@ from common.text import parse_line
 from common.xyz import Vector3
 
 
-def part_1(report: list['Reading']) -> 'Map':
+def part_1(report: list['Reading']) -> tuple['Map', int]:
     """
     As your probe drifted down through this area, it released an assortment of **beacons** and
     **scanners** into the water. It's difficult to navigate in the pitch black open waters of
@@ -356,7 +356,7 @@ def part_1(report: list['Reading']) -> 'Map':
     result = len(world.all_beacons)
 
     print(f"part 1: there are {result} beacons")
-    return world
+    return world, result
 
 
 def part_2(world_map: 'Map') -> int:
@@ -711,7 +711,12 @@ def report_from_lines(lines: Iterable[str]) -> Iterable[Reading]:
         yield Reading(beacons_buffer)
 
 
+def main(fn: str = 'data/19-input.txt') -> tuple[int, int]:
+    report = report_from_file(fn)
+    world, result_1 = part_1(report)
+    result_2 = part_2(world)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    report_ = report_from_file('data/19-input.txt')
-    world_ = part_1(report_)
-    part_2(world_)
+    main()

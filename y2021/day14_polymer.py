@@ -244,7 +244,12 @@ def input_from_lines(lines: Iterable[str]) -> Input:
     return template, rules
 
 
+def main(fn: str = 'data/14-input.txt') -> tuple[int, int]:
+    template, rules = input_from_file(fn)
+    result_1 = part_1(template, rules)
+    result_2 = part_2(template, rules)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    template_, rules_ = input_from_file('data/14-input.txt')
-    part_1(template_, rules_)
-    part_2(template_, rules_)
+    main()

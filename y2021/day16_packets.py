@@ -599,7 +599,12 @@ def abc(n: int) -> 'str':
     return chr(ord('A') + n % 26)
 
 
+def main(fn: str = 'data/16-input.txt') -> tuple[int, int]:
+    packet = Packet.from_file(fn)
+    result_1 = part_1(packet)
+    result_2 = part_2(packet)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    packet_ = Packet.from_file('data/16-input.txt')
-    part_1(packet_)
-    part_2(packet_)
+    main()

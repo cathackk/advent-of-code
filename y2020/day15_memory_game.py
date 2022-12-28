@@ -164,13 +164,17 @@ def memory_game(numbers: list[int], turns: int) -> int:
 def load_numbers(fn: str) -> list[int]:
     return [
         int(v)
-        for line in relative_path(__file__, fn)
+        for line in open(relative_path(__file__, fn))
         for v in line.split(",")
     ]
 
 
-if __name__ == '__main__':
-    starting_numbers_ = load_numbers('data/15-input.txt')
+def main(fn: str = 'data/15-input.txt') -> tuple[int, int]:
+    starting_numbers = load_numbers(fn)
+    result_1 = part_1(starting_numbers)
+    result_2 = part_2(starting_numbers)
+    return result_1, result_2
 
-    part_1(starting_numbers_)
-    part_2(starting_numbers_)
+
+if __name__ == '__main__':
+    main()

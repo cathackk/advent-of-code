@@ -319,7 +319,12 @@ def target_area_from_file(fn: str) -> Rect:
     return target_area_from_text(single_value(open(relative_path(__file__, fn))).strip())
 
 
+def main(fn: str = 'data/17-input.txt') -> tuple[int, int]:
+    target = target_area_from_file(fn)
+    result_1 = part_1(target)
+    result_2 = part_2(target)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    target_ = target_area_from_file('data/17-input.txt')
-    part_1(target_)
-    part_2(target_)
+    main()

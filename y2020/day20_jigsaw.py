@@ -673,9 +673,14 @@ class Pattern:
         return "\n".join("".join(row) for row in image_pixels)
 
 
-if __name__ == '__main__':
-    tiles_ = tiles_from_file("data/20-input.txt")
-    assert len(tiles_) == 144
+def main(fn: str = 'data/20-input.txt') -> tuple[int, int]:
+    tiles = tiles_from_file(fn)
+    assert len(tiles) == 144
 
-    _, image_ = part_1(tiles_)
-    part_2(image_, Pattern.monster())
+    result_1, image = part_1(tiles)
+    result_2 = part_2(image, Pattern.monster())
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

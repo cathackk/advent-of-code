@@ -579,7 +579,12 @@ def steps_from_lines(lines: Iterable[str]) -> Iterable[Step]:
     return (Step.from_str(line.strip()) for line in lines)
 
 
+def main(fn: str = 'data/22-input.txt') -> tuple[int, int]:
+    steps = steps_from_file(fn)
+    result_1 = part_1(steps)
+    result_2 = part_2(steps)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    steps_ = steps_from_file('data/22-input.txt')
-    part_1(steps_)
-    part_2(steps_)
+    main()
