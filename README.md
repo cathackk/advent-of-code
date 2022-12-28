@@ -43,7 +43,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2022/day/23)) Day 23: [Unstable Diffusion](y2022/day23_diffusion.py)
 - ([aoc](https://adventofcode.com/2022/day/24)) Day 24: [Blizzard Basin](y2022/day24_blizzard.py)
 - ([aoc](https://adventofcode.com/2022/day/25)) Day 25: [Full of Hot Air](y2022/day25_snafu.py)
-...
+- ...
 
 
 ### 2021
@@ -112,7 +112,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 
 ([aoc 2019 event](https://adventofcode.com/2019))
 
-...
+- ...
 
 
 ### 2018
@@ -137,7 +137,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2018/day/16)) Day 16: [Chronal Classification](y2018/day16_opcodes.py)
 - ([aoc](https://adventofcode.com/2018/day/22)) Day 22: [Mode Maze](y2018/day22_cave_maze.py)
 - ([aoc](https://adventofcode.com/2018/day/23)) Day 23: [Experimental Emergency Teleportation](y2018/day23_nanobots.py)
-...
+- ...
 
 
 ### 2017

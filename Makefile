@@ -18,3 +18,7 @@ doctests:
 
 create-readme:
 	python3 -m meta.create_readme
+
+
+run:
+	python3 -m meta.run --year $(YEAR) --day $(DAY)
