@@ -10,10 +10,10 @@ from typing import Callable
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.math import lcm
 from common.text import line_groups
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(monkeys: list['Monkey'], rounds_count: int = 20) -> int:
@@ -255,7 +255,7 @@ def part_2(monkeys: list['Monkey'], rounds_count: int = 10_000) -> int:
     With these new rules, you can still figure out the monkey business after 10_000 rounds.
     Using the same example above:
 
-        >>> ms = monkeys_from_file('data/11-example.txt')
+        >>> ms = monkeys_from_file(data_path(__file__, 'example.txt'))
         >>> game = play(ms, worry_func=monkeys_modulo_func(ms))
         >>> next(game).inspect_counts
         (2, 4, 3, 6)
@@ -462,7 +462,7 @@ def monkeys_modulo_func(monkeys: Iterable[Monkey]) -> IntFunc:
 
 
 def monkeys_from_file(fn: str) -> list[Monkey]:
-    return list(monkeys_from_lines(open(relative_path(__file__, fn))))
+    return list(monkeys_from_lines(open(fn)))
 
 
 def monkeys_from_text(text: str) -> list[Monkey]:
@@ -473,8 +473,8 @@ def monkeys_from_lines(lines: Iterable[str]) -> Iterable[Monkey]:
     return (Monkey.from_lines(line_group) for line_group in line_groups(lines))
 
 
-def main(input_fn: str = 'data/11-input.txt') -> tuple[int, int]:
-    monkeys = monkeys_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    monkeys = monkeys_from_file(input_path)
     result_1 = part_1(monkeys)
     result_2 = part_2(monkeys)
     return result_1, result_2

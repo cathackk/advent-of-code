@@ -10,8 +10,8 @@ from typing import Iterator
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import last
+from meta.aoc_tools import data_path
 
 
 def part_1(numbers: list[int]) -> int:
@@ -164,13 +164,13 @@ def memory_game(numbers: list[int], turns: int) -> int:
 def load_numbers(fn: str) -> list[int]:
     return [
         int(v)
-        for line in open(relative_path(__file__, fn))
+        for line in open(fn)
         for v in line.split(",")
     ]
 
 
-def main(fn: str = 'data/15-input.txt') -> tuple[int, int]:
-    starting_numbers = load_numbers(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    starting_numbers = load_numbers(input_path)
     result_1 = part_1(starting_numbers)
     result_2 = part_2(starting_numbers)
     return result_1, result_2

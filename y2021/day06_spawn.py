@@ -10,7 +10,7 @@ from itertools import islice
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(state: Iterable[int], days: int = 80) -> int:
@@ -249,11 +249,11 @@ def simulate(state_numbers: Iterable[int], days: int, log: bool = False) -> Stat
 
 
 def state_from_file(fn: str) -> State:
-    return State(int(v) for v in next(open(relative_path(__file__, fn))).strip().split(','))
+    return State(int(v) for v in next(open(fn)).strip().split(','))
 
 
-def main(fn: str = 'data/06-input.txt') -> tuple[int, int]:
-    state = state_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    state = state_from_file(input_path)
     result_1 = part_1(state)
     result_2 = part_2(state)
     return result_1, result_2

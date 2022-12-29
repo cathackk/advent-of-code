@@ -6,8 +6,8 @@ https://adventofcode.com/2021/day/1
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import slidingw
+from meta.aoc_tools import data_path
 
 
 def part_1(values: Iterable[int]) -> int:
@@ -82,11 +82,11 @@ def count_increases(values: Iterable[int]) -> int:
 
 
 def values_from_file(fn: str) -> list[int]:
-    return [int(line.strip()) for line in open(relative_path(__file__, fn))]
+    return [int(line.strip()) for line in open(fn)]
 
 
-def main(fn: str = 'data/01-input.txt') -> tuple[int, int]:
-    values = list(values_from_file(fn))
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    values = list(values_from_file(input_path))
     result_1 = part_1(values)
     result_2 = part_2(values)
     return result_1, result_2

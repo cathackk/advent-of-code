@@ -7,7 +7,7 @@ https://adventofcode.com/2020/day/9
 from typing import Collection
 from typing import Iterator
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(numbers: list[int], preamble_length: int = 25) -> int:
@@ -244,15 +244,13 @@ def load_nums(fn: str) -> list[int]:
     """ Load numbers from file, one per line. """
     return [
         int(line_stripped)
-        for line in open(relative_path(__file__, fn))
+        for line in open(fn)
         if (line_stripped := line.strip())
     ]
 
 
-def main(fn: str = 'data/09-input.txt') -> tuple[int, int]:
-    nums = load_nums(fn)
-    assert len(nums) == 1000
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    nums = load_nums(input_path)
     result_1 = part_1(nums)
     result_2 = part_2(result_1, nums)
     return result_1, result_2

@@ -7,8 +7,8 @@ https://adventofcode.com/2022/day/5
 from dataclasses import dataclass
 from typing import Iterable
 
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(stacks: list['Stack'], moves: Iterable['Move']) -> str:
@@ -148,7 +148,7 @@ def part_2(stacks: list['Stack'], moves: Iterable['Move']) -> str:
 
     Again considering the example above, the crates begin in the same configuration:
 
-        >>> state_0, movez = input_from_file('data/05-example.txt')
+        >>> state_0, movez = input_from_file(data_path(__file__, 'example.txt'))
         >>> draw_stacks(state_0)
             [D]
         [N] [C]
@@ -265,7 +265,7 @@ def draw_stacks(stacks: list[Stack]) -> None:
 
 
 def input_from_file(fn: str) -> tuple[list[Stack], list[Move]]:
-    return input_from_lines(open(relative_path(__file__, fn)))
+    return input_from_lines(open(fn))
 
 
 def input_from_text(text: str) -> tuple[list[Stack], list[Move]]:
@@ -307,8 +307,8 @@ def input_from_lines(lines: Iterable[str]) -> tuple[list[Stack], list[Move]]:
     return stacks, moves
 
 
-def main(input_fn: str = 'data/05-input.txt') -> tuple[str, str]:
-    initial_stacks, moves = input_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    initial_stacks, moves = input_from_file(input_path)
     result_1 = part_1(initial_stacks, moves)
     result_2 = part_2(initial_stacks, moves)
     return result_1, result_2

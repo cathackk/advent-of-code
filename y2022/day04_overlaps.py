@@ -6,8 +6,8 @@ https://adventofcode.com/2022/day/4
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 Range = tuple[int, int]
 Pair = tuple[Range, Range]
@@ -119,7 +119,7 @@ def part_2(assignments: Iterable[Pair]) -> int:
       - `6-6,4-6` overlaps in a single section, `6`.
       - `2-6,4-8` overlaps in sections `4`, `5`, and `6`.
 
-        >>> work = assignments_from_file('data/04-example.txt')
+        >>> work = assignments_from_file(data_path(__file__, 'example.txt'))
         >>> [pair for pair in work if has_overlap(pair)]
         [((5, 7), (7, 9)), ((2, 8), (3, 7)), ((6, 6), (4, 6)), ((2, 6), (4, 8))]
 
@@ -176,7 +176,7 @@ def assignments_from_text(text: str) -> list[Pair]:
 
 
 def assignments_from_file(fn: str) -> list[Pair]:
-    return list(assignments_from_lines(open(relative_path(__file__, fn))))
+    return list(assignments_from_lines(open(fn)))
 
 
 def assignments_from_lines(lines: Iterable[str]) -> Iterable[Pair]:
@@ -188,8 +188,8 @@ def assignments_from_lines(lines: Iterable[str]) -> Iterable[Pair]:
     return (to_pair(line) for line in lines)
 
 
-def main(input_fn: str = 'data/04-input.txt') -> tuple[int, int]:
-    assignments = assignments_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    assignments = assignments_from_file(input_path)
     result_1 = part_1(assignments)
     result_2 = part_2(assignments)
     return result_1, result_2

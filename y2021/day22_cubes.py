@@ -13,11 +13,11 @@ from typing import Optional
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import separate
 from common.iteration import zip1
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(steps: Iterable['Step']) -> int:
@@ -112,7 +112,7 @@ def part_1(steps: Iterable['Step']) -> int:
 
     Here is a larger example:
 
-        >>> reboot_steps_2 = steps_from_file('data/22-example.txt')
+        >>> reboot_steps_2 = steps_from_file(data_path(__file__, 'example.txt'))
         >>> len(reboot_steps_2)
         22
 
@@ -150,7 +150,7 @@ def part_2(steps: Iterable['Step']) -> int:
 
     Consider the following reboot steps:
 
-        >>> reboot_steps = steps_from_file('data/22-larger-example.txt')
+        >>> reboot_steps = steps_from_file(data_path(__file__, 'larger-example.txt'))
 
     After running the above reboot steps, 2758514936282235 cubes are on:
 
@@ -572,15 +572,15 @@ def steps_from_text(text: str) -> list[Step]:
 
 
 def steps_from_file(fn: str) -> list[Step]:
-    return list(steps_from_lines(open(relative_path(__file__, fn))))
+    return list(steps_from_lines(open(fn)))
 
 
 def steps_from_lines(lines: Iterable[str]) -> Iterable[Step]:
     return (Step.from_str(line.strip()) for line in lines)
 
 
-def main(fn: str = 'data/22-input.txt') -> tuple[int, int]:
-    steps = steps_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    steps = steps_from_file(input_path)
     result_1 = part_1(steps)
     result_2 = part_2(steps)
     return result_1, result_2

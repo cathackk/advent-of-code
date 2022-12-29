@@ -10,8 +10,8 @@ from enum import IntEnum
 from math import prod
 from typing import Iterable
 
-from common.file import relative_path
 from common.utils import assert_single_not_none
+from meta.aoc_tools import data_path
 
 
 def part_1(packet: 'Packet') -> int:
@@ -353,7 +353,7 @@ class Packet(ABC):
 
     @classmethod
     def from_file(cls, fn: str) -> 'Packet':
-        return cls.from_hex(open(relative_path(__file__, fn)).readline().strip())
+        return cls.from_hex(open(fn).readline().strip())
 
     @classmethod
     def from_hex(cls, hex_string: str) -> 'Packet':
@@ -599,8 +599,8 @@ def abc(n: int) -> 'str':
     return chr(ord('A') + n % 26)
 
 
-def main(fn: str = 'data/16-input.txt') -> tuple[int, int]:
-    packet = Packet.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    packet = Packet.from_file(input_path)
     result_1 = part_1(packet)
     result_2 = part_2(packet)
     return result_1, result_2

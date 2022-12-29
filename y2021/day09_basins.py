@@ -6,9 +6,9 @@ https://adventofcode.com/2021/day/9
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.rect import Rect
 from common.utils import ro
+from meta.aoc_tools import data_path
 
 
 def part_1(heights: 'HeightMap') -> int:
@@ -20,7 +20,7 @@ def part_1(heights: 'HeightMap') -> int:
     Smoke flows to the lowest point of the area it's in. For example, consider the following
     heightmap:
 
-        >>> hmap = HeightMap.from_file('data/09-example.txt')
+        >>> hmap = HeightMap.from_file(data_path(__file__, 'example.txt'))
         >>> print(hmap)
         2199943210
         3987894921
@@ -84,7 +84,7 @@ def part_2(heights: 'HeightMap') -> int:
     The size of a basin is the number of locations within the basin, including the low point.
     The example above has four basins:
 
-        >>> hmap = HeightMap.from_file('data/09-example.txt')
+        >>> hmap = HeightMap.from_file(data_path(__file__, 'example.txt'))
         >>> basins = list(hmap.basins())
         >>> len(basins)
         4
@@ -168,7 +168,7 @@ class HeightMap:
 
     @classmethod
     def from_file(cls, fn: str) -> 'HeightMap':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'HeightMap':
@@ -250,8 +250,8 @@ def adjacent(pos: Pos) -> Iterable[Pos]:
     yield x, y - 1
 
 
-def main(fn: str = 'data/09-input.txt') -> tuple[int, int]:
-    heights = HeightMap.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    heights = HeightMap.from_file(input_path)
     result_1 = part_1(heights)
     result_2 = part_2(heights)
     return result_1, result_2

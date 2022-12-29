@@ -9,11 +9,11 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import ilen
 from common.math import sgn
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(sensors: list['Sensor'], y: int = 2_000_000) -> int:
@@ -182,7 +182,7 @@ def part_2(sensors: list['Sensor'], bounds=Rect.at_origin(4_000_000, 4_000_000))
     be at most `20`. With this reduced search area, there is only a single position that could have
     a beacon: `x=14, y=11`:
 
-        >>> ss = sensors_from_file('data/15-example.txt')
+        >>> ss = sensors_from_file(data_path(__file__, 'example.txt'))
         >>> find_beacon(ss, bounds=Rect.at_origin(20, 20))
         (14, 11)
 
@@ -390,7 +390,7 @@ def draw_sensors(
 
 
 def sensors_from_file(fn: str) -> list[Sensor]:
-    return list(sensors_from_lines(open(relative_path(__file__, fn))))
+    return list(sensors_from_lines(open(fn)))
 
 
 def sensors_from_text(text: str) -> list[Sensor]:
@@ -401,8 +401,8 @@ def sensors_from_lines(lines: Iterable[str]) -> Iterable[Sensor]:
     return (Sensor.from_line(line) for line in lines)
 
 
-def main(input_fn: str = 'data/15-input.txt') -> tuple[int, int]:
-    sensors = sensors_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    sensors = sensors_from_file(input_path)
     result_1 = part_1(sensors)
     result_2 = part_2(sensors)
     return result_1, result_2

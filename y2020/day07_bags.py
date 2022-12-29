@@ -7,9 +7,9 @@ https://adventofcode.com/2020/day/7
 from functools import lru_cache
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs_set
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(rule_set: 'RuleSet', my_bag_color='shiny gold') -> int:
@@ -90,7 +90,7 @@ def part_2(rule_set: 'RuleSet', my_bag_color: str = 'shiny gold') -> int:
     """
     Consider again your `shiny gold` bag and the rules from the above example:
 
-        >>> rules = RuleSet.from_file('data/07-example.txt')
+        >>> rules = RuleSet.from_file(data_path(__file__, 'example.txt'))
 
         - both `faded blue` and `dotted black` bags contain 0 other bags.
 
@@ -175,7 +175,7 @@ class RuleSet:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]):
@@ -253,10 +253,8 @@ def parse_rule(text: str) -> Rule:
     return color, inside
 
 
-def main(fn: str = 'data/07-input.txt') -> tuple[int, int]:
-    rules = RuleSet.from_file(fn)
-    assert len(rules) == 594
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    rules = RuleSet.from_file(input_path)
     result_1 = part_1(rules)
     result_2 = part_2(rules)
     return result_1, result_2

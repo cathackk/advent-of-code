@@ -6,7 +6,7 @@ https://adventofcode.com/2022/day/21
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(tree: 'Tree', root_monkey: str = 'root') -> int:
@@ -122,7 +122,7 @@ def part_2(tree: 'Tree', root_monkey: str = 'root', human: str = 'humn') -> int:
     In the above example, the number you need to yell to pass root's equality test is **`301`**.
     (This causes `root` to get the same number, `150`, from both of its monkeys.)
 
-        >>> t_original = tree_from_file('data/21-example.txt')
+        >>> t_original = tree_from_file(data_path(__file__, 'example.txt'))
         >>> t2 = dict(t_original)
         >>> tree_op_replace(t2, 'root', op='-')
         >>> tree_backeval(t2, root='root', root_result=0, variable='humn')
@@ -233,7 +233,7 @@ def tree_contains(tree: Tree, root: str, searched: str) -> bool:
 
 
 def tree_from_file(fn: str) -> Tree:
-    return dict(nodes_from_lines(open(relative_path(__file__, fn))))
+    return dict(nodes_from_lines(open(fn)))
 
 
 def tree_from_text(text: str) -> Tree:
@@ -250,8 +250,8 @@ def nodes_from_lines(lines: Iterable[str]) -> Iterable[tuple[str, NodeValue]]:
             yield name, (val1, op, val2)
 
 
-def main(input_fn: str = 'data/21-input.txt') -> tuple[int, int]:
-    tree = tree_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    tree = tree_from_file(input_path)
     result_1 = part_1(tree)
     result_2 = part_2(tree)
     return result_1, result_2

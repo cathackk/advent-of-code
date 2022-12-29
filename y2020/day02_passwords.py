@@ -6,8 +6,8 @@ https://adventofcode.com/2020/day/2
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(rules_passwords: list[tuple['PasswordRule', str]]) -> int:
@@ -157,7 +157,7 @@ class PasswordRule:
 
 
 def data_from_file(fn: str) -> list[tuple[PasswordRule, str]]:
-    return list(data_from_lines(open(relative_path(__file__, fn))))
+    return list(data_from_lines(open(fn)))
 
 
 def data_from_text(text: str) -> list[tuple[PasswordRule, str]]:
@@ -171,10 +171,8 @@ def data_from_lines(lines: Iterable[str]) -> Iterable[tuple[PasswordRule, str]]:
         yield PasswordRule(int(min_count), int(max_count), character), password
 
 
-def main(fn: str = 'data/02-input.txt') -> tuple[int, int]:
-    data = data_from_file(fn)
-    assert len(data) == 1000
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    data = data_from_file(input_path)
     result_1 = part_1(data)
     result_2 = part_2(data)
     return result_1, result_2

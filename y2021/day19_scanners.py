@@ -11,13 +11,13 @@ from typing import Iterator
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs
 from common.iteration import maxk
 from common.math import sgn
 from common.rect import Rect
 from common.text import parse_line
 from common.xyz import Vector3
+from meta.aoc_tools import data_path
 
 
 def part_1(report: list['Reading']) -> tuple['Map', int]:
@@ -161,7 +161,7 @@ def part_1(report: list['Reading']) -> tuple['Map', int]:
     By finding pairs of scanners that both see at least 12 of the same beacons, you can assemble
     the entire map. For example, consider the following report:
 
-        >>> example_report = report_from_file('data/19-example.txt')
+        >>> example_report = report_from_file(data_path(__file__, 'example.txt'))
         >>> [len(reading) for reading in example_report]
         [25, 25, 26, 25, 26]
 
@@ -367,7 +367,7 @@ def part_2(world_map: 'Map') -> int:
     In the above example, scanners 2 (`1105,-1205,1229`) and 3 (`-92,-2380,-20`) are the largest
     Manhattan distance apart. In total, they are `1197 + 1175 + 1249 = 3621` units apart.
 
-        >>> example_report = report_from_file('data/19-example.txt')
+        >>> example_report = report_from_file(data_path(__file__, 'example.txt'))
         >>> world = Map.build(example_report)
         >>> (s3, s2), d = world.most_distant_scanners()
         >>> s2
@@ -688,7 +688,7 @@ def report_from_text(text: str) -> list[Reading]:
 
 
 def report_from_file(fn: str) -> list[Reading]:
-    return list(report_from_lines(open(relative_path(__file__, fn))))
+    return list(report_from_lines(open(fn)))
 
 
 def report_from_lines(lines: Iterable[str]) -> Iterable[Reading]:
@@ -711,8 +711,8 @@ def report_from_lines(lines: Iterable[str]) -> Iterable[Reading]:
         yield Reading(beacons_buffer)
 
 
-def main(fn: str = 'data/19-input.txt') -> tuple[int, int]:
-    report = report_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    report = report_from_file(input_path)
     world, result_1 = part_1(report)
     result_2 = part_2(world)
     return result_1, result_2

@@ -8,12 +8,12 @@ import math
 from textwrap import dedent
 from typing import Iterable
 
-from common.file import relative_path
 from common.heading import Heading
 from common.iteration import last
 from common.iteration import minmax
 from common.rect import Rect
 from common.text import line_groups
+from meta.aoc_tools import data_path
 
 
 def part_1(board: 'Board', path: 'Path') -> int:
@@ -193,7 +193,7 @@ def part_2(board: 'Board', path: 'Path') -> int:
     if you are at `A` and move to the right, you would arrive at `B` facing down; if you are at
     `C` and move down, you would arrive at `D` facing up:
 
-        >>> b, p = input_from_file('data/22-example.txt')
+        >>> b, p = input_from_file(data_path(__file__, 'example.txt'))
         >>> c = Cube.fold(b)
         >>> pos_b, heading_b = c.neighbor(pos_a := (12, 6), Heading.EAST)
         >>> pos_b, heading_b
@@ -476,7 +476,7 @@ def final_password(final_pos: Pos, final_heading: Heading) -> int:
 
 
 def input_from_file(fn: str) -> tuple[Board, Path]:
-    return input_from_lines(open(relative_path(__file__, fn)))
+    return input_from_lines(open(fn))
 
 
 def input_from_text(text: str) -> tuple[Board, Path]:
@@ -499,8 +499,8 @@ def path_from_line(line: str) -> Iterable[int | str]:
             yield int(split_2)
 
 
-def main(input_fn: str = 'data/22-input.txt') -> tuple[int, int]:
-    board, path = input_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    board, path = input_from_file(input_path)
     result_1 = part_1(board, path)
     result_2 = part_2(board, path)
     return result_1, result_2

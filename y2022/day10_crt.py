@@ -7,8 +7,8 @@ https://adventofcode.com/2022/day/10
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.ocr import FONT_6X5
+from meta.aoc_tools import data_path
 
 
 def part_1(program: 'Program') -> int:
@@ -94,7 +94,7 @@ def part_1(program: 'Program') -> int:
 
     For example, consider this larger program:
 
-        >>> p2 = program_from_file('data/10-example.txt')
+        >>> p2 = program_from_file(data_path(__file__, 'example.txt'))
         >>> len(p2)
         146
         >>> p2[:5]
@@ -192,7 +192,7 @@ def part_2(program: 'Program') -> str:
 
     The first few pixels from the larger example above are drawn as follows:
 
-        >>> p = program_from_file('data/10-example.txt')
+        >>> p = program_from_file(data_path(__file__, 'example.txt'))
         >>> print(crt_draw(pixels(execute(p))))
         ##··##··##··##··##··##··##··##··##··##··
         ###···###···###···###···###···###···###·
@@ -261,7 +261,7 @@ def crt_draw(pixels_: Iterator[bool], lit: str = '#', dark: str = '·') -> str:
 
 
 def program_from_file(fn: str) -> Program:
-    return list(program_from_lines(open(relative_path(__file__, fn))))
+    return list(program_from_lines(open(fn)))
 
 
 def program_from_text(text: str) -> Program:
@@ -278,8 +278,8 @@ def program_from_lines(lines: Iterable[str]) -> Iterable[Instruction]:
             yield op, int(value)
 
 
-def main(input_fn: str = 'data/10-input.txt') -> tuple[int, str]:
-    program = program_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, str]:
+    program = program_from_file(input_path)
     result_1 = part_1(program)
     result_2 = part_2(program)
     return result_1, result_2

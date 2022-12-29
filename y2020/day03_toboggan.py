@@ -7,9 +7,9 @@ https://adventofcode.com/2020/day/3
 import math
 from typing import Iterable
 
-from common.file import relative_path
 from common.rect import Rect
 from common.text import join_and
+from meta.aoc_tools import data_path
 
 
 def part_1(trees: 'TreesMap'):
@@ -175,7 +175,7 @@ class TreesMap:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text: str):
@@ -274,11 +274,8 @@ class TreesMap:
         return self.trees == other.trees and self.bounds == other.bounds
 
 
-def main(fn: str = 'data/03-input.txt') -> tuple[int, int]:
-    trees_map = TreesMap.from_file(fn)
-    assert trees_map.x_period == 31
-    assert trees_map.height == 323
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    trees_map = TreesMap.from_file(input_path)
     result_1 = part_1(trees_map)
     result_2 = part_2(trees_map)
     return result_1, result_2

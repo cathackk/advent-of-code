@@ -9,7 +9,7 @@ from typing import Iterable
 from tqdm import tqdm
 
 from common.chain import Circle
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(numbers: list[int]) -> int:
@@ -115,7 +115,7 @@ def part_2(numbers: list[int], decryption_key: int = 811589153) -> int:
 
     Using the same example as above:
 
-        >>> nums = numbers_from_file('data/20-example.txt')
+        >>> nums = numbers_from_file(data_path(__file__, 'example.txt'))
         >>> nums_decrypted = [num * 811589153 for num in nums]
         >>> nums_mixed = mixed(nums_decrypted, rounds=10, logging=True)
         Initial arrangement:
@@ -223,11 +223,11 @@ def grove_coordinates(
 
 
 def numbers_from_file(fn: str) -> list[int]:
-    return [int(line.strip()) for line in open(relative_path(__file__, fn))]
+    return [int(line.strip()) for line in open(fn)]
 
 
-def main(input_fn: str = 'data/20-input.txt') -> tuple[int, int]:
-    numbers = numbers_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    numbers = numbers_from_file(input_path)
     result_1 = part_1(numbers)
     result_2 = part_2(numbers)
     return result_1, result_2

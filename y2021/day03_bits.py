@@ -8,7 +8,7 @@ from collections import Counter
 from typing import Callable
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(values: list[str]) -> int:
@@ -212,7 +212,7 @@ def _select_bit(
 
 
 def values_from_file(fn: str) -> list[str]:
-    with open(relative_path(__file__, fn)) as file_in:
+    with open(fn) as file_in:
         values = [line.strip() for line in file_in]
 
     # make sure there are any values
@@ -223,8 +223,8 @@ def values_from_file(fn: str) -> list[str]:
     return values
 
 
-def main(fn: str = 'data/03-input.txt') -> tuple[int, int]:
-    values = values_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    values = values_from_file(input_path)
     result_1 = part_1(values)
     result_2 = part_2(values)
     return result_1, result_2

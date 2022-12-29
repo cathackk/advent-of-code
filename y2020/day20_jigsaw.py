@@ -10,11 +10,11 @@ import re
 from typing import Iterable
 from typing import Optional
 
-from common.file import relative_path
 from common.iteration import single_value
 from common.rect import Rect
 from common.text import parse_line
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(tiles: list['Tile']) -> tuple[int, 'Image']:
@@ -409,7 +409,7 @@ class Tile:
 
 
 def tiles_from_file(fn: str) -> list[Tile]:
-    return list(tiles_from_lines(open(relative_path(__file__, fn))))
+    return list(tiles_from_lines(open(fn)))
 
 
 def tiles_from_text(text: str) -> list[Tile]:
@@ -673,10 +673,8 @@ class Pattern:
         return "\n".join("".join(row) for row in image_pixels)
 
 
-def main(fn: str = 'data/20-input.txt') -> tuple[int, int]:
-    tiles = tiles_from_file(fn)
-    assert len(tiles) == 144
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    tiles = tiles_from_file(input_path)
     result_1, image = part_1(tiles)
     result_2 = part_2(image, Pattern.monster())
     return result_1, result_2

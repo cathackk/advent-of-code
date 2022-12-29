@@ -9,7 +9,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(initial_map: 'Map') -> int:
@@ -86,7 +86,7 @@ def part_1(initial_map: 'Map') -> int:
     on the top edge. Sea cucumbers always check whether their destination location is empty before
     moving, even if that destination is on the opposite side of the map:
 
-        >>> medium = Map.from_file('data/25-example-medium.txt')
+        >>> medium = Map.from_file(data_path(__file__, 'example-medium.txt'))
         >>> _ = run(medium, steps_limit=4, log=True)
         Initial state:
         ···>···
@@ -355,7 +355,7 @@ class Map:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Map':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Map':
@@ -466,8 +466,8 @@ def run(initial_map: Map, steps_limit: int = None, log: bool | Iterable[int] = F
     assert False
 
 
-def main(fn: str = 'data/25-input.txt') -> tuple[int]:
-    initial_map = Map.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int]:
+    initial_map = Map.from_file(input_path)
     result_1 = part_1(initial_map)
     return (result_1,)
 

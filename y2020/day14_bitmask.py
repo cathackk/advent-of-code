@@ -7,9 +7,9 @@ https://adventofcode.com/2020/day/14
 from typing import Iterable
 from typing import Union
 
-from common.file import relative_path
 from common.text import parse_line
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(program: 'Program') -> int:
@@ -244,7 +244,7 @@ class Program:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]):
@@ -294,10 +294,8 @@ class Program:
         return memory
 
 
-def main(fn: str = 'data/14-input.txt') -> tuple[int, int]:
-    program = Program.from_file(fn)
-    assert len(program) == 545
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    program = Program.from_file(input_path)
     result_1 = part_1(program)
     result_2 = part_2(program)
     return result_1, result_2

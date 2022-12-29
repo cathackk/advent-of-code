@@ -6,7 +6,7 @@ https://adventofcode.com/2021/day/12
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(caves: 'Graph') -> int:
@@ -115,7 +115,7 @@ def part_1(caves: 'Graph') -> int:
 
     Finally, this even larger example has 226 paths through it:
 
-        >>> g3 = Graph.from_file('data/12-example-even-larger.txt')
+        >>> g3 = Graph.from_file(data_path(__file__, 'example-even-larger.txt'))
         >>> len(g3.edges)
         18
         >>> sum(1 for _ in g3.paths())
@@ -143,7 +143,7 @@ def part_2(caves: 'Graph') -> int:
     leave the `start` cave, you may not return to it, and once you reach the `end` cave, the path
     must end immediately.
 
-        >>> g = Graph.from_file('data/12-example-small.txt')
+        >>> g = Graph.from_file(data_path(__file__, 'example-small.txt'))
         >>> ('start', 'A') in g.edges_set
         True
         >>> ('A', 'start') in g.edges_set
@@ -196,10 +196,10 @@ def part_2(caves: 'Graph') -> int:
     The slightly larger example above now has `103` paths through it, and the even larger example
     now has `3509` paths through it:
 
-        >>> g2 = Graph.from_file('data/12-example-slightly-larger.txt')
+        >>> g2 = Graph.from_file(data_path(__file__, 'example-slightly-larger.txt'))
         >>> sum(1 for _ in g2.paths(small_revisits_remaining=1))
         103
-        >>> g3 = Graph.from_file('data/12-example-even-larger.txt')
+        >>> g3 = Graph.from_file(data_path(__file__, 'example-even-larger.txt'))
         >>> sum(1 for _ in g3.paths(small_revisits_remaining=1))
         3509
 
@@ -268,7 +268,7 @@ class Graph:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Graph':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Graph':
@@ -298,8 +298,8 @@ class Graph:
         )
 
 
-def main(fn: str = 'data/12-input.txt') -> tuple[int, int]:
-    caves = Graph.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    caves = Graph.from_file(input_path)
     result_1 = part_1(caves)
     result_2 = part_2(caves)
     return result_1, result_2

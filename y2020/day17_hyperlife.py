@@ -8,9 +8,9 @@ from collections import Counter
 from itertools import product
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import single_value
 from common.rect import HyperCuboid
+from meta.aoc_tools import data_path
 
 
 def part_1(initial_state: set['Pos'], cycles: int = 6) -> int:
@@ -394,7 +394,7 @@ def state_from_text(dimensions: int, text: str) -> set[Pos]:
 
 
 def state_from_file(dimensions: int, fn: str) -> set[Pos]:
-    return set(active_positions_from_lines(dimensions, open(relative_path(__file__, fn))))
+    return set(active_positions_from_lines(dimensions, open(fn)))
 
 
 def active_positions_from_lines(dimensions: int, lines: Iterable[str]) -> Iterable[Pos]:
@@ -447,9 +447,9 @@ def print_state(state: set[Pos], cycle: int):
                 print(pad_2 + line)
 
 
-def main(fn: str = 'data/17-input.txt') -> tuple[int, int]:
-    result_1 = part_1(state_from_file(3, fn))
-    result_2 = part_2(state_from_file(4, fn))
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    result_1 = part_1(state_from_file(3, input_path))
+    result_2 = part_2(state_from_file(4, input_path))
     return result_1, result_2
 
 

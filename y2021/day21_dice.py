@@ -9,9 +9,9 @@ from collections import Counter
 from dataclasses import dataclass
 from typing import Iterable
 
-from common.file import relative_path
 from common.text import parse_line
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(player_1_start: int, player_2_start: int) -> int:
@@ -378,7 +378,7 @@ def start_from_text(text: str) -> tuple[int, int]:
 
 
 def start_from_file(fn: str) -> tuple[int, int]:
-    return start_from_lines(open(relative_path(__file__, fn)))
+    return start_from_lines(open(fn))
 
 
 def start_from_lines(lines: Iterable[str]) -> tuple[int, int]:
@@ -393,8 +393,8 @@ def _rolls_str(die_rolls: Iterable[int]) -> str:
     return "+".join(str(v) for v in die_rolls)
 
 
-def main(fn: str = 'data/21-input.txt') -> tuple[int, int]:
-    p1_start, p2_start = start_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    p1_start, p2_start = start_from_file(input_path)
     result_1 = part_1(p1_start, p2_start)
     result_2 = part_2(p1_start, p2_start)
     return result_1, result_2

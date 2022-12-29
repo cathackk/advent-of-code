@@ -6,8 +6,8 @@ https://adventofcode.com/2020/day/13
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.math import modular_inverse
+from meta.aoc_tools import data_path
 
 
 def part_1(start: int, bus_ids: Iterable[int]) -> int:
@@ -206,7 +206,7 @@ def data_from_text(text: str) -> tuple[int, dict[int, int]]:
 
 
 def data_from_file(fn: str) -> tuple[int, dict[int, int]]:
-    return data_from_lines(open(relative_path(__file__, fn)))
+    return data_from_lines(open(fn))
 
 
 def data_from_lines(lines: Iterable[str]) -> tuple[int, dict[int, int]]:
@@ -296,10 +296,8 @@ def divide(x, y, base) -> int:
     return (x * modular_inverse(y, base)) % base
 
 
-def main(fn: str = 'data/13-input.txt') -> tuple[int, int]:
-    start, buses_offsets = data_from_file(fn)
-    assert len(buses_offsets) == 9
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    start, buses_offsets = data_from_file(input_path)
     result_1 = part_1(start, buses_offsets.keys())
     result_2 = part_2(buses_offsets)
     return result_1, result_2

@@ -7,10 +7,10 @@ https://adventofcode.com/2021/day/5
 from collections import Counter
 from typing import Iterable
 
-from common.file import relative_path
 from common.math import sgn
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(all_vents: Iterable['Vent']) -> int:
@@ -235,15 +235,15 @@ def draw_map(vents: Iterable[Vent], allow_diagonal: bool = False) -> None:
 
 
 def vents_from_file(fn: str) -> list[Vent]:
-    return [Vent.parse(line.strip()) for line in open(relative_path(__file__, fn))]
+    return [Vent.parse(line.strip()) for line in open(fn)]
 
 
 def vents_from_text(text: str) -> list[Vent]:
     return [Vent.parse(line.strip()) for line in text.strip().splitlines()]
 
 
-def main(fn: str = 'data/05-input.txt') -> tuple[int, int]:
-    vents = vents_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    vents = vents_from_file(input_path)
     result_1 = part_1(vents)
     result_2 = part_2(vents)
     return result_1, result_2

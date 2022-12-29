@@ -9,10 +9,10 @@ import string
 from typing import Callable
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.heading import Heading
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(heightmap: 'HeightMap') -> int:
@@ -109,7 +109,7 @@ def part_2(heightmap: 'HeightMap') -> int:
 
     Again consider the example from above:
 
-        >>> hm = HeightMap.from_file('data/12-example.txt')
+        >>> hm = HeightMap.from_file(data_path(__file__, 'example.txt'))
 
     Now, there are six choices for starting position (five marked `a`, plus the square marked `S`
     that counts as being at elevation `a`). If you start at the bottom-left square, you can reach
@@ -205,7 +205,7 @@ class HeightMap:
 
     @classmethod
     def from_file(cls, fn: str) -> 'HeightMap':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text: str) -> 'HeightMap':
@@ -241,8 +241,8 @@ class HeightMap:
 
 
 
-def main(input_fn: str = 'data/12-input.txt') -> tuple[int, int]:
-    heightmap = HeightMap.from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    heightmap = HeightMap.from_file(input_path)
     result_1 = part_1(heightmap)
     result_2 = part_2(heightmap)
     return result_1, result_2

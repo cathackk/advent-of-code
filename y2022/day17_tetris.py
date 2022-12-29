@@ -13,9 +13,9 @@ from typing import Literal
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.rect import Rect
 from common.utils import ro
+from meta.aoc_tools import data_path
 
 
 def part_1(moves: list['Move'], target_shapes_count: int = 2022) -> int:
@@ -465,7 +465,7 @@ def part_2(moves: list['Move'], target_shapes_count: int = 1_000_000_000_000) ->
 
     In the example above, the tower would be **1_514_285_714_288** units tall!
 
-        >>> ms = moves_from_file('data/17-example.txt')
+        >>> ms = moves_from_file(data_path(__file__, 'example.txt'))
         >>> final_height(ms, target_shapes_count=1_000_000_000_000)
         1514285714288
 
@@ -756,15 +756,15 @@ def final_height(moves: list[Move], target_shapes_count: int) -> int:
 
 
 def moves_from_file(fn: str) -> list[Move]:
-    return moves_from_text(open(relative_path(__file__, fn)).read())
+    return moves_from_text(open(fn).read())
 
 
 def moves_from_text(text: str) -> list[Move]:
     return [Move.from_char(char) for char in text.strip()]
 
 
-def main(input_fn: str = 'data/17-input.txt') -> tuple[int, int]:
-    moves = moves_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    moves = moves_from_file(input_path)
     result_1 = part_1(moves)
     result_2 = part_2(moves)
     return result_1, result_2

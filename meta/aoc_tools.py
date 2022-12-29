@@ -3,6 +3,7 @@ import re
 from dataclasses import dataclass
 from typing import Iterable
 
+from common.file import relative_path
 from common.text import parse_line
 
 
@@ -15,17 +16,23 @@ def year_dirs() -> Iterable[tuple[int, str]]:
     )
 
 
-def day_files(path: str) -> Iterable[tuple[int, str]]:
-    def parse_day_number(fn: str) -> int:
-        num, _ = parse_line(fn, "day$_$.py")
-        return int(num)
+def parse_day_number(filename: str) -> int:
+    num, _ = parse_line(filename, "day$_$.py")
+    return int(num)
 
+
+def day_files(path: str) -> Iterable[tuple[int, str]]:
     return sorted(
         (day_number, os.path.join(path, filename))
         for filename in os.listdir(path)
         if re.fullmatch(r'day\d\d_[a-z0-9_]+\.py', filename)
         if (day_number := parse_day_number(filename)) > 0  # ignore template
     )
+
+
+def data_path(module_path: str, filename: str = 'input.txt') -> str:
+    number = parse_day_number(os.path.basename(module_path))
+    return relative_path(module_path, f'data/{number:02}-{filename}')
 
 
 @dataclass(frozen=True, order=True)

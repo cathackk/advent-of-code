@@ -6,7 +6,7 @@ https://adventofcode.com/2020/day/25
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(card_public_key: int, door_public_key: int) -> int:
@@ -116,7 +116,7 @@ def crack_loop_size(
 
 
 def public_keys_from_file(fn: str) -> tuple[int, int]:
-    return public_keys_from_lines(open(relative_path(__file__, fn)))
+    return public_keys_from_lines(open(fn))
 
 
 def public_keys_from_lines(lines: Iterable[str]) -> tuple[int, int]:
@@ -124,8 +124,8 @@ def public_keys_from_lines(lines: Iterable[str]) -> tuple[int, int]:
     return int(card_key_line), int(door_key_line)
 
 
-def main(fn: str = 'data/25-input.txt') -> tuple[int]:
-    card_public_key, door_public_key = public_keys_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int]:
+    card_public_key, door_public_key = public_keys_from_file(input_path)
     result_1 = part_1(card_public_key, door_public_key)
     return (result_1,)
 

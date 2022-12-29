@@ -8,8 +8,8 @@ from collections import Counter
 from collections import defaultdict
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import zip1
+from meta.aoc_tools import data_path
 
 
 def part_1(adapters: list[int]) -> int:
@@ -160,15 +160,13 @@ def arrangements_count(adapters: list[int]) -> int:
 def load_data(fn: str) -> list[int]:
     return [
         int(line_stripped)
-        for line in open(relative_path(__file__, fn))
+        for line in open(fn)
         if (line_stripped := line.strip())
     ]
 
 
-def main(fn: str = 'data/10-input.txt') -> tuple[int, int]:
-    adapters = load_data(fn)
-    assert len(adapters) == 106
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    adapters = load_data(input_path)
     result_1 = part_1(adapters)
     result_2 = part_2(adapters)
     return result_1, result_2

@@ -9,7 +9,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(entries: Iterable['Entry']) -> int:
@@ -184,7 +184,7 @@ def part_2(entries: Iterable['Entry']) -> int:
     Following this same process for each entry in the second, larger example above, the output value
     of each entry can be determined:
 
-        >>> example = entries_from_file('data/08-example.txt')
+        >>> example = entries_from_file(data_path(__file__, 'example.txt'))
         >>> for en in example:
         ...     ops = ' '.join(en.output_patterns)
         ...     sol = solve(en)
@@ -328,15 +328,15 @@ def entries_from_text(text: str) -> list[Entry]:
 
 
 def entries_from_file(fn: str) -> list[Entry]:
-    return list(entries_from_lines(open(relative_path(__file__, fn))))
+    return list(entries_from_lines(open(fn)))
 
 
 def entries_from_lines(lines: Iterable[str]) -> Iterable[Entry]:
     return (Entry.from_line(line.strip()) for line in lines)
 
 
-def main(fn: str = 'data/08-input.txt') -> tuple[int, int]:
-    entries = entries_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    entries = entries_from_file(input_path)
     result_1 = part_1(entries)
     result_2 = part_2(entries)
     return result_1, result_2

@@ -7,7 +7,7 @@ https://adventofcode.com/2021/day/2
 from dataclasses import dataclass
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(commands: Iterable['Command']) -> int:
@@ -142,7 +142,7 @@ Command = tuple[str, int]
 
 
 def commands_from_file(fn: str) -> list[Command]:
-    return list(commands_from_lines(open(relative_path(__file__, fn))))
+    return list(commands_from_lines(open(fn)))
 
 
 def commands_from_text(text: str) -> list[Command]:
@@ -199,8 +199,8 @@ class Submarine2:
         return self
 
 
-def main(fn: str = 'data/02-input.txt') -> tuple[int, int]:
-    commands = commands_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    commands = commands_from_file(input_path)
     result_1 = part_1(commands)
     result_2 = part_2(commands)
     return result_1, result_2

@@ -8,8 +8,8 @@ import re
 from functools import partial
 from typing import Iterable
 
-from common.file import relative_path
 from common.text import line_groups
+from meta.aoc_tools import data_path
 
 
 def part_1(passports: list['Passport']) -> int:
@@ -219,7 +219,7 @@ Passport = dict[str, str]
 
 
 def passports_from_file(fn: str) -> list[Passport]:
-    return list(passports_from_lines(open(relative_path(__file__, fn))))
+    return list(passports_from_lines(open(fn)))
 
 
 def passports_from_text(text: str) -> list[Passport]:
@@ -304,8 +304,8 @@ def is_valid_passport(passport: Passport) -> bool:
            and all(is_valid_entry(*entry) for entry in passport.items())
 
 
-def main(fn: str = 'data/04-input.txt') -> tuple[int, int]:
-    passports = passports_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    passports = passports_from_file(input_path)
     result_1 = part_1(passports)
     result_2 = part_2(passports)
     return result_1, result_2

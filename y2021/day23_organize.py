@@ -7,11 +7,11 @@ https://adventofcode.com/2021/day/23
 from itertools import chain
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.iteration import zip1
 from common.text import parse_line
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(initial_state: 'State') -> int:
@@ -236,7 +236,7 @@ def part_2(initial_state_extended: 'State') -> int:
 
     So, the above example now becomes:
 
-        >>> state_0 = State.from_file('data/23-example.txt').extended()
+        >>> state_0 = State.from_file(data_path(__file__, 'example.txt')).extended()
         >>> print(state_0)
         #############
         #...........#
@@ -563,7 +563,7 @@ class State:
 
     @classmethod
     def from_file(cls, fn: str) -> 'State':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'State':
@@ -797,8 +797,8 @@ _MAZE_PATHS = _generate_paths()
 assert len(_MAZE_PATHS) == 110, len(_MAZE_PATHS)
 
 
-def main(fn: str = 'data/23-input.txt') -> tuple[int, int]:
-    initial_state = State.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    initial_state = State.from_file(input_path)
     result_1 = part_1(initial_state)
     result_2 = part_2(initial_state.extended())
     return result_1, result_2

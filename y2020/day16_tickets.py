@@ -8,10 +8,10 @@ import math
 from typing import Callable
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import single_value
 from common.text import line_groups
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(rules: 'RuleList', nearby_tickets: list['Ticket']) -> int:
@@ -306,7 +306,7 @@ def data_from_text(text: str) -> tuple[RuleList, Ticket, list[Ticket]]:
 
 
 def data_from_file(fn: str) -> tuple[RuleList, Ticket, list[Ticket]]:
-    return data_from_lines(open(relative_path(__file__, fn)))
+    return data_from_lines(open(fn))
 
 
 def data_from_lines(lines: Iterable[str]) -> tuple[RuleList, Ticket, list[Ticket]]:
@@ -328,12 +328,8 @@ def data_from_lines(lines: Iterable[str]) -> tuple[RuleList, Ticket, list[Ticket
     return rules, my_ticket, nearby_tickets
 
 
-def main(fn: str = 'data/16-input.txt') -> tuple[int, int]:
-    rules, my_ticket, nearby_tickets = data_from_file(fn)
-    assert len(rules) == 20
-    assert len(my_ticket) == 20
-    assert len(nearby_tickets) == 240
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    rules, my_ticket, nearby_tickets = data_from_file(input_path)
     result_1 = part_1(rules, nearby_tickets)
     result_2 = part_2(
         rules, my_ticket, nearby_tickets, consider_field=lambda f: f.startswith("departure")

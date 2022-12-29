@@ -8,8 +8,8 @@ from itertools import chain
 from typing import Iterable
 from typing import Optional
 
-from common.file import relative_path
 from common.iteration import zip1
+from meta.aoc_tools import data_path
 
 
 def part_1(numbers: list['Number']) -> int:
@@ -311,7 +311,7 @@ def part_2(numbers: list['Number']) -> int:
 
     Again considering the last example homework assignment above:
 
-        >>> homework = Number.many_from_file('data/18-example.txt')
+        >>> homework = Number.many_from_file(data_path(__file__, 'example.txt'))
 
     The largest magnitude of the sum of any two snailfish numbers in this list is **`3993`**:
 
@@ -359,7 +359,7 @@ class Number:
 
     @classmethod
     def many_from_file(cls, fn: str) -> list['Number']:
-        return list(cls.many_from_lines(open(relative_path(__file__, fn))))
+        return list(cls.many_from_lines(open(fn)))
 
     @classmethod
     def many_from_lines(cls, lines: Iterable[str]) -> Iterable['Number']:
@@ -539,8 +539,8 @@ class Explain:
         return False
 
 
-def main(fn: str = 'data/18-input.txt') -> tuple[int, int]:
-    numbers = Number.many_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    numbers = Number.many_from_file(input_path)
     result_1 = part_1(numbers)
     result_2 = part_2(numbers)
     return result_1, result_2

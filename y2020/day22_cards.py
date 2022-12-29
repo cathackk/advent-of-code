@@ -8,9 +8,9 @@ from dataclasses import dataclass
 from typing import Iterable
 
 from common.chain import Link
-from common.file import relative_path
 from common.text import line_groups
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
@@ -522,7 +522,7 @@ Decks = tuple[Deck, Deck]
 
 
 def decks_from_file(fn: str) -> Decks:
-    return decks_from_lines(open(relative_path(__file__, fn)))
+    return decks_from_lines(open(fn))
 
 
 def decks_from_text(text: str) -> Decks:
@@ -694,10 +694,8 @@ class Game:
         return self.victory
 
 
-def main(fn: str = 'data/22-input.txt') -> tuple[int, int]:
-    deck_1, deck_2 = decks_from_file(fn)
-    assert len(deck_1) == len(deck_2) == 25
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    deck_1, deck_2 = decks_from_file(input_path)
     result_1 = part_1(deck_1, deck_2)
     result_2 = part_2(deck_1, deck_2)
     return result_1, result_2

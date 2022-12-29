@@ -7,9 +7,9 @@ https://adventofcode.com/2021/day/13
 from typing import Iterable
 
 from common import ocr
-from common.file import relative_path
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(dots: set['Pos'], first_instruction: 'Instruction') -> int:
@@ -177,7 +177,7 @@ def part_2(dots: set['Pos'], instructions: Iterable['Instruction']) -> str:
 
     **What code do you use to activate the infrared thermal imaging camera system?**
 
-        >>> example_dots, example_instructions = input_from_file('data/13-example.txt')
+        >>> example_dots, example_instructions = input_from_file(data_path(__file__, 'example.txt'))
         >>> draw(fold(example_dots, *example_instructions))
         █████
         █···█
@@ -240,6 +240,7 @@ class Instruction:
 def draw(dots: set[Pos], instruction: Instruction = None, full_char='█', empty_char='·') -> None:
     print(drawn(dots, instruction, full_char, empty_char))
 
+
 def drawn(dots: set[Pos], instruction: Instruction = None, full_char='█', empty_char='·') -> str:
     def char(pos: Pos) -> str:
         if pos in dots:
@@ -270,7 +271,7 @@ def input_from_text(text: str) -> Input:
 
 
 def input_from_file(fn: str) -> Input:
-    return input_from_lines(open(relative_path(__file__, fn)))
+    return input_from_lines(open(fn))
 
 
 def input_from_lines(lines: Iterable[str]) -> Input:
@@ -293,8 +294,8 @@ def input_from_lines(lines: Iterable[str]) -> Input:
     return dots, instructions
 
 
-def main(fn: str = 'data/13-input.txt') -> tuple[int, str]:
-    dots, instructions = input_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, str]:
+    dots, instructions = input_from_file(input_path)
     result_1 = part_1(dots, instructions[0])
     result_2 = part_2(dots, instructions)
     return result_1, result_2

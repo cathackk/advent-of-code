@@ -6,13 +6,13 @@ https://adventofcode.com/2021/day/17
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import last
 from common.iteration import single_value
 from common.math import sgn
 from common.math import triangular_root
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(target: Rect) -> int:
@@ -316,11 +316,11 @@ def target_area_from_text(text: str) -> Rect:
 
 
 def target_area_from_file(fn: str) -> Rect:
-    return target_area_from_text(single_value(open(relative_path(__file__, fn))).strip())
+    return target_area_from_text(single_value(open(fn)).strip())
 
 
-def main(fn: str = 'data/17-input.txt') -> tuple[int, int]:
-    target = target_area_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    target = target_area_from_file(input_path)
     result_1 = part_1(target)
     result_2 = part_2(target)
     return result_1, result_2

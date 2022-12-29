@@ -10,6 +10,7 @@ from typing import Iterable
 
 from common.file import relative_path
 from common.iteration import dgroupby_pairs
+from meta.aoc_tools import data_path
 
 
 def part_1(orbit_map: 'OrbitMap') -> int:
@@ -337,12 +338,11 @@ class OrbitMap:
 
     @classmethod
     def from_file(cls, fn: str) -> 'OrbitMap':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
 
-def main(fn: str = 'data/06-orbits.txt') -> tuple[int, int]:
+def main(fn: str = data_path(__file__)) -> tuple[int, int]:
     orbit_map = OrbitMap.from_file(fn)
-    # sys.setrecursionlimit(2048)  # max depth is ~ 350
     result_1 = part_1(orbit_map)
     result_2 = part_2(orbit_map)
     return result_1, result_2

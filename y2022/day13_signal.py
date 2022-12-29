@@ -10,9 +10,9 @@ from ast import literal_eval
 from dataclasses import dataclass
 from typing import Iterable
 
-from common.file import relative_path
 from common.math import sgn
 from common.text import line_groups
+from meta.aoc_tools import data_path
 
 
 def part_1(packet_pairs: Iterable['PacketPair']) -> int:
@@ -169,7 +169,7 @@ def part_2(packet_pairs: list['PacketPair']) -> int:
 
     For the example above, the result of putting the packets in the correct order is:
 
-        >>> pps = packet_pairs_from_file('data/13-example.txt')
+        >>> pps = packet_pairs_from_file(data_path(__file__, 'example.txt'))
         >>> packets_sorted = sorted([packet for pair in pps for packet in pair] + DIVIDER_PACKETS)
         >>> print("\n".join(str(p) for p in packets_sorted))
         []
@@ -289,7 +289,7 @@ def decoder_key(packets: list[Packet]) -> int:
 
 
 def packet_pairs_from_file(fn: str) -> list[PacketPair]:
-    return list(packet_pairs_from_lines(open(relative_path(__file__, fn))))
+    return list(packet_pairs_from_lines(open(fn)))
 
 
 def packet_pairs_from_text(text: str) -> list[PacketPair]:
@@ -303,8 +303,8 @@ def packet_pairs_from_lines(lines: Iterable[str]) -> Iterable[PacketPair]:
     )
 
 
-def main(input_fn: str = 'data/13-input.txt') -> tuple[int, int]:
-    packet_pairs = packet_pairs_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    packet_pairs = packet_pairs_from_file(input_path)
     result_1 = part_1(packet_pairs)
     result_2 = part_2(packet_pairs)
     return result_1, result_2

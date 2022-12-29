@@ -9,7 +9,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(cups: 'Cups', moves: int = 100) -> str:
@@ -203,7 +203,7 @@ class Cups:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_line(open(relative_path(__file__, fn)).readline())
+        return cls.from_line(open(fn).readline())
 
     def grown_to(self, count: int):
         return type(self)(chain(
@@ -282,10 +282,8 @@ class Cups:
         return f'{type(self).__name__}({list(self)!r})'
 
 
-def main(fn: str = 'data/23-input.txt') -> tuple[str, int]:
-    cups = Cups.from_file(fn)
-    assert len(cups) == 9
-
+def main(input_path: str = data_path(__file__)) -> tuple[str, int]:
+    cups = Cups.from_file(input_path)
     result_1 = part_1(cups)
     result_2 = part_2(cups)
     return result_1, result_2

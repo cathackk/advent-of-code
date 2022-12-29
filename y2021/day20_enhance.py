@@ -8,8 +8,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(algorithm: 'Algorithm', image: 'Image', runs: int = 2) -> int:
@@ -175,7 +175,7 @@ def part_2(algorithm: 'Algorithm', image: 'Image', runs: int = 50) -> int:
     If you enhance the starting input image in the above example a total of **50** times, **`3351`**
     pixels are lit in the final output image.
 
-        >>> algo, img = input_from_file('data/20-example.txt')
+        >>> algo, img = input_from_file(data_path(__file__, 'example.txt'))
         >>> img_50 = algo.enhance(img, runs=50)
         >>> img_50.lit_pixels_count
         3351
@@ -294,7 +294,7 @@ def input_from_text(text: str) -> Input:
 
 
 def input_from_file(fn: str) -> Input:
-    return input_from_lines(open(relative_path(__file__, fn)))
+    return input_from_lines(open(fn))
 
 
 def input_from_lines(lines: Iterable[str], light_char: str = '#', dark_char: str = '.') -> Input:
@@ -320,8 +320,8 @@ def input_from_lines(lines: Iterable[str], light_char: str = '#', dark_char: str
     return algorithm, image
 
 
-def main(fn: str = 'data/20-input.txt') -> tuple[int, int]:
-    algorithm, image = input_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    algorithm, image = input_from_file(input_path)
     result_1 = part_1(algorithm, image)
     result_2 = part_2(algorithm, image)
     return result_1, result_2

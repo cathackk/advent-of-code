@@ -8,9 +8,9 @@ from itertools import islice
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.iteration import last
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(numbers_drawn: Iterable[int], boards: 'Boards') -> int:
@@ -288,7 +288,7 @@ Game = tuple[list[int], 'Boards']
 
 
 def game_from_file(fn: str) -> Game:
-    return game_from_lines(open(relative_path(__file__, fn)))
+    return game_from_lines(open(fn))
 
 
 def game_from_text(text: str) -> Game:
@@ -311,8 +311,8 @@ def game_from_lines(lines: Iterable[str]) -> Game:
     return numbers_drawn, boards
 
 
-def main(fn: str = 'data/04-input.txt') -> tuple[int, int]:
-    drawn_nums, boards = game_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    drawn_nums, boards = game_from_file(input_path)
     result_1 = part_1(drawn_nums, boards)
     boards.reset()  # TODO: I don't like resetting - rework with immutable classes
     result_2 = part_2(drawn_nums, boards)

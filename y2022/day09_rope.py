@@ -7,10 +7,10 @@ https://adventofcode.com/2022/day/9
 from enum import Enum
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs
 from common.math import sgn
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(moves: Iterable['Move']) -> int:
@@ -293,7 +293,7 @@ def part_2(moves: Iterable['Move']) -> int:
     Using the same series of motions as the above example, but with the knots marked `H`, `1`, `2`,
     ..., `9`, the motions now occur as follows:
 
-        >>> moves_1 = moves_from_file('data/09-example.txt')
+        >>> moves_1 = moves_from_file(data_path(__file__, 'example.txt'))
         >>> len(moves_1)
         8
         >>> bounds_1 = Rect((0, 0), (5, -4))
@@ -846,7 +846,7 @@ def draw_positions(
 
 
 def moves_from_file(fn: str) -> list[Move]:
-    return list(moves_from_lines(open(relative_path(__file__, fn))))
+    return list(moves_from_lines(open(fn)))
 
 
 def moves_from_text(text: str) -> list[Move]:
@@ -859,8 +859,8 @@ def moves_from_lines(lines: Iterable[str]) -> Iterable[Move]:
         yield Direction.from_letter(dir_letter), int(distance)
 
 
-def main(input_fn: str = 'data/09-input.txt') -> tuple[int, int]:
-    moves = moves_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    moves = moves_from_file(input_path)
     result_1 = part_1(moves)
     result_2 = part_2(moves)
     return result_1, result_2

@@ -9,7 +9,7 @@ from typing import Iterable
 from typing import Iterator
 from typing import Union
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(expressions: Iterable['Expr']) -> int:
@@ -309,7 +309,7 @@ class Expr:
 
     @classmethod
     def load_from_file(cls, fn: str) -> list['Expr']:
-        return list(cls.load_from_lines(open(relative_path(__file__, fn))))
+        return list(cls.load_from_lines(open(fn)))
 
     @classmethod
     def load_from_text(cls, text: str) -> list['Expr']:
@@ -320,8 +320,8 @@ class Expr:
         return (cls.parse(line.strip()) for line in lines)
 
 
-def main(fn: str = 'data/18-input.txt') -> tuple[int, int]:
-    exprs = Expr.load_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    exprs = Expr.load_from_file(input_path)
     result_1 = part_1(exprs)
     result_2 = part_2(exprs)
     return result_1, result_2

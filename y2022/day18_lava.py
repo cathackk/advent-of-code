@@ -6,8 +6,8 @@ https://adventofcode.com/2022/day/18
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.rect import HyperCuboid
+from meta.aoc_tools import data_path
 
 
 def part_1(cubes: Iterable['Pos3']) -> int:
@@ -89,7 +89,7 @@ def part_2(cubes: Iterable['Pos3']) -> int:
     In the larger example above, exactly one cube of air is trapped within the lava droplet
     (at `2,2,5`), so the exterior surface area of the lava droplet is **58**.
 
-        >>> cs = cubes_from_file('data/18-example.txt')
+        >>> cs = cubes_from_file(data_path(__file__, 'example.txt'))
         >>> exterior_surface_area(cs)
         58
 
@@ -173,7 +173,7 @@ def exterior_surface_area(cubes: Iterable[Pos3]) -> int:
 
 
 def cubes_from_file(fn: str) -> list[Pos3]:
-    return list(cubes_from_lines(open(relative_path(__file__, fn))))
+    return list(cubes_from_lines(open(fn)))
 
 
 def cubes_from_text(text: str) -> list[Pos3]:
@@ -186,8 +186,8 @@ def cubes_from_lines(lines: Iterable[str]) -> Iterable[Pos3]:
         yield int(x), int(y), int(z)
 
 
-def main(input_fn: str = 'data/18-input.txt') -> tuple[int, int]:
-    cubes = cubes_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    cubes = cubes_from_file(input_path)
     result_1 = part_1(cubes)
     result_2 = part_2(cubes)
     return result_1, result_2

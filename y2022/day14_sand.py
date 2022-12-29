@@ -7,11 +7,11 @@ https://adventofcode.com/2022/day/14
 from itertools import chain
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import zip1
 from common.math import sgn
 from common.rect import Rect
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(walls: Iterable['Pos']) -> int:
@@ -187,7 +187,7 @@ def part_2(walls: Iterable['Pos']) -> int:
     `y=11`. (This is as if your scan contained one extra rock path like `-inf,11 -> +inf,11`.)
     With the added floor, the example above now looks like this:
 
-        >>> rock = walls_from_file('data/14-example.txt')
+        >>> rock = walls_from_file(data_path(__file__, 'example.txt'))
         >>> print(state_0 := State(set(rock), bottom_floor=True))
         ········+·····
         ··············
@@ -364,7 +364,7 @@ class State:
 
 
 def walls_from_file(fn: str) -> list[Pos]:
-    return list(walls_from_lines(open(relative_path(__file__, fn))))
+    return list(walls_from_lines(open(fn)))
 
 
 def walls_from_text(text: str) -> list[Pos]:
@@ -392,8 +392,8 @@ def walls_from_lines(lines: Iterable[str]) -> Iterable[Pos]:
         yield points[-1]
 
 
-def main(input_fn: str = 'data/14-input.txt') -> tuple[int, int]:
-    walls = walls_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    walls = walls_from_file(input_path)
     result_1 = part_1(walls)
     result_2 = part_2(walls)
     return result_1, result_2

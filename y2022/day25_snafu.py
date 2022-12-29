@@ -6,7 +6,7 @@ https://adventofcode.com/2022/day/25
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(snafu_numbers: list[str]) -> str:
@@ -192,7 +192,7 @@ def to_snafu(num: int) -> str:
 
 
 def numbers_from_file(fn: str) -> list[str]:
-    return list(numbers_from_lines(open(relative_path(__file__, fn))))
+    return list(numbers_from_lines(open(fn)))
 
 
 def numbers_from_text(text: str) -> list[str]:
@@ -203,8 +203,8 @@ def numbers_from_lines(lines: Iterable[str]) -> Iterable[str]:
     return (line.strip() for line in lines)
 
 
-def main(input_fn: str = 'data/25-input.txt') -> tuple[str]:
-    snafu_numbers = numbers_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[str]:
+    snafu_numbers = numbers_from_file(input_path)
     result_1 = part_1(snafu_numbers)
     return (result_1,)
 

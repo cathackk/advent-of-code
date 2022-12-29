@@ -6,9 +6,9 @@ https://adventofcode.com/2020/day/12
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.heading import Heading
 from common.utils import assert_single_not_none
+from meta.aoc_tools import data_path
 
 
 def part_1(instructions: list['Instruction']) -> int:
@@ -173,7 +173,7 @@ def instructions_from_text(text: str) -> list[Instruction]:
 
 
 def instructions_from_file(fn: str) -> list[Instruction]:
-    return list(instructions_from_lines(open(relative_path(__file__, fn))))
+    return list(instructions_from_lines(open(fn)))
 
 
 def instructions_from_lines(lines: Iterable[str]) -> Iterable[Instruction]:
@@ -248,10 +248,8 @@ class Ship:
         return abs(x) + abs(y)
 
 
-def main(fn: str = 'data/12-input.txt') -> tuple[int, int]:
-    instructions = instructions_from_file(fn)
-    assert len(instructions) == 747
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    instructions = instructions_from_file(input_path)
     result_1 = part_1(instructions)
     result_2 = part_2(instructions)
     return result_1, result_2

@@ -6,8 +6,8 @@ https://adventofcode.com/2021/day/7
 
 from typing import Callable
 
-from common.file import relative_path
 from common.iteration import minmax
+from meta.aoc_tools import data_path
 
 
 def part_1(positions: list[int]) -> int:
@@ -159,11 +159,11 @@ def best_destination(positions: list[int], cost_fn: CostFunction = cost_linear):
 
 
 def positions_from_file(fn: str) -> list[int]:
-    return [int(v) for v in next(open(relative_path(__file__, fn))).strip().split(',')]
+    return [int(v) for v in next(open(fn)).strip().split(',')]
 
 
-def main(fn: str = 'data/07-input.txt') -> tuple[int, int]:
-    positions = positions_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    positions = positions_from_file(input_path)
     result_1 = part_1(positions)
     result_2 = part_2(positions)
     return result_1, result_2

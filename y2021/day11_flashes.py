@@ -6,8 +6,8 @@ https://adventofcode.com/2021/day/11
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(octopuses: 'Map', steps: int = 100) -> int:
@@ -368,7 +368,7 @@ def part_2(octopuses: 'Map') -> int:
 
     In the example above, the first time all octopuses flash simultaneously is step **`195`**:
 
-        >>> example = Map.from_file('data/11-example.txt')
+        >>> example = Map.from_file(data_path(__file__, 'example.txt'))
         >>> _, steps = example.run(log=range(193, 200))
         After step 193:
         5877777777
@@ -442,7 +442,7 @@ class Map:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Map':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Map':
@@ -515,8 +515,8 @@ class Map:
         return current_step, total_flashes
 
 
-def main(fn: str = 'data/11-input.txt') -> tuple[int, int]:
-    octopuses = Map.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    octopuses = Map.from_file(input_path)
     result_1 = part_1(octopuses)
     result_2 = part_2(octopuses)
     return result_1, result_2

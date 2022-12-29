@@ -10,7 +10,7 @@ from typing import Any
 from typing import Generator
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(program: 'Program') -> int:
@@ -106,7 +106,7 @@ def part_1(program: 'Program') -> int:
     To do this, the ALU will run the MOdel Number Automatic Detector program (MONAD, your puzzle
     input).
 
-        >>> monad = Program.from_file('data/24-input-2.txt', return_from='z')
+        >>> monad = Program.from_file(data_path(__file__, 'input-2.txt'), return_from='z')
 
     Submarine model numbers are always **fourteen-digit numbers** consisting only of digits `1`
     through `9`. The digit `0` **cannot** appear in a model number.
@@ -147,7 +147,7 @@ def part_2(program: 'Program') -> int:
 
     **What is the smallest model number accepted by MONAD?**
 
-        >>> part_2(Program.from_file('data/24-input-2.txt'))
+        >>> part_2(Program.from_file(data_path(__file__, 'input-2.txt')))
         part 2: smallest model number is 17241911811915
         17241911811915
     """
@@ -220,7 +220,7 @@ class Program:
 
     @classmethod
     def from_file(cls, fn: str, return_from: str = 'wxyz') -> 'Program':
-        return cls.from_lines(open(relative_path(__file__, fn)), return_from)
+        return cls.from_lines(open(fn), return_from)
 
     @classmethod
     def from_lines(cls, lines: Iterable[str], return_from: str = 'wxyz') -> 'Program':
@@ -484,8 +484,8 @@ def all_monad_solutions(monad_variables: Iterable[tuple[int, int, int]]) -> Iter
         yield int(''.join(str(digit) for digit in digits))
 
 
-def main(fn: str = 'data/24-input.txt') -> tuple[int, int]:
-    program = Program.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    program = Program.from_file(input_path)
     result_1 = part_1(program)
     result_2 = part_2(program)
     return result_1, result_2

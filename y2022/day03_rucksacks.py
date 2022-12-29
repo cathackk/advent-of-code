@@ -7,8 +7,8 @@ https://adventofcode.com/2022/day/3
 import string
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import chunks
+from meta.aoc_tools import data_path
 
 
 def part_1(rucksacks: Iterable[str]) -> int:
@@ -130,7 +130,7 @@ def part_2(rucksacks: Iterable[str]) -> int:
     a different badge item type. So, in the above example, the first group's rucksacks are the
     first three lines:
 
-        >>> rs = rucksacks_from_file('data/03-example.txt')
+        >>> rs = rucksacks_from_file(data_path(__file__, 'example.txt'))
         >>> len(rs)
         6
         >>> rgs = list(groups(rs))
@@ -207,11 +207,11 @@ def rucksacks_from_text(text: str) -> list[str]:
 
 
 def rucksacks_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
 
 
-def main(input_fn: str = 'data/03-input.txt') -> tuple[int, int]:
-    rucksacks_ = rucksacks_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    rucksacks_ = rucksacks_from_file(input_path)
     result_1 = part_1(rucksacks_)
     result_2 = part_2(rucksacks_)
     return result_1, result_2

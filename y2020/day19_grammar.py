@@ -9,10 +9,10 @@ from abc import abstractmethod
 from functools import cached_property
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import single_value
 from common.text import line_groups
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(rules: dict[int, 'Rule'], messages: list[str]) -> int:
@@ -561,7 +561,7 @@ def rules_from_lines(lines: Iterable[str]) -> dict[int, Rule]:
 
 
 def input_from_file(fn: str) -> tuple[dict[int, Rule], list[str]]:
-    return input_from_lines(open(relative_path(__file__, fn)))
+    return input_from_lines(open(fn))
 
 
 def input_from_text(text: str) -> tuple[dict[int, Rule], list[str]]:
@@ -574,11 +574,8 @@ def input_from_lines(lines: Iterable[str]) -> tuple[dict[int, Rule], list[str]]:
     return rules, messages
 
 
-def main(fn: str = 'data/19-input.txt') -> tuple[int, int]:
-    rules, messages = input_from_file(fn)
-    assert len(rules) == 130
-    assert len(messages) == 458
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    rules, messages = input_from_file(input_path)
     result_1 = part_1(rules, messages)
     result_2 = part_2(rules, messages)
     return result_1, result_2

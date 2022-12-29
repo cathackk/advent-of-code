@@ -9,8 +9,8 @@ from collections import defaultdict
 from functools import cached_property
 from typing import Iterable
 
-from common.file import relative_path
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(seats_map: 'SeatsMap') -> int:
@@ -378,7 +378,7 @@ class SeatsMap:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text: str):
@@ -510,11 +510,8 @@ class SeatsMap:
         )
 
 
-def main(fn: str = 'data/11-input.txt') -> tuple[int, int]:
-    seats = SeatsMap.from_file(fn)
-    assert seats.width == 92
-    assert seats.height == 94
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    seats = SeatsMap.from_file(input_path)
     result_1 = part_1(seats)
     result_2 = part_2(seats)
     return result_1, result_2

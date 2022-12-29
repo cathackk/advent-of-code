@@ -3,15 +3,16 @@ Advent of Code 2022
 Day 24: Blizzard Basin
 https://adventofcode.com/2022/day/24
 """
+
 from enum import Enum
 from functools import lru_cache
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.iteration import dgroupby_pairs
 from common.math import mod1
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(map_: 'Map') -> int:
@@ -310,7 +311,7 @@ def part_2(map_: 'Map') -> int:
     takes 23 minutes, and the trip back to the goal again takes 13 minutes, for a total time of
     **54** minutes.
 
-        >>> map_complex = Map.from_file('data/24-example.txt')
+        >>> map_complex = Map.from_file(data_path(__file__, 'example.txt'))
         >>> path_1, path_2, path_3 = map_complex.shortest_trip(rounds=3)
         >>> len(path_1), len(path_2), len(path_3)
         (18, 23, 13)
@@ -501,7 +502,7 @@ class Map:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Map':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text) -> 'Map':
@@ -535,8 +536,8 @@ class Map:
         return cls(width, height, blizzards)
 
 
-def main(input_fn: str = 'data/24-input.txt') -> tuple[int, int]:
-    map_ = Map.from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    map_ = Map.from_file(input_path)
     result_1 = part_1(map_)
     result_2 = part_2(map_)
     return result_1, result_2

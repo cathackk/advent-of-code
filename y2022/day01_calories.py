@@ -6,8 +6,8 @@ https://adventofcode.com/2022/day/1
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.text import line_groups
+from meta.aoc_tools import data_path
 
 
 def part_1(calories: list[list[int]]):
@@ -144,7 +144,7 @@ def max_n_totals(calories: list[list[int]], n: int) -> list[int]:
 
 
 def calories_from_file(fn: str) -> list[list[int]]:
-    return list(calories_from_lines(open(relative_path(__file__, fn))))
+    return list(calories_from_lines(open(fn)))
 
 
 def calories_from_text(text: str) -> list[list[int]]:
@@ -155,8 +155,8 @@ def calories_from_lines(lines: Iterable[str]) -> Iterable[list[int]]:
     return ([int(line.strip()) for line in group] for group in line_groups(lines))
 
 
-def main(input_fn: str = 'data/01-input.txt') -> tuple[int, int]:
-    calories = calories_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    calories = calories_from_file(input_path)
     result_1 = part_1(calories)
     result_2 = part_2(calories)
     return result_1, result_2

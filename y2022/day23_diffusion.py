@@ -10,8 +10,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(init_state: 'State', stop_at_round: int = 10) -> int:
@@ -306,7 +306,7 @@ def part_2(init_state: 'State') -> int:
 
     In the example above, the **first round where no Elf moved** was round **20**:
 
-        >>> state_0 = State.from_file('data/23-example.txt')
+        >>> state_0 = State.from_file(data_path(__file__, 'example.txt'))
         >>> state_final = state_0.run()
         >>> state_final.round_
         20
@@ -459,7 +459,7 @@ class State:
 
     @classmethod
     def from_file(cls, fn: str) -> 'State':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text: str) -> 'State':
@@ -475,8 +475,8 @@ class State:
         )
 
 
-def main(input_fn: str = 'data/23-input.txt') -> tuple[int, int]:
-    init_state = State.from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    init_state = State.from_file(input_path)
     result_1 = part_1(init_state)
     result_2 = part_2(init_state)
     return result_1, result_2

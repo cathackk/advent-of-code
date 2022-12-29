@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import ClassVar
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(lines: Iterable[str]) -> int:
@@ -125,7 +125,7 @@ def part_2(lines: Iterable[str]) -> int:
 
     In the example above, there are five incomplete lines:
 
-        >>> example_lines = lines_from_file('data/10-example.txt')
+        >>> example_lines = lines_from_file(data_path(__file__, 'example.txt'))
         >>> incomplete_errors = [
         ...     err for line in example_lines
         ...     if isinstance(err := validate(line), IncompleteValidationError)
@@ -263,11 +263,11 @@ def lines_from_text(text: str) -> list[str]:
 
 
 def lines_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
 
 
-def main(fn: str = 'data/10-input.txt') -> tuple[int, int]:
-    lines = lines_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    lines = lines_from_file(input_path)
     result_1 = part_1(lines)
     result_2 = part_2(lines)
     return  result_1, result_2

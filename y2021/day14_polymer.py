@@ -9,9 +9,9 @@ from itertools import chain
 from typing import Iterable
 from typing import TypeVar
 
-from common.file import relative_path
 from common.iteration import slidingw
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(template: str, rules: 'Rules', steps: int = 10) -> int:
@@ -132,7 +132,7 @@ def part_2(template: str, rules: 'Rules', steps: int = 40) -> int:
     In the above example, the most common element is `B` (occurring `2192039569602` times)
     and the least common element is `H` (occurring `3849876073` times):
 
-        >>> p0, insertion_rules = input_from_file('data/14-example.txt')
+        >>> p0, insertion_rules = input_from_file(data_path(__file__, 'example.txt'))
         >>> p40 = grow_optimized(p0, insertion_rules, steps=40)
         >>> p40['B']
         2192039569602
@@ -229,7 +229,7 @@ def input_from_text(text: str) -> Input:
 
 
 def input_from_file(fn: str) -> Input:
-    return input_from_lines(open(relative_path(__file__, fn)))
+    return input_from_lines(open(fn))
 
 
 def input_from_lines(lines: Iterable[str]) -> Input:
@@ -244,8 +244,8 @@ def input_from_lines(lines: Iterable[str]) -> Input:
     return template, rules
 
 
-def main(fn: str = 'data/14-input.txt') -> tuple[int, int]:
-    template, rules = input_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    template, rules = input_from_file(input_path)
     result_1 = part_1(template, rules)
     result_2 = part_2(template, rules)
     return result_1, result_2

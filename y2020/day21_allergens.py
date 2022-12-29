@@ -6,9 +6,9 @@ https://adventofcode.com/2020/day/21
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import single_value
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(food_list: list['Food']) -> int:
@@ -181,7 +181,7 @@ def match_allergens(foods: list[Food]) -> Iterable[tuple[Ingredient, Allergen]]:
 
 
 def foods_from_file(fn: str) -> list[Food]:
-    return list(foods_from_lines(open(relative_path(__file__, fn))))
+    return list(foods_from_lines(open(fn)))
 
 
 def foods_from_text(text: str) -> list[Food]:
@@ -192,10 +192,8 @@ def foods_from_lines(lines: Iterable[str]) -> Iterable[Food]:
     return (Food.from_line(line.strip()) for line in lines)
 
 
-def main(fn: str = 'data/21-input.txt') -> tuple[int, str]:
-    food_list = foods_from_file(fn)
-    assert len(food_list) == 42
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, str]:
+    food_list = foods_from_file(input_path)
     result_1 = part_1(food_list)
     result_2 = part_2(food_list)
     return result_1, result_2

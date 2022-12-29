@@ -7,8 +7,8 @@ https://adventofcode.com/2020/day/1
 from itertools import combinations
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import single_value
+from meta.aoc_tools import data_path
 
 
 def part_1(numbers: list[int]) -> int:
@@ -90,7 +90,7 @@ def find_summation(numbers: list[int], *, total: int, count: int) -> tuple[int, 
 
 
 def values_from_file(fn: str) -> list[int]:
-    return list(values_from_lines(open(relative_path(__file__, fn))))
+    return list(values_from_lines(open(fn)))
 
 
 def values_from_text(text: str) -> list[int]:
@@ -101,8 +101,8 @@ def values_from_lines(lines: Iterable[str]) -> Iterable[int]:
     return [int(line.strip()) for line in lines]
 
 
-def main(fn: str = 'data/01-input.txt') -> tuple[int, int]:
-    numbers = values_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    numbers = values_from_file(input_path)
     result_1 = part_1(numbers)
     result_2 = part_2(numbers)
     return result_1, result_2

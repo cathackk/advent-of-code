@@ -8,7 +8,7 @@ from functools import lru_cache
 from typing import Iterable
 from typing import Union
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(filesystem: 'Directory', size_limit: int = 100_000) -> int:
@@ -173,7 +173,7 @@ def part_2(
     used space) is 48381165; this means that the size of the unused space must currently be
     21618835, which isn't quite the 30000000 required by the update.
 
-        >>> fs = Directory.from_file('data/07-example.txt')
+        >>> fs = Directory.from_file(data_path(__file__, 'example.txt'))
         >>> fs.total_size()
         48381165
         >>> 70_000_000 - fs.total_size()
@@ -299,7 +299,7 @@ class Directory:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Directory':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Directory':
@@ -351,8 +351,8 @@ def group_command_lines(lines: Iterable[str]) -> Iterable[tuple[str, list[str]]]
         yield command, output
 
 
-def main(input_fn: str = 'data/07-input.txt') -> tuple[int, int]:
-    filesystem = Directory.from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    filesystem = Directory.from_file(input_path)
     result_1 = part_1(filesystem)
     result_2 = part_2(filesystem)
     return result_1, result_2

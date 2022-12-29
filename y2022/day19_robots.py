@@ -13,9 +13,9 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.text import line_groups
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(blueprints: list['Blueprint'], minutes: int = 24) -> int:
@@ -141,7 +141,7 @@ def part_2(blueprints: list['Blueprint'], minutes: int = 32, max_blueprints: int
     In 32 minutes, the largest number of geodes blueprint 1 (from the example above) can open is
     **`56`**. One way to achieve that is:
 
-        >>> bps = blueprints_from_file('data/19-example.txt')
+        >>> bps = blueprints_from_file(data_path(__file__, 'example.txt'))
 
         >>> bps[0].best_by_geodes(minutes=32)
         56
@@ -402,7 +402,7 @@ class Blueprint:
 
 
 def blueprints_from_file(fn: str) -> list[Blueprint]:
-    return list(blueprints_from_lines(open(relative_path(__file__, fn))))
+    return list(blueprints_from_lines(open(fn)))
 
 
 def blueprints_from_text(text: str) -> list[Blueprint]:
@@ -414,8 +414,8 @@ def blueprints_from_lines(lines: Iterable[str]) -> Iterable[Blueprint]:
     return (Blueprint.from_line(line.strip()) for line in lines)
 
 
-def main(input_fn: str = 'data/19-input.txt') -> tuple[int, int]:
-    blueprints = blueprints_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    blueprints = blueprints_from_file(input_path)
     result_1 = part_1(blueprints)
     result_2 = part_2(blueprints)
     return result_1, result_2

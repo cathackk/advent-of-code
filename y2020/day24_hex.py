@@ -9,8 +9,8 @@ from enum import Enum
 from functools import cached_property
 from typing import Iterable
 
-from common.file import relative_path
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(walks: Iterable['Walk']) -> tuple[int, 'HexGrid']:
@@ -265,7 +265,7 @@ class Walk:
 
     @classmethod
     def parse_file(cls, fn: str) -> list['Walk']:
-        return list(cls.parse_lines(open(relative_path(__file__, fn))))
+        return list(cls.parse_lines(open(fn)))
 
     @classmethod
     def parse_text(cls, text: str) -> list['Walk']:
@@ -359,10 +359,8 @@ class HexGrid:
         )
 
 
-def main(fn: str = 'data/24-input.txt') -> tuple[int, int]:
-    walks = Walk.parse_file(fn)
-    assert len(walks) == 430
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    walks = Walk.parse_file(input_path)
     result_1, hex_grid_1 = part_1(walks)
     result_2, _ = part_2(hex_grid_1)
     return result_1, result_2

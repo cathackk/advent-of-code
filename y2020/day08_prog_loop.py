@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Generator
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(program: 'Program') -> int:
@@ -196,7 +196,7 @@ class Program:
 
     @classmethod
     def from_file(cls, fn: str):
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]):
@@ -387,10 +387,8 @@ class Program:
             raise ValueError("program cannot be repaired")
 
 
-def main(fn: str = 'data/08-input.txt') -> tuple[int, int]:
-    program = Program.from_file(fn)
-    assert len(program) == 605
-
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    program = Program.from_file(input_path)
     result_1 = part_1(program)
     result_2 = part_2(program)
     return result_1, result_2

@@ -6,7 +6,7 @@ https://adventofcode.com/2022/day/2
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(rounds: Iterable[str]) -> int:
@@ -179,15 +179,15 @@ def total_score(rounds: Iterable[str], part: int = 1) -> int:
 
 
 def rounds_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
 
 
 def rounds_from_text(text: str) -> list[str]:
     return [line.strip() for line in text.strip().splitlines()]
 
 
-def main(input_fn: str = 'data/02-input.txt') -> tuple[int, int]:
-    rounds = rounds_from_file(input_fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    rounds = rounds_from_file(input_path)
     result_1 = part_1(rounds)
     result_2 = part_2(rounds)
     return result_1, result_2

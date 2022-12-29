@@ -6,9 +6,9 @@ https://adventofcode.com/2021/day/15
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(risk_map: 'RiskMap') -> int:
@@ -127,7 +127,7 @@ def part_2(risk_map: 'RiskMap') -> int:
 
     Here is the full five-times-as-large version of the first example above:
 
-        >>> original_cave_map = RiskMap.from_file('data/15-example.txt')
+        >>> original_cave_map = RiskMap.from_file(data_path(__file__, 'example.txt'))
         >>> original_cave_map.bounds.shape
         (10, 10)
         >>> larger_cave_map = original_cave_map.extended(times=5)
@@ -256,7 +256,7 @@ class RiskMap:
 
     @classmethod
     def from_file(cls, fn: str) -> 'RiskMap':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'RiskMap':
@@ -307,8 +307,8 @@ class RiskMap:
         )
 
 
-def main(fn: str = 'data/15-input.txt') -> tuple[int, int]:
-    risk_map = RiskMap.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    risk_map = RiskMap.from_file(input_path)
     result_1 = part_1(risk_map)
     result_2 = part_2(risk_map)
     return result_1, result_2

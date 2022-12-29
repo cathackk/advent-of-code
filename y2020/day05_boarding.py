@@ -6,9 +6,9 @@ https://adventofcode.com/2020/day/5
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import maxk
 from common.iteration import single_value
+from meta.aoc_tools import data_path
 
 
 def part_1(seat_codes: Iterable[str]) -> int:
@@ -137,11 +137,11 @@ def seat_id(seat_code: str) -> int:
 
 
 def passes_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
 
 
-def main(fn: str = 'data/05-input.txt') -> tuple[int, int]:
-    passes = passes_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    passes = passes_from_file(input_path)
     result_1 = part_1(passes)
     result_2 = part_2(passes)
     return result_1, result_2

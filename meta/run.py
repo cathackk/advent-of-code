@@ -10,6 +10,7 @@ from meta.aoc_tools import DayDescription
 from meta.aoc_tools import year_dirs
 
 
+# pylint: disable=unused-argument
 def parse_year_dir(ctx: click.Context, param, value: int) -> str:
     try:
         year_dir = next(y_dir for y, y_dir in year_dirs() if y == value)
@@ -17,11 +18,12 @@ def parse_year_dir(ctx: click.Context, param, value: int) -> str:
         ctx.obj['year_dir'] = year_dir
         return year_dir
 
-    except StopIteration:
+    except StopIteration as stop:
         click.echo(f">> year {value} not found", err=True)
-        ctx.exit(1)
+        raise Exit(1) from stop
 
 
+# pylint: disable=unused-argument
 def parse_day_paths(ctx: click.Context, param, value) -> list[str]:
     year_dir = ctx.obj['year_dir']
 
@@ -31,9 +33,9 @@ def parse_day_paths(ctx: click.Context, param, value) -> list[str]:
     day = int(value)
     try:
         return [next(d_filename for d, d_filename in day_files(year_dir) if d == day)]
-    except StopIteration:
+    except StopIteration as stop:
         click.echo(f">> day {day} not found in {year_dir}", err=True)
-        raise Exit(1)
+        raise Exit(1) from stop
 
 
 
@@ -70,8 +72,9 @@ def run(year_dir: str, day_paths: list[str], input_path: str, show_description: 
 
         except AttributeError as exc:
             click.echo(f">> {exc}", err=True)
-            raise Exit(1)
+            raise Exit(1) from exc
 
 
 if __name__ == '__main__':
+    # pylint: disable=no-value-for-parameter
     run()
