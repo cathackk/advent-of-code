@@ -112,6 +112,8 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 
 ([aoc 2019 event](https://adventofcode.com/2019))
 
+- ([aoc](https://adventofcode.com/2019/day/1)) Day 1: [The Tyranny of the Rocket Equation](y2019/day01_fuel.py)
+- ([aoc](https://adventofcode.com/2019/day/3)) Day 3: [Crossed Wires](y2019/day03_wires.py)
 - ...
 
 
