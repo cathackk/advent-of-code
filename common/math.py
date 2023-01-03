@@ -142,3 +142,19 @@ def mod1(a: int, b: int) -> int:
     [3, 1, 2, 3, 1, 2, 3, 1, 2, 3]
     """
     return (a % b) or b
+
+
+def ceildiv(a: int, b: int) -> int:
+    """
+    >>> ceildiv(9, 3)
+    3
+    >>> ceildiv(10, 3)
+    4
+    >>> ceildiv(11, 3)
+    4
+    >>> ceildiv(12, 3)
+    4
+    >>> ceildiv(13, 3)
+    5
+    """
+    return a // b + (a % b > 0)
