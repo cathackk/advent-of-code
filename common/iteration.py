@@ -60,6 +60,32 @@ def last(items: Iterable[T], default: T = NotSet) -> T:  # type: ignore
     return last_item
 
 
+def nth(items: Iterable[T], index: int) -> T:
+    """
+        >>> def g():
+        ...     return (x for x in range(100) if x % 7 == 3)
+        >>> nth(g(), 0)
+        3
+        >>> nth(g(), 2)
+        17
+        >>> nth(g(), 13)
+        94
+        >>> nth(g(), 14)
+        Traceback (most recent call last):
+        ...
+        IndexError: 14
+    """
+
+    if index < 0:
+        raise ValueError("negative index not supported")
+
+    for item_index, item in enumerate(items):
+        if item_index == index:
+            return item
+    else:
+        raise IndexError(index)
+
+
 def single_value(items: Iterable[T]) -> T:
     """
     Return the first element of an iterable if it has exactly one element:
