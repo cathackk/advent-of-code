@@ -118,6 +118,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2019/day/6)) Day 6: [Universal Orbit Map](y2019/day06_orbits.py)
 - ([aoc](https://adventofcode.com/2019/day/8)) Day 8: [Space Image Format](y2019/day08_image.py)
 - ([aoc](https://adventofcode.com/2019/day/10)) Day 10: [Monitoring Station](y2019/day10_asteroids.py)
+- ([aoc](https://adventofcode.com/2019/day/12)) Day 12: [The N-Body Problem](y2019/day12_bodies.py)
 - ...
 
 

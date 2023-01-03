@@ -21,6 +21,11 @@ class XYZ(Orderable):
         return any(v for v in self)
 
     def __format__(self, format_spec: str) -> str:
+        labels = False
+        if format_spec.endswith("="):
+            labels = True
+            format_spec = format_spec[:-1]
+
         left, right = "", ""
         if len(format_spec) >= 2:
             maybe_enclosings = format_spec[0], format_spec[-1]
@@ -28,9 +33,9 @@ class XYZ(Orderable):
                 left, right = maybe_enclosings
                 format_spec = format_spec[1:-1]
 
-        x_str = format(self.x, format_spec)
-        y_str = format(self.y, format_spec)
-        z_str = format(self.z, format_spec)
+        x_str = ("x=" if labels else "") + format(self.x, format_spec)
+        y_str = ("y=" if labels else "") + format(self.y, format_spec)
+        z_str = ("z=" if labels else "") + format(self.z, format_spec)
         return f"{left}{x_str}, {y_str}, {z_str}{right}"
 
 

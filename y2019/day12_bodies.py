@@ -1,329 +1,458 @@
-import itertools
-from typing import Generator
-from typing import Iterable
-from typing import Optional
+"""
+Advent of Code 2019
+Day 12: The N-Body Problem
+https://adventofcode.com/2019/day/12
+"""
 
-from common.iteration import exhaust
-from common.iteration import last
+from typing import Iterable
+
+from tqdm import tqdm
+
 from common.math import lcm
 from common.math import sgn
+from common.text import parse_line
 from common.xyz import Point3
 from common.xyz import Vector3
+from common.xyz import XYZ
+from meta.aoc_tools import data_path
 
 
-def sgn_v3(v3: Vector3):
-    return Vector3(*(sgn(n) for n in v3))
+def part_1(positions: Iterable[Point3], steps: int = 1000) -> int:
+    """
+    The space near Jupiter is not a very safe place; you need to be careful of a big distracting red
+    spot, extreme radiation, and a whole lot of moons swirling around. You decide to start by
+    tracking the four largest moons: **Io**, **Europa**, **Ganymede**, and **Callisto**.
+
+    After a brief scan, you calculate the **position of each moon** (your puzzle input). You just
+    need to **simulate their motion** so you can avoid them.
+
+    Each moon has a 3-dimensional position (`x`, `y`, and `z`) and a 3-dimensional velocity.
+    The position of each moon is given in your scan; the `x`, `y`, and `z` velocity of each moon
+    starts at `0`.
+
+    Simulate the motion of the moons in **time steps**. Within each time step, first update the
+    velocity of every moon by applying **gravity**. Then, once all moons' velocities have been
+    updated, update the position of every moon by applying **velocity**. Time progresses by one step
+    once all of the positions are updated.
+
+    To apply **gravity**, consider every **pair** of moons. On each axis (`x`, `y`, and `z`), the
+    velocity of each moon changes by **exactly `+1` or `-1`** to pull the moons together. For
+    example, if Ganymede has an `x` position of `3`, and Callisto has a `x` position of `5`, then
+    Ganymede's `x` velocity **changes by +1** (because `5 > 3`) and Callisto's `x` velocity
+    **changes by -1** (because `3 < 5`). However, if the positions on a given axis are the same, the
+    velocity on that axis **does not change** for that pair of moons.
+
+    Once all gravity has been applied, apply **velocity**: simply add the velocity of each moon to
+    its own position. For example, if Europa has a position of `x=1, y=2, z=3` and a velocity of
+    `x=-2, y=0,z=3`, then its new position would be `x=-1, y=2, z=6`. This process does not modify
+    the velocity of any moon.
+
+        >>> Point3(1, 2, 3) + Vector3(-2, 0, 3)
+        Point3(-1, 2, 6)
+
+    For example, suppose your scan reveals the following positions:
+
+        >>> example_1 = positions_from_text('''
+        ...     <x=-1, y=0, z=2>
+        ...     <x=2, y=-10, z=-7>
+        ...     <x=4, y=-8, z=8>
+        ...     <x=3, y=5, z=-1>
+        ... ''')
+        >>> example_1
+        [Point3(-1, 0, 2), Point3(2, -10, -7), Point3(4, -8, 8), Point3(3, 5, -1)]
+
+    Simulating the motion of these moons would produce the following:
+
+        >>> final_state_1 = simulate(example_1, steps_count=10, log=True)
+        After 0 steps:
+        pos=<x= -1, y=  0, z=  2>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  2, y=-10, z= -7>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  4, y= -8, z=  8>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  3, y=  5, z= -1>, vel=<x=  0, y=  0, z=  0>
+        After 1 step:
+        pos=<x=  2, y= -1, z=  1>, vel=<x=  3, y= -1, z= -1>
+        pos=<x=  3, y= -7, z= -4>, vel=<x=  1, y=  3, z=  3>
+        pos=<x=  1, y= -7, z=  5>, vel=<x= -3, y=  1, z= -3>
+        pos=<x=  2, y=  2, z=  0>, vel=<x= -1, y= -3, z=  1>
+        After 2 steps:
+        pos=<x=  5, y= -3, z= -1>, vel=<x=  3, y= -2, z= -2>
+        pos=<x=  1, y= -2, z=  2>, vel=<x= -2, y=  5, z=  6>
+        pos=<x=  1, y= -4, z= -1>, vel=<x=  0, y=  3, z= -6>
+        pos=<x=  1, y= -4, z=  2>, vel=<x= -1, y= -6, z=  2>
+        After 3 steps:
+        pos=<x=  5, y= -6, z= -1>, vel=<x=  0, y= -3, z=  0>
+        pos=<x=  0, y=  0, z=  6>, vel=<x= -1, y=  2, z=  4>
+        pos=<x=  2, y=  1, z= -5>, vel=<x=  1, y=  5, z= -4>
+        pos=<x=  1, y= -8, z=  2>, vel=<x=  0, y= -4, z=  0>
+        After 4 steps:
+        pos=<x=  2, y= -8, z=  0>, vel=<x= -3, y= -2, z=  1>
+        pos=<x=  2, y=  1, z=  7>, vel=<x=  2, y=  1, z=  1>
+        pos=<x=  2, y=  3, z= -6>, vel=<x=  0, y=  2, z= -1>
+        pos=<x=  2, y= -9, z=  1>, vel=<x=  1, y= -1, z= -1>
+        After 5 steps:
+        pos=<x= -1, y= -9, z=  2>, vel=<x= -3, y= -1, z=  2>
+        pos=<x=  4, y=  1, z=  5>, vel=<x=  2, y=  0, z= -2>
+        pos=<x=  2, y=  2, z= -4>, vel=<x=  0, y= -1, z=  2>
+        pos=<x=  3, y= -7, z= -1>, vel=<x=  1, y=  2, z= -2>
+        After 6 steps:
+        pos=<x= -1, y= -7, z=  3>, vel=<x=  0, y=  2, z=  1>
+        pos=<x=  3, y=  0, z=  0>, vel=<x= -1, y= -1, z= -5>
+        pos=<x=  3, y= -2, z=  1>, vel=<x=  1, y= -4, z=  5>
+        pos=<x=  3, y= -4, z= -2>, vel=<x=  0, y=  3, z= -1>
+        After 7 steps:
+        pos=<x=  2, y= -2, z=  1>, vel=<x=  3, y=  5, z= -2>
+        pos=<x=  1, y= -4, z= -4>, vel=<x= -2, y= -4, z= -4>
+        pos=<x=  3, y= -7, z=  5>, vel=<x=  0, y= -5, z=  4>
+        pos=<x=  2, y=  0, z=  0>, vel=<x= -1, y=  4, z=  2>
+        After 8 steps:
+        pos=<x=  5, y=  2, z= -2>, vel=<x=  3, y=  4, z= -3>
+        pos=<x=  2, y= -7, z= -5>, vel=<x=  1, y= -3, z= -1>
+        pos=<x=  0, y= -9, z=  6>, vel=<x= -3, y= -2, z=  1>
+        pos=<x=  1, y=  1, z=  3>, vel=<x= -1, y=  1, z=  3>
+        After 9 steps:
+        pos=<x=  5, y=  3, z= -4>, vel=<x=  0, y=  1, z= -2>
+        pos=<x=  2, y= -9, z= -3>, vel=<x=  0, y= -2, z=  2>
+        pos=<x=  0, y= -8, z=  4>, vel=<x=  0, y=  1, z= -2>
+        pos=<x=  1, y=  1, z=  5>, vel=<x=  0, y=  0, z=  2>
+        After 10 steps:
+        pos=<x=  2, y=  1, z= -3>, vel=<x= -3, y= -2, z=  1>
+        pos=<x=  1, y= -8, z=  0>, vel=<x= -1, y=  1, z=  3>
+        pos=<x=  3, y= -6, z=  1>, vel=<x=  3, y=  2, z= -3>
+        pos=<x=  2, y=  0, z=  4>, vel=<x=  1, y= -1, z= -1>
+        >>> final_state_1.step
+        10
+
+    Then, it might help to calculate the **total energy in the system**. The total energy for
+    a single moon is its **potential energy** multiplied by its **kinetic energy**. A moon's
+    **potential energy** is the sum of the absolute values of its `x`, `y`, and `z` position
+    coordinates. A moon's **kinetic energy** is the sum of the absolute values of its velocity
+    coordinates. Below, each line shows the calculations for a moon's potential energy (pot),
+    kinetic energy (kin), and total energy:
+
+        >>> print(final_state_1.energy_description())  # doctest: +NORMALIZE_WHITESPACE
+        Energy after 10 steps:
+        pot: 2 + 1 + 3 =  6;   kin: 3 + 2 + 1 = 6;   total:  6 * 6 = 36
+        pot: 1 + 8 + 0 =  9;   kin: 1 + 1 + 3 = 5;   total:  9 * 5 = 45
+        pot: 3 + 6 + 1 = 10;   kin: 3 + 2 + 3 = 8;   total: 10 * 8 = 80
+        pot: 2 + 0 + 4 =  6;   kin: 1 + 1 + 1 = 3;   total:  6 * 3 = 18
+        Sum of total energy: 36 + 45 + 80 + 18 = 179
+
+    In the above example, adding together the total energy for all moons after 10 steps produces
+    the total energy in the system, **179**.
+
+        >>> final_state_1.total_energy()
+        179
+
+    Here's a second example:
+
+        >>> example_2 = positions_from_text('''
+        ...     <x=-8, y=-10, z=0>
+        ...     <x=5, y=5, z=10>
+        ...     <x=2, y=-7, z=3>
+        ...     <x=9, y=-8, z=-3>
+        ... ''')
+
+    Every ten steps of simulation for 100 steps produces:
+
+        >>> final_state_2 = simulate(example_2, steps_count=100, log=range(0, 101, 10))
+        After 0 steps:
+        pos=<x= -8, y=-10, z=  0>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  5, y=  5, z= 10>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  2, y= -7, z=  3>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  9, y= -8, z= -3>, vel=<x=  0, y=  0, z=  0>
+        After 10 steps:
+        pos=<x= -9, y=-10, z=  1>, vel=<x= -2, y= -2, z= -1>
+        pos=<x=  4, y= 10, z=  9>, vel=<x= -3, y=  7, z= -2>
+        pos=<x=  8, y=-10, z= -3>, vel=<x=  5, y= -1, z= -2>
+        pos=<x=  5, y=-10, z=  3>, vel=<x=  0, y= -4, z=  5>
+        After 20 steps:
+        pos=<x=-10, y=  3, z= -4>, vel=<x= -5, y=  2, z=  0>
+        pos=<x=  5, y=-25, z=  6>, vel=<x=  1, y=  1, z= -4>
+        pos=<x= 13, y=  1, z=  1>, vel=<x=  5, y= -2, z=  2>
+        pos=<x=  0, y=  1, z=  7>, vel=<x= -1, y= -1, z=  2>
+        After 30 steps:
+        pos=<x= 15, y= -6, z= -9>, vel=<x= -5, y=  4, z=  0>
+        pos=<x= -4, y=-11, z=  3>, vel=<x= -3, y=-10, z=  0>
+        pos=<x=  0, y= -1, z= 11>, vel=<x=  7, y=  4, z=  3>
+        pos=<x= -3, y= -2, z=  5>, vel=<x=  1, y=  2, z= -3>
+        After 40 steps:
+        pos=<x= 14, y=-12, z= -4>, vel=<x= 11, y=  3, z=  0>
+        pos=<x= -1, y= 18, z=  8>, vel=<x= -5, y=  2, z=  3>
+        pos=<x= -5, y=-14, z=  8>, vel=<x=  1, y= -2, z=  0>
+        pos=<x=  0, y=-12, z= -2>, vel=<x= -7, y= -3, z= -3>
+        After 50 steps:
+        pos=<x=-23, y=  4, z=  1>, vel=<x= -7, y= -1, z=  2>
+        pos=<x= 20, y=-31, z= 13>, vel=<x=  5, y=  3, z=  4>
+        pos=<x= -4, y=  6, z=  1>, vel=<x= -1, y=  1, z= -3>
+        pos=<x= 15, y=  1, z= -5>, vel=<x=  3, y= -3, z= -3>
+        After 60 steps:
+        pos=<x= 36, y=-10, z=  6>, vel=<x=  5, y=  0, z=  3>
+        pos=<x=-18, y= 10, z=  9>, vel=<x= -3, y= -7, z=  5>
+        pos=<x=  8, y=-12, z= -3>, vel=<x= -2, y=  1, z= -7>
+        pos=<x=-18, y= -8, z= -2>, vel=<x=  0, y=  6, z= -1>
+        After 70 steps:
+        pos=<x=-33, y= -6, z=  5>, vel=<x= -5, y= -4, z=  7>
+        pos=<x= 13, y= -9, z=  2>, vel=<x= -2, y= 11, z=  3>
+        pos=<x= 11, y= -8, z=  2>, vel=<x=  8, y= -6, z= -7>
+        pos=<x= 17, y=  3, z=  1>, vel=<x= -1, y= -1, z= -3>
+        After 80 steps:
+        pos=<x= 30, y= -8, z=  3>, vel=<x=  3, y=  3, z=  0>
+        pos=<x= -2, y= -4, z=  0>, vel=<x=  4, y=-13, z=  2>
+        pos=<x=-18, y= -7, z= 15>, vel=<x= -8, y=  2, z= -2>
+        pos=<x= -2, y= -1, z= -8>, vel=<x=  1, y=  8, z=  0>
+        After 90 steps:
+        pos=<x=-25, y= -1, z=  4>, vel=<x=  1, y= -3, z=  4>
+        pos=<x=  2, y= -9, z=  0>, vel=<x= -3, y= 13, z= -1>
+        pos=<x= 32, y= -8, z= 14>, vel=<x=  5, y= -4, z=  6>
+        pos=<x= -1, y= -2, z= -8>, vel=<x= -3, y= -6, z= -9>
+        After 100 steps:
+        pos=<x=  8, y=-12, z= -9>, vel=<x= -7, y=  3, z=  0>
+        pos=<x= 13, y= 16, z= -3>, vel=<x=  3, y=-11, z= -5>
+        pos=<x=-29, y=-11, z= -1>, vel=<x= -3, y=  7, z=  4>
+        pos=<x= 16, y=-13, z= 23>, vel=<x=  7, y=  1, z=  1>
+        >>> print(final_state_2.energy_description())  # doctest: +NORMALIZE_WHITESPACE
+        Energy after 100 steps:
+        pot:  8 + 12 +  9 = 29;   kin: 7 +  3 + 0 = 10;   total: 29 * 10 = 290
+        pot: 13 + 16 +  3 = 32;   kin: 3 + 11 + 5 = 19;   total: 32 * 19 = 608
+        pot: 29 + 11 +  1 = 41;   kin: 3 +  7 + 4 = 14;   total: 41 * 14 = 574
+        pot: 16 + 13 + 23 = 52;   kin: 7 +  1 + 1 =  9;   total: 52 *  9 = 468
+        Sum of total energy: 290 + 608 + 574 + 468 = 1940
+
+    **What is the total energy in the system** after simulating the moons given in your scan for
+    1000 steps?
+
+        >>> part_1(example_2, steps=100)
+        part 1: after 100 steps, total energy is 1940
+        1940
+    """
+
+    result = simulate(positions, steps_count=steps).total_energy()
+
+    print(f"part 1: after {steps} steps, total energy is {result}")
+    return result
 
 
-class Body:
-    def __init__(self, pos: Point3, vel: Vector3 = None):
-        self.pos = pos
-        self.vel = vel if vel is not None else Vector3.null()
+def part_2(positions: Iterable[Point3]) -> int:
+    """
+    All this drifting around in space makes you wonder about the nature of the universe. Does
+    history really repeat itself? You're curious whether the moons will ever return to a previous
+    state.
 
-    def __repr__(self):
-        return f'{type(self).__name__}({self.pos!r}, {self.vel!r})'
+    Determine **the number of steps** that must occur before all of the moons' positions and
+    velocities exactly match a previous point in time.
 
-    def __str__(self):
-        return f"pos={self.pos}, vel={self.vel}"
+    For example, the first example above takes `2772` steps before they exactly match a previous
+    point in time; it eventually returns to the initial state:
 
-    @property
-    def potential_energy(self):
-        return sum(abs(v) for v in self.pos)
+        >>> example_1 = positions_from_file(data_path(__file__, 'example-1.txt'))
+        >>> steps_until_repeat(example_1)
+        2772
+        >>> final_state_1 = simulate(example_1, log=[0, 2770, 2771, 2772])
+        After 0 steps:
+        pos=<x= -1, y=  0, z=  2>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  2, y=-10, z= -7>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  4, y= -8, z=  8>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  3, y=  5, z= -1>, vel=<x=  0, y=  0, z=  0>
+        After 2770 steps:
+        pos=<x=  2, y= -1, z=  1>, vel=<x= -3, y=  2, z=  2>
+        pos=<x=  3, y= -7, z= -4>, vel=<x=  2, y= -5, z= -6>
+        pos=<x=  1, y= -7, z=  5>, vel=<x=  0, y= -3, z=  6>
+        pos=<x=  2, y=  2, z=  0>, vel=<x=  1, y=  6, z= -2>
+        After 2771 steps:
+        pos=<x= -1, y=  0, z=  2>, vel=<x= -3, y=  1, z=  1>
+        pos=<x=  2, y=-10, z= -7>, vel=<x= -1, y= -3, z= -3>
+        pos=<x=  4, y= -8, z=  8>, vel=<x=  3, y= -1, z=  3>
+        pos=<x=  3, y=  5, z= -1>, vel=<x=  1, y=  3, z= -1>
+        After 2772 steps:
+        pos=<x= -1, y=  0, z=  2>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  2, y=-10, z= -7>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  4, y= -8, z=  8>, vel=<x=  0, y=  0, z=  0>
+        pos=<x=  3, y=  5, z= -1>, vel=<x=  0, y=  0, z=  0>
+        >>> final_state_1.step
+        2772
 
-    @property
-    def kinetic_energy(self):
-        return sum(abs(v) for v in self.vel)
+    Of course, the universe might last for a very long time before repeating. The second example
+    from above takes `4686774924` steps before it repeats a previous state!
 
-    @property
-    def energy(self):
-        return self.potential_energy * self.kinetic_energy
+        >>> example_2 = positions_from_file(data_path(__file__, 'example-2.txt'))
+        >>> steps_until_repeat(example_2)
+        4686774924
 
-    def only_x(self):
-        return Body(Point3(self.pos.x, 0, 0), Vector3(self.vel.x, 0, 0))
+    Clearly, you might need to **find a more efficient way to simulate the universe**.
 
-    def only_y(self):
-        return Body(Point3(0, self.pos.y, 0), Vector3(0, self.vel.y, 0))
+    **How many steps does it take** to reach the first state that exactly matches a previous state?
 
-    def only_z(self):
-        return Body(Point3(0, 0, self.pos.z), Vector3(0, 0, self.vel.z))
+        >>> part_2(example_2)
+        part 2: it takes 4686774924 steps to match a previous state
+        4686774924
+    """
+
+    result = steps_until_repeat(positions)
+
+    print(f"part 2: it takes {result} steps to match a previous state")
+    return result
 
 
-SimState = tuple[tuple[Point3, Vector3], ...]
+Body = tuple[Point3, Vector3]
+
+
+class State:
+    def __init__(
+        self,
+        positions: Iterable[Point3],
+        velocities: Iterable[Vector3] = None,
+        step: int = 0
+    ):
+        self.positions = list(positions)
+        if velocities is None:
+            self.velocities = [Vector3.null()] * len(self.positions)
+        else:
+            self.velocities = list(velocities)
+        self.step = step
+
+        assert len(self.positions) == len(self.velocities)
+
+    def __eq__(self, other) -> bool:
+        return (
+            isinstance(other, type(self)) and
+            self.positions == other.positions and
+            self.velocities == other.velocities
+        )
+
+    def bodies(self) -> Iterable[Body]:
+        return zip(self.positions, self.velocities)
+
+    def next_state(self) -> 'State':
+        def sgn_v3(vector: Vector3) -> Vector3:
+            return Vector3(*(sgn(v) for v in vector))
+
+        new_velocities = [
+            vel_1 + sum((
+                sgn_v3(pos_1.to(pos_2))
+                for index_2, pos_2 in enumerate(self.positions)
+                if index_1 != index_2
+            ), start=Vector3.null())
+            for index_1, (pos_1, vel_1) in enumerate(self.bodies())
+        ]
+
+        new_positions = (pos + vel for pos, vel in zip(self.positions, new_velocities))
+
+        return type(self)(new_positions, new_velocities, self.step + 1)
+
+    def total_energy(self) -> int:
+        return sum(
+            sum(abs(v) for v in pos) * sum(abs(v) for v in vel)
+            for pos, vel in self.bodies()
+        )
+
+    def __str__(self) -> str:
+        def lines() -> Iterable[str]:
+            if self.step == 1:
+                yield f"After 1 step:"
+            else:
+                yield f"After {self.step} steps:"
+
+            yield from (
+                f"pos={pos:<3>=}, vel={vel:<3>=}"
+                for pos, vel in self.bodies()
+            )
+
+        return "\n".join(lines())
+
+    def energy_description(self) -> str:
+        def format_sum(xyz: XYZ) -> tuple[str, int]:
+            sum_str = " + ".join(str(abs(v)).rjust(2) for v in xyz)
+            sum_int = sum(abs(v) for v in xyz)
+            return f"{sum_str} = {sum_int:2}", sum_int
+
+        def lines() -> Iterable[str]:
+            yield f"Energy after {self.step} steps:"
+            totals = []
+            for pos, vel in self.bodies():
+                pot_str, pot = format_sum(pos)
+                kin_str, kin = format_sum(vel)
+                total_str = f"{pot:2} * {kin}"
+                total = pot * kin
+                yield f"pot: {pot_str};   kin: {kin_str};   total: {total_str} = {total:2}"
+                totals.append(total)
+
+            totals_sum = " + ".join(str(v) for v in totals)
+            result = sum(totals)
+            yield f"Sum of total energy: {totals_sum} = {result}"
+
+        return "\n".join(lines())
 
 
 def simulate(
-        bodies: Iterable[Body],
-        steps_limit: int = None,
-        debug: bool = False,
-        say_each: int = None
-) -> Iterable[SimState]:
-    bodies = list(bodies)
+    positions: Iterable[Point3],
+    steps_count: int = 0,
+    log: bool | Iterable[int] = False,
+    desc: str = "simulating"
+) -> State:
+    init_state = State(positions)
 
-    step = 0
+    def log_state(state_: State) -> None:
+        if log is False:
+            return
+        if log is True or state_.step in log:
+            print(state_)
 
-    def log():
-        if debug or (say_each and step % say_each == 0):
-            print(f"After {step} steps:")
-            print("\n".join(str(b) for b in bodies))
-            print()
+    progress = tqdm(unit_scale=True, unit=" steps", delay=1.0, desc=desc)
+    if steps_count:
+        progress.total = steps_count
 
-    log()
-    yield tuple((b.pos, b.vel) for b in bodies)
-
-    while not steps_limit or step < steps_limit:
-        # 1. adjust velocities based on current positions
-        for b1, b2 in itertools.combinations(bodies, 2):
-            b1.vel += sgn_v3(b1.pos.to(b2.pos))
-            b2.vel += sgn_v3(b2.pos.to(b1.pos))
-        # 2. adjust positions based on current velocities
-        for b in bodies:
-            b.pos += b.vel
-
-        step += 1
-        log()
-        yield tuple((b.pos, b.vel) for b in bodies)
+    state = init_state
+    while True:
+        log_state(state)
+        if steps_count and state.step >= steps_count:
+            return state
+        if state.step > 0 and state == init_state:
+            return state
+        state = state.next_state()
+        progress.update()
 
 
-def simulate_reverse(
-        bodies: Iterable[Body],
-        steps_limit: int = None,
-        debug: bool = False,
-        say_each: int = None
-) -> Iterable[SimState]:
-    bodies = list(bodies)
+def steps_until_repeat(positions: Iterable[Point3]) -> int:
+    # idea: run simulations for each of the three dimensions apart
+    #       and return LCM of the resulting periods
 
-    step = 0
+    positions = list(positions)
 
-    def log():
-        if debug or (say_each and step % say_each == 0):
-            print(f"After {step} reverse-steps:")
-            print("\n".join(str(b) for b in bodies))
-            print()
+    def simulate_single_dimension(dim: int) -> int:
+        single_dim_positions = (
+            Point3(*(val if index == dim else 0 for index, val in enumerate(pos)))
+            for pos in positions
+        )
+        dim_name = chr(ord('x') + dim)
+        final_state = simulate(
+            positions=single_dim_positions,
+            desc=f"calculating {dim_name} period"
+        )
+        return final_state.step
 
-    log()
-    yield tuple((b.pos, b.vel) for b in bodies)
-
-    while not steps_limit or step < steps_limit:
-        # 1. retrace positions based on current velocities
-        for b in bodies:
-            b.pos -= b.vel
-        # 2. retrace velocities based on current positions
-        for b1, b2 in itertools.combinations(bodies, 2):
-            b1.vel -= sgn_v3(b1.pos.to(b2.pos))
-            b2.vel -= sgn_v3(b2.pos.to(b1.pos))
-
-        step += 1
-        log()
-        yield tuple((b.pos, b.vel) for b in bodies)
+    return lcm(*(simulate_single_dimension(d) for d in range(3)))
 
 
-def until_repeat(
-        simulation: Iterable[SimState]
-) -> Generator[SimState, None, Optional[int]]:
-    shs = dict()
-    for step, state in enumerate(simulation):
-        sh = hash(state)
-        identical_step = shs.get(sh)
-        if identical_step is None:
-            shs[sh] = step
-            yield step
-        else:
-            assert identical_step == 0
-            return step
-    else:
-        return None
+def positions_from_text(text: str) -> list[Point3]:
+    return list(positions_from_lines(text.strip().splitlines()))
 
 
-def until_repeat_steps(bodies: Iterable[Body], debug: bool = False) -> int:
-    def log(message = ""):
-        if debug:
-            print(message)
-
-    bodies = list(bodies)
-    sx = exhaust(until_repeat(simulate(b.only_x() for b in bodies)))
-    log(f">> sx = {sx}")
-    sy = exhaust(until_repeat(simulate(b.only_y() for b in bodies)))
-    log(f">> sy = {sy}")
-    sz = exhaust(until_repeat(simulate(b.only_z() for b in bodies)))
-    log(f">> sz = {sz}")
-    ss = lcm(sx, sy, sz)
-    log(f">> ss = {ss}")
-    return ss
+def positions_from_file(fn: str) -> list[Point3]:
+    return list(positions_from_lines(open(fn)))
 
 
-def test_1a():
-    bodies = [
-        Body(Point3(-1, 0, 2)),
-        Body(Point3(2, -10, -7)),
-        Body(Point3(4, -8, 8)),
-        Body(Point3(3, 5, -1))
-    ]
-    r = list(simulate(bodies, steps_limit=10))
-    assert len(r) == 11
-    assert r[1] == (
-        (Point3( 2, -1,  1), Vector3( 3, -1, -1)),
-        (Point3( 3, -7, -4), Vector3( 1,  3,  3)),
-        (Point3( 1, -7,  5), Vector3(-3,  1, -3)),
-        (Point3( 2,  2,  0), Vector3(-1, -3,  1)),
-    )
-    assert r[2] == (
-        (Point3( 5, -3, -1), Vector3( 3, -2, -2)),
-        (Point3( 1, -2,  2), Vector3(-2,  5,  6)),
-        (Point3( 1, -4, -1), Vector3( 0,  3, -6)),
-        (Point3( 1, -4,  2), Vector3(-1, -6,  2)),
-    )
-    assert r[3] == (
-        (Point3( 5, -6, -1), Vector3( 0, -3,  0)),
-        (Point3( 0,  0,  6), Vector3(-1,  2,  4)),
-        (Point3( 2,  1, -5), Vector3( 1,  5, -4)),
-        (Point3( 1, -8,  2), Vector3( 0, -4,  0)),
-    )
-    assert r[4] == (
-        (Point3( 2, -8,  0), Vector3(-3, -2,  1)),
-        (Point3( 2,  1,  7), Vector3( 2,  1,  1)),
-        (Point3( 2,  3, -6), Vector3( 0,  2, -1)),
-        (Point3( 2, -9,  1), Vector3( 1, -1, -1)),
-    )
-    assert r[5] == (
-        (Point3(-1, -9,  2), Vector3(-3, -1,  2)),
-        (Point3( 4,  1,  5), Vector3( 2,  0, -2)),
-        (Point3( 2,  2, -4), Vector3( 0, -1,  2)),
-        (Point3( 3, -7, -1), Vector3( 1,  2, -2)),
-    )
-    assert r[6] == (
-        (Point3(-1, -7,  3), Vector3( 0,  2,  1)),
-        (Point3( 3,  0,  0), Vector3(-1, -1, -5)),
-        (Point3( 3, -2,  1), Vector3( 1, -4,  5)),
-        (Point3( 3, -4, -2), Vector3( 0,  3, -1)),
-    )
-    assert r[7] == (
-        (Point3( 2, -2,  1), Vector3( 3,  5, -2)),
-        (Point3( 1, -4, -4), Vector3(-2, -4, -4)),
-        (Point3( 3, -7,  5), Vector3( 0, -5,  4)),
-        (Point3( 2,  0,  0), Vector3(-1,  4,  2)),
-    )
-    assert r[8] == (
-        (Point3( 5,  2, -2), Vector3( 3,  4, -3)),
-        (Point3( 2, -7, -5), Vector3( 1, -3, -1)),
-        (Point3( 0, -9,  6), Vector3(-3, -2,  1)),
-        (Point3( 1,  1,  3), Vector3(-1,  1,  3)),
-    )
-    assert r[9] == (
-        (Point3( 5,  3, -4), Vector3( 0,  1, -2)),
-        (Point3( 2, -9, -3), Vector3( 0, -2,  2)),
-        (Point3( 0, -8,  4), Vector3( 0,  1, -2)),
-        (Point3( 1,  1,  5), Vector3( 0,  0,  2)),
-    )
-    assert r[10] == (
-        (Point3( 2,  1, -3), Vector3(-3, -2,  1)),
-        (Point3( 1, -8,  0), Vector3(-1,  1,  3)),
-        (Point3( 3, -6,  1), Vector3( 3,  2, -3)),
-        (Point3( 2,  0,  4), Vector3( 1, -1, -1)),
-    )
-
-    assert sum(b.energy for b in bodies) == 179
-
-    print("passed test_1a")
+def positions_from_lines(lines: Iterable[str]) -> Iterable[Point3]:
+    for line in lines:
+        x, y, z = parse_line(line.strip(), '<x=$, y=$, z=$>')
+        yield Point3(int(x), int(y), int(z))
 
 
-def test_1b():
-    bodies = [
-        Body(Point3(-8,-10, 0)),
-        Body(Point3( 5,  5,10)),
-        Body(Point3( 2, -7, 3)),
-        Body(Point3( 9, -8,-3)),
-    ]
-
-    last_state = last(simulate(bodies, steps_limit=100))
-
-    assert last_state == (
-        (Point3(  8, -12, -9), Vector3(-7,   3,  0)),
-        (Point3( 13,  16, -3), Vector3( 3, -11, -5)),
-        (Point3(-29, -11, -1), Vector3(-3,   7,  4)),
-        (Point3( 16, -13, 23), Vector3( 7,   1,  1)),
-    )
-    assert sum(b.energy for b in bodies) == 1940
-    print("passed test_1b")
-
-
-def test_2a():
-    bodies = [
-        Body(Point3(-1, 0, 2)),
-        Body(Point3(2, -10, -7)),
-        Body(Point3(4, -8, 8)),
-        Body(Point3(3, 5, -1))
-    ]
-    assert until_repeat_steps(bodies) == 2772
-    print("passed test_2a")
-
-
-def test_2b():
-    bodies = [
-        Body(Point3(-8,-10, 0)),
-        Body(Point3( 5,  5,10)),
-        Body(Point3( 2, -7, 3)),
-        Body(Point3( 9, -8,-3)),
-    ]
-    assert until_repeat_steps(bodies) == 4686774924
-    print("passed test_2b")
-
-
-def test_reverse():
-    bodies = [
-        Body(Point3(-1, 0, 2)),
-        Body(Point3(2, -10, -7)),
-        Body(Point3(4, -8, 8)),
-        Body(Point3(3, 5, -1))
-    ]
-
-    states_f = list(simulate(bodies, steps_limit=2772))
-    states_b = list(simulate_reverse(bodies, steps_limit=2772))
-
-    assert len(states_f) == len(states_b) == 2773
-    assert states_f[0] == states_b[0]
-    assert states_f[0] == states_f[-1]
-    assert states_b[0] == states_b[-1]
-
-    assert states_f[1] == states_b[-2]
-    assert states_f[2] == states_b[-3]
-    assert states_f[1000] == states_b[-1001]
-
-    print("passed test_reverse")
-
-
-def tests():
-    test_1a()
-    test_1b()
-    test_2a()
-    test_2b()
-    test_reverse()
-    print()
-
-
-def part_1(steps=1000):
-    bodies = [
-        Body(Point3(-1, -4, 0)),
-        Body(Point3(4, 7, -1)),
-        Body(Point3(-14, -10, 9)),
-        Body(Point3(1, 2, 17)),
-    ]
-    last(simulate(bodies, steps_limit=steps))
-    total_energy = sum(b.energy for b in bodies)
-    print(f"part 1: total energy after {steps} steps is {total_energy}")
-
-
-def part_2():
-    bodies = [
-        Body(Point3(-1, -4, 0)),
-        Body(Point3(4, 7, -1)),
-        Body(Point3(-14, -10, 9)),
-        Body(Point3(1, 2, 17)),
-    ]
-    ss = until_repeat_steps(bodies, debug=True)
-    print(f"part 2: simulation will repeat after {ss} steps")
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    positions = positions_from_file(input_path)
+    result_1 = part_1(positions)
+    result_2 = part_2(positions)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    tests()
-    part_1()
-    part_2()
+    main()
