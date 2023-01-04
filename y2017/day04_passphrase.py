@@ -6,7 +6,7 @@ https://adventofcode.com/2017/day/4
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(passphrases: Iterable[str]) -> int:
@@ -106,10 +106,15 @@ def is_valid_2(passphrase: str) -> bool:
 
 
 def passphrases_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    passphrases = passphrases_from_file(input_path)
+    result_1 = part_1(passphrases)
+    result_2 = part_2(passphrases)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    passphrases_ = passphrases_from_file('data/04-input.txt')
-    part_1(passphrases_)
-    part_2(passphrases_)
+    main()

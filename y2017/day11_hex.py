@@ -6,9 +6,9 @@ https://adventofcode.com/2017/day/11
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import last
 from common.iteration import maxk
+from meta.aoc_tools import data_path
 
 
 def part_1(directions: Iterable[str]) -> int:
@@ -132,10 +132,15 @@ def distance(pos_1: Pos, pos_2: Pos) -> int:
 
 
 def directions_from_file(fn: str) -> list[str]:
-    return open(relative_path(__file__, fn)).readline().strip().split(',')
+    return open(fn).readline().strip().split(',')
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    directions = directions_from_file(input_path)
+    result_1 = part_1(directions)
+    result_2 = part_2(directions)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    directions_ = directions_from_file('data/11-input.txt')
-    part_1(directions_)
-    part_2(directions_)
+    main()

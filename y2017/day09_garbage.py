@@ -7,9 +7,9 @@ https://adventofcode.com/2017/day/9
 from typing import Generator
 from typing import NamedTuple
 
-from common.file import relative_path
 from common.iteration import exhaust
 from common.iteration import ilen
+from meta.aoc_tools import data_path
 
 
 def part_1(group: str) -> int:
@@ -184,10 +184,15 @@ def count_garbage(text: str) -> int:
 
 
 def group_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    group = group_from_file(input_path)
+    result_1 = part_1(group)
+    result_2 = part_2(group)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    group_ = group_from_file('data/09-input.txt')
-    part_1(group_)
-    part_2(group_)
+    main()

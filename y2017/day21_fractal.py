@@ -8,10 +8,10 @@ from typing import Callable
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs
 from common.iteration import single_value
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(rulebook: 'RuleBook', iterations: int = 5) -> int:
@@ -413,7 +413,7 @@ class RuleBook:
 
     @classmethod
     def from_file(cls, fn: str) -> 'RuleBook':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text: str) -> 'RuleBook':
@@ -499,7 +499,12 @@ def print_subgrids(subgrids: Iterable[tuple[Pos, Grid]]) -> None:
             print("|".join(rows))
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    rulebook = RuleBook.from_file(input_path)
+    result_1 = part_1(rulebook)
+    result_2 = part_2(rulebook)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    rulebook_ = RuleBook.from_file('data/21-input.txt')
-    part_1(rulebook_)
-    part_2(rulebook_)
+    main()

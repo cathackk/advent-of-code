@@ -9,9 +9,9 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import sorted_dict
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(layers: 'Layers') -> int:
@@ -470,7 +470,7 @@ def layers_from_text(text: str) -> Layers:
 
 
 def layers_from_file(fn: str) -> Layers:
-    return sorted_dict(layers_from_lines(open(relative_path(__file__, fn))))
+    return sorted_dict(layers_from_lines(open(fn)))
 
 
 def layers_from_lines(lines: Iterable[str]) -> Iterable[Layer]:
@@ -481,7 +481,12 @@ def layers_from_lines(lines: Iterable[str]) -> Iterable[Layer]:
 # endregion
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    layers = layers_from_file(input_path)
+    result_1 = part_1(layers)
+    result_2 = part_2(layers)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    layers_ = layers_from_file('data/13-input.txt')
-    part_1(layers_)
-    part_2(layers_)
+    main()

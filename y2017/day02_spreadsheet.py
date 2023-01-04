@@ -7,7 +7,7 @@ https://adventofcode.com/2017/day/2
 from itertools import combinations
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(sheet: 'Spreadsheet') -> int:
@@ -130,7 +130,7 @@ def spreadsheet_from_text(text: str) -> Spreadsheet:
 
 
 def spreadsheet_from_file(fn: str) -> Spreadsheet:
-    return spreadsheet_from_lines(open(relative_path(__file__, fn)))
+    return spreadsheet_from_lines(open(fn))
 
 
 def spreadsheet_from_lines(lines: Iterable[str]) -> Spreadsheet:
@@ -140,7 +140,12 @@ def spreadsheet_from_lines(lines: Iterable[str]) -> Spreadsheet:
     ]
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    sheet = spreadsheet_from_file(input_path)
+    result_1 = part_1(sheet)
+    result_2 = part_2(sheet)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    sheet_ = spreadsheet_from_file('data/02-input.txt')
-    part_1(sheet_)
-    part_2(sheet_)
+    main()

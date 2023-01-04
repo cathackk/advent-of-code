@@ -3,11 +3,12 @@ Advent of Code 2017
 Day 6: Memory Reallocation
 https://adventofcode.com/2017/day/6
 """
+
 from typing import Any
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(initial_state: Iterable[int]) -> int:
@@ -140,14 +141,19 @@ def wait_for_repeat(states: Iterable) -> tuple[int, int]:
 
 
 def blocks_from_file(fn: str) -> list[int]:
-    return blocks_from_line(open(relative_path(__file__, fn)).readline())
+    return blocks_from_line(open(fn).readline())
 
 
 def blocks_from_line(line: str) -> list[int]:
     return [int(val) for val in line.strip().split()]
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    initial_state = blocks_from_file(input_path)
+    result_1 = part_1(initial_state)
+    result_2 = part_2(initial_state)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    initial_state_ = blocks_from_file('data/06-input.txt')
-    part_1(initial_state_)
-    part_2(initial_state_)
+    main()

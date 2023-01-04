@@ -8,8 +8,8 @@ from dataclasses import dataclass
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.heading import Heading
+from meta.aoc_tools import data_path
 
 
 def part_1(diagram: 'Diagram') -> str:
@@ -222,7 +222,7 @@ class Diagram:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Diagram':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Diagram':
@@ -234,7 +234,12 @@ class Diagram:
         )
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[str, int]:
+    diagram = Diagram.from_file(input_path)
+    result_1 = part_1(diagram)
+    result_2 = part_2(diagram)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    diagram_ = Diagram.from_file('data/19-input.txt')
-    part_1(diagram_)
-    part_2(diagram_)
+    main()

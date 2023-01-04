@@ -8,9 +8,9 @@ from typing import Iterator
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import last
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(step_size: int, count: int = 2017) -> int:
@@ -167,10 +167,15 @@ def print_spin(spin: SpinState, context: int = None) -> None:
 
 
 def step_size_from_file(fn: str) -> int:
-    return int(open(relative_path(__file__, fn)).readline().strip())
+    return int(open(fn).readline().strip())
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    step_size = step_size_from_file(input_path)
+    result_1 = part_1(step_size)
+    result_2 = part_2(step_size)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    step_size_ = step_size_from_file('data/17-input.txt')
-    part_1(step_size_)
-    part_2(step_size_)
+    main()

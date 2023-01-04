@@ -8,7 +8,7 @@ from itertools import count
 from typing import Iterable
 
 from common import spiral
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(number: int) -> int:
@@ -126,10 +126,15 @@ def sum_spiral_sequence(start: int = 1) -> Iterable[int]:
 
 
 def number_from_file(fn: str) -> int:
-    return int(open(relative_path(__file__, fn)).readline().strip())
+    return int(open(fn).readline().strip())
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    number = number_from_file(input_path)
+    result_1 = part_1(number)
+    result_2 = part_2(number)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    number_ = number_from_file('data/03-input.txt')
-    part_1(number_)
-    part_2(number_)
+    main()

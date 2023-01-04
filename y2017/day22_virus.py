@@ -11,11 +11,11 @@ from typing import NamedTuple
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.heading import Heading
 from common.iteration import last
 from common.iteration import single_value
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(grid: 'Grid', bursts: int = 10_000) -> int:
@@ -335,7 +335,7 @@ class Grid:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Grid':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Grid':
@@ -427,7 +427,12 @@ def run_virus(
         yield RunState(pos, heading, grid, bursts=burst, infections=infections)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    grid = Grid.from_file(input_path)
+    result_1 = part_1(grid)
+    result_2 = part_2(grid)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    grid_ = Grid.from_file('data/22-input.txt')
-    part_1(grid_)
-    part_2(grid_)
+    main()

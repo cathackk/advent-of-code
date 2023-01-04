@@ -7,7 +7,7 @@ https://adventofcode.com/2017/day/23
 import math
 from collections import Counter
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 from y2016.assembunny import Command
 from y2016.assembunny import Tape
 from y2016.assembunny import run as assembunny_run
@@ -219,10 +219,15 @@ def tape_from_text(text: str) -> Tape:
 
 
 def tape_from_file(fn: str) -> Tape:
-    return assembunny_compatible_tape(Tape.from_lines(open(relative_path(__file__, fn))))
+    return assembunny_compatible_tape(Tape.from_lines(open(fn)))
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    tape = tape_from_file(input_path)
+    result_1 = part_1(tape)
+    result_2 = part_2(tape)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    tape_ = tape_from_file('data/23-input.txt')
-    part_1(tape_)
-    part_2(tape_)
+    main()

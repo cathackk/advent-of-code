@@ -11,8 +11,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import exhaust
+from meta.aoc_tools import data_path
 
 
 def part_1(jumps: list[int]) -> int:
@@ -151,10 +151,15 @@ def print_jump(jump: Jump) -> None:
 
 
 def jumps_from_file(fn: str) -> list[int]:
-    return [int(line) for line in open(relative_path(__file__, fn))]
+    return [int(line) for line in open(fn)]
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    jumps = jumps_from_file(input_path)
+    result_1 = part_1(jumps)
+    result_2 = part_2(jumps)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    jumps_ = jumps_from_file('data/05-input.txt')
-    part_1(jumps_)
-    part_2(jumps_)
+    main()

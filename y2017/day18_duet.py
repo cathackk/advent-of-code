@@ -10,8 +10,8 @@ from typing import Generator
 from typing import Iterable
 from typing import Optional
 
-from common.file import relative_path
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(tape: 'Tape'):
@@ -324,14 +324,19 @@ def tape_from_text(text: str) -> Tape:
 
 
 def tape_from_file(fn: str) -> Tape:
-    return list(instructions_from_lines(open(relative_path(__file__, fn))))
+    return list(instructions_from_lines(open(fn)))
 
 
 def instructions_from_lines(lines: Iterable[str]) -> Iterable[Instr]:
     return (Instr.from_str(line.strip()) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    tape = tape_from_file(input_path)
+    result_1 = part_1(tape)
+    result_2 = part_2(tape)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    tape_ = tape_from_file('data/18-input.txt')
-    part_1(tape_)
-    part_2(tape_)
+    main()

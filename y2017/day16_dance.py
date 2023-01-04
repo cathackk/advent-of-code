@@ -7,8 +7,8 @@ https://adventofcode.com/2017/day/16
 from typing import Callable
 from typing import Iterable
 
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(moves: Iterable['Move'], dancers_count: int = 16) -> 'Dancers':
@@ -203,7 +203,7 @@ def create_dancers(count: int) -> Dancers:
 
 
 def moves_from_file(fn: str) -> list[Move]:
-    return moves_from_text(open(relative_path(__file__, fn)).readline().strip())
+    return moves_from_text(open(fn).readline().strip())
 
 
 def moves_from_text(text: str) -> list[Move]:
@@ -231,7 +231,12 @@ def move_from_str(line: str) -> Move:
     assert False
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    moves = moves_from_file(input_path)
+    result_1 = part_1(moves)
+    result_2 = part_2(moves)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    moves_ = moves_from_file('data/16-input.txt')
-    part_1(moves_)
-    part_2(moves_)
+    main()

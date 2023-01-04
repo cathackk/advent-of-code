@@ -8,7 +8,7 @@ import operator
 from functools import reduce
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(lengths: Iterable[int], rope_length: int = 256) -> int:
@@ -247,7 +247,7 @@ def knot_hash(input_bytes: bytes) -> bytes:
 
 
 def line_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
 
 
 def lengths_from_file(fn: str) -> list[int]:
@@ -258,7 +258,11 @@ def input_bytes_from_file(fn: str) -> bytes:
     return line_from_file(fn).encode()
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, str]:
+    result_1 = part_1(lengths_from_file(input_path))
+    result_2 = part_2(input_bytes_from_file(input_path))
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    FILENAME = 'data/10-input.txt'
-    part_1(lengths_from_file(FILENAME))
-    part_2(input_bytes_from_file(FILENAME))
+    main()

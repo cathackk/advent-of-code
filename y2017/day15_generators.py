@@ -9,8 +9,8 @@ from typing import Iterator
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(init_a: int, init_b: int, tests_count: int = 40_000_000) -> int:
@@ -208,13 +208,18 @@ def print_binary(values: Iterable[tuple[int, int]]) -> None:
 
 
 def initial_values_from_file(fn: str) -> tuple[int, int]:
-    with open(relative_path(__file__, fn)) as file:
+    with open(fn) as file:
         init_a, = parse_line(next(file), "Generator A starts with $\n")
         init_b, = parse_line(next(file), "Generator B starts with $\n")
         return int(init_a), int(init_b)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    init_values = initial_values_from_file(input_path)
+    result_1 = part_1(*init_values)
+    result_2 = part_2(*init_values)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    init_values_ = initial_values_from_file('data/15-input.txt')
-    part_1(*init_values_)
-    part_2(*init_values_)
+    main()

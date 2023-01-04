@@ -9,8 +9,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(machine: 'Machine') -> int:
@@ -199,7 +199,7 @@ class Machine:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Machine':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Machine':
@@ -234,6 +234,11 @@ class Machine:
         return cls(init_state=init_state, steps=int(steps), rules=rules())
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int]:
+    machine = Machine.from_file(input_path)
+    result_1 = part_1(machine)
+    return (result_1,)
+
+
 if __name__ == '__main__':
-    machine_ = Machine.from_file('data/25-input.txt')
-    part_1(machine_)
+    main()

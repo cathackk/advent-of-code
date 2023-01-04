@@ -11,9 +11,9 @@ from typing import Iterable
 from typing import Iterator
 from typing import Optional
 
-from common.file import relative_path
 from common.iteration import max_all
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(links: Iterable['Link']) -> int:
@@ -324,14 +324,19 @@ def links_from_text(text: str) -> list[Link]:
 
 
 def links_from_file(fn: str) -> list[Link]:
-    return list(links_from_lines(open(relative_path(__file__, fn))))
+    return list(links_from_lines(open(fn)))
 
 
 def links_from_lines(lines: Iterable[str]) -> Iterable[Link]:
     return (Link.from_str(line.strip()) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    links = preprocessed_links(links_from_file(input_path))
+    result_1 = part_1(links)
+    result_2 = part_2(links)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    links_ = preprocessed_links(links_from_file('data/24-input.txt'))
-    part_1(links_)
-    part_2(links_)
+    main()

@@ -8,9 +8,9 @@ from collections import Counter
 from typing import Iterable
 from typing import Optional
 
-from common.file import relative_path
 from common.text import parse_line
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(tower: 'Tower') -> str:
@@ -215,7 +215,7 @@ class Tower:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Tower':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text: str) -> 'Tower':
@@ -283,8 +283,13 @@ class Tower:
                 yield prefix + sub_line
 
 
-if __name__ == '__main__':
-    tower_ = Tower.from_file('data/07-input.txt')
+def main(input_path: str = data_path(__file__)) -> tuple[str, int]:
+    tower = Tower.from_file(input_path)
     # print(format(tower_, 'weights'))
-    part_1(tower_)
-    part_2(tower_)
+    result_1 = part_1(tower)
+    result_2 = part_2(tower)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

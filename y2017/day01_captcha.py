@@ -4,8 +4,8 @@ Day 1: Inverse Captcha
 https://adventofcode.com/2017/day/1
 """
 
-from common.file import relative_path
 from common.iteration import slidingw
+from meta.aoc_tools import data_path
 
 
 def part_1(digits: str) -> int:
@@ -120,10 +120,15 @@ def captcha_2(digits: str) -> int:
 
 
 def digits_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    digits = digits_from_file(input_path)
+    result_1 = part_1(digits)
+    result_2 = part_2(digits)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    digits_ = digits_from_file('data/01-input.txt')
-    part_1(digits_)
-    part_2(digits_)
+    main()
