@@ -6,7 +6,7 @@ https://adventofcode.com/2016/day/9
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(compressed: str) -> int:
@@ -169,10 +169,15 @@ def _decompressed_length_parts(string: str, recursive: bool) -> Iterable[int]:
 
 
 def string_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    compressed = string_from_file(input_path)
+    result_1 = part_1(compressed)
+    result_2 = part_2(compressed)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    compressed_ = string_from_file('data/09-input.txt')
-    part_1(compressed_)
-    part_2(compressed_)
+    main()

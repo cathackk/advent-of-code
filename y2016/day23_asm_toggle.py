@@ -3,7 +3,7 @@ Advent of Code 2016
 Day 23: Safe Cracking
 https://adventofcode.com/2016/day/23
 """
-
+from meta.aoc_tools import data_path
 from y2016 import assembunny
 
 
@@ -125,7 +125,7 @@ def part_2(tape: assembunny.Tape):
 
     Anyway, what value should actually be sent to the safe?
 
-        >>> example = assembunny.Tape.from_file('data/23-example.txt')
+        >>> example = assembunny.Tape.from_file(data_path(__file__, 'example.txt'))
         >>> part_2(example)
         part 2: result is a=720
         720
@@ -136,7 +136,12 @@ def part_2(tape: assembunny.Tape):
     return result
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    tape = assembunny.Tape.from_file(input_path)
+    result_1 = part_1(tape)
+    result_2 = part_2(tape)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    tape_ = assembunny.Tape.from_file('data/23-input.txt')
-    part_1(tape_)
-    part_2(tape_)
+    main()

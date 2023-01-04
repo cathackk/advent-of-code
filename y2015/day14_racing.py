@@ -6,10 +6,10 @@ https://adventofcode.com/2015/day/14
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import max_all
 from common.iteration import maxk
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(reindeer: list['Reindeer'], race_length_seconds: int = 2503) -> int:
@@ -114,7 +114,7 @@ def part_2(reindeer: list['Reindeer'], race_length_seconds: int = 2503) -> int:
     Given the example reindeer from above, after the first second, Dancer is in the lead and gets
     one point.
 
-        >>> example_reindeer = reindeer_from_file('data/14-example.txt')
+        >>> example_reindeer = reindeer_from_file(data_path(__file__, 'example.txt'))
         >>> points_race(example_reindeer, seconds=1)
         {'Comet': 0, 'Dancer': 1}
 
@@ -221,14 +221,19 @@ def reindeer_from_text(text: str) -> list[Reindeer]:
 
 
 def reindeer_from_file(fn: str) -> list[Reindeer]:
-    return list(reindeer_from_lines(open(relative_path(__file__, fn))))
+    return list(reindeer_from_lines(open(fn)))
 
 
 def reindeer_from_lines(lines: Iterable[str]) -> Iterable[Reindeer]:
     return (Reindeer.from_str(line.strip()) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    reindeer = reindeer_from_file(input_path)
+    result_1 = part_1(reindeer)
+    result_2 = part_2(reindeer)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    reindeer_ = reindeer_from_file('data/14-input.txt')
-    part_1(reindeer_)
-    part_2(reindeer_)
+    main()

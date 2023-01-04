@@ -7,10 +7,10 @@ https://adventofcode.com/2016/day/24
 from itertools import permutations
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import mink
 from common.iteration import slidingw
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(maze: 'Maze') -> int:
@@ -81,7 +81,7 @@ def part_2(maze: 'Maze') -> int:
     What is the fewest number of steps required to start at `0`, visit every non-`0` number marked
     on the map at least once, and then **return to `0`**?
 
-        >>> example_maze = Maze.from_file('data/24-example.txt')
+        >>> example_maze = Maze.from_file(data_path(__file__, 'example.txt'))
         >>> part_2(example_maze)
         part 2: shortest closed path is 20 steps long (0-1-2-3-4-0)
         20
@@ -207,7 +207,7 @@ class Maze:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Maze':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Maze':
@@ -225,7 +225,12 @@ class Maze:
         return cls(passages, targets)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    maze = Maze.from_file(input_path)
+    result_1 = part_1(maze)
+    result_2 = part_2(maze)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    maze_ = Maze.from_file('data/24-input.txt')
-    part_1(maze_)
-    part_2(maze_)
+    main()

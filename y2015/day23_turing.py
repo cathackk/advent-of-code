@@ -3,10 +3,11 @@ Advent of Code 2015
 Day 23: Opening the Turing Lock
 https://adventofcode.com/2015/day/23
 """
+
 from typing import Final
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(tape: 'Tape'):
@@ -71,7 +72,7 @@ def part_2(tape: 'Tape'):
     computer. Definitely not to distract you, what is the value in register `b` after the program is
     finished executing if register `a` starts as 1 instead?
 
-        >>> part_2(tape_from_file('data/23-example.txt'))
+        >>> part_2(tape_from_file(data_path(__file__, 'example.txt')))
         part 2: a = 7, b = 0
         0
     """
@@ -125,6 +126,7 @@ class Command:
         # TODO: remove when mypy realizes this is unreachable
         assert False
 
+
 Tape = list[Command]
 
 
@@ -158,7 +160,7 @@ def run_tape(tape: Tape, a: int = 0, b: int = 0) -> dict[str, int]:
 
 
 def tape_from_file(fn: str) -> Tape:
-    return list(tape_from_lines(open(relative_path(__file__, fn))))
+    return list(tape_from_lines(open(fn)))
 
 
 def tape_from_text(text: str) -> Tape:
@@ -169,7 +171,12 @@ def tape_from_lines(lines: Iterable[str]) -> Iterable[Command]:
     return (Command.from_str(line.strip()) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    tape = tape_from_file(input_path)
+    result_1 = part_1(tape)
+    result_2 = part_2(tape)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    tape_ = tape_from_file('data/23-input.txt')
-    part_1(tape_)
-    part_2(tape_)
+    main()

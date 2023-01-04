@@ -6,7 +6,7 @@ https://adventofcode.com/2015/day/8
 
 from ast import literal_eval
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(strings: list[str]) -> int:
@@ -129,10 +129,15 @@ def repr_len(string: str) -> int:
 
 
 def strings_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    strings = strings_from_file(input_path)
+    result_1 = part_1(strings)
+    result_2 = part_2(strings)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    strings_ = strings_from_file('data/08-input.txt')
-    part_1(strings_)
-    part_2(strings_)
+    main()

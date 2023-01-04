@@ -9,6 +9,7 @@ from typing import Iterator
 
 from tqdm import tqdm
 
+from meta.aoc_tools import data_path
 from y2016 import assembunny
 
 
@@ -102,6 +103,11 @@ def clock_length(signal: Iterator[int], test_length: int) -> int:
     return max_tick
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int]:
+    tape = assembunny.Tape.from_file(input_path)
+    result_1 = part_1(tape)
+    return (result_1,)
+
+
 if __name__ == '__main__':
-    tape_ = assembunny.Tape.from_file('data/25-input.txt')
-    part_1(tape_)
+    main()

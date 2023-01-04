@@ -6,7 +6,7 @@ https://adventofcode.com/2016/day/6
 
 from collections import Counter
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(lines: list[str]) -> str:
@@ -73,7 +73,7 @@ def part_2(lines: list[str]) -> str:
     and so on. Repeating this process for the remaining characters produces the original message,
     `advent`.
 
-        >>> example_lines = lines_from_file('data/06-example.txt')
+        >>> example_lines = lines_from_file(data_path(__file__, 'example.txt'))
         >>> repcode(example_lines, least_common=True)
         'advent'
 
@@ -99,14 +99,19 @@ def repcode(lines: list[str], least_common: bool = False) -> str:
 
 
 def lines_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
 
 
 def lines_from_text(text: str) -> list[str]:
     return [line.strip() for line in text.strip().splitlines()]
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    lines = lines_from_file(input_path)
+    result_1 = part_1(lines)
+    result_2 = part_2(lines)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    lines_ = lines_from_file("data/06-input.txt")
-    part_1(lines_)
-    part_2(lines_)
+    main()

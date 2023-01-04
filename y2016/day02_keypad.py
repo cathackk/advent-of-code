@@ -6,9 +6,9 @@ https://adventofcode.com/2016/day/2
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.heading import Heading
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(instructions: Iterable['Steps']) -> str:
@@ -89,7 +89,7 @@ def part_2(instructions: Iterable['Steps']) -> str:
     You still start at "5" and stop when you're at an edge, but given the same instructions as
     above, the outcome is very different:
 
-        >>> example_instructions = instructions_from_file('data/02-example.txt')
+        >>> example_instructions = instructions_from_file(data_path(__file__, 'example.txt'))
 
       - You start at "5" and don't move at all (up and left are both edges), ending at `5`.
       - Continuing from "5", you move right twice and down three times (through "6", "7", "B", "D",
@@ -195,7 +195,7 @@ def instructions_from_text(text: str) -> list[Steps]:
 
 
 def instructions_from_file(fn: str) -> list[Steps]:
-    return list(instructions_from_lines(open(relative_path(__file__, fn))))
+    return list(instructions_from_lines(open(fn)))
 
 
 def instructions_from_lines(lines: Iterable[str]) -> Iterable[Steps]:
@@ -205,7 +205,12 @@ def instructions_from_lines(lines: Iterable[str]) -> Iterable[Steps]:
     )
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    instructions = instructions_from_file(input_path)
+    result_1 = part_1(instructions)
+    result_2 = part_2(instructions)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    instructions_ = list(instructions_from_file('data/02-input.txt'))
-    part_1(instructions_)
-    part_2(instructions_)
+    main()

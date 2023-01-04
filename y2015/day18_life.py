@@ -9,8 +9,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(grid: 'Grid', steps: int = 100) -> int:
@@ -51,7 +51,7 @@ def part_1(grid: 'Grid', steps: int = 100) -> int:
 
     Here's a few steps from an example configuration of another 6x6 grid:
 
-        >>> g = Grid.from_file('data/18-example.txt')
+        >>> g = Grid.from_file(data_path(__file__, 'example.txt'))
         >>> g.on_count
         15
         >>> g4 = animate(g, steps=4, log=True)
@@ -105,7 +105,7 @@ def part_1(grid: 'Grid', steps: int = 100) -> int:
     In your grid of 100x100 lights, given your initial configuration, **how many lights are on after
     100 steps**?
 
-        >>> part_1(Grid.from_file('data/18-example.txt'), steps=4)
+        >>> part_1(Grid.from_file(data_path(__file__, 'example.txt')), steps=4)
         part 1: after 4 steps, there are 4 lights on
         4
     """
@@ -122,7 +122,7 @@ def part_2(grid: 'Grid', steps: int = 100) -> int:
     the grid of lights you bought: four lights, one in each corner, are **stuck on** and can't be
     turned off. The example above will actually run like this:
 
-        >>> g = Grid.from_file('data/18-example.txt')
+        >>> g = Grid.from_file(data_path(__file__, 'example.txt'))
         >>> g5 = animate(with_corner_lights_stuck_on(g), steps=5, log=True)
         Initial state:
         ##·#·#
@@ -253,7 +253,7 @@ class Grid:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Grid':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Grid':
@@ -310,7 +310,12 @@ def with_corner_lights_stuck_on(grid: Grid) -> Grid:
     )
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    grid = Grid.from_file(input_path)
+    result_1 = part_1(grid)
+    result_2 = part_2(grid)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    grid_ = Grid.from_file('data/18-input.txt')
-    part_1(grid_)
-    part_2(grid_)
+    main()

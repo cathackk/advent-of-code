@@ -10,8 +10,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.md5 import md5
+from meta.aoc_tools import data_path
 
 
 def part_1(door_id: str) -> str:
@@ -176,10 +176,15 @@ def next_hash(salt: str, start_at: int, prefix: str) -> tuple[str, int]:
 
 
 def door_id_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    door_id = door_id_from_file(input_path)
+    result_1 = part_1(door_id)
+    result_2 = part_2(door_id)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    door_id_ = door_id_from_file('data/05-input.txt')
-    part_1(door_id_)
-    part_2(door_id_)
+    main()

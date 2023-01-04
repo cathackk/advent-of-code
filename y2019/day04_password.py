@@ -7,8 +7,8 @@ https://adventofcode.com/2019/day/4
 from collections import Counter
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import zip1
+from meta.aoc_tools import data_path
 
 
 def part_1(passwords: Iterable[int]) -> int:
@@ -109,7 +109,7 @@ def is_valid_2(password_num: int) -> bool:
 
 
 def range_from_file(fn: str) -> range:
-    return range_from_line(open(relative_path(__file__, fn)).readline())
+    return range_from_line(open(fn).readline())
 
 
 def range_from_line(line: str) -> range:
@@ -117,8 +117,8 @@ def range_from_line(line: str) -> range:
     return range(int(start), int(end) + 1)
 
 
-def main(fn: str = 'data/04-input.txt') -> tuple[int, int]:
-    password_range = range_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    password_range = range_from_file(input_path)
     result_1 = part_1(password_range)
     result_2 = part_2(password_range)
     return result_1, result_2

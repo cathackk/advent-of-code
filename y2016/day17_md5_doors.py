@@ -7,10 +7,10 @@ https://adventofcode.com/2016/day/17
 from enum import Enum
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.md5 import md5
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(password: str) -> str:
@@ -249,10 +249,15 @@ def find_longest_path(password: str, start: Room = None, end: Room = None) -> st
 
 
 def password_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[str, int]:
+    password = password_from_file(input_path)
+    result_1 = part_1(password)
+    result_2 = part_2(password)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    password_ = password_from_file('data/17-input.txt')
-    part_1(password_)
-    part_2(password_)
+    main()

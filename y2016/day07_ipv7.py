@@ -6,7 +6,7 @@ https://adventofcode.com/2016/day/7
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(ips: list[str]) -> int:
@@ -194,14 +194,19 @@ def supports_ssl(ip: str) -> bool:
 
 
 def ips_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
 
 
 def ips_from_text(text: str) -> list[str]:
     return [line.strip() for line in text.strip().splitlines()]
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    ips = ips_from_file(input_path)
+    result_1 = part_1(ips)
+    result_2 = part_2(ips)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    ips_ = ips_from_file('data/07-input.txt')
-    part_1(ips_)
-    part_2(ips_)
+    main()

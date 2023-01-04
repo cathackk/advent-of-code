@@ -6,11 +6,11 @@ https://adventofcode.com/2016/day/22
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.iteration import single_value
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(grid: 'Grid') -> int:
@@ -101,7 +101,7 @@ def part_2(grid: 'Grid'):
 
     For example, suppose you have the following grid:
 
-        >>> example_grid = Grid.from_file('data/22-example.txt')
+        >>> example_grid = Grid.from_file(data_path(__file__, 'example.txt'))
         >>> print(example_grid)
         Filesystem            Size  Used  Avail  Use%
         /dev/grid/node-x0-y0   10T    8T     2T   80%
@@ -222,7 +222,11 @@ def part_2(grid: 'Grid'):
         7
     """
 
-    steps, _ = access_target_data(grid)
+    if len(grid.nodes) <= 20:
+        steps, _ = access_target_data(grid)
+    else:
+        steps = access_target_data_shortcut(grid)
+
     print(f"part 2: takes {steps} steps to reach the data in {grid.target_data_node.name}")
     return steps
 
@@ -474,7 +478,7 @@ class Grid:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Grid':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text: str) -> 'Grid':
@@ -486,30 +490,12 @@ class Grid:
         assert "Filesystem" in next(lines)  # header
         return cls(Node.from_str(line) for line in lines)
 
-    # def find_move_sequence(self):
-    #     # TODO: remove or rework into optimized version
-    #     t_x = max(d.x for d in disks if d.y == 0)
-    #     empty_disk = next(d for d in disks if d.used == 0)
-    #     e_x, e_y = empty_disk.pos
-    #     moves = (
-    #         # move empty to (0, ey) because of barrier with hole at x=0,
-    #         e_y
-    #         # then move empty to (tx-1, 0),
-    #         + e_x + (t_x - 1)
-    #         # then move tx left by shuffling to x=1
-    #         + 5 * (t_x - 1)
-    #         # then one final step
-    #         + 1
-    #     )
-
 
 Move = tuple[Pos, Pos]
 
 
 def access_target_data(grid: Grid) -> tuple[int, list[Move]]:
-
     # TODO: optimize!
-
     def possible_moves(current_grid: Grid) -> Iterable[tuple[Grid, Move, int]]:
         target = current_grid.empty_node
         return (
@@ -528,8 +514,29 @@ def access_target_data(grid: Grid) -> tuple[int, list[Move]]:
     )
 
 
+def access_target_data_shortcut(grid: Grid) -> int:
+    t_x = max(x for x, y in grid.nodes if y == 0)
+    empty_node = next(node for node in grid.nodes.values() if node.used == 0)
+    e_x, e_y = empty_node.pos
+    return (
+        # move empty to (0, ey) because of barrier with hole at x=0,
+        e_y
+        # then move empty to (tx-1, 0),
+        + e_x + (t_x - 1)
+        # then move tx left by shuffling to x=1
+        + 5 * (t_x - 1)
+        # then one final step
+        + 1
+    )
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    grid = Grid.from_file(input_path)
+    # grid_.print_data_schema()
+    result_1 = part_1(grid)
+    result_2 = part_2(grid)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    grid_ = Grid.from_file('data/22-input.txt')
-    grid_.print_data_schema()
-    part_1(grid_)
-    part_2(grid_)
+    main()

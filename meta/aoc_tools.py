@@ -30,9 +30,10 @@ def day_files(path: str) -> Iterable[tuple[int, str]]:
     )
 
 
-def data_path(module_path: str, filename: str = 'input.txt') -> str:
-    number = parse_day_number(os.path.basename(module_path))
-    return relative_path(module_path, f'data/{number:02}-{filename}')
+def data_path(module_path: str, filename: str = 'input.txt', day_number: int = None) -> str:
+    if day_number is None:
+        day_number = parse_day_number(os.path.basename(module_path))
+    return relative_path(module_path, f'data/{day_number:02}-{filename}')
 
 
 @dataclass(frozen=True, order=True)

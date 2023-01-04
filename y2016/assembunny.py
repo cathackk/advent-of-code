@@ -4,7 +4,6 @@ from typing import Generator
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.iteration import exhaust
 
 
@@ -71,7 +70,7 @@ class Tape:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Tape':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Tape':
@@ -235,7 +234,8 @@ def _incdec_to_mul(tape: Tape) -> None:
     ->
     mul y x; cpy 0 z, cpy 0 w
 
-        >>> t = Tape.from_file('data/23-example.txt')
+        >>> from meta.aoc_tools import data_path
+        >>> t = Tape.from_file(data_path(__file__, 'example.txt', 23))
         >>> print(t)  # doctest: +NORMALIZE_WHITESPACE
         cpy 60 b; cpy -1 c; cpy -1 d;
         cpy a d; cpy 0 a; cpy b c; inc a; dec c; jnz c -2; dec d; jnz d -5;

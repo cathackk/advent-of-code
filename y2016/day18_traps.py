@@ -3,8 +3,7 @@ Advent of Code 2016
 Day 18: Like a Rogue
 https://adventofcode.com/2016/day/18
 """
-
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(first_row: str, height: int = 40) -> int:
@@ -150,10 +149,15 @@ def draw_map(first_row: str, height: int, safe_char='·', trap_char='^') -> None
 
 
 def first_row_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    first_row = first_row_from_file(input_path)
+    result_1 = part_1(first_row)
+    result_2 = part_2(first_row)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    first_row_ = first_row_from_file('data/18-input.txt')
-    part_1(first_row_)
-    part_2(first_row_)
+    main()

@@ -7,10 +7,10 @@ https://adventofcode.com/2015/day/21
 from itertools import combinations
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import maxk
 from common.iteration import mink
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(boss: 'Character', player_hp: int, shop: 'Shop') -> int:
@@ -34,7 +34,7 @@ def part_1(boss: 'Character', player_hp: int, shop: 'Shop') -> int:
 
     Here is what the item shop is selling:
 
-        >>> the_shop = Shop.from_file('data/21-shop.txt')
+        >>> the_shop = Shop.from_file(data_path(__file__, 'shop.txt'))
         >>> print(the_shop)
         Weapons:    Cost  Damage  Armor
         Dagger        8     4       0
@@ -134,9 +134,9 @@ def part_2(boss: 'Character', player_hp: int, shop: 'Shop') -> int:
     Turns out the shopkeeper is working with the boss, and can persuade you to buy whatever items he
     wants. The other rules still apply, and he still only has one of each item.
 
-        >>> (example_boss := Character.from_file("boss", 'data/21-example-boss.txt'))
+        >>> (example_boss := Character.from_file("boss", data_path(__file__, 'example-boss.txt')))
         Character('boss', hit_points=12, damage=7, armor=2)
-        >>> the_shop = Shop.from_file('data/21-shop.txt')
+        >>> the_shop = Shop.from_file(data_path(__file__, 'shop.txt'))
         >>> expensive_equipment = the_shop.get_items('Dagger', 'Damage +3', 'Defense +3')
         >>> expensive_equipment  # doctest: +NORMALIZE_WHITESPACE
         [Item('Dagger', cost=8, damage=4),
@@ -224,7 +224,7 @@ class Shop:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Shop':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Shop':
@@ -282,7 +282,7 @@ class Character:
 
     @classmethod
     def from_file(cls, name: str, fn: str) -> 'Character':
-        return cls.from_lines(name, open(relative_path(__file__, fn)))
+        return cls.from_lines(name, open(fn))
 
     @classmethod
     def from_lines(cls, name: str, lines: Iterable[str]) -> 'Character':
@@ -335,10 +335,18 @@ def is_beating_boss(items: list[Item], boss: Character, player_hp: int):
     return winner is player
 
 
-if __name__ == '__main__':
-    boss_ = Character.from_file("boss", 'data/21-input.txt')
-    PLAYER_HP = 100
-    shop_ = Shop.from_file('data/21-shop.txt')
+def main(
+    input_path: str = data_path(__file__),
+    shop_path: str = data_path(__file__, 'shop.txt')
+) -> tuple[int, int]:
+    boss = Character.from_file("boss", input_path)
+    player_hp = 100
+    shop = Shop.from_file(shop_path)
 
-    part_1(boss_, PLAYER_HP, shop_)
-    part_2(boss_, PLAYER_HP, shop_)
+    result_1 = part_1(boss, player_hp, shop)
+    result_2 = part_2(boss, player_hp, shop)
+    return result_1, result_2
+
+
+if __name__ == '__main__':
+    main()

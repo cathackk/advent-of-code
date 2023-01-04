@@ -8,9 +8,9 @@ from collections import defaultdict
 from typing import Generator
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import exhaust
 from common.multibuffer import MultiBuffer
+from meta.aoc_tools import data_path
 
 Rules = dict[str, list[str]]
 
@@ -192,7 +192,7 @@ def reversed_rules(rules: Rules) -> Rules:
 
 
 def input_from_file(fn: str) -> tuple[str, Rules]:
-    return input_from_lines(open(relative_path(__file__, fn)))
+    return input_from_lines(open(fn))
 
 
 def input_from_lines(lines: Iterable[str]) -> tuple[str, Rules]:
@@ -221,7 +221,12 @@ def rules_from_lines(lines: Iterable[str]) -> Rules:
     return dict(rules)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    molecule, rules = input_from_file(input_path)
+    result_1 = part_1(molecule, rules)
+    result_2 = part_2(molecule, rules)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    molecule_, rules_ = input_from_file('data/19-input.txt')
-    part_1(molecule_, rules_)
-    part_2(molecule_, rules_)
+    main()

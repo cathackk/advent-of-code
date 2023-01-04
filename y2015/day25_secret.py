@@ -6,8 +6,8 @@ https://adventofcode.com/2015/day/25
 
 from tabulate import tabulate
 
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(row: int, column: int) -> int:
@@ -134,7 +134,7 @@ def print_page(rows: int, columns: int) -> None:
 
 
 def coordinates_from_file(fn: str) -> tuple[int, int]:
-    return coordinates_from_text(open(relative_path(__file__, fn)).readline())
+    return coordinates_from_text(open(fn).readline())
 
 
 def coordinates_from_text(text: str) -> tuple[int, int]:
@@ -147,6 +147,11 @@ def coordinates_from_text(text: str) -> tuple[int, int]:
     return int(row), int(col)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int]:
+    coordinates = coordinates_from_file(input_path)
+    result_1 = part_1(*coordinates)
+    return (result_1,)
+
+
 if __name__ == '__main__':
-    coordinates_ = coordinates_from_file('data/25-input.txt')
-    part_1(*coordinates_)
+    main()

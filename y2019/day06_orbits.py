@@ -8,7 +8,6 @@ import functools
 from itertools import zip_longest
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs
 from meta.aoc_tools import data_path
 
@@ -341,8 +340,8 @@ class OrbitMap:
         return cls.from_lines(open(fn))
 
 
-def main(fn: str = data_path(__file__)) -> tuple[int, int]:
-    orbit_map = OrbitMap.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    orbit_map = OrbitMap.from_file(input_path)
     result_1 = part_1(orbit_map)
     result_2 = part_2(orbit_map)
     return result_1, result_2

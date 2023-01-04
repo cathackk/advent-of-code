@@ -3,8 +3,7 @@ Advent of Code 2016
 Day 19: An Elephant Named Joseph
 https://adventofcode.com/2016/day/19
 """
-
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(elf_count: int) -> int:
@@ -203,10 +202,15 @@ def across_elimination_fast(count: int) -> int:
 
 
 def elf_count_from_file(fn: str) -> int:
-    return int(open(relative_path(__file__, fn)).readline().strip())
+    return int(open(fn).readline().strip())
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    elf_count = elf_count_from_file(input_path)
+    result_1 = part_1(elf_count)
+    result_2 = part_2(elf_count)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    elf_count_ = elf_count_from_file('data/19-input.txt')
-    part_1(elf_count_)
-    part_2(elf_count_)
+    main()

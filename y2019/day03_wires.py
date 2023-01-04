@@ -6,10 +6,10 @@ https://adventofcode.com/2019/day/3
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.heading import Heading
 from common.iteration import mink
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(wire_1: 'Wire', wire_2: 'Wire') -> int:
@@ -248,7 +248,7 @@ def manhattan_distance_from_origin(pos: Pos) -> int:
 
 
 def wires_from_file(fn: str) -> list[Wire]:
-    return [wire_from_line(line) for line in open(relative_path(__file__, fn))]
+    return [wire_from_line(line) for line in open(fn)]
 
 
 def wire_from_line(line: str) -> Wire:
@@ -261,8 +261,8 @@ def wire_from_line(line: str) -> Wire:
     return [(headings[p[0]], int(p[1:])) for p in line.strip().split(',')]
 
 
-def main(fn: str = 'data/03-input.txt') -> tuple[int, int]:
-    wires = wires_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    wires = wires_from_file(input_path)
     result_1 = part_1(*wires)
     result_2 = part_2(*wires)
     return result_1, result_2

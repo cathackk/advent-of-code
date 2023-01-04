@@ -9,11 +9,11 @@ from collections import defaultdict
 from typing import Generator
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import exhaust
 from common.iteration import single_value
 from common.text import join_and
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(instructions: 'Instructions', watch_for: tuple[int, int] = (61, 17)) -> int:
@@ -99,7 +99,7 @@ def part_2(instructions: 'Instructions', considered_outputs: Iterable[int] = (0,
     What do you get if you **multiply together the values** of one chip in each of outputs `0`, `1`,
     and `2`?
 
-        >>> example_instructions = instructions_from_file('data/10-example.txt')
+        >>> example_instructions = instructions_from_file(data_path(__file__, 'example.txt'))
         >>> exhaust(run_bots(*example_instructions))
         {1: 2, 2: 3, 0: 5}
         >>> part_2(example_instructions)
@@ -198,7 +198,7 @@ def instructions_from_text(text: str) -> Instructions:
 
 
 def instructions_from_file(fn: str) -> Instructions:
-    return instructions_from_lines(open(relative_path(__file__, fn)))
+    return instructions_from_lines(open(fn))
 
 
 def instructions_from_lines(lines: Iterable[str]) -> Instructions:
@@ -227,7 +227,12 @@ def instructions_from_lines(lines: Iterable[str]) -> Instructions:
     return frozen_state(init), comparisons
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    instructions = instructions_from_file(input_path)
+    result_1 = part_1(instructions)
+    result_2 = part_2(instructions)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    instructions_ = instructions_from_file('data/10-input.txt')
-    part_1(instructions_)
-    part_2(instructions_)
+    main()

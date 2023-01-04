@@ -12,9 +12,9 @@ from typing import Iterator
 from tabulate import tabulate
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import following
 from common.iteration import mink
+from meta.aoc_tools import data_path
 
 
 def part_1(weights: list[int]) -> int:
@@ -106,7 +106,7 @@ def part_2(weights: list[int]) -> int:
     Given the example packages above, this would be some of the new unique first groups, their
     quantum entanglements, and one way to divide the remaining packages:
 
-        >>> example_weights = weights_from_file('data/24-example.txt')
+        >>> example_weights = weights_from_file(data_path(__file__, 'example.txt'))
         >>> print_configs(unique_configs(example_weights, 4))
         | Group 1   |   QE | Group 2   | Group 3   | Group 4   |
         |-----------|------|-----------|-----------|-----------|
@@ -221,10 +221,15 @@ def ideal_configuration(weights: list[int], containers_count: int) -> tuple[Conf
 
 
 def weights_from_file(fn: str) -> list[int]:
-    return sorted((int(line) for line in open(relative_path(__file__, fn))), reverse=True)
+    return sorted((int(line) for line in open(fn)), reverse=True)
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    weights = weights_from_file(input_path)
+    result_1 = part_1(weights)
+    result_2 = part_2(weights)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    weights_ = weights_from_file('data/24-input.txt')
-    part_1(weights_)
-    part_2(weights_)
+    main()

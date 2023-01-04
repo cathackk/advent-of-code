@@ -6,9 +6,9 @@ https://adventofcode.com/2015/day/17
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import following
 from common.iteration import min_all
+from meta.aoc_tools import data_path
 
 
 def part_1(containers: list[int], amount: int = 150) -> int:
@@ -80,10 +80,15 @@ def generate_fillings(amount: int, containers: Iterable[int]) -> Iterable[list[i
 
 
 def containers_from_file(fn: str) -> list[int]:
-    return [int(line.strip()) for line in open(relative_path(__file__, fn))]
+    return [int(line.strip()) for line in open(fn)]
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    containers = containers_from_file(input_path)
+    result_1 = part_1(containers)
+    result_2 = part_2(containers)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    containers_ = containers_from_file('data/17-input.txt')
-    part_1(containers_)
-    part_2(containers_)
+    main()

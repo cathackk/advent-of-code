@@ -7,10 +7,10 @@ https://adventofcode.com/2015/day/13
 from itertools import permutations
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import slidingw
 from common.iteration import zip1
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 Rule = tuple[tuple[str, str], int]
 Rules = dict[tuple[str, str], int]
@@ -95,7 +95,7 @@ def part_2(rules: Rules) -> int:
     What is the **total change in happiness** for the optimal seating arrangement that actually
     includes yourself?
 
-        >>> part_2(rules_from_file('data/13-example.txt'))
+        >>> part_2(rules_from_file(data_path(__file__, 'example.txt')))
         part 2: optimal arrangement (including myself) brings 286 happiness
         286
     """
@@ -144,7 +144,7 @@ def add_myself(rules: Rules) -> Rules:
 
 
 def rules_from_file(fn: str) -> Rules:
-    return dict(rulelist_from_lines(open(relative_path(__file__, fn))))
+    return dict(rulelist_from_lines(open(fn)))
 
 
 def rules_from_text(text: str) -> Rules:
@@ -171,7 +171,12 @@ def rule_from_str(line: str) -> Rule:
     return (name1, name2), amount
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    rules = rules_from_file(input_path)
+    result_1 = part_1(rules)
+    result_2 = part_2(rules)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    rules_ = rules_from_file('data/13-input.txt')
-    part_1(rules_)
-    part_2(rules_)
+    main()

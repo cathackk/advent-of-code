@@ -7,7 +7,7 @@ https://adventofcode.com/2016/day/4
 from collections import Counter
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(rooms: list['Room']) -> int:
@@ -82,7 +82,7 @@ def part_2(rooms: Iterable['Room']) -> int:
 
     **What is the sector ID** of the room where North Pole objects are stored?
 
-        >>> part_2(rooms_from_file('data/04-example.txt'))
+        >>> part_2(rooms_from_file(data_path(__file__, 'example.txt')))
         part 2: room 'northpole objects' has sector ID 698
         698
     """
@@ -143,14 +143,19 @@ def rot(char: str, times: int) -> str:
 
 
 def rooms_from_file(fn: str) -> list[Room]:
-    return list(rooms_from_lines(open(relative_path(__file__, fn))))
+    return list(rooms_from_lines(open(fn)))
 
 
 def rooms_from_lines(lines: Iterable[str]) -> Iterable[Room]:
     return (Room.from_str(line.strip()) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    rooms = rooms_from_file(input_path)
+    result_1 = part_1(rooms)
+    result_2 = part_2(rooms)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    rooms_ = rooms_from_file('data/04-input.txt')
-    part_1(rooms_)
-    part_2(rooms_)
+    main()

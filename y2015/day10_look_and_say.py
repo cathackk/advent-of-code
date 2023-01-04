@@ -7,8 +7,8 @@ https://adventofcode.com/2015/day/10
 from itertools import groupby
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import last
+from meta.aoc_tools import data_path
 
 
 def part_1(starting_number: str, iterations: int = 40) -> str:
@@ -78,10 +78,15 @@ def las_sequence(starting_number: str, iterations: int) -> Iterable[str]:
 
 
 def number_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    starting_number = number_from_file(input_path)
+    result_1 = part_1(starting_number)
+    result_2 = part_2(result_1, iterations=10)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    starting_number_ = number_from_file('data/10-input.txt')
-    seq_40 = part_1(starting_number_)
-    part_2(seq_40, iterations=10)
+    main()

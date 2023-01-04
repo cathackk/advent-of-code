@@ -6,7 +6,7 @@ https://adventofcode.com/2016/day/20
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(ranges: 'RangeSet') -> int:
@@ -59,7 +59,7 @@ def part_2(ranges: 'RangeSet', total_ips_count: int = 1 << 32) -> int:
     """
     **How many IPs** are allowed by the blacklist?
 
-        >>> example_blacklist = RangeSet.from_file('data/20-example.txt')
+        >>> example_blacklist = RangeSet.from_file(data_path(__file__, 'example.txt'))
         >>> print(example_blacklist)
         0-2, 4-8
         >>> part_2(example_blacklist, total_ips_count=10)
@@ -272,7 +272,7 @@ class RangeSet:
 
     @classmethod
     def from_file(cls, fn: str) -> 'RangeSet':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_text(cls, text: str) -> 'RangeSet':
@@ -283,7 +283,12 @@ class RangeSet:
         return cls(Range(*line.strip().split('-')) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    ranges = RangeSet.from_file(input_path)
+    result_1 = part_1(ranges)
+    result_2 = part_2(ranges)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    ranges_ = RangeSet.from_file('data/20-input.txt')
-    part_1(ranges_)
-    part_2(ranges_)
+    main()

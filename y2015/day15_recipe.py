@@ -7,9 +7,9 @@ https://adventofcode.com/2015/day/15
 import math
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import maxk
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(ingredients: list['Ingredient']) -> int:
@@ -89,7 +89,7 @@ def part_2(ingredients: list['Ingredient'], calories: int = 500) -> int:
     would be `40*8 + 60*3 = 500`. The total score would go down, though: only `57600000`, the best
     you can do in such trying circumstances.
 
-        >>> butterscotch, cinnamon = ingredients_from_file('data/15-example.txt')
+        >>> butterscotch, cinnamon = ingredients_from_file(data_path(__file__, 'example.txt'))
         >>> recipe_score({butterscotch: 40, cinnamon: 60}, required_calories=500)
         57600000
         >>> recipe_score({butterscotch: 44, cinnamon: 56}, required_calories=500)
@@ -181,14 +181,19 @@ def ingredients_from_text(text: str) -> list[Ingredient]:
 
 
 def ingredients_from_file(fn: str) -> list[Ingredient]:
-    return list(ingredients_from_lines(open(relative_path(__file__, fn))))
+    return list(ingredients_from_lines(open(fn)))
 
 
 def ingredients_from_lines(lines: Iterable[str]) -> Iterable[Ingredient]:
     return (Ingredient.from_str(line.strip()) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    ingredients = ingredients_from_file(input_path)
+    result_1 = part_1(ingredients)
+    result_2 = part_2(ingredients)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    ingredients_ = ingredients_from_file('data/15-input.txt')
-    part_1(ingredients_)
-    part_2(ingredients_)
+    main()

@@ -12,9 +12,9 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import last
 from common.md5 import md5 as plain_md5
+from meta.aoc_tools import data_path
 
 
 def part_1(salt: str, nth: int = 64) -> int:
@@ -244,10 +244,15 @@ def generate_nth_key(salt: str, hasher: Hasher, nth: int) -> tuple[int, str]:
 
 
 def salt_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    salt = salt_from_file(input_path)
+    result_1 = part_1(salt)
+    result_2 = part_2(salt)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    salt_ = salt_from_file('data/14-input.txt')
-    part_1(salt_)
-    part_2(salt_)
+    main()

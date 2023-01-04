@@ -7,9 +7,9 @@ https://adventofcode.com/2016/day/8
 from typing import Iterable
 
 from common import ocr
-from common.file import relative_path
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(commands: list[str]) -> int:
@@ -133,14 +133,8 @@ def part_2(commands: list[str]) -> str:
 
     After you swipe your card, **what code is the screen trying to display?**
 
-        >>> part_2(commands_from_file('data/08-example-large.txt'))
+        >>> part_2(commands_from_file(data_path(__file__, 'example-large.txt')))
         part 2: the screen shows 'UPOJFLBCEZ'
-        █  █ ███   ██    ██ ████ █    ███   ██  ████ ████
-        █  █ █  █ █  █    █ █    █    █  █ █  █ █       █
-        █  █ █  █ █  █    █ ███  █    ███  █    ███    █
-        █  █ ███  █  █    █ █    █    █  █ █    █     █
-        █  █ █    █  █ █  █ █    █    █  █ █  █ █    █
-         ██  █     ██   ██  █    ████ ███   ██  ████ ████
         'UPOJFLBCEZ'
     """
 
@@ -149,7 +143,7 @@ def part_2(commands: list[str]) -> str:
     result = ocr.FONT_6X5.read_string(str(screen))
 
     print(f"part 2: the screen shows {result!r}")
-    print(format(screen, " █"))
+    # print(format(screen, " █"))
     return result
 
 
@@ -235,10 +229,15 @@ class Screen:
 
 
 def commands_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, str]:
+    commands = commands_from_file(input_path)
+    result_1 = part_1(commands)
+    result_2 = part_2(commands)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    commands_ = commands_from_file('data/08-input.txt')
-    part_1(commands_)
-    part_2(commands_)
+    main()

@@ -11,7 +11,7 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(target_gifts: int) -> int:
@@ -145,10 +145,15 @@ def first_house_to_receive(
 
 
 def target_gifts_from_file(fn: str) -> int:
-    return int(open(relative_path(__file__, fn)).readline().strip())
+    return int(open(fn).readline().strip())
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    target_gifts = target_gifts_from_file(input_path)
+    result_1 = part_1(target_gifts)
+    result_2 = part_2(target_gifts)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    target_gifts_ = target_gifts_from_file('data/20-input.txt')
-    part_1(target_gifts_)
-    part_2(target_gifts_)
+    main()

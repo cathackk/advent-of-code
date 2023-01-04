@@ -6,7 +6,7 @@ https://adventofcode.com/2019/day/1
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(masses: Iterable[int]) -> int:
@@ -129,11 +129,11 @@ def fuel_2(mass: int) -> int:
 
 
 def masses_from_file(fn: str) -> list[int]:
-    return [int(line) for line in open(relative_path(__file__, fn))]
+    return [int(line) for line in open(fn)]
 
 
-def main(fn: str = 'data/01-input.txt') -> tuple[int, int]:
-    masses = masses_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    masses = masses_from_file(input_path)
     result_1 = part_1(masses)
     result_2 = part_2(masses)
     return result_1, result_2

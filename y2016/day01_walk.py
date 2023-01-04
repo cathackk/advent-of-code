@@ -6,11 +6,11 @@ https://adventofcode.com/2016/day/1
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.heading import Heading
 from common.iteration import first_repeat
 from common.iteration import last
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(instructions: Iterable['Instr'] | str) -> int:
@@ -114,7 +114,7 @@ def distance_from_origin(pos: Pos) -> int:
 
 
 def instructions_from_file(fn: str) -> list[Instr]:
-    return list(instructions_from_line(open(relative_path(__file__, fn)).readline().strip()))
+    return list(instructions_from_line(open(fn).readline().strip()))
 
 
 def instructions_from_line(line: str) -> Iterable[Instr]:
@@ -124,7 +124,12 @@ def instructions_from_line(line: str) -> Iterable[Instr]:
     )
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    instructions = instructions_from_file(input_path)
+    result_1 = part_1(instructions)
+    result_2 = part_2(instructions)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    instructions_ = instructions_from_file('data/01-input.txt')
-    part_1(instructions_)
-    part_2(instructions_)
+    main()

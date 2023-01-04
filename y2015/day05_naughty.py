@@ -6,8 +6,8 @@ https://adventofcode.com/2015/day/5
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import zip1
+from meta.aoc_tools import data_path
 
 
 def part_1(strings: Iterable[str]) -> int:
@@ -136,10 +136,15 @@ def is_nice_2(string: str) -> bool:
 
 
 def strings_from_file(fn: str) -> list[str]:
-    return [line.strip() for line in open(relative_path(__file__, fn))]
+    return [line.strip() for line in open(fn)]
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    strings = strings_from_file(input_path)
+    result_1 = part_1(strings)
+    result_2 = part_2(strings)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    strings_ = strings_from_file('data/05-input.txt')
-    part_1(strings_)
-    part_2(strings_)
+    main()

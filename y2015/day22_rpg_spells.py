@@ -8,9 +8,9 @@ from typing import Iterable
 
 import yaml
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.text import join_and
+from meta.aoc_tools import data_path
 
 
 def part_1(player: 'Character', boss: 'Character', spellbook: 'SpellBook') -> int:
@@ -33,7 +33,7 @@ def part_1(player: 'Character', boss: 'Character', spellbook: 'SpellBook') -> in
     limit. You must have enough mana to cast a spell, and its cost is immediately deducted when you
     cast it. Your spells are:
 
-        >>> the_spellbook = SpellBook.from_file('data/22-spells.yaml')
+        >>> the_spellbook = SpellBook.from_file(data_path(__file__, 'spells.yaml'))
         >>> list(the_spellbook.spell_names())
         ['Magic Missile', 'Drain', 'Shield', 'Poison', 'Recharge']
 
@@ -191,7 +191,7 @@ def part_2(player: 'Character', boss: 'Character', spellbook: 'SpellBook') -> in
 
         >>> example_player = Character(hit_points=11, mana=250)
         >>> example_boss = Character(hit_points=13, damage=8)
-        >>> the_spellbook = SpellBook.from_file('data/22-spells.yaml')
+        >>> the_spellbook = SpellBook.from_file(data_path(__file__, 'spells.yaml'))
         >>> example_battle=Battle(example_player, example_boss, the_spellbook, hard=True)
         >>> end = example_battle.run('Poison', 'Magic Missile', logging=True)
         -- Player turn --
@@ -241,7 +241,7 @@ class Character:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Character':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Character':
@@ -268,7 +268,7 @@ class SpellBook:
 
     @classmethod
     def from_file(cls, fn: str) -> 'SpellBook':
-        return cls.from_dict(yaml.safe_load(open(relative_path(__file__, fn))))
+        return cls.from_dict(yaml.safe_load(open(fn)))
 
     @classmethod
     def from_dict(cls, d: dict) -> 'SpellBook':
@@ -640,9 +640,19 @@ def total_cost(spells: Iterable[Spell]) -> int:
     return sum(spell.cost for spell in spells)
 
 
+def main(
+    input_path: str = data_path(__file__),
+    player_path: str = data_path(__file__, 'player.txt'),
+    spellbook_path: str = data_path(__file__, 'spells.yaml')
+) -> tuple[int, int]:
+    player = Character.from_file(player_path)
+    boss = Character.from_file(input_path)
+    spellbook = SpellBook.from_file(spellbook_path)
+
+    result_1 = part_1(player, boss, spellbook)
+    result_2 = part_2(player, boss, spellbook)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    player_ = Character.from_file('data/22-player.txt')
-    boss_ = Character.from_file('data/22-input.txt')
-    spellbook_ = SpellBook.from_file('data/22-spells.yaml')
-    part_1(player_, boss_, spellbook_)
-    part_2(player_, boss_, spellbook_)
+    main()

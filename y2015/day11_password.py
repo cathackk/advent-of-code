@@ -8,7 +8,7 @@ import string
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(last_password: str) -> str:
@@ -186,10 +186,15 @@ def next_password(pwd: str) -> str:
 
 
 def password_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    last_password = password_from_file(input_path)
+    result_1 = part_1(last_password)
+    result_2 = part_2(result_1)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    last_password_ = password_from_file('data/11-input.txt')
-    new_password_ = part_1(last_password_)
-    part_2(new_password_)
+    main()

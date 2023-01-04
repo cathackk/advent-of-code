@@ -7,7 +7,7 @@ https://adventofcode.com/2015/day/7
 from enum import Enum
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(circuit: 'Circuit') -> int:
@@ -241,14 +241,19 @@ def circuit_from_text(text: str) -> Circuit:
 
 
 def circuit_from_file(fn: str) -> Circuit:
-    return list(connections_from_lines(open(relative_path(__file__, fn))))
+    return list(connections_from_lines(open(fn)))
 
 
 def connections_from_lines(lines: Iterable[str]) -> Iterable[Connection]:
     return (Connection.from_str(line.strip()) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    circuit = circuit_from_file(input_path)
+    result_1 = part_1(circuit)
+    result_2 = part_2(circuit, b_override=result_1)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    circuit_ = circuit_from_file('data/07-input.txt')
-    a = part_1(circuit_)
-    part_2(circuit_, b_override=a)
+    main()

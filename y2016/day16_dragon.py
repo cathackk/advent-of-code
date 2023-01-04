@@ -6,7 +6,7 @@ https://adventofcode.com/2016/day/16
 
 from tqdm import tqdm
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(initial_state: str, disk_size: int = 272) -> str:
@@ -165,10 +165,15 @@ def disk_checksum(seed: str, size: int) -> str:
 
 
 def state_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    initial_state = state_from_file(input_path)
+    result_1 = part_1(initial_state)
+    result_2 = part_2(initial_state)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    initial_ = state_from_file('data/16-input.txt')
-    part_1(initial_)
-    part_2(initial_)
+    main()

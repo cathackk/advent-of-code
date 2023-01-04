@@ -6,8 +6,8 @@ https://adventofcode.com/2015/day/16
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import single_value
+from meta.aoc_tools import data_path
 
 
 def part_1(aunts: list['Aunt'], criteria: list['Criterium']) -> int:
@@ -84,7 +84,7 @@ def part_2(aunts: list['Aunt'], criteria: list['Criterium']) -> int:
 
     What is the number of the real Aunt Sue?
 
-        >>> example_criteria = criteria_from_file('data/16-criteria.txt')
+        >>> example_criteria = criteria_from_file(data_path(__file__, 'criteria.txt'))
         >>> example_criteria_adjusted = list(adjust_criteria(example_criteria))
         >>> example_criteria_adjusted[1]
         Criterium('cats', '>', 7)
@@ -94,7 +94,7 @@ def part_2(aunts: list['Aunt'], criteria: list['Criterium']) -> int:
         Criterium('goldfish', '<', 5)
         >>> example_criteria_adjusted[7]
         Criterium('trees', '>', 3)
-        >>> example_aunts = aunts_from_file('data/16-example.txt')
+        >>> example_aunts = aunts_from_file(data_path(__file__, 'example.txt'))
         >>> print("\n".join(str(aunt) for aunt in example_aunts))
         Sue 1: cats: 10, pomeranians: 2, trees: 4
         Sue 2: goldfish: 3, trees: 3, children: 0
@@ -188,7 +188,7 @@ def aunts_from_text(text: str) -> list[Aunt]:
 
 
 def aunts_from_file(fn: str) -> list[Aunt]:
-    return list(aunts_from_lines(open(relative_path(__file__, fn))))
+    return list(aunts_from_lines(open(fn)))
 
 
 def aunts_from_lines(lines: Iterable[str]) -> Iterable[Aunt]:
@@ -200,15 +200,23 @@ def criteria_from_text(text: str) -> list[Criterium]:
 
 
 def criteria_from_file(fn: str) -> list[Criterium]:
-    return list(criteria_from_lines(open(relative_path(__file__, fn))))
+    return list(criteria_from_lines(open(fn)))
 
 
 def criteria_from_lines(lines: Iterable[str]) -> Iterable[Criterium]:
     return (Criterium.from_str(line.strip()) for line in lines)
 
 
+def main(
+    input_path: str = data_path(__file__),
+    criteria_path: str = data_path(__file__, 'criteria.txt')
+) -> tuple[int, int]:
+    aunts = aunts_from_file(input_path)
+    criteria = criteria_from_file(criteria_path)
+    result_1 = part_1(aunts, criteria)
+    result_2 = part_2(aunts, criteria)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    aunts_ = aunts_from_file('data/16-input.txt')
-    criteria_ = criteria_from_file('data/16-criteria.txt')
-    part_1(aunts_, criteria_)
-    part_2(aunts_, criteria_)
+    main()

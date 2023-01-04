@@ -3,11 +3,12 @@ Advent of Code 2016
 Day 21: Scrambled Letters and Hash
 https://adventofcode.com/2016/day/21
 """
+
 from typing import Final
 from typing import Iterable
 
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(commands: Iterable['Command'], password: str = 'abcdefgh') -> str:
@@ -61,7 +62,7 @@ def part_1(commands: Iterable['Command'], password: str = 'abcdefgh') -> str:
     list of scrambling operations in your puzzle input, **what is the result of scrambling
     `abcdefgh`**?
 
-        >>> example_commands = commands_from_file('data/21-example.txt')
+        >>> example_commands = commands_from_file(data_path(__file__, 'example.txt'))
         >>> print("\n".join(str(cmd) for cmd in example_commands))
         swap position 4 with position 0
         swap letter d with letter b
@@ -89,7 +90,7 @@ def part_2(commands: Iterable['Command'], scrambled: str = 'fbgdceah') -> str:
 
     What is the un-scrambled version of the scrambled password `fbgdceah`?
 
-        >>> example_commands = commands_from_file('data/21-example.txt')
+        >>> example_commands = commands_from_file(data_path(__file__, 'example.txt'))
         >>> part_2(example_commands, 'decab')
         part 2: unscrambled password is 'abcde'
         'abcde'
@@ -384,14 +385,19 @@ def unscramble(string: str, commands: Iterable[Command]) -> str:
 
 
 def commands_from_file(fn: str) -> list[Command]:
-    return list(commands_from_lines(open(relative_path(__file__, fn))))
+    return list(commands_from_lines(open(fn)))
 
 
 def commands_from_lines(lines: Iterable[str]) -> Iterable[Command]:
     return (Command.from_str(line) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    commands = commands_from_file(input_path)
+    result_1 = part_1(commands)
+    result_2 = part_2(commands)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    commands_ = commands_from_file('data/21-input.txt')
-    part_1(commands_)
-    part_2(commands_)
+    main()

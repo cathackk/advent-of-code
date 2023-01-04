@@ -6,7 +6,7 @@ https://adventofcode.com/2015/day/12
 
 import json
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(document) -> int:
@@ -41,7 +41,7 @@ def part_1(document) -> int:
 
     What is the **sum of all numbers** in the document?
 
-        >>> part_1(load_document('data/12-example.json'))
+        >>> part_1(load_document(data_path(__file__, 'example.json')))
         part 1: sum of all numbers in document is 6
         6
     """
@@ -67,7 +67,7 @@ def part_2(document) -> int:
         >>> sumj([1, "red", 5])
         6
 
-        >>> part_2(load_document('data/12-example.json'))
+        >>> part_2(load_document(data_path(__file__, 'example.json')))
         part 2: sum of all numbers in document (ignoring "red") is 4
         4
     """
@@ -99,10 +99,15 @@ def sumj(d, fobidden_value=None) -> int:
 
 
 def load_document(fn: str):
-    return json.load(open(relative_path(__file__, fn)))
+    return json.load(open(fn))
+
+
+def main(input_path: str = data_path(__file__, 'input.json')) -> tuple[int, int]:
+    document = load_document(input_path)
+    result_1 = part_1(document)
+    result_2 = part_2(document)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    document_ = load_document('data/12-input.json')
-    part_1(document_)
-    part_2(document_)
+    main()

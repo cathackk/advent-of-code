@@ -7,9 +7,9 @@ https://adventofcode.com/2015/day/9
 from itertools import permutations
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import zip1
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 Distances = dict[tuple[str, str], int]
 
@@ -68,7 +68,7 @@ def part_2(distances: Distances) -> int:
     `Dublin -> London -> Belfast`.
 
 
-        >>> part_2(distances_from_file('data/09-example.txt'))
+        >>> part_2(distances_from_file(data_path(__file__, 'example.txt')))
         part 2: longest route has distance 982
         982
     """
@@ -100,7 +100,7 @@ def distances_from_text(text: str) -> Distances:
 
 
 def distances_from_file(fn: str) -> Distances:
-    return dict(roads_from_lines(open(relative_path(__file__, fn))))
+    return dict(roads_from_lines(open(fn)))
 
 
 def roads_from_lines(lines: Iterable[str]) -> Iterable[Road]:
@@ -112,7 +112,12 @@ def roads_from_lines(lines: Iterable[str]) -> Iterable[Road]:
         yield (place_2, place_1), distance
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    distances = distances_from_file(input_path)
+    result_1 = part_1(distances)
+    result_2 = part_2(distances)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    distances_ = distances_from_file('data/09-input.txt')
-    part_1(distances_)
-    part_2(distances_)
+    main()

@@ -3,7 +3,7 @@ Advent of Code 2016
 Day 12: Leonardo's Monorail
 https://adventofcode.com/2016/day/12
 """
-
+from meta.aoc_tools import data_path
 from y2016 import assembunny
 
 
@@ -75,7 +75,7 @@ def part_2(tape: assembunny.Tape) -> int:
 
     If you instead **initialize register `c` to be `1`**, what value is now left in register `a`?
 
-        >>> example_tape = assembunny.Tape.from_file('data/12-example.txt')
+        >>> example_tape = assembunny.Tape.from_file(data_path(__file__, 'example.txt'))
         >>> assembunny.run(example_tape)['a']
         41
         >>> assembunny.run(example_tape, c=1)['a']
@@ -91,7 +91,12 @@ def part_2(tape: assembunny.Tape) -> int:
     return result
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    tape = assembunny.Tape.from_file(input_path)
+    result_1 = part_1(tape)
+    result_2 = part_2(tape)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    tape_ = assembunny.Tape.from_file('data/12-input.txt')
-    part_1(tape_)
-    part_2(tape_)
+    main()

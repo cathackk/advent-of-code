@@ -6,9 +6,9 @@ https://adventofcode.com/2016/day/15
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.math import modular_inverse
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(discs: list['Disc']) -> int:
@@ -139,7 +139,7 @@ def fall_through(discs: list[Disc]) -> int:
 
 
 def discs_from_file(fn: str) -> list[Disc]:
-    return list(discs_from_lines(open(relative_path(__file__, fn))))
+    return list(discs_from_lines(open(fn)))
 
 
 def discs_from_text(text: str) -> list[Disc]:
@@ -157,7 +157,12 @@ def discs_from_lines(lines: Iterable[str]) -> Iterable[Disc]:
         yield int(pos0), int(size)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    discs = discs_from_file(input_path)
+    result_1 = part_1(discs)
+    result_2 = part_2(discs)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    discs_ = discs_from_file('data/15-input.txt')
-    part_1(discs_)
-    part_2(discs_)
+    main()

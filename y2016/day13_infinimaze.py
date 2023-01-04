@@ -6,9 +6,9 @@ https://adventofcode.com/2016/day/13
 
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(seed: int, start: 'Pos' = (1, 1), end: 'Pos' = (31, 39)) -> int:
@@ -188,10 +188,15 @@ def flood(seed: int, start: Pos, max_distance: int) -> set[Pos]:
 
 
 def seed_from_file(fn: str) -> int:
-    return int(open(relative_path(__file__, fn)).readline().strip())
+    return int(open(fn).readline().strip())
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    seed = seed_from_file(input_path)
+    result_1 = part_1(seed)
+    result_2 = part_2(seed)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    seed_ = seed_from_file('data/13-input.txt')
-    part_1(seed_)
-    part_2(seed_)
+    main()

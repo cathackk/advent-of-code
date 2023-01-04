@@ -7,10 +7,10 @@ https://adventofcode.com/2016/day/11
 from itertools import combinations
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.text import abc_rot
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(initial_state: 'State') -> int:
@@ -377,7 +377,7 @@ class State:
 
     @classmethod
     def from_file(cls, fn: str) -> 'State':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'State':
@@ -497,7 +497,12 @@ def search(initial_state: State) -> tuple[int, list[Move]]:
     )
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    initial_state = State.from_file(input_path)
+    result_1 = part_1(initial_state)
+    result_2 = part_2(initial_state)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    initial_state_ = State.from_file('data/11-input.txt')
-    part_1(initial_state_)
-    part_2(initial_state_)
+    main()

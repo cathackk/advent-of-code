@@ -6,7 +6,7 @@ https://adventofcode.com/2015/day/2
 
 from typing import Iterable
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 Dimension = tuple[int, int, int]
 
@@ -99,7 +99,7 @@ def ribbon(length: int, width: int, height: int) -> int:
 
 
 def dimensions_from_file(fn: str) -> list[Dimension]:
-    return list(dimensions_from_lines(open(relative_path(__file__, fn))))
+    return list(dimensions_from_lines(open(fn)))
 
 
 def dimensions_from_lines(lines: Iterable[str]) -> Iterable[Dimension]:
@@ -108,7 +108,12 @@ def dimensions_from_lines(lines: Iterable[str]) -> Iterable[Dimension]:
         yield int(length), int(width), int(height)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    dimensions = dimensions_from_file(input_path)
+    result_1 = part_1(dimensions)
+    result_2 = part_2(dimensions)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    dimensions_ = dimensions_from_file('data/02-input.txt')
-    part_1(dimensions_)
-    part_2(dimensions_)
+    main()
