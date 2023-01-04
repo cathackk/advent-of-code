@@ -7,9 +7,9 @@ https://adventofcode.com/2018/day/1
 from itertools import cycle
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import first_repeat
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(increments: Iterable[int]) -> int:
@@ -123,10 +123,15 @@ def cycling_frequencies(increments: Iterable[int]) -> Iterable[int]:
 
 
 def frequencies_from_file(fn: str) -> list[int]:
-    return [int(line.strip()) for line in open(relative_path(__file__, fn))]
+    return [int(line.strip()) for line in open(fn)]
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    frequencies = frequencies_from_file(input_path)
+    result_1 = part_1(frequencies)
+    result_2 = part_2(frequencies)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    frequencies_ = frequencies_from_file('data/01-input.txt')
-    part_1(frequencies_)
-    part_2(frequencies_)
+    main()

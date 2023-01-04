@@ -14,10 +14,10 @@ from itertools import groupby
 from typing import Any
 from typing import Iterable
 
-from common.file import relative_path
 from common.graph import shortest_path
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(cave: 'Cave'):
@@ -702,7 +702,7 @@ class Cave:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Cave':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Cave':
@@ -712,8 +712,8 @@ class Cave:
         return cls(depth=int(depth), target_pos=(int(target_x), int(target_y)))
 
 
-def main(fn: str = 'data/22-input.txt') -> tuple[int, int]:
-    cave = Cave.from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    cave = Cave.from_file(input_path)
     result_1 = part_1(cave)
     result_2 = part_2(cave)
     return result_1, result_2

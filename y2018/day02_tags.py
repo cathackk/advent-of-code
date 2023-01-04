@@ -8,9 +8,9 @@ from collections import Counter
 from itertools import combinations
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs
 from common.iteration import single_value
+from meta.aoc_tools import data_path
 
 
 def part_1(box_ids: Iterable[str]) -> int:
@@ -171,14 +171,19 @@ def box_ids_from_text(text: str) -> list[str]:
 
 
 def box_ids_from_file(fn: str) -> list[str]:
-    return box_ids_from_lines(open(relative_path(__file__, fn)))
+    return box_ids_from_lines(open(fn))
 
 
 def box_ids_from_lines(lines: Iterable[str]) -> list[str]:
     return [line.strip() for line in lines]
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, str]:
+    box_ids = box_ids_from_file(input_path)
+    result_1 = part_1(box_ids)
+    result_2 = part_2(box_ids)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    box_ids_ = box_ids_from_file('data/02-input.txt')
-    part_1(box_ids_)
-    part_2(box_ids_)
+    main()

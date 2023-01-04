@@ -9,9 +9,9 @@ from itertools import count
 from typing import Iterable
 from typing import Optional
 
-from common.file import relative_path
 from common.utils import ro
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(battle: 'Battle') -> int:
@@ -898,7 +898,7 @@ class Battle:
 
     @classmethod
     def from_file(cls, fn: str, teams: Iterable[Team] = tuple(default_teams())) -> 'Battle':
-        return cls.from_lines(open(relative_path(__file__, fn)), teams)
+        return cls.from_lines(open(fn), teams)
 
     @classmethod
     def from_lines(cls, lines: Iterable[str], teams: Iterable[Team]) -> 'Battle':
@@ -985,7 +985,12 @@ def lowest_elf_attack_without_losses(battle: Battle) -> int:
     assert False
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    battle = Battle.from_file(input_path)
+    result_1 = part_1(battle)
+    result_2 = part_2(battle)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    battle_ = Battle.from_file('data/15-input.txt')
-    part_1(battle_)
-    part_2(battle_)
+    main()

@@ -4,8 +4,8 @@ Day 5: Alchemical Reduction
 https://adventofcode.com/2018/day/5
 """
 
-from common.file import relative_path
 from common.iteration import mink
+from meta.aoc_tools import data_path
 
 
 def part_1(polymer: str) -> int:
@@ -150,11 +150,15 @@ def without_units(polymer: str, removed: str) -> str:
 
 
 def polymer_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    polymer = polymer_from_file(input_path)
+    result_1 = part_1(polymer)
+    result_2 = part_2(polymer)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    polymer_ = polymer_from_file('data/05-input.txt')
-    assert len(polymer_) == 50_000
-    part_1(polymer_)
-    part_2(polymer_)
+    main()

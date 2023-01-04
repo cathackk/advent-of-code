@@ -9,8 +9,8 @@ from typing import Iterable
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import ifind
+from meta.aoc_tools import data_path
 
 
 def part_1(recipes_count: int, scores_count: int = 10) -> str:
@@ -180,10 +180,15 @@ def find_scores(scores_to_find: str) -> int:
 
 
 def input_from_file(fn: str) -> str:
-    return open(relative_path(__file__, fn)).readline().strip()
+    return open(fn).readline().strip()
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[str, int]:
+    input_value = input_from_file(input_path)
+    result_1 = part_1(recipes_count=int(input_value))
+    result_2 = part_2(scores_to_find=input_value)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    input_ = input_from_file('data/14-input.txt')
-    part_1(recipes_count=int(input_))
-    part_2(scores_to_find=input_)
+    main()

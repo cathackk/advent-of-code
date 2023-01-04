@@ -7,11 +7,11 @@ https://adventofcode.com/2018/day/3
 from collections import Counter
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs
 from common.iteration import single_value
 from common.rect import Rect
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(claims: Iterable['Claim']) -> int:
@@ -204,14 +204,19 @@ def claims_from_text(text: str) -> list[Claim]:
 
 
 def claims_from_file(fn: str) -> list[Claim]:
-    return list(claims_from_lines(open(relative_path(__file__, fn))))
+    return list(claims_from_lines(open(fn)))
 
 
 def claims_from_lines(lines: Iterable[str]) -> Iterable[Claim]:
     return (Claim.from_str(line.strip()) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    claims = claims_from_file(input_path)
+    result_1 = part_1(claims)
+    result_2 = part_2(claims)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    claims_ = claims_from_file('data/03-input.txt')
-    part_1(claims_)
-    part_2(claims_)
+    main()

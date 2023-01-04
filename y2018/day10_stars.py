@@ -11,11 +11,11 @@ from typing import Iterator
 from tqdm import tqdm
 
 from common import ocr
-from common.file import relative_path
 from common.rect import Rect
 from common.text import parse_line
 from common.xy import Point
 from common.xy import Vector
+from meta.aoc_tools import data_path
 
 
 def part_1(stars: 'Stars', font: ocr.Font = ocr.FONT_10X8) -> str:
@@ -247,7 +247,7 @@ def stars_from_text(text: str) -> Stars:
 
 
 def stars_from_file(fn: str) -> Stars:
-    return tuple(stars_from_lines(open(relative_path(__file__, fn))))
+    return tuple(stars_from_lines(open(fn)))
 
 
 def stars_from_lines(lines: Iterable[str]) -> Iterable[Star]:
@@ -256,7 +256,12 @@ def stars_from_lines(lines: Iterable[str]) -> Iterable[Star]:
         yield Point(int(p_x), int(p_y)), Vector(int(v_x), int(v_y))
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[str, int]:
+    stars = stars_from_file(input_path)
+    result_1 = part_1(stars)
+    result_2 = part_2(stars)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    stars_ = stars_from_file('data/10-input.txt')
-    part_1(stars_)
-    part_2(stars_)
+    main()

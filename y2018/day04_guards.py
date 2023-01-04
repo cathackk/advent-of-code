@@ -8,9 +8,9 @@ from collections import Counter
 from typing import Iterable
 from typing import NamedTuple
 
-from common.file import relative_path
 from common.text import parse_line
 from common.utils import some
+from meta.aoc_tools import data_path
 
 
 def part_1(nights: Iterable['NightRecord']) -> int:
@@ -295,7 +295,7 @@ def events_from_text(text: str) -> list[Event]:
 
 
 def events_from_file(fn: str) -> list[Event]:
-    return sorted(events_from_lines(open(relative_path(__file__, fn))))
+    return sorted(events_from_lines(open(fn)))
 
 
 def events_from_lines(lines: Iterable[str]) -> Iterable[Event]:
@@ -347,7 +347,12 @@ def records_from_events(events: Iterable[Event]) -> Iterable[NightRecord]:
         yield NightRecord(some(current_date), some(current_guard_id), current_sleeps)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    records = records_from_file(input_path)
+    result_1 = part_1(records)
+    result_2 = part_2(records)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    records_ = records_from_file('data/04-input.txt')
-    part_1(records_)
-    part_2(records_)
+    main()

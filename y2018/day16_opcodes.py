@@ -8,11 +8,11 @@ from dataclasses import dataclass
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.iteration import ilen
 from common.iteration import single_value
 from common.text import parse_line
 from common.text import ParseError
+from meta.aoc_tools import data_path
 
 
 def part_1(samples: Iterable['Sample']) -> int:
@@ -272,7 +272,7 @@ def run_program(program: Iterable[Instr], opnum_to_opcode: dict[int, str]) -> li
 
 
 def input_from_file(fn: str) -> tuple[list[Sample], list[Instr]]:
-    return input_from_lines(line.strip() for line in open(relative_path(__file__, fn)))
+    return input_from_lines(line.strip() for line in open(fn))
 
 
 def input_from_lines(lines: Iterator[str]) -> tuple[list[Sample], list[Instr]]:
@@ -294,7 +294,12 @@ def program_from_lines(lines: Iterator[str]) -> Iterable[Instr]:
     return (Instr.from_str(line) for line in lines)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    samples, program = input_from_file(input_path)
+    result_1 = part_1(samples)
+    result_2 = part_2(samples, program)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    samples_, program_ = input_from_file('data/16-input.txt')
-    part_1(samples_)
-    part_2(samples_, program_)
+    main()

@@ -8,9 +8,9 @@ from itertools import count
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.iteration import minmax
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(initial_state: 'State', rules: 'Rules', generations: int = 20) -> int:
@@ -258,7 +258,7 @@ def input_from_text(text: str) -> tuple[State, Rules]:
 
 
 def input_from_file(fn: str) -> tuple[State, Rules]:
-    return input_from_lines(open(relative_path(__file__, fn)))
+    return input_from_lines(open(fn))
 
 
 def input_from_lines(lines: Iterable[str]) -> tuple[State, Rules]:
@@ -280,7 +280,12 @@ def rule_from_line(line: str) -> Rule:
     return int(rule_in.replace('.', '0').replace('#', '1'), 2), rule_out == '#'
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    initial_state, rules = input_from_file(input_path)
+    result_1 = part_1(initial_state, rules)
+    result_2 = part_2(initial_state, rules)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    initial_state_, rules_ = input_from_file('data/12-input.txt')
-    part_1(initial_state_, rules_)
-    part_2(initial_state_, rules_)
+    main()

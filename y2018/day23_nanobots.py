@@ -9,9 +9,9 @@ from dataclasses import dataclass
 from typing import Iterable
 from typing import Union
 
-from common.file import relative_path
 from common.iteration import zip1
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(nanobots: list['Nanobot']) -> int:
@@ -198,7 +198,7 @@ def most_common_distance(nanobots: list[Nanobot]) -> int:
 
 
 def nanobots_from_file(fn: str) -> list[Nanobot]:
-    return list(nanobots_from_lines(open(relative_path(__file__, fn))))
+    return list(nanobots_from_lines(open(fn)))
 
 
 def nanobots_from_text(text: str) -> list[Nanobot]:
@@ -209,8 +209,8 @@ def nanobots_from_lines(lines: Iterable[str]) -> Iterable[Nanobot]:
     return (Nanobot.from_line(line) for line in lines)
 
 
-def main(fn: str = 'data/23-input.txt') -> tuple[int, int]:
-    nanobots = nanobots_from_file(fn)
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    nanobots = nanobots_from_file(input_path)
     result_1 = part_1(nanobots)
     result_2 = part_2(nanobots)
     # TODO: the result is actually off by one -> should be +1 -> 116547949; what went wrong?

@@ -8,9 +8,9 @@ from functools import lru_cache
 
 from tqdm import tqdm
 
-from common.file import relative_path
 from common.iteration import maxk
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(serial: int) -> str:
@@ -253,10 +253,15 @@ def draw_region(x: int, y: int, serial: int, square_size: int = 3, margin: int =
 
 
 def serial_from_file(fn: str) -> int:
-    return int(open(relative_path(__file__, fn)).readline())
+    return int(open(fn).readline())
+
+
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    serial = serial_from_file(input_path)
+    result_1 = part_1(serial)
+    result_2 = part_2(serial)
+    return result_1, result_2
 
 
 if __name__ == '__main__':
-    serial_ = serial_from_file('data/11-input.txt')
-    part_1(serial_)
-    part_2(serial_)
+    main()

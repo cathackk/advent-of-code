@@ -7,8 +7,8 @@ https://adventofcode.com/2018/day/9
 from tqdm import tqdm
 
 from common.chain import Circle
-from common.file import relative_path
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(players_count: int, last_marble: int) -> int:
@@ -158,7 +158,7 @@ def game(players_count: int, last_marble: int, log: bool | int = False) -> int:
 
 
 def parameters_from_file(fn: str) -> tuple[int, int]:
-    return parameters_from_line(open(relative_path(__file__, fn)).readline().strip())
+    return parameters_from_line(open(fn).readline().strip())
 
 
 def parameters_from_line(line: str) -> tuple[int, int]:
@@ -167,7 +167,12 @@ def parameters_from_line(line: str) -> tuple[int, int]:
     return int(players_count), int(last_marble)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    player_count, last_marble = parameters_from_file(input_path)
+    result_1 = part_1(player_count, last_marble)
+    result_2 = part_2(player_count, last_marble * 100)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    player_count_, last_marble_ = parameters_from_file('data/09-input.txt')
-    part_1(player_count_, last_marble_)
-    part_2(player_count_, last_marble_ * 100)
+    main()

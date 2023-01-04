@@ -10,12 +10,12 @@ from typing import Iterable
 from typing import Iterator
 from typing import NamedTuple
 
-from common.file import relative_path
 from common.heading import Heading
 from common.iteration import single_value
 from common.rect import Pos
 from common.rect import Rect
 from common.utils import ro
+from meta.aoc_tools import data_path
 
 
 def part_1(carts_map: 'Map') -> str:
@@ -462,7 +462,7 @@ class Map:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Map':
-        return cls.from_lines(open(relative_path(__file__, fn)))
+        return cls.from_lines(open(fn))
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Map':
@@ -485,7 +485,12 @@ class Map:
         return Map(tracks, carts)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
+    carts_map = Map.from_file(input_path)
+    result_1 = part_1(carts_map)
+    result_2 = part_2(carts_map)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    carts_map_ = Map.from_file('data/13-input.txt')
-    part_1(carts_map_)
-    part_2(carts_map_)
+    main()

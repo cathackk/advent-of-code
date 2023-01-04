@@ -11,11 +11,11 @@ from typing import Generator
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs_set
 from common.iteration import exhaust
 from common.iteration import last
 from common.text import parse_line
+from meta.aoc_tools import data_path
 
 
 def part_1(instructions: Iterable['Dependency']) -> str:
@@ -255,7 +255,7 @@ def instructions_from_text(text: str) -> list[Dependency]:
 
 
 def instructions_from_file(fn: str) -> list[Dependency]:
-    return list(dependencies_from_lines(open(relative_path(__file__, fn))))
+    return list(dependencies_from_lines(open(fn)))
 
 
 def dependencies_from_lines(lines: Iterable[str]) -> Iterable[Dependency]:
@@ -264,7 +264,12 @@ def dependencies_from_lines(lines: Iterable[str]) -> Iterable[Dependency]:
         yield before, after
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[str, int]:
+    instructions = instructions_from_file(input_path)
+    result_1 = part_1(instructions)
+    result_2 = part_2(instructions)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    instructions_ = instructions_from_file('data/07-input.txt')
-    part_1(instructions_)
-    part_2(instructions_)
+    main()

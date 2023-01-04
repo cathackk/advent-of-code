@@ -7,11 +7,11 @@ https://adventofcode.com/2018/day/6
 import string
 from typing import Iterable
 
-from common.file import relative_path
 from common.iteration import dgroupby_pairs_set
 from common.iteration import single_value
 from common.rect import Pos
 from common.rect import Rect
+from meta.aoc_tools import data_path
 
 
 def part_1(coordinates: Iterable[Pos]) -> int:
@@ -262,7 +262,7 @@ def coordinates_from_text(text: str) -> list[Pos]:
 
 
 def coordinates_from_file(fn: str) -> list[Pos]:
-    return list(coordinates_from_lines(open(relative_path(__file__, fn))))
+    return list(coordinates_from_lines(open(fn)))
 
 
 def coordinates_from_lines(lines: Iterable[str]) -> Iterable[Pos]:
@@ -271,7 +271,12 @@ def coordinates_from_lines(lines: Iterable[str]) -> Iterable[Pos]:
         yield int(x), int(y)
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    points = coordinates_from_file(input_path)
+    result_1 = part_1(points)
+    result_2 = part_2(points)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    points_ = coordinates_from_file('data/06-input.txt')
-    part_1(points_)
-    part_2(points_)
+    main()

@@ -9,7 +9,7 @@ from itertools import islice
 from typing import Iterable
 from typing import Iterator
 
-from common.file import relative_path
+from meta.aoc_tools import data_path
 
 
 def part_1(root_node: 'Node') -> int:
@@ -159,7 +159,7 @@ class Node:
 
     @classmethod
     def from_file(cls, fn: str) -> 'Node':
-        return cls.from_str(open(relative_path(__file__, fn)).readline())
+        return cls.from_str(open(fn).readline())
 
     @classmethod
     def from_str(cls, line: str) -> 'Node':
@@ -181,7 +181,12 @@ class Node:
         yield from self.metadata
 
 
+def main(input_path: str = data_path(__file__)) -> tuple[int, int]:
+    root_node = Node.from_file(input_path)
+    result_1 = part_1(root_node)
+    result_2 = part_2(root_node)
+    return result_1, result_2
+
+
 if __name__ == '__main__':
-    root_node_ = Node.from_file('data/08-input.txt')
-    part_1(root_node_)
-    part_2(root_node_)
+    main()
