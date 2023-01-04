@@ -199,7 +199,7 @@ def part_2(stars: 'Stars', font: ocr.Font = ocr.FONT_10X8) -> int:
     Impressed by your sub-hour communication capabilities, the Elves are curious: **exactly how many
     seconds would they have needed to wait for that message to appear?
 
-        >>> example_stars = stars_from_file('data/10-example.txt')
+        >>> example_stars = stars_from_file(data_path(__file__, 'example.txt'))
         >>> part_2(example_stars, font=ocr.FONT_8X6)
         part 2: message appears in 3 seconds
         3

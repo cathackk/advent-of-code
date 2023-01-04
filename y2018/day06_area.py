@@ -110,7 +110,7 @@ def part_2(coordinates: Iterable[Pos], distance_limit: int = 10_000) -> int:
     the total of those distances is less than 32, that location is within the desired region. Using
     the same coordinates as above, the resulting region looks like this:
 
-        >>> example_coordinates = coordinates_from_file('data/06-example.txt')
+        >>> example_coordinates = coordinates_from_file(data_path(__file__, 'example.txt'))
         >>> draw_coordinates(example_coordinates, distance_limit=32)
         ··········
         ·A········

@@ -143,7 +143,7 @@ def part_2(initial_state: 'State', rules: 'Rules', generations: int = 50_000_000
     **After fifty billion (`50_000_000_000`) generations, what is the sum of the numbers of all pots
     which contain a plant?**
 
-        >>> example_state, example_rules = input_from_file('data/12-example.txt')
+        >>> example_state, example_rules = input_from_file(data_path(__file__, 'example.txt'))
         >>> part_2(example_state, example_rules)
         part 2: after 50000000000 generations, plants have score 999999999374
         999999999374

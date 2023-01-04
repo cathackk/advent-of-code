@@ -109,7 +109,7 @@ def part_2(links: Iterable['Link']) -> int:
 
     In the example above, there are two longest bridges:
 
-        >>> example_links = links_from_file('data/24-example.txt')
+        >>> example_links = links_from_file(data_path(__file__, 'example.txt'))
         >>> bridges = longest_bridges(example_links)
         >>> for bridge in bridges:
         ...     print(bridge)

@@ -106,7 +106,7 @@ def part_2(tower: 'Tower') -> int:
     In the example above, this means that for `ugml`'s disc to be balanced, `gyxo`, `ebii`, and
     `jptl` must all have the same weight, and they do: `61`.
 
-        >>> example = Tower.from_file('data/07-example.txt')
+        >>> example = Tower.from_file(data_path(__file__, 'example.txt'))
         >>> print(format(example, 'weights'))
         tknk (41 + 737 = 778)
         ├── ugml (68 + 183 = 251)

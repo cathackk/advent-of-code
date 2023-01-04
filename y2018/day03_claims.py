@@ -102,7 +102,7 @@ def part_2(claims: Iterable['Claim']) -> int:
 
     For example, in the claims above, only claim `3` is intact after all claims are made:
 
-        >>> example_claims = claims_from_file('data/03-example.txt')
+        >>> example_claims = claims_from_file(data_path(__file__, 'example.txt'))
         >>> list(without_overlaps(example_claims))
         [Claim(id_=3, left=5, top=5, width=2, height=2)]
 

@@ -100,7 +100,7 @@ def part_2(diagram: 'Diagram') -> int:
 
     For example, using the same routing diagram from the example above, the packet would go:
 
-        >>> example_diagram = Diagram.from_file('data/19-example.txt')
+        >>> example_diagram = Diagram.from_file(data_path(__file__, 'example.txt'))
         >>> print("\n".join(f"- {route}" for route in example_diagram.routes()))
         - 5 steps down
         - 3 steps right

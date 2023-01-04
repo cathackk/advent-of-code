@@ -107,7 +107,7 @@ def part_1(battle: 'Battle') -> int:
 
     Here's a larger example of movement:
 
-        >>> example_map = Battle.from_file('data/15-example-movement.txt')
+        >>> example_map = Battle.from_file(data_path(__file__, 'example-movement.txt'))
         >>> print(format(example_map, '!status'))
         Initially:
         #########
@@ -220,7 +220,7 @@ def part_1(battle: 'Battle') -> int:
     Below is an entire sample combat. Next to each map, each row's units' hit points are listed from
     left to right.
 
-        >>> example_combat = Battle.from_file('data/15-example-0.txt')
+        >>> example_combat = Battle.from_file(data_path(__file__, 'example-0.txt'))
         >>> print(example_combat)
         Initially:
         #######
@@ -354,7 +354,7 @@ def part_1(battle: 'Battle') -> int:
 
     Here are a few example summarized combats:
 
-        >>> Battle.from_file('data/15-example-1.txt').finish()
+        >>> Battle.from_file(data_path(__file__, 'example-1.txt')).finish()
         #######       #######
         #G..#E#       #...#E#   E(200)
         #E#E.E#       #E#...#   E(197)
@@ -367,7 +367,7 @@ def part_1(battle: 'Battle') -> int:
         Elves win with 982 total hit points left
         Outcome: 37 * 982 = 36334
 
-        >>> Battle.from_file('data/15-example-2.txt').finish()
+        >>> Battle.from_file(data_path(__file__, 'example-2.txt')).finish()
         #######       #######
         #E..EG#       #.E.E.#   E(164), E(197)
         #.#G.E#       #.#E..#   E(200)
@@ -380,7 +380,7 @@ def part_1(battle: 'Battle') -> int:
         Elves win with 859 total hit points left
         Outcome: 46 * 859 = 39514
 
-        >>> Battle.from_file('data/15-example-3.txt').finish()
+        >>> Battle.from_file(data_path(__file__, 'example-3.txt')).finish()
         #######       #######
         #E.G#.#       #G.G#.#   G(200), G(98)
         #.#G..#       #.#G..#   G(200)
@@ -393,7 +393,7 @@ def part_1(battle: 'Battle') -> int:
         Goblins win with 793 total hit points left
         Outcome: 35 * 793 = 27755
 
-        >>> Battle.from_file('data/15-example-4.txt').finish()
+        >>> Battle.from_file(data_path(__file__, 'example-4.txt')).finish()
         #######       #######
         #.E...#       #.....#
         #.#..G#       #.#G..#   G(200)
@@ -406,7 +406,7 @@ def part_1(battle: 'Battle') -> int:
         Goblins win with 536 total hit points left
         Outcome: 54 * 536 = 28944
 
-        >>> Battle.from_file('data/15-example-5.txt').finish()
+        >>> Battle.from_file(data_path(__file__, 'example-5.txt')).finish()
         #########       #########
         #G......#       #.G.....#   G(137)
         #.E.#...#       #G.G#...#   G(200), G(200)
@@ -423,7 +423,7 @@ def part_1(battle: 'Battle') -> int:
 
     **What is the outcome** of the combat described in your puzzle input?
 
-        >>> part_1(Battle.from_file('data/15-example-5.txt'))
+        >>> part_1(Battle.from_file(data_path(__file__, 'example-5.txt')))
         part 1:
             Combat ends after 20 full rounds
             Goblins win with 937 total hit points left
@@ -455,7 +455,9 @@ def part_2(battle: 'Battle') -> int:
     In the first summarized example above, the lowest attack power the Elves need to win without
     losses is `15`:
 
-        >>> Battle.from_file('data/15-example-0.txt', default_teams(elves_attack=15)).finish()
+        >>> Battle.from_file(
+        ...     data_path(__file__, 'example-0.txt'), teams=default_teams(elves_attack=15)
+        ... ).finish()
         #######       #######
         #.G...#       #..E..#   E(158)
         #...EG#       #...E.#   E(14)
@@ -470,7 +472,9 @@ def part_2(battle: 'Battle') -> int:
 
     Because with attack power 14, the elves would win, but with a single loss:
 
-        >>> Battle.from_file('data/15-example-0.txt', default_teams(elves_attack=14)).finish()
+        >>> Battle.from_file(
+        ...     data_path(__file__, 'example-0.txt'), teams=default_teams(elves_attack=14)
+        ... ).finish()
         #######       #######
         #.G...#       #..E..#   E(152)
         #...EG#       #.....#
@@ -485,7 +489,7 @@ def part_2(battle: 'Battle') -> int:
 
     In the second example above, the Elves need only 4 attack power:
 
-        >>> example_2 = Battle.from_file('data/15-example-2.txt')
+        >>> example_2 = Battle.from_file(data_path(__file__, 'example-2.txt'))
         >>> lowest_elf_attack_without_losses(example_2)
         4
         >>> example_2.with_attack('E', 4).finish()
@@ -503,7 +507,7 @@ def part_2(battle: 'Battle') -> int:
 
     In the third example above, the Elves need 15 attack power:
 
-        >>> example_3 = Battle.from_file('data/15-example-3.txt')
+        >>> example_3 = Battle.from_file(data_path(__file__, 'example-3.txt'))
         >>> lowest_elf_attack_without_losses(example_3)
         15
         >>> example_3.with_attack('E', 15).finish()
@@ -521,7 +525,7 @@ def part_2(battle: 'Battle') -> int:
 
     In the fourth example above, the Elves need 12 attack power:
 
-        >>> example_4 = Battle.from_file('data/15-example-4.txt')
+        >>> example_4 = Battle.from_file(data_path(__file__, 'example-4.txt'))
         >>> lowest_elf_attack_without_losses(example_4)
         12
         >>> example_4.with_attack('E', 12).finish()
@@ -539,7 +543,7 @@ def part_2(battle: 'Battle') -> int:
 
     In the last example above, the lone Elf needs 34 attack power:
 
-        >>> example_5 = Battle.from_file('data/15-example-5.txt')
+        >>> example_5 = Battle.from_file(data_path(__file__, 'example-5.txt'))
         >>> lowest_elf_attack_without_losses(example_5)
         34
         >>> example_5.with_attack('E', 34).finish()

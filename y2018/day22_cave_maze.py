@@ -249,7 +249,7 @@ def part_2(cave: 'Cave') -> int:
     moving to the bottom right corner (the target, `10,10`) as quickly as possible, one possible
     route is as follows, with your current position marked `X`:
 
-        >>> example_cave = Cave.from_file('data/22-example.txt')
+        >>> example_cave = Cave.from_file(data_path(__file__, 'example.txt'))
         >>> duration, path = example_cave.shortest_path()
         >>> path  # doctest: +NORMALIZE_WHITESPACE
         [DOWN, RIGHT, SWITCH_TOOL, RIGHT, RIGHT, RIGHT, SWITCH_TOOL,

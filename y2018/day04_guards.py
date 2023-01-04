@@ -138,7 +138,7 @@ def part_2(nights: Iterable['NightRecord']) -> int:
     In the example above, Guard #99 spent minute 45 asleep more than any other guard or minute -
     three times in total. (In all other cases, any guard spent any minute asleep at most twice.)
 
-        >>> example_records = records_from_file('data/04-example.txt')
+        >>> example_records = records_from_file(data_path(__file__, 'example.txt'))
         >>> slept_per_guard_minute(example_records).most_common(2)
         [((99, 45), 3), ((10, 24), 2)]
 

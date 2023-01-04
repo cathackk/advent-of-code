@@ -87,7 +87,7 @@ def part_2(links: Iterable['Link']) -> int:
     In the example above, there were `2` groups: one consisting of programs `0,2,3,4,5,6`, and the
     other consisting solely of program `1`.
 
-        >>> example_links = links_from_file('data/12-example.txt')
+        >>> example_links = links_from_file(data_path(__file__, 'example.txt'))
         >>> create_groups(example_links)
         [[0, 2, 3, 4, 5, 6], [1]]
 

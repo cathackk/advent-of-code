@@ -114,7 +114,7 @@ def part_2(instructions: Iterable['Dependency']) -> int:
     takes 26 seconds). Then, using the same instructions as above, this is how each second would be
     spent:
 
-        >>> example = instructions_from_file('data/07-example.txt')
+        >>> example = instructions_from_file(data_path(__file__, 'example.txt'))
         >>> print_schedule(build(example, workers_count=2, step_length_base=0))
         Second   Worker 1   Worker 2   Done
            0        C          .

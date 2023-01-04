@@ -84,7 +84,7 @@ def part_1(carts_map: 'Map') -> str:
 
     Here is a longer example:
 
-        >>> example_map = Map.from_file('data/13-example-1.txt')
+        >>> example_map = Map.from_file(data_path(__file__, 'example-1.txt'))
         >>> example_map.run(draw=True)
         /->-\
         |   |  /----\
@@ -207,7 +207,7 @@ def part_1(carts_map: 'Map') -> str:
 
     In this example, the location of the first crash is **`7,3`**.
 
-        >>> part_1(Map.from_file('data/13-example-1.txt'))
+        >>> part_1(Map.from_file(data_path(__file__, 'example-1.txt')))
         part 1: first collision happens after 14 ticks at 7,3
         '7,3'
     """
@@ -231,7 +231,7 @@ def part_2(carts_map: 'Map') -> str:
 
     For example:
 
-        >>> example_map = Map.from_file('data/13-example-2.txt')
+        >>> example_map = Map.from_file(data_path(__file__, 'example-2.txt'))
         >>> example_map.run(draw=True)
         />-<\
         |   |
@@ -274,7 +274,7 @@ def part_2(carts_map: 'Map') -> str:
     **What is the location of the last cart** at the end of the first tick where it is the only cart
     left?
 
-        >>> part_2(Map.from_file('data/13-example-2.txt'))
+        >>> part_2(Map.from_file(data_path(__file__, 'example-2.txt')))
         part 2: last remaining cart is at 6,4
         '6,4'
     """

@@ -218,7 +218,7 @@ def part_2(layers: 'Layers') -> int:
 
     In the example above, if you delay `10` picoseconds, you won't get caught:
 
-        >>> example_layers = layers_from_file('data/13-example.txt')
+        >>> example_layers = layers_from_file(data_path(__file__, 'example.txt'))
         >>> print_layers_traversal(example_layers, delay=10)
         === State after delaying: ===
          0   1   2   3   4   5   6

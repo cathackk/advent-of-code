@@ -190,7 +190,7 @@ def part_2(grid: 'Grid', bursts: int = 10_000_000) -> int:
     **flagged** as `f`, the middle of the infinite grid looks like this, with the virus carrier's
     position again marked with `[ ]`:
 
-        >>> example_grid = Grid.from_file('data/22-example.txt')
+        >>> example_grid = Grid.from_file(data_path(__file__, 'example.txt'))
         >>> run = run_virus(example_grid, bursts=100, extended_states=True)
         >>> print(next(run))
         · · · · · · ·

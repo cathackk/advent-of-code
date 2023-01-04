@@ -82,7 +82,7 @@ def part_2(root_node: 'Node') -> int:
     The second check is slightly more complicated: you need to find the value of the root node
     (`A` in the example above).
 
-        >>> node_a = Node.from_file('data/08-example.txt')
+        >>> node_a = Node.from_file(data_path(__file__, 'example.txt'))
         >>> node_b, node_c = node_a.children
         >>> node_d, = node_c.children
 

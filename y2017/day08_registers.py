@@ -91,7 +91,7 @@ def part_2(instructions: list['Instruction']) -> int:
     the above instructions, the highest value ever held was `10` (in register `c` after the third
     instruction was evaluated).
 
-        >>> example_instructions = instructions_from_file('data/08-example.txt')
+        >>> example_instructions = instructions_from_file(data_path(__file__, 'example.txt'))
         >>> part_2(example_instructions)
         part 2: largest value in registers at any moment was c=10
         10
