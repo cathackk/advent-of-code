@@ -111,7 +111,7 @@ def part_2(wire_1: 'Wire', wire_2: 'Wire') -> int:
     to that location, including the intersection being considered. Again consider the example from
     above:
 
-        >>> example_wires = wires_from_file('data/03-example.txt')
+        >>> example_wires = wires_from_file(data_path(__file__, 'example.txt'))
         >>> draw_wires(*example_wires)
         ···········
         ·+-----+···
