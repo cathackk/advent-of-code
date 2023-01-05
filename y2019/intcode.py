@@ -1,9 +1,12 @@
 from enum import Enum
+from typing import Any
 from typing import Callable
 from typing import Generator
 from typing import Iterable
 from typing import Optional
 
+
+Tape = list[int]
 
 class OperationCode(Enum):
     # writes (a1 + a2) to a3
@@ -58,10 +61,10 @@ class Argument:
         elif self.mode == Mode.RELATIVE:
             return f"[R+{self.value}]"
         else:
-            raise ValueError(f"unsupport mode {self.mode}")
+            raise ValueError(f"unsupported mode {self.mode}")
 
 
-class Operation:
+class Instruction:
     def __init__(self, opcode: OperationCode, args: Iterable[Argument]):
         self.opcode = opcode
         self.args = tuple(args)
@@ -75,18 +78,18 @@ class Halt(Exception):
     pass
 
 
-RunCoroutine = Generator[Optional[int], int, None]
+# yields optional ints:
+#   - yielded None = asking for input
+#   - yielded int = output
+#
+# can be sent int (when asking for it by yielding None) = input
+RunCoroutine = Generator[int | None, int, None]
 
 
 class Machine:
-    def __init__(
-            self,
-            tape: Iterable[int],
-            name: str = None,
-            debug: bool = False
-    ):
+    def __init__(self, tape: Iterable[int], name: str = None, debug: bool = False):
         self.tape = list(tape)
-        self.memory: list[int] = []
+        self.memory: Tape = []
         self.rbase = 0
         self.head = -1
         self.tick = -1
@@ -94,7 +97,7 @@ class Machine:
         self.name = name
         self.debug = debug
 
-    def log(self, message=""):
+    def log(self, message: Any = ""):
         if self.debug:
             if self.name:
                 print(f"[{self.name} {self.tick}] {message}")
@@ -107,29 +110,55 @@ class Machine:
         self.head = 0
         self.tick = 0
 
-    def run(self) -> RunCoroutine:
+    def run_coroutine(self) -> RunCoroutine:
         """
-        yields None -> gimme input (int)
+        yields None -> asks for input (int) to be sent in
         yields int -> output
         """
         self._restart()
         try:
             while True:
-                out_value = yield from self.step()
+                out_value = yield from self._step()
                 if out_value is not None:
                     yield out_value
         except Halt:
             self.log("halting")
 
+    def _step(self) -> Generator[None, int, int]:
+        """returns output (if any)"""
+
+        self.tick += 1
+        self.log(f"> head={self.head}")
+
+        instr = self.scan_instruction()
+        self.log(f"> instr={instr}")
+
+        out_value = yield from self.evaluate(instr)
+        if out_value is not None:
+            self.log(f"> out={out_value}")
+
+        return out_value
+
+    def run_through(self) -> Tape:
+        """
+        Simple diagnostic run that assumes no input or output and returns the final memory state.
+        """
+        co = self.run_coroutine()
+        try:
+            next(co)
+            assert False
+        except StopIteration:
+            return list(self.memory)
+
     def run_io(self) -> 'MachineIO':
-        return MachineIO(self.run())
+        return MachineIO(self.run_coroutine())
 
     def run_output_only(self) -> Iterable[int]:
         return self.run_io().read()
 
     def run_fixed_input(self, ins: Iterable[int]) -> Generator[int, None, None]:
         ins_it = iter(ins)
-        co = self.run()
+        co = self.run_coroutine()
         io = next(co)
         while True:
             if io is not None:
@@ -142,7 +171,7 @@ class Machine:
 
     def run_control(self, initial_state: int = 0):
         ctrl_state = initial_state
-        co = self.run()
+        co = self.run_coroutine()
         io = next(co)
         while True:
             if io is not None:
@@ -158,10 +187,10 @@ class Machine:
                 io = co.send(ctrl_state)
 
     def as_function(
-            self, *,
-            out_count: int = None,
-            init: Iterable[int] = (),
-            restarting: bool = False
+        self, *,
+        out_count: int = None,
+        init: Iterable[int] = (),
+        restarting: bool = True
     ) -> Callable[..., tuple[int, ...]]:
         assert out_count is None or out_count > 0
 
@@ -185,9 +214,9 @@ class Machine:
             return func
 
     def as_function_scalar(
-            self, *,
-            init: Iterable[int] = (),
-            restarting: bool = False
+        self, *,
+        init: Iterable[int] = (),
+        restarting: bool = True
     ) -> Callable[..., int]:
         fn_vector = self.as_function(out_count=1, init=init, restarting=restarting)
 
@@ -196,36 +225,20 @@ class Machine:
 
         return fn_scalar
 
-    def step(self) -> Optional[int]:
-        """
-        returns output (if any)
-        """
-        self.tick += 1
-        self.log(f"step {self.tick}")
-        self.log(f"> head={self.head}")
+    def scan_instruction(self) -> Instruction:
+        code = self.scan_single()
+        self.log(f"> op={code}")
 
-        op = self.scan_operation()
-        self.log(f"> op={op}")
-
-        out_value = yield from self.evaluate(op)
-        if out_value is not None:
-            self.log(f"> out={out_value}")
-        return out_value
-
-    def scan_operation(self) -> Operation:
-        instr = self.scan_single()
-        self.log(f"> instr={instr}")
-
-        opcode = OperationCode.from_code(instr % 100)
+        opcode = OperationCode.from_code(code % 100)
         # self.log(f"> opcode={opcode}")
 
-        inst_str = str(instr).zfill(2 + opcode.argcount)
+        inst_str = str(code).zfill(2 + opcode.argcount)
         arg_values = list(self.scan_multi(opcode.argcount))
         arg_modes = [Mode(int(c)) for c in inst_str[-3::-1]]
         args = [Argument(v, m) for v, m in zip(arg_values, arg_modes)]
         # self.log(f"> args=[{', '.join(str(arg) for arg in args)}]")
 
-        return Operation(opcode, args)
+        return Instruction(opcode, args)
 
     def scan_single(self) -> int:
         value = self.read_memory(self.head)
@@ -267,88 +280,96 @@ class Machine:
         if address >= len(self.memory):
             self.memory.extend([0] * (1 + address - len(self.memory)))
 
-    def evaluate(self, op: Operation) -> Generator[None, int, Optional[int]]:
+    def evaluate(self, instr: Instruction) -> Generator[None, int, int | None]:
         """
-        yields -> gimme input (int)
-        returns -> output (optional int)
+        yields  None = asks for input (int) to be sent
+        returns int  = output
+        returns None = no output
         """
-        if op.opcode == OperationCode.ADD:
-            v1 = self.value(op.args[0])
-            v2 = self.value(op.args[1])
-            result = v1 + v2
-            self.write_memory(op.args[2], result)
-            self.log(f">> {op.args[0]} + {op.args[1]} -> {op.args[2]} ({v1} + {v2} = {result})")
 
-        elif op.opcode == OperationCode.MULTIPLY:
-            v1 = self.value(op.args[0])
-            v2 = self.value(op.args[1])
-            result = v1 * v2
-            self.write_memory(op.args[2], result)
-            self.log(f">> {op.args[0]} * {op.args[1]} -> {op.args[2]} ({v1} * {v2} = {result})")
+        match instr.opcode:
+            case OperationCode.ADD:
+                src_1, src_2, target = instr.args
+                val_1 = self.value(src_1)
+                val_2 = self.value(src_2)
+                result = val_1 + val_2
+                self.write_memory(instr.args[2], result)
+                self.log(f">> {src_1} + {src_2} -> {target} ({val_1} + {val_2} = {result})")
 
-        elif op.opcode == OperationCode.INPUT:
-            value = yield
-            self.write_memory(op.args[0], value)
-            self.log(f">> input -> {op.args[0]} ({value})")
+            case OperationCode.MULTIPLY:
+                src_1, src_2, target = instr.args
+                val_1 = self.value(src_1)
+                val_2 = self.value(src_2)
+                result = val_1 * val_2
+                self.write_memory(target, result)
+                self.log(f">> {src_1} * {src_2} -> {target} ({val_1} * {val_2} = {result})")
 
-        elif op.opcode == OperationCode.OUTPUT:
-            value = self.value(op.args[0])
-            self.log(f">> output <- {op.args[0]} ({value})")
-            return value
+            case OperationCode.INPUT:
+                # yields None = asks for input
+                target, = instr.args
+                value = yield
+                self.write_memory(target, value)
+                self.log(f">> input -> {target} ({value})")
 
-        elif op.opcode == OperationCode.JUMP_IF_TRUE:
-            value = self.value(op.args[0])
-            if value:
-                jump = self.value(op.args[1])
-                self.log(f">> {op.args[0]} ?>> {op.args[1]} ({value} >> {jump})")
-                self.head = jump
-            else:
-                self.log(f">> {op.args[0]} ?>> {op.args[1]} ({value})")
+            case OperationCode.OUTPUT:
+                source, = instr.args
+                value = self.value(source)
+                self.log(f">> output <- {source} ({value})")
+                # returns value = output
+                return value
 
-        elif op.opcode == OperationCode.JUMP_IF_FALSE:
-            value = self.value(op.args[0])
-            if not value:
-                jump = self.value(op.args[1])
-                self.log(f">> {op.args[0]} !>> {op.args[1]} ({value} >> {jump})")
-                self.head = jump
-            else:
-                self.log(f">> {op.args[0]} !>> {op.args[1]} ({value})")
+            case OperationCode.JUMP_IF_TRUE:
+                cond_src, jump_src = instr.args
+                cond_val = self.value(cond_src)
+                if cond_val:
+                    jump_target = self.value(jump_src)
+                    self.log(f">> {cond_src} ?>> {jump_src} ({cond_val} >> {jump_target})")
+                    self.head = jump_target
+                else:
+                    self.log(f">> {cond_src} ?>> {jump_src} ({cond_val})")
 
-        elif op.opcode == OperationCode.LESS_THAN:
-            v1 = self.value(op.args[0])
-            v2 = self.value(op.args[1])
-            result = 1 if v1 < v2 else 0
-            self.write_memory(op.args[2], result)
-            self.log(f">> {op.args[0]} < {op.args[1]} -> {op.args[2]} ({v1} < {v2} -> {result})")
+            case OperationCode.JUMP_IF_FALSE:
+                cond_src, jump_src = instr.args
+                cond_val = self.value(cond_src)
+                if not cond_val:
+                    jump_target = self.value(jump_src)
+                    self.log(f">> {cond_src} !>> {jump_src} ({cond_val} >> {jump_target})")
+                    self.head = jump_target
+                else:
+                    self.log(f">> {cond_src} !>> {jump_src} ({cond_val})")
 
-        elif op.opcode == OperationCode.EQUALS:
-            v1 = self.value(op.args[0])
-            v2 = self.value(op.args[1])
-            result = 1 if v1 == v2 else 0
-            self.write_memory(op.args[2], result)
-            self.log(f">> {op.args[0]} = {op.args[1]} -> {op.args[2]} ({v1} = {v2} -> {result})")
+            case OperationCode.LESS_THAN:
+                src_1, src_2, target = instr.args
+                val_1 = self.value(src_1)
+                val_2 = self.value(src_2)
+                result = int(val_1 < val_2)
+                self.write_memory(target, result)
+                self.log(f">> {src_1} < {src_2} -> {target} ({val_1} < {val_2} -> {result})")
 
-        elif op.opcode == OperationCode.ADD_TO_RBASE:
-            v1 = self.value(op.args[0])
-            self.log(f">> R + {op.args[0]} -> R ({self.rbase} + {v1} -> {self.rbase + v1})")
-            self.rbase += v1
+            case OperationCode.EQUALS:
+                src_1, src_2, target = instr.args
+                val_1 = self.value(src_1)
+                val_2 = self.value(src_2)
+                result = int(val_1 == val_2)
+                self.write_memory(target, result)
+                self.log(f">> {src_1} = {src_2} -> {target} ({val_1} = {val_2} -> {result})")
 
-        elif op.opcode == OperationCode.HALT:
-            self.log(f">> HALT")
-            raise Halt()
+            case OperationCode.ADD_TO_RBASE:
+                source, = instr.args
+                value = self.value(source)
+                self.log(f">> R + {source} -> R ({self.rbase} + {value} -> {self.rbase + value})")
+                self.rbase += value
 
-        else:
-            raise ValueError(f"Unsupported operation {op}")
+            case OperationCode.HALT:
+                self.log(f">> HALT")
+                raise Halt()
+
+            case other:
+                raise ValueError(f"Unsupported opcode {other}")
 
 
-def load_tape(fn) -> list[int]:
-    with open(fn) as f:
-        return [
-            int(v)
-            for line in f
-            for v in line.strip().split(',')
-            if v
-        ]
+def load_tape(fn) -> Tape:
+    return [int(v) for line in open(fn) for v in line.strip().split(',') if v]
 
 
 class IOState(Enum):
@@ -484,7 +505,7 @@ def test_coroutine_repeater():
         0
     ])
 
-    co = m.run()
+    co = m.run_coroutine()
     assert next(co) is None  # in
     assert co.send(0) == 0   # out
     assert next(co) is None
