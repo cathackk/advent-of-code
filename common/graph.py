@@ -2,7 +2,6 @@ import heapq
 from dataclasses import dataclass
 from dataclasses import field
 from typing import Callable
-from typing import cast
 from typing import Iterable
 from typing import TypeVar
 
@@ -38,7 +37,7 @@ def shortest_path(
         path: PathInfo = field(compare=True)
 
     if is_callable(target):
-        is_target: Callable[[Node], bool] = cast(Callable, target)
+        is_target: Callable[[Node], bool] = target
     else:
         is_target = target.__eq__
 

@@ -185,11 +185,16 @@ class State:
     stock_geode: int = 0
 
     def __str__(self) -> str:
+        # pylint: disable=invalid-name
         def fv(value: int) -> str:
             return str(value) if value < SO_MUCH else "*"
 
-        robots = ":".join(str(v) for v in [self.robots_ore, self.robots_clay, self.robots_obsid, self.robots_geode])
-        stocks = ":".join([fv(self.stock_ore), fv(self.stock_clay), fv(self.stock_obsid), str(self.stock_geode)])
+        robots = ":".join([
+            fv(self.robots_ore), fv(self.robots_clay), fv(self.robots_obsid), fv(self.robots_geode)
+        ])
+        stocks = ":".join([
+            fv(self.stock_ore), fv(self.stock_clay), fv(self.stock_obsid), str(self.stock_geode)
+        ])
         return f"minutes={self.minutes_remaining}, robots={robots}, stock={stocks}"
 
     def next_ore(self, max_ore: int, spent_ore: int = 0) -> int:
@@ -332,8 +337,12 @@ class Blueprint:
             state,
             minutes_remaining=state.minutes_remaining - 1,
             robots_obsid=state.robots_obsid + 1,
-            stock_ore=state.next_ore(max_ore=self.max_ore_cost, spent_ore=self.obsid_robot_ore_cost),
-            stock_clay=state.next_clay(max_clay=self.max_clay_cost, spent_clay=self.obsid_robot_clay_cost),
+            stock_ore=state.next_ore(
+                max_ore=self.max_ore_cost, spent_ore=self.obsid_robot_ore_cost
+            ),
+            stock_clay=state.next_clay(
+                max_clay=self.max_clay_cost, spent_clay=self.obsid_robot_clay_cost
+            ),
             stock_obsid=state.next_obsid(max_obsid=self.max_obsid_cost),
             stock_geode=state.next_geode(),
         )
@@ -349,9 +358,13 @@ class Blueprint:
             state,
             minutes_remaining=state.minutes_remaining - 1,
             robots_geode=state.robots_geode + 1,
-            stock_ore=state.next_ore(max_ore=self.max_ore_cost, spent_ore=self.geode_robot_ore_cost),
+            stock_ore=state.next_ore(
+                max_ore=self.max_ore_cost, spent_ore=self.geode_robot_ore_cost
+            ),
             stock_clay=state.next_clay(max_clay=self.max_clay_cost),
-            stock_obsid=state.next_obsid(max_obsid=self.max_obsid_cost, spent_obsid=self.geode_robot_obsid_cost),
+            stock_obsid=state.next_obsid(
+                max_obsid=self.max_obsid_cost, spent_obsid=self.geode_robot_obsid_cost
+            ),
             stock_geode=state.next_geode(),
         )
 
@@ -384,7 +397,7 @@ class Blueprint:
         layer = {State(minutes_remaining=minutes)}
         visited: set[State] = set()
 
-        for minute in range(minutes):
+        for _ in range(minutes):
             next_layer = set()
 
             for old_state in layer:

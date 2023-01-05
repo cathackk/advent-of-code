@@ -1,4 +1,6 @@
 from typing import Any
+from typing import Callable
+from typing import TypeGuard
 from typing import TypeVar
 
 T = TypeVar('T')
@@ -43,5 +45,5 @@ def some(item: T | None, description: str = "") -> T:
     return item
 
 
-def is_callable(obj: Any) -> bool:
+def is_callable(obj: Any) -> TypeGuard[Callable]:
     return hasattr(obj, '__call__')
