@@ -188,22 +188,26 @@ class Machine:
                 # input
                 io = co.send(next(ins_it))
 
-    def run_control(self, initial_state: int = 0):
+    def run_control(self, initial_state: int = 0) -> Generator[int, int | None, None]:
         ctrl_state = initial_state
         co = self.run_coroutine()
         io = next(co)
-        while True:
-            if io is not None:
-                # signals output
-                # -> output the value check for control change
-                ctrl = yield io
-                if ctrl is not None:
-                    ctrl_state = ctrl
-                io = next(co)
-            else:
-                # signals input
-                # -> feed it control state
-                io = co.send(ctrl_state)
+        try:
+            while True:
+                if io is not None:
+                    # signals output
+                    # -> output the value check for control change
+                    ctrl = yield io
+                    if ctrl is not None:
+                        ctrl_state = ctrl
+                    io = next(co)
+                else:
+                    # signals input
+                    # -> feed it control state
+                    io = co.send(ctrl_state)
+
+        except StopIteration:
+            return
 
     def as_function(
         self, *,

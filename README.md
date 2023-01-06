@@ -124,6 +124,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2019/day/10)) Day 10: [Monitoring Station](y2019/day10_asteroids.py)
 - ([aoc](https://adventofcode.com/2019/day/11)) Day 11: [Space Police](y2019/day11_intcode_painting.py)
 - ([aoc](https://adventofcode.com/2019/day/12)) Day 12: [The N-Body Problem](y2019/day12_bodies.py)
+- ([aoc](https://adventofcode.com/2019/day/13)) Day 13: [Care Package](y2019/day13_intcode_arcade.py)
 - ([aoc](https://adventofcode.com/2019/day/14)) Day 14: [Space Stoichiometry](y2019/day14_reactions.py)
 - ([aoc](https://adventofcode.com/2019/day/16)) Day 16: [Flawed Frequency Transmission](y2019/day16_fft.py)
 - ...
