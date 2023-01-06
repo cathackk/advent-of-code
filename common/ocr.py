@@ -128,8 +128,10 @@ class Font:
                 int(''.join(str(int(PIXELS[char])) for char in ''.join(letter)), 2)
             )
             for letter in zip(*(
-                [line[k:k + self.char_width].ljust(self.char_width) for k in
-                 range(0, len(line), self.char_width)]
+                [
+                    line[k:k + self.char_width].ljust(self.char_width)
+                    for k in range(0, len(line), self.char_width)
+                ]
                 for line in dedent(ascii_text.strip('\n')).splitlines()
             ))
         )

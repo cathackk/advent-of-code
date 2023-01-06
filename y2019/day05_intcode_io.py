@@ -32,7 +32,7 @@ def part_1(tape: Tape, system_id: int = 1) -> int:
     connected to the input and output. The program `3,0,4,0,99` outputs whatever it gets as input,
     then halts.
 
-        >>> echo = Machine([3, 0, 4, 0, 99]).as_function_scalar()
+        >>> echo = Machine([3, 0, 4, 0, 99]).as_function_scalar(restarting=True)
         >>> echo(18)
         18
         >>> echo(248)
@@ -124,7 +124,7 @@ def part_1(tape: Tape, system_id: int = 1) -> int:
         333
     """
 
-    func = Machine(tape).as_function()
+    func = Machine(tape).as_function(restarting=True)
     result = next(v for v in func(system_id) if v != 0)
 
     print(f"part 1: diagnostic code for system ID={system_id} is {result}")
@@ -162,30 +162,36 @@ def part_2(tape: Tape, system_id: int = 5) -> int:
     For example, here are several programs that take one input, compare it to the value `8`,
     and then produce one output:
 
-        >>> equal_to_eight_pos = Machine([3,9,8,9,10,9,4,9,99,-1,8]).as_function_scalar()
+        >>> tape_eq8_pos = [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]
+        >>> equal_to_eight_pos = Machine(tape_eq8_pos).as_function_scalar(restarting=True)
         >>> equal_to_eight_pos(7), equal_to_eight_pos(8), equal_to_eight_pos(9)
         (0, 1, 0)
 
-        >>> less_than_eight_pos = Machine([3,9,7,9,10,9,4,9,99,-1,8]).as_function_scalar()
-        >>> less_than_eight_pos(7), less_than_eight_pos(8), less_than_eight_pos(9)
-        (1, 0, 0)
-
-        >>> equal_to_eight_imm = Machine([3,3,1108,-1,8,3,4,3,99]).as_function_scalar()
+        >>> tape_eq8_imm = [3, 3, 1108, -1, 8, 3, 4, 3, 99]
+        >>> equal_to_eight_imm = Machine(tape_eq8_imm).as_function_scalar(restarting=True)
         >>> equal_to_eight_imm(7), equal_to_eight_imm(8), equal_to_eight_imm(9)
         (0, 1, 0)
 
-        >>> less_than_eight_imm = Machine([3,3,1107,-1,8,3,4,3,99]).as_function_scalar()
+        >>> tape_lt8_pos = [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8]
+        >>> less_than_eight_pos = Machine(tape_lt8_pos).as_function_scalar(restarting=True)
+        >>> less_than_eight_pos(7), less_than_eight_pos(8), less_than_eight_pos(9)
+        (1, 0, 0)
+
+        >>> tape_lt8_imm = [3, 3, 1107, -1, 8, 3, 4, 3, 99]
+        >>> less_than_eight_imm = Machine(tape_lt8_imm).as_function_scalar(restarting=True)
         >>> less_than_eight_imm(7), less_than_eight_imm(8), less_than_eight_imm(9)
         (1, 0, 0)
 
     Here are some jump tests that take an input, then output `0` if the input was zero or `1` if the
     input was non-zero:
 
-        >>> nonzero_pos = Machine([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9]).as_function_scalar()
+        >>> tape_ne0_pos = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9]
+        >>> nonzero_pos = Machine(tape_ne0_pos).as_function_scalar(restarting=True)
         >>> nonzero_pos(-1), nonzero_pos(0), nonzero_pos(1)
         (1, 0, 1)
 
-        >>> nonzero_imm = Machine([3,3,1105,-1,9,1101,0,0,12,4,12,99,1]).as_function_scalar()
+        >>> tape_ne0_imm = [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1]
+        >>> nonzero_imm = Machine(tape_ne0_imm).as_function_scalar(restarting=True)
         >>> nonzero_imm(-1), nonzero_imm(0), nonzero_imm(1)
         (1, 0, 1)
 
@@ -193,10 +199,10 @@ def part_2(tape: Tape, system_id: int = 5) -> int:
     number. The program will then output `999` if the input value is below `8`, output `1000` if the
     input value is equal to `8`, or output `1001` if the input value is greater than `8`:
 
-        >>> larger_example = [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
-        ...                   1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
-        ...                   999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99]
-        >>> comp_eight = Machine(larger_example).as_function_scalar()
+        >>> tape_larger = [3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
+        ...                1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104, 999,
+        ...                1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]
+        >>> comp_eight = Machine(tape_larger).as_function_scalar(restarting=True)
         >>> [comp_eight(n) for n in range(12)]
         [999, 999, 999, 999, 999, 999, 999, 999, 1000, 1001, 1001, 1001]
 

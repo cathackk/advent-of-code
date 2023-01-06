@@ -2,16 +2,17 @@ from enum import Enum
 
 
 class Heading(Enum):
-    NORTH = ('N', 0, -1, "↑")
-    EAST = ('E', +1, 0, "→")
-    SOUTH = ('S', 0, +1, "↓")
-    WEST = ('W', -1, 0, "←")
+    NORTH = ('N', 0, -1, "↑", "^")
+    EAST = ('E', +1, 0, "→", ">")
+    SOUTH = ('S', 0, +1, "↓", "v")
+    WEST = ('W', -1, 0, "←", "<")
 
-    def __init__(self, letter: str, dx: int, dy: int, arrow: str):
+    def __init__(self, letter: str, dx: int, dy: int, arrow: str, caret: str):
         self.letter = letter
         self.dx = dx
         self.dy = dy
         self.arrow = arrow
+        self.caret = caret
 
     def __repr__(self) -> str:
         return f'{type(self).__name__}.{self.name}'

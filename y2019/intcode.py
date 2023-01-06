@@ -5,6 +5,7 @@ from typing import Generator
 from typing import Iterable
 from typing import Optional
 
+from tqdm import tqdm
 
 Tape = list[int]
 
@@ -87,7 +88,14 @@ RunCoroutine = Generator[int | None, int, None]
 
 
 class Machine:
-    def __init__(self, tape: Iterable[int], name: str = None, debug: bool = False):
+    def __init__(
+        self,
+        tape: Iterable[int],
+        name: str = None,
+        *,
+        debug: bool = False,
+        progress: bool = False,
+    ):
         self.tape = list(tape)
         self.memory: Tape = []
         self.rbase = 0
@@ -96,6 +104,7 @@ class Machine:
 
         self.name = name
         self.debug = debug
+        self.progress = progress
 
     def log(self, message: Any = ""):
         if self.debug:
@@ -116,9 +125,19 @@ class Machine:
         yields int -> output
         """
         self._restart()
+
+        if self.progress:
+            progress = tqdm(
+                desc=f"running {self.name or 'intcode'}", unit=" steps", unit_scale=True, delay=1.0
+            )
+        else:
+            progress = None
+
         try:
             while True:
                 out_value = yield from self._step()
+                if progress is not None:
+                    progress.update()
                 if out_value is not None:
                     yield out_value
         except Halt:
@@ -190,7 +209,7 @@ class Machine:
         self, *,
         out_count: int = None,
         init: Iterable[int] = (),
-        restarting: bool = True
+        restarting: bool = False
     ) -> Callable[..., tuple[int, ...]]:
         assert out_count is None or out_count > 0
 
@@ -216,7 +235,7 @@ class Machine:
     def as_function_scalar(
         self, *,
         init: Iterable[int] = (),
-        restarting: bool = True
+        restarting: bool = False
     ) -> Callable[..., int]:
         fn_vector = self.as_function(out_count=1, init=init, restarting=restarting)
 
@@ -448,55 +467,6 @@ class MachineIO:
             return values
 
 
-def test_equals_8():
-    # consider whether the input is equal to 8; output 1 (if it is) or 0 (if it is not)
-    m1a = Machine([3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8], "1A")
-    m1v = Machine([3, 3, 1108, -1, 8, 3, 4, 3, 99], "1V")
-    for m in [m1a, m1v]:
-        assert list(m.run_fixed_input([7])) == [0]
-        assert list(m.run_fixed_input([8])) == [1]
-        assert list(m.run_fixed_input([9])) == [0]
-
-
-def test_less_than_8():
-    # consider whether the input is less than 8; output 1 (if it is) or 0 (if it is not)
-    m2a = Machine([3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8], "2A")
-    m2v = Machine([3, 3, 1107, -1, 8, 3, 4, 3, 99], "2V")
-    for m in [m2a, m2v]:
-        assert list(m.run_fixed_input([0])) == [1]
-        assert list(m.run_fixed_input([7])) == [1]
-        assert list(m.run_fixed_input([8])) == [0]
-        assert list(m.run_fixed_input([100])) == [0]
-
-
-def test_jump():
-    # take an input, then output 0 if the input was zero or 1 if the input was non-zero
-    m3a = Machine([3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9], "3A")
-    m3v = Machine([3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1], "3V")
-    for m in [m3a, m3v]:
-        assert list(m.run_fixed_input([1])) == [1]
-        assert list(m.run_fixed_input([2])) == [1]
-        assert list(m.run_fixed_input([-1])) == [1]
-        assert list(m.run_fixed_input([0])) == [0]
-
-
-def test_compare_to_8():
-    # This program uses an input instruction to ask for a single number.
-    # The program will then output 999 if the input value is below 8,
-    #                       output 1000 if the input value is equal to 8,
-    #                       or output 1001 if the input value is greater than 8.
-    m = Machine(name="M8", tape=[
-        3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
-        1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104,
-        999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99
-    ])
-    assert list(m.run_fixed_input([0])) == [999]
-    assert list(m.run_fixed_input([7])) == [999]
-    assert list(m.run_fixed_input([8])) == [1000]
-    assert list(m.run_fixed_input([9])) == [1001]
-    assert list(m.run_fixed_input([100])) == [1001]
-
-
 def test_coroutine_repeater():
     m = Machine(name="repeater", tape=[
         3, 7,
@@ -655,7 +625,7 @@ def test_as_function_restarting():
         99
     ])
 
-    f = m.as_function_scalar()
+    f = m.as_function_scalar(restarting=False)
     assert f(1, 2) == 3
     try:
         f(4, 5)
@@ -666,31 +636,6 @@ def test_as_function_restarting():
     fr = m.as_function_scalar(restarting=True)
     assert fr(6, 7) == 13
     assert fr(8, 9) == 17
-
-
-def test_quine():
-    tape = [
-        109, 1,              # R + 1 -> R
-        204, -1,             # output <- [R-1]
-        1001, 100, 1, 100,   # [100] + 1 -> [100]
-        1008, 100, 16, 101,  # [100] = 16 -> [101]
-        1006, 101, 0,        # [101] !>> [0]
-        99                   # HALT
-    ]
-    assert list(Machine(tape).run_output_only()) == tape
-
-
-def test_big_numbers():
-    m1 = Machine([
-        1102, 34915192, 34915192, 7,  # 34915192 * 34915192 -> [7]
-        4, 7,                         # output <- [7]
-        99,                           # HALT
-        0
-    ])
-    assert list(m1.run_output_only()) == [34915192 * 34915192]
-
-    m2 = Machine([104, 1125899906842624, 99])
-    assert list(m2.run_output_only()) == [1125899906842624]
 
 
 def test_write_rbase():
