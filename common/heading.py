@@ -24,6 +24,14 @@ class Heading(Enum):
         except StopIteration as stop:
             raise KeyError(letter) from stop
 
+    @classmethod
+    def from_caret(cls, caret: str) -> 'Heading':
+        try:
+            return next(h for h in cls if h.caret == caret)
+        except StopIteration as stop:
+            raise KeyError(caret) from stop
+
+
     def right(self) -> 'Heading':
         return {
             Heading.NORTH: Heading.EAST,
