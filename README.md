@@ -129,6 +129,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2019/day/15)) Day 15: [Oxygen System](y2019/day15_intcode_mapping.py)
 - ([aoc](https://adventofcode.com/2019/day/16)) Day 16: [Flawed Frequency Transmission](y2019/day16_fft.py)
 - ([aoc](https://adventofcode.com/2019/day/17)) Day 17: [Set and Forget](y2019/day17_intcode_compress.py)
+- ([aoc](https://adventofcode.com/2019/day/18)) Day 18: [Many-Worlds Interpretation](y2019/day18_keys.py)
 - ...
 
 
