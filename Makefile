@@ -2,6 +2,7 @@ install:
 	pip install --upgrade pip wheel setuptools
 	pip install -r requirements.txt
 
+
 checks: mypy pylint doctests
 
 mypy:
@@ -15,6 +16,18 @@ pylint:
 doctests:
     # TODO: y2019
 	py.test --doctest-modules common meta y2015 y2016 y2017 y2018 y2020 y2021 y2022
+
+
+checks_2023: mypy_2023 pylint_2023 doctests_2023
+
+mypy_2023:
+	mypy -p common -p meta -p y2023
+
+pylint_2023:
+	pylint --rcfile=.pylintrc common meta y2023
+
+doctests_2023:
+	py.test --doctest-modules common meta y2023
 
 
 create-readme:

@@ -38,8 +38,6 @@ def parse_day_paths(ctx: click.Context, param, value) -> list[str]:
         raise Exit(1) from stop
 
 
-
-
 @click.command()
 @click.option(
     '--year', '-y', 'year_dir', type=int, callback=parse_year_dir, required=True
