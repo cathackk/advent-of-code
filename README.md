@@ -21,6 +21,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 ([aoc 2023 event](https://adventofcode.com/2023))
 
 - ([aoc](https://adventofcode.com/2023/day/1)) Day 1: [Trebuchet?!](y2023/day01_digits.py)
+- ([aoc](https://adventofcode.com/2023/day/2)) Day 2: [Cube Conundrum](y2023/day02_cubes.py)
 - ...
 
 
