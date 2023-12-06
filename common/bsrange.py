@@ -23,7 +23,10 @@ class BSRange:
         return self._lower is not None
 
     @property
-    def lower(self) -> Optional[int]:
+    def lower(self) -> int:
+        if self._lower is None:
+            raise ValueError(f"{self} has no lower bound")
+
         return self._lower
 
     @lower.setter
@@ -36,7 +39,10 @@ class BSRange:
         return self._upper is not None
 
     @property
-    def upper(self) -> Optional[int]:
+    def upper(self) -> int:
+        if self._upper is None:
+            raise ValueError(f"{self} has no upper bound")
+
         return self._upper
 
     @upper.setter
@@ -53,15 +59,15 @@ class BSRange:
         )
 
     @property
-    def single_value(self) -> Optional[int]:
-        return self.lower if self.has_single_value() else None
+    def single_value(self) -> int:
+        if not self.has_single_value():
+            raise ValueError(f"{self} doesn't have a single value")
+
+        return self.lower
 
     def is_bounded(self) -> bool:
         return self.has_lower() and self.has_upper()
 
     @property
-    def mid(self) -> Optional[int]:
-        if self._lower is not None and self._upper is not None:
-            return (self._lower + self._upper) // 2
-        else:
-            return None
+    def mid(self) -> int:
+        return (self.lower + self.upper) // 2
