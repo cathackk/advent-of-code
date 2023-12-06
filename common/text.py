@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Iterator
 from typing import Iterable
 
 from common.iteration import single_value
@@ -102,7 +102,7 @@ def join_or(items: Iterable[Any], oxford_comma=False) -> str:
     return join_english(items, conj=", or " if oxford_comma else " or ")
 
 
-def line_groups(lines: Iterable[str], lstrip: bool = True) -> Iterable[list[str]]:
+def line_groups(lines: Iterable[str], lstrip: bool = True) -> Iterator[list[str]]:
     r"""
     Separate stream of lines into groups of whitespace-stripped lines.
     Empty line (containing only whitespace) serves as separator.
