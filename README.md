@@ -26,6 +26,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2023/day/4)) Day 4: [Scratchcards](y2023/day04_cards.py)
 - ([aoc](https://adventofcode.com/2023/day/5)) Day 5: [If You Give A Seed A Fertilizer](y2023/day05_almanac.py)
 - ([aoc](https://adventofcode.com/2023/day/6)) Day 6: [Wait For It](y2023/day06_boats.py)
+- ([aoc](https://adventofcode.com/2023/day/7)) Day 7: [Camel Cards](y2023/day07_poker.py)
 - ...
 
 
