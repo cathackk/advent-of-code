@@ -53,9 +53,13 @@ def index_lines() -> Iterable[str]:
         yield f"([aoc {year} event](https://adventofcode.com/{year}))"
         yield ""
 
-        complete_days_count = 0
-
+        prev_day = 0
         for day, day_path in day_files(year_dir):
+            assert day > prev_day
+            if day > prev_day + 1:
+                yield "- ..."
+            prev_day = day
+
             try:
                 desc = DayDescription.from_file(day_path)
             except ValueError as exc:
@@ -64,9 +68,8 @@ def index_lines() -> Iterable[str]:
                 assert desc.year == year
                 assert desc.day == day
                 yield f"- ([aoc]({desc.aoc_url})) Day {desc.day}: [{desc.title}]({desc.path})"
-                complete_days_count += 1
 
-        if complete_days_count < 25:
+        if prev_day < 25:
             yield "- ..."
 
 

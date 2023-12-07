@@ -49,6 +49,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2022/day/13)) Day 13: [Distress Signal](y2022/day13_signal.py)
 - ([aoc](https://adventofcode.com/2022/day/14)) Day 14: [Regolith Reservoir](y2022/day14_sand.py)
 - ([aoc](https://adventofcode.com/2022/day/15)) Day 15: [Beacon Exclusion Zone](y2022/day15_beacons.py)
+- ...
 - ([aoc](https://adventofcode.com/2022/day/17)) Day 17: [Pyroclastic Flow](y2022/day17_tetris.py)
 - ([aoc](https://adventofcode.com/2022/day/18)) Day 18: [Boiling Boulders](y2022/day18_lava.py)
 - ([aoc](https://adventofcode.com/2022/day/19)) Day 19: [Not Enough Minerals](y2022/day19_robots.py)
@@ -58,7 +59,6 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2022/day/23)) Day 23: [Unstable Diffusion](y2022/day23_diffusion.py)
 - ([aoc](https://adventofcode.com/2022/day/24)) Day 24: [Blizzard Basin](y2022/day24_blizzard.py)
 - ([aoc](https://adventofcode.com/2022/day/25)) Day 25: [Full of Hot Air](y2022/day25_snafu.py)
-- ...
 
 
 ### 2021
@@ -147,7 +147,6 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2019/day/18)) Day 18: [Many-Worlds Interpretation](y2019/day18_keys.py)
 - ([aoc](https://adventofcode.com/2019/day/19)) Day 19: [Tractor Beam](y2019/day19_intcode_beam.py)
 - ([aoc](https://adventofcode.com/2019/day/20)) Day 20: [Donut Maze](y2019/day20_donut.py)
-- ...
 
 
 ### 2018
@@ -170,6 +169,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2018/day/14)) Day 14: [Chocolate Charts](y2018/day14_recipes.py)
 - ([aoc](https://adventofcode.com/2018/day/15)) Day 15: [Beverage Bandits](y2018/day15_battle.py)
 - ([aoc](https://adventofcode.com/2018/day/16)) Day 16: [Chronal Classification](y2018/day16_opcodes.py)
+- ...
 - ([aoc](https://adventofcode.com/2018/day/22)) Day 22: [Mode Maze](y2018/day22_cave_maze.py)
 - ([aoc](https://adventofcode.com/2018/day/23)) Day 23: [Experimental Emergency Teleportation](y2018/day23_nanobots.py)
 - ...
