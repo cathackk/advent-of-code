@@ -245,11 +245,11 @@ class Character:
 
     @classmethod
     def from_lines(cls, lines: Iterable[str]) -> 'Character':
-        prefixes = dict(
-            hit_points="Hit Points: ",
-            damage="Damage: ",
-            mana="Mana: "
-        )
+        prefixes = {
+            'hit_points': "Hit Points: ",
+            'damage': "Damage: ",
+            'mana': "Mana: "
+        }
 
         def parse_line(line: str) -> tuple[str, int]:
             for key, prefix in prefixes.items():

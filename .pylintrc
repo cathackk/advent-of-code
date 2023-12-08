@@ -6,6 +6,7 @@ disable=
     missing-module-docstring,
     no-else-break,
     no-else-return,
+    superfluous-parens,
     unbalanced-tuple-unpacking,
     unspecified-encoding,
     useless-else-on-loop
