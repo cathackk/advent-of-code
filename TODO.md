@@ -5,7 +5,6 @@
 - [ ] rework and finish [2018](y2018)
 - [ ] rework [2019](y2019)
 - [ ] finish [linter integration TODOs](Makefile) for all packages
-- [ ] `make run` to run all years all days
 - [ ] use `click` in [create_readme.py](meta/create_readme.py)
 
 
@@ -19,3 +18,4 @@
 - [x] integrate **mypy**
 - [x] include the **mypy** release with `match` support
 - [x] rework [2017](y2017)
+- [x] `make run` to run all years all days

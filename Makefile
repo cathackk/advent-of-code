@@ -34,5 +34,22 @@ create-readme:
 	python3 -m meta.create_readme
 
 
-run:
+run-day:
 	python3 -m meta.run --year $(YEAR) --day $(DAY)
+
+
+run-year:
+	python3 -m meta.run --year $(YEAR) --day all
+
+
+run:
+	# TODO: meta.run --all
+	python3 -m meta.run --year 2015 --day all
+	python3 -m meta.run --year 2016 --day all
+	python3 -m meta.run --year 2017 --day all
+	# TODO: python3 -m meta.run --year 2018 --day all
+	# TODO: python3 -m meta.run --year 2019 --day all
+	python3 -m meta.run --year 2020 --day all
+	python3 -m meta.run --year 2021 --day all
+	python3 -m meta.run --year 2022 --day all
+	python3 -m meta.run --year 2023 --day all

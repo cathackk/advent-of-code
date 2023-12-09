@@ -42,7 +42,6 @@ def parse_day_paths(ctx: click.Context, param, value) -> list[str]:
 @click.option(
     '--year', '-y', 'year_dir', type=int, callback=parse_year_dir, required=True
 )
-# TODO: multiple days
 @click.option(
     '--day', '-d', 'day_paths', type=click.UNPROCESSED, callback=parse_day_paths, required=True
 )
