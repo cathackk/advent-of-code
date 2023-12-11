@@ -31,7 +31,6 @@ class Heading(Enum):
         except StopIteration as stop:
             raise KeyError(caret) from stop
 
-
     def right(self) -> 'Heading':
         return {
             Heading.NORTH: Heading.EAST,

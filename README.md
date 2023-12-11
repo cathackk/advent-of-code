@@ -29,6 +29,8 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2023/day/7)) Day 7: [Camel Cards](y2023/day07_poker.py)
 - ([aoc](https://adventofcode.com/2023/day/8)) Day 8: [Haunted Wasteland](y2023/day08_ghosts.py)
 - ([aoc](https://adventofcode.com/2023/day/9)) Day 9: [Mirage Maintenance](y2023/day09_diffs.py)
+- ([aoc](https://adventofcode.com/2023/day/10)) Day 10: [Pipe Maze](y2023/day10_loop.py)
+- ([aoc](https://adventofcode.com/2023/day/11)) Day 11: [Cosmic Expansion](y2023/day11_galaxies.py)
 - ...
 
 
