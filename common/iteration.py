@@ -575,6 +575,32 @@ def first_repeat(values: Iterable[T]) -> T | None:
     return None
 
 
+def detect_cycle(initial: T, function: Callable[[T], T]) -> tuple[list[T], list[T]]:
+    """
+    TODO: parameter for longer cycle section
+    TODO: utilize in puzzles
+
+        >>> detect_cycle(0, lambda x: (x + 4) % 7)
+        ([], [0, 4, 1, 5, 2, 6, 3])
+        >>> detect_cycle(10, lambda n: n // 2 if n % 2 == 0 else 3 * n + 1)
+        ([10, 5, 16, 8], [4, 2, 1])
+    """
+
+    seen: dict[T, int] = {}
+    sequence: list[T] = []
+
+    index, value = 0, initial
+
+    while True:
+        if value in seen:
+            repeat_index = seen[value]
+            return sequence[:repeat_index], sequence[repeat_index:]
+
+        seen[value] = index
+        sequence.append(value)
+        index, value = index + 1, function(value)
+
+
 def unique(values: Iterable[T]) -> Iterable[T]:
     """
     Like set, but retains order:

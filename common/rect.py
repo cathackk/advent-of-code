@@ -32,17 +32,24 @@ class Rect:
         y_min, y_max = minmax(y for _, y in positions)
         return cls((x_min, y_min), (x_max, y_max))
 
-    def grow_by(self, dx: int = 0, dy: int = 0) -> 'Rect':
+    def grow_by(
+        self,
+        dx: int = 0, dy: int = 0,
+        left_x: int = 0, right_x: int = 0,
+        top_y: int = 0, bottom_y: int = 0,
+    ) -> 'Rect':
         return type(self)(
-            (self.left_x - dx, self.top_y - dy),
-            (self.right_x + dx, self.bottom_y + dy)
+            (self.left_x - dx - left_x, self.top_y - dy - top_y),
+            (self.right_x + dx + right_x, self.bottom_y + dy + bottom_y)
         )
 
     def grow_to_fit(self, positions: Iterable[Pos]) -> 'Rect':
-        return type(self).with_all(chain(
-            [self.top_left, self.bottom_right],
-            positions
-        ))
+        return type(self).with_all(
+            chain(
+                [self.top_left, self.bottom_right],
+                positions
+            )
+        )
 
     @property
     def left_x(self) -> int:

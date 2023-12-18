@@ -32,7 +32,9 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2023/day/10)) Day 10: [Pipe Maze](y2023/day10_loop.py)
 - ([aoc](https://adventofcode.com/2023/day/11)) Day 11: [Cosmic Expansion](y2023/day11_galaxies.py)
 - ([aoc](https://adventofcode.com/2023/day/12)) Day 12: [Hot Springs](y2023/day12_nono.py)
-- ([aoc](https://adventofcode.com/2023/day/13)) Day 13: [Point of Incidence](y2023/day13_lava.py)
+- ([aoc](https://adventofcode.com/2023/day/13)) Day 13: [Point of Incidence](y2023/day13_mirrors.py)
+- ([aoc](https://adventofcode.com/2023/day/14)) Day 14: [Parabolic Reflector Dish](y2023/day14_rocks.py)
+- ([aoc](https://adventofcode.com/2023/day/15)) Day 15: [Lens Library](y2023/day15_lenses.py)
 - ...
 
 
