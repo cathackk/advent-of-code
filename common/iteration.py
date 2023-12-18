@@ -1,5 +1,5 @@
 import itertools
-from typing import Any
+from typing import Any, Iterator
 from typing import Callable
 from typing import Generator
 from typing import Iterable
@@ -58,6 +58,10 @@ def last(items: Iterable[T], default: T = NotSet) -> T:  # type: ignore
         raise ValueError("last() arg is an empty sequence")
 
     return last_item
+
+
+def maybe_next(it: Iterator[T]) -> T | None:
+    return next(it, None)
 
 
 def nth(items: Iterable[T], index: int) -> T:
