@@ -35,6 +35,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2023/day/13)) Day 13: [Point of Incidence](y2023/day13_mirrors.py)
 - ([aoc](https://adventofcode.com/2023/day/14)) Day 14: [Parabolic Reflector Dish](y2023/day14_rocks.py)
 - ([aoc](https://adventofcode.com/2023/day/15)) Day 15: [Lens Library](y2023/day15_lenses.py)
+- ([aoc](https://adventofcode.com/2023/day/16)) Day 16: [The Floor Will Be Lava](y2023/day16_beams.py)
 - ...
 
 
