@@ -37,6 +37,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2023/day/15)) Day 15: [Lens Library](y2023/day15_lenses.py)
 - ([aoc](https://adventofcode.com/2023/day/16)) Day 16: [The Floor Will Be Lava](y2023/day16_beams.py)
 - ([aoc](https://adventofcode.com/2023/day/17)) Day 17: [Clumsy Crucible](y2023/day17_heat.py)
+- ([aoc](https://adventofcode.com/2023/day/18)) Day 18: [Lavaduct Lagoon](y2023/day18_digging.py)
 - ...
 
 
