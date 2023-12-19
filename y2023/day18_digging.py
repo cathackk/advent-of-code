@@ -221,10 +221,6 @@ def trace_trench(dig_plan: Iterable[Dig], init_pos: Pos = (0, 0)) -> Iterable[Po
     )
 
 
-def adjacent(pos: Pos) -> Iterable[Pos]:
-    return (heading.move(pos) for heading in Heading)
-
-
 def fill(trench: set[Pos]) -> Iterable[Pos]:
     x_0, y_0 = min(trench)
     assert (x_0 + 1, y_0) in trench
@@ -264,26 +260,23 @@ def lagoon_size_optimized(dig_plan: Iterable[Dig]) -> int:
 
     grid_xs = sorted(set(x + dx for x, _ in corners for dx in range(2)))
     grid_ys = sorted(set(y + dy for _, y in corners for dy in range(2)))
-    simplified_trench = set(
-        trace_trench(
-            dig_plan=(
-                Dig.between(*pos_pair)
-                for pos_pair in zip1(
-                    (grid_xs.index(x), grid_ys.index(y))
-                    for x, y in corners
-                )
-            ),
-            init_pos=(grid_xs.index(0), grid_ys.index(0)),
+    compressed_dig_plan = (
+        Dig.between(*pos_pair)
+        for pos_pair in zip1(
+            (grid_xs.index(x), grid_ys.index(y))
+            for x, y in corners
         )
     )
-    simplified_interior = set(fill(simplified_trench))
+    compressed_init_pos = grid_xs.index(0), grid_ys.index(0)
+    compressed_trench = set(trace_trench(compressed_dig_plan, compressed_init_pos))
+    compressed_interior = set(fill(compressed_trench))
 
-    def real_size(x: int, y: int) -> int:
-        d_x = grid_xs[x+1] - grid_xs[x]
-        d_y = grid_ys[y+1] - grid_ys[y]
-        return d_x * d_y
+    def decompressed_size(x: int, y: int) -> int:
+        width = grid_xs[x+1] - grid_xs[x]
+        height = grid_ys[y+1] - grid_ys[y]
+        return width * height
 
-    return sum(real_size(x, y) for x, y in (simplified_trench | simplified_interior))
+    return sum(decompressed_size(x, y) for x, y in (compressed_trench | compressed_interior))
 
 
 def draw_trench(
