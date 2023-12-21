@@ -286,6 +286,18 @@ def zip1(items: Iterable[T], wrap: bool = False) -> Iterable[tuple[T, T]]:
         yield some(last_item), some(first_item)
 
 
+def diffs(numbers: Iterable[int], wrap: bool = False) -> Iterable[int]:
+    """
+    >>> list(diffs(x*x for x in range(6)))
+    [1, 3, 5, 7, 9]
+    >>> list(diffs([1, 3, 10, 14, 13, 13, 0], wrap=True))
+    [2, 7, 4, -1, 0, -13, 1]
+    """
+
+    for a, b in zip1(numbers, wrap=wrap):
+        yield b - a
+
+
 def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[tuple[T, ...]]:
     """
         >>> list(slidingw([1, 2, 3, 4], 2))
