@@ -41,6 +41,8 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2023/day/19)) Day 19: [Aplenty](y2023/day19_workflows.py)
 - ([aoc](https://adventofcode.com/2023/day/20)) Day 20: [Pulse Propagation](y2023/day20_circuits.py)
 - ...
+- ([aoc](https://adventofcode.com/2023/day/22)) Day 22: [Sand Slabs](y2023/day22_bricks.py)
+- ...
 
 
 ### 2022

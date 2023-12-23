@@ -318,7 +318,7 @@ class HyperCuboid:
         else:
             raise TypeError(type(dim))
 
-    def __iter__(self) -> Iterable[HyperPos]:
+    def __iter__(self) -> Iterator[HyperPos]:
         return itertools.product(*(self[d] for d in self.range_dim))
 
     def __hash__(self) -> int:
