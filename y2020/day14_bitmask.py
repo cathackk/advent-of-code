@@ -5,7 +5,6 @@ https://adventofcode.com/2020/day/14
 """
 
 from typing import Iterable
-from typing import Union
 
 from common.text import parse_line
 from common.utils import some
@@ -230,8 +229,7 @@ class BitMask:
             yield submask.apply(value)
 
 
-# TODO: change `Union` to `|` (when mypy allows it)
-Instruction = Union[tuple[str, BitMask], tuple[str, int, int]]
+Instruction = tuple[str, BitMask] | tuple[str, int, int]
 
 
 class Program:

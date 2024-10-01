@@ -34,7 +34,7 @@ class Rect:
 
     def grow_by(
         self,
-        dx: int = 0, dy: int = 0,
+        dx: int = 0, dy: int = 0, *,
         left_x: int = 0, right_x: int = 0,
         top_y: int = 0, bottom_y: int = 0,
     ) -> 'Rect':

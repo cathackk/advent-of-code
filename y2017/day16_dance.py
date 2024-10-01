@@ -227,9 +227,6 @@ def move_from_str(line: str) -> Move:
         case _:
             raise ValueError(line)
 
-    # TODO: remove when mypy realizes this is unreachable
-    assert False
-
 
 def main(input_path: str = data_path(__file__)) -> tuple[str, str]:
     moves = moves_from_file(input_path)

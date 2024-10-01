@@ -3,8 +3,8 @@ from typing import Any, Iterator
 from typing import Callable
 from typing import Generator
 from typing import Iterable
-from typing import Sized
 from typing import TypeVar
+from collections.abc import Sized
 
 from common.utils import some
 

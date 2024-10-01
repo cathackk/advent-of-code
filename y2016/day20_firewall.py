@@ -90,8 +90,7 @@ class Range:
         return self.vmax - self.vmin + 1
 
     def __iter__(self):
-        for n in range(self.vmin, self.vmax+1):
-            yield n
+        yield from range(self.vmin, self.vmax+1)
 
     def __eq__(self, other):
         return (

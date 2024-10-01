@@ -19,6 +19,7 @@ good-names=K,R,T,V,a,b,c,d,dx,dy,fn,hp,ip,k,m,n,no,on,op,q,r,t,tn,to,w,x,x1,x2,y
 max-args=10
 max-attributes=15
 max-locals=20
+max-positional-arguments=6
 
 [FORMAT]
 max-line-length=100

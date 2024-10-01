@@ -115,6 +115,7 @@ def part_2(ingredients: list['Ingredient'], calories: int = 500) -> int:
 
 
 class Ingredient:
+    # pylint: disable=too-many-positional-arguments
     def __init__(self, name, capacity, durability, flavor, texture, calories):
         self.name = str(name)
         self.capacity = int(capacity)

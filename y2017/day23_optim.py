@@ -190,9 +190,6 @@ def assembunny_compatible_tape(tape: Tape) -> Tape:
             case _:
                 raise ValueError(f"unexpected command {command!r}")
 
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
-
     return type(tape)(compatible_command(cmd) for cmd in tape)
 
 

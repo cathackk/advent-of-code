@@ -123,9 +123,6 @@ class Command:
             case _:
                 raise ValueError(line)
 
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
-
 
 Tape = list[Command]
 

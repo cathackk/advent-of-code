@@ -544,9 +544,6 @@ class OperatorPacket(Packet):
             case _:
                 raise ValueError(f'unsupported packet type {self.p_type.name}')
 
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
-
     def expression(self, with_result: bool = True) -> str:
         expr = self._expression_base()
         if with_result:
@@ -576,9 +573,6 @@ class OperatorPacket(Packet):
                 return '(' + a.expression(False) + ' == ' + b.expression(False) + ')'
             case _:
                 raise ValueError(f'unsupported packet type {self.p_type.name}')
-
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
 
 
 def complement(value: int, n: int) -> int:

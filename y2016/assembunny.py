@@ -40,9 +40,6 @@ class Command:
             case _:
                 raise ValueError(self)
 
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
-
 
 def try_int(arg: str) -> str | int:
     try:

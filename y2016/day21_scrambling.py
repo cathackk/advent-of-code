@@ -259,9 +259,6 @@ class Command:
             case _:
                 raise ValueError(self)
 
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
-
     # pylint: disable=too-many-return-statements
     def apply(self, string: str) -> str:
         match self:
@@ -281,9 +278,6 @@ class Command:
                 return move(string, pos_1, pos_2)
             case _:
                 raise ValueError(self)
-
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
 
     # pylint: disable=too-many-return-statements
     def unapply(self, string: str) -> str:
@@ -316,9 +310,6 @@ class Command:
                 return move(string, pos_2, pos_1)
             case _:
                 raise ValueError(repr(self))
-
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
 
     @classmethod
     def from_str(cls, line: str) -> 'Command':

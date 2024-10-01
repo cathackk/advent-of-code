@@ -282,7 +282,7 @@ class SpellBook:
 
 
 class Spell:
-    def __init__(self, name, cost, damage=0, heal=0, effect=None):
+    def __init__(self, name, cost, damage=0, heal=0, *, effect=None):
         self.name = str(name)
         self.cost = int(cost)
         self.damage = int(damage)

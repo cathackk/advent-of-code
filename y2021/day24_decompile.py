@@ -478,8 +478,8 @@ def all_monad_solutions(monad_variables: Iterable[tuple[int, int, int]]) -> Iter
     for ds_prod in itertools.product(*d_values):
         digits = [None] * 14
         for (d_1, d_2), (d_1i, d_2i) in zip(ds_prod, d_pair_indexes):
-            digits[d_1i] = d_1
-            digits[d_2i] = d_2
+            digits[d_1i] = d_1  # type: ignore
+            digits[d_2i] = d_2  # type: ignore
         assert all(digit is not None for digit in digits)
         yield int(''.join(str(digit) for digit in digits))
 

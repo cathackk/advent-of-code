@@ -326,9 +326,6 @@ class Operation:
             case _:
                 raise ValueError(self.arg_1, self.op, self.arg_2)
 
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
-
     def __call__(self, old: int) -> int:
         match self.arg_1, self.op, self.arg_2:
             case 'old', '+', x if isinstance(x, int):
@@ -339,9 +336,6 @@ class Operation:
                 return old * old
             case _:
                 raise ValueError(self.arg_1, self.op, self.arg_2)
-
-        # TODO: remove when mypy realizes this is unreachable
-        assert False
 
     @classmethod
     def from_line(cls, line: str):

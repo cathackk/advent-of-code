@@ -4,9 +4,6 @@ Day 22: Mode Maze
 https://adventofcode.com/2018/day/22
 """
 
-# TODO: remove when solved: https://github.com/PyCQA/pylint/issues/3045
-# pylint: disable=unsupported-membership-test
-
 import functools
 from dataclasses import dataclass
 from enum import Enum
