@@ -1,6 +1,8 @@
 ## To Be Done
 
+- [ ] `pyproject.yaml`
 - [ ] integrate **black**
+- [ ] integrate **ruff**
 - [ ] use [ocr](common/ocr.py) where applicable
 - [ ] rework and finish [2018](y2018)
 - [ ] rework [2019](y2019)
