@@ -5,6 +5,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 
 ## Index
 
+- [2024](#2024)
 - [2023](#2023)
 - [2022](#2022)
 - [2021](#2021)
@@ -14,6 +15,14 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - [2017](#2017)
 - [2016](#2016)
 - [2015](#2015)
+
+
+### 2024
+
+([aoc 2024 event](https://adventofcode.com/2024))
+
+- ([aoc](https://adventofcode.com/2024/day/1)) Day 1: [Historian Hysteria](y2024/day01_lists.py)
+- ...
 
 
 ### 2023
