@@ -1,5 +1,5 @@
 #!/bin/bash
 
-source ./.direnv/python-3.10/bin/activate
+source ./.direnv/python-3.12/bin/activate
 make create-readme
 git add README.md
