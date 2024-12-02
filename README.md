@@ -22,6 +22,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 ([aoc 2024 event](https://adventofcode.com/2024))
 
 - ([aoc](https://adventofcode.com/2024/day/1)) Day 1: [Historian Hysteria](y2024/day01_lists.py)
+- ([aoc](https://adventofcode.com/2024/day/2)) Day 2: [Red-Nosed Reports](y2024/day02_reports.py)
 - ...
 
 

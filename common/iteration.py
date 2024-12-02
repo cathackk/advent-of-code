@@ -539,6 +539,20 @@ def picking(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
         yield item, items[:k]+items[k+1:]
 
 
+def omitting(items: Iterable[T]) -> Iterable[list[T]]:
+    """
+    Given an iterable of items, returns the items as list once per each item, omitting it:
+
+        >>> list(omitting('ABC'))
+        [['B', 'C'], ['A', 'C'], ['A', 'B']]
+        >>> list(omitting(range(1, 6)))
+        [[2, 3, 4, 5], [1, 3, 4, 5], [1, 2, 4, 5], [1, 2, 3, 5], [1, 2, 3, 4]]
+    """
+    items = list(items)
+    for k in range(len(items)):
+        yield items[:k] + items[k + 1:]
+
+
 def following(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     """
         >>> list(following('ABC'))

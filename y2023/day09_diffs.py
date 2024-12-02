@@ -7,7 +7,7 @@ https://adventofcode.com/2023/day/9
 from typing import Iterable
 
 from common.file import relative_path
-from common.iteration import zip1
+from common.iteration import diffs
 
 
 def part_1(sequences: Iterable[list[int]]) -> int:
@@ -208,10 +208,6 @@ def part_2(sequences: Iterable[list[int]]) -> int:
 
     print(f"part 2: sum of backward-extrapolated values is {result}")
     return result
-
-
-def diffs(values: Iterable[int]) -> Iterable[int]:
-    return (b - a for a, b in zip1(values))
 
 
 def extrapolate(values: Iterable[int], backwards: bool = False) -> int:

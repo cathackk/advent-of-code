@@ -6,9 +6,8 @@ https://adventofcode.com/2020/day/10
 
 from collections import Counter
 from collections import defaultdict
-from typing import Iterable
 
-from common.iteration import zip1
+from common.iteration import diffs
 from meta.aoc_tools import data_path
 
 
@@ -138,10 +137,6 @@ def part_2(adapters: list[int]) -> int:
 
 def increases(adapters: list[int]) -> list[int]:
     return list(diffs([0] + sorted(adapters))) + [3]
-
-
-def diffs(items: Iterable[int]) -> Iterable[int]:
-    return (b - a for a, b in zip1(items))
 
 
 def arrangements_count(adapters: list[int]) -> int:
