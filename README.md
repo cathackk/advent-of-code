@@ -24,6 +24,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/1)) Day 1: [Historian Hysteria](y2024/day01_lists.py)
 - ([aoc](https://adventofcode.com/2024/day/2)) Day 2: [Red-Nosed Reports](y2024/day02_reports.py)
 - ([aoc](https://adventofcode.com/2024/day/3)) Day 3: [Mull It Over](y2024/day03_multiplication.py)
+- ([aoc](https://adventofcode.com/2024/day/4)) Day 4: [Ceres Search](y2024/day04_word_search.py)
 - ...
 
 

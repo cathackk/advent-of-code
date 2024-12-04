@@ -15,7 +15,8 @@ def part_1(memory: list[str]) -> int:
     """
     "Our computers are having issues, so I have no idea if we have any Chief Historians in stock!
     You're welcome to check the warehouse, though," says the mildly flustered shopkeeper at the
-    North Pole Toboggan Rental Shop (y2020/day02_passwords). The Historians head out to take a look.
+    North Pole Toboggan Rental Shop (y2020/day02_passwords.py). The Historians head out to take
+    a look.
 
     The shopkeeper turns to you. "Any chance you can see why our computers are having issues again?"
 
