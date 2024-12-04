@@ -4,11 +4,8 @@ Day 16: Flawed Frequency Transmission
 https://adventofcode.com/2019/day/16
 """
 
-from itertools import chain
-from itertools import cycle
-from itertools import repeat
-from typing import Iterable
-from typing import Iterator
+from itertools import chain, cycle, repeat
+from typing import Iterable, Iterator
 
 from tqdm import tqdm
 

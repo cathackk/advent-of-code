@@ -188,7 +188,7 @@ class Grid:
         return sum(1 for _ in self.find_word(word))
 
     def find_crosses(self, cross: str) -> Iterable[tuple[Pos, ...]]:
-        m, a, s = cross
+        m, a, s = list(cross)
         return (
             ((x, y), (x-1, y-1), (x-1, y+1), (x+1, y-1), (x+1, y+1))
             for x in range(self.bounds.left_x + 1, self.bounds.right_x)

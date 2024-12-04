@@ -5,7 +5,7 @@ https://adventofcode.com/2023/day/11
 """
 
 from itertools import combinations
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.rect import Rect
@@ -223,7 +223,7 @@ class Universe:
         occupied_rows = {y for _, y in self.galaxies}
         return (y for y in self.bounds.range_y() if y not in occupied_rows)
 
-    def expanded(self, factor: int = 2) -> 'Universe':
+    def expanded(self, factor: int = 2) -> Self:
         def expanded_values(val_range: range, empties: Iterable[int]) -> Iterable[int]:
             empties_set = set(empties)
             offset = 0
@@ -283,15 +283,15 @@ class Universe:
         )
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Universe':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Universe':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Universe':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             (x, y)
             for y, line in enumerate(lines)

@@ -5,13 +5,10 @@ https://adventofcode.com/2018/day/16
 """
 
 from dataclasses import dataclass
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator, Self
 
-from common.iteration import ilen
-from common.iteration import single_value
-from common.text import parse_line
-from common.text import ParseError
+from common.iteration import ilen, single_value
+from common.text import parse_line, ParseError
 from meta.aoc_tools import data_path
 
 
@@ -199,7 +196,7 @@ class Instr:
         return f"{self.opnum} {self.a} {self.b} {self.c}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Instr':
+    def from_str(cls, line: str) -> Self:
         opcode, a, b, c = line.strip().split(" ")
         return cls(int(opcode), int(a), int(b), int(c))
 
@@ -211,14 +208,14 @@ class Sample:
     after: list[int]
 
     @classmethod
-    def from_text(cls, text: str) -> 'Sample':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(iter(text.strip().splitlines()))
 
     def __str__(self) -> str:
         return f"Before: {self.before}\n{self.instr}\nAfter:{self.after}"
 
     @classmethod
-    def from_lines(cls, lines: Iterator[str]) -> 'Sample':
+    def from_lines(cls, lines: Iterator[str]) -> Self:
         def registers(values: Iterable[str]) -> list[int]:
             return [int(val) for val in values]
 

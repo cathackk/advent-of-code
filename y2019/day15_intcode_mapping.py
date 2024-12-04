@@ -5,17 +5,14 @@ https://adventofcode.com/2019/day/15
 """
 
 from enum import Enum
-from typing import Callable
-from typing import Iterable
+from typing import Callable, Iterable
 
 from tqdm import tqdm
 
 from common.heading import Heading
 from common.rect import Rect
 from meta.aoc_tools import data_path
-from y2019.intcode import load_tape
-from y2019.intcode import Machine
-from y2019.intcode import Tape
+from y2019.intcode import load_tape, Machine, Tape
 
 
 def part_1(sensor: 'Sensor') -> int:

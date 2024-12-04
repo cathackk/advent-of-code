@@ -4,7 +4,7 @@ Day 16: Aunt Sue
 https://adventofcode.com/2015/day/16
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.iteration import single_value
 from meta.aoc_tools import data_path
@@ -124,7 +124,7 @@ class Aunt:
         return f"Sue {self.number}: {data_str}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Aunt':
+    def from_str(cls, line: str) -> Self:
         name_part, data_part = line.strip().split(': ', 1)
         sue, number = name_part.split(' ')
         assert sue == "Sue"
@@ -147,7 +147,7 @@ class Criterium:
             return f"{self.key} {self.op} {self.value}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Criterium':
+    def from_str(cls, line: str) -> Self:
         key, value = line.split(': ')
         return cls(key, '=', value)
 

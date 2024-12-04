@@ -4,8 +4,7 @@ Day 15: Rambunctious Recitation
 https://adventofcode.com/2020/day/15
 """
 
-from itertools import count
-from itertools import islice
+from itertools import count, islice
 from typing import Iterator
 
 from tqdm import tqdm

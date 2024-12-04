@@ -5,7 +5,7 @@ https://adventofcode.com/2022/day/5
 """
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.text import parse_line
 from meta.aoc_tools import data_path
@@ -225,7 +225,7 @@ class Move:
         return f'move {self.count} from {self.stack_from} to {self.stack_to}'
 
     @classmethod
-    def from_line(cls, line: str) -> 'Move':
+    def from_line(cls, line: str) -> Self:
         count, stack_from, stack_to = parse_line(line.strip(), 'move $ from $ to $')
         return cls(int(count), int(stack_from), int(stack_to))
 

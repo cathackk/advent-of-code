@@ -6,14 +6,12 @@ https://adventofcode.com/2015/day/24
 
 import math
 from itertools import islice
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator
 
 from tabulate import tabulate
 from tqdm import tqdm
 
-from common.iteration import following
-from common.iteration import mink
+from common.iteration import following, mink
 from meta.aoc_tools import data_path
 
 

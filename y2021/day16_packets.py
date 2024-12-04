@@ -4,11 +4,10 @@ Day 16: Packet Decoder
 https://adventofcode.com/2021/day/16
 """
 
-from abc import ABC
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from enum import IntEnum
 from math import prod
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.utils import assert_single_not_none
 from meta.aoc_tools import data_path
@@ -269,11 +268,11 @@ class BitStream:
         return len(self.bits)
 
     @classmethod
-    def from_binary_string(cls, binary: str) -> 'BitStream':
+    def from_binary_string(cls, binary: str) -> Self:
         return cls(int(b) for b in binary)
 
     @classmethod
-    def from_hex(cls, hex_string: str) -> 'BitStream':
+    def from_hex(cls, hex_string: str) -> Self:
         return cls(
             b
             for h in hex_string
@@ -325,13 +324,13 @@ class BitStream:
         return int(''.join(str(b) for b in bits), 2)
 
     @classmethod
-    def concat(cls, streams: Iterable['BitStream']) -> 'BitStream':
-        bits = BitStream()
+    def concat(cls, streams: Iterable[Self]) -> Self:
+        bits = cls()
         for stream in streams:
             bits.append(stream)
         return bits
 
-    def append(self, other: 'BitStream') -> None:
+    def append(self, other: Self) -> None:
         self.bits += other.bits
 
 
@@ -417,7 +416,7 @@ class ValuePacket(Packet):
         return f'{tn}(version={self.version!r}, value={self.value!r})'
 
     @classmethod
-    def impl_from_bits(cls, version: int, p_type: PacketType, bits: BitStream) -> 'ValuePacket':
+    def impl_from_bits(cls, version: int, p_type: PacketType, bits: BitStream) -> Self:
         value = 0
         while True:
             should_continue = bits.pop(1)
@@ -468,7 +467,7 @@ class OperatorPacket(Packet):
                f'sub_packets={self.sub_packets!r})'
 
     @classmethod
-    def impl_from_bits(cls, version: int, p_type: PacketType, bits: BitStream) -> 'OperatorPacket':
+    def impl_from_bits(cls, version: int, p_type: PacketType, bits: BitStream) -> Self:
         length_type_id = bits.pop(1)
         if length_type_id == 0:
             # 15 bits of sub-packets bit length
@@ -585,7 +584,7 @@ def complement(value: int, n: int) -> int:
     return (n - (value % n)) % n
 
 
-def abc(n: int) -> 'str':
+def abc(n: int) -> str:
     """
         >>> abc(0), abc(1), abc(2), abc(26)
         ('A', 'B', 'C', 'A')

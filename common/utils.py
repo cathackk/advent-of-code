@@ -1,7 +1,4 @@
-from typing import Any
-from typing import Callable
-from typing import TypeGuard
-from typing import TypeVar
+from typing import Any, Callable, TypeGuard, TypeVar
 
 T = TypeVar('T')
 

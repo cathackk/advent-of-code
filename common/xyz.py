@@ -1,4 +1,4 @@
-from typing import Iterator
+from typing import Iterator, Self
 
 from common.mixin import Orderable
 
@@ -43,17 +43,17 @@ class Vector3(XYZ):
     def __str__(self) -> str:
         return format(self, "()")
 
-    def __add__(self, other: 'Vector3') -> 'Vector3':
-        return Vector3(*(a + b for a, b in zip(self, other)))
+    def __add__(self, other: Self) -> Self:
+        return type(self)(*(a + b for a, b in zip(self, other)))
 
-    def __sub__(self, other: 'Vector3') -> 'Vector3':
-        return Vector3(*(a - b for a, b in zip(self, other)))
+    def __sub__(self, other: Self) -> Self:
+        return type(self)(*(a - b for a, b in zip(self, other)))
 
-    def __mul__(self, k: int) -> 'Vector3':
-        return Vector3(*(v * k for v in self))
+    def __mul__(self, k: int) -> Self:
+        return type(self)(*(v * k for v in self))
 
-    def __floordiv__(self, k: int) -> 'Vector3':
-        return Vector3(*(v // k for v in self))
+    def __floordiv__(self, k: int) -> Self:
+        return type(self)(*(v // k for v in self))
 
     def __abs__(self) -> int:
         return sum(abs(v) for v in self)
@@ -62,19 +62,19 @@ class Vector3(XYZ):
         return all(v == 0 for v in self)
 
     @classmethod
-    def null(cls) -> 'Vector3':
-        return Vector3(0, 0, 0)
+    def null(cls) -> Self:
+        return cls(0, 0, 0)
 
 
 class Point3(XYZ):
     def __str__(self):
         return format(self, "[]")
 
-    def to(self, other: 'Point3') -> Vector3:
+    def to(self, other: Self) -> Vector3:
         return Vector3(*(b - a for a, b in zip(self, other)))
 
-    def __add__(self, other: Vector3) -> 'Point3':
-        return Point3(*(a + b for a, b in zip(self, other)))
+    def __add__(self, other: Vector3) -> Self:
+        return type(self)(*(a + b for a, b in zip(self, other)))
 
-    def __sub__(self, other: Vector3) -> 'Point3':
-        return Point3(*(a - b for a, b in zip(self, other)))
+    def __sub__(self, other: Vector3) -> Self:
+        return type(self)(*(a - b for a, b in zip(self, other)))

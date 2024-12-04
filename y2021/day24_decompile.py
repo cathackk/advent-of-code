@@ -6,9 +6,7 @@ https://adventofcode.com/2021/day/24
 
 import itertools
 from enum import Enum
-from typing import Any
-from typing import Generator
-from typing import Iterable
+from typing import Any, Generator, Iterable, Self
 
 from meta.aoc_tools import data_path
 
@@ -198,7 +196,7 @@ class Instr:
         return isinstance(other, type(self)) and self._key() == other._key()
 
     @classmethod
-    def from_str(cls, line: str) -> 'Instr':
+    def from_str(cls, line: str) -> Self:
         op_str, *args = line.split(' ')
         op = Op(op_str)
         if op == Op.INP:
@@ -215,18 +213,18 @@ class Program:
         self.return_from = return_from
 
     @classmethod
-    def from_text(cls, text: str, return_from: str = 'wxyz') -> 'Program':
+    def from_text(cls, text: str, return_from: str = 'wxyz') -> Self:
         return cls.from_lines(text.strip().splitlines(), return_from)
 
     @classmethod
-    def from_file(cls, fn: str, return_from: str = 'wxyz') -> 'Program':
+    def from_file(cls, fn: str, return_from: str = 'wxyz') -> Self:
         return cls.from_lines(open(fn), return_from)
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str], return_from: str = 'wxyz') -> 'Program':
+    def from_lines(cls, lines: Iterable[str], return_from: str = 'wxyz') -> Self:
         return cls(
             instructions=(Instr.from_str(line.strip()) for line in lines),
-            return_from=return_from
+            return_from=return_from,
         )
 
     def __len__(self) -> int:

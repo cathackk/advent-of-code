@@ -6,13 +6,10 @@ https://adventofcode.com/2022/day/11
 
 import math
 from dataclasses import dataclass
-from typing import Callable
-from typing import Iterable
-from typing import Iterator
+from typing import Callable, Iterable, Iterator, Self
 
 from common.math import lcm
-from common.text import line_groups
-from common.text import parse_line
+from common.text import line_groups, parse_line
 from meta.aoc_tools import data_path
 
 
@@ -406,7 +403,7 @@ class State:
         )
         return header + "\n" + "\n".join(monkey_lines)
 
-    def next_state(self, monkeys: Iterable[Monkey], worry_func: IntFunc) -> 'State':
+    def next_state(self, monkeys: Iterable[Monkey], worry_func: IntFunc) -> Self:
         items = [list(monkey_items) for monkey_items in self.items]
         inspect_counts = list(self.inspect_counts)
         for monkey, monkey_items in zip(monkeys, items):
@@ -416,7 +413,7 @@ class State:
                 target_monkey_number = monkey.test(item)
                 items[target_monkey_number].append(item)
 
-        return State(
+        return type(self)(
             round_num=self.round_num + 1,
             items=tuple(items),
             inspect_counts=tuple(inspect_counts)

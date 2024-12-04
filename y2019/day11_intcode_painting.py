@@ -5,14 +5,13 @@ https://adventofcode.com/2019/day/11
 """
 
 from enum import Enum
+from typing import Self
 
 from common import ocr
 from common.heading import Heading
 from common.rect import Rect
 from meta.aoc_tools import data_path
-from y2019.intcode import load_tape
-from y2019.intcode import Machine
-from y2019.intcode import Tape
+from y2019.intcode import load_tape, Machine, Tape
 
 
 def part_1(tape: Tape) -> int:
@@ -208,7 +207,7 @@ class Robot:
         # 3. move
         self.pos = self.heading.move(self.pos)
 
-    def run(self, tape: Tape) -> 'Robot':
+    def run(self, tape: Tape) -> Self:
 
         raw_func = Machine(tape).as_function()
 

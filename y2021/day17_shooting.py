@@ -6,10 +6,8 @@ https://adventofcode.com/2021/day/17
 
 from typing import Iterable
 
-from common.iteration import last
-from common.iteration import single_value
-from common.math import sgn
-from common.math import triangular_root
+from common.iteration import last, single_value
+from common.math import sgn, triangular_root
 from common.rect import Rect
 from common.text import parse_line
 from meta.aoc_tools import data_path

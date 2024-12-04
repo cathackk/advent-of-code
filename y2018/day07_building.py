@@ -7,13 +7,9 @@ https://adventofcode.com/2018/day/7
 from collections import defaultdict
 from dataclasses import dataclass
 from itertools import count
-from typing import Generator
-from typing import Iterable
-from typing import Iterator
+from typing import Generator, Iterable, Iterator
 
-from common.iteration import dgroupby_pairs_set
-from common.iteration import exhaust
-from common.iteration import last
+from common.iteration import dgroupby_pairs_set, exhaust, last
 from common.text import parse_line
 from meta.aoc_tools import data_path
 

@@ -8,7 +8,7 @@ import string
 from collections import defaultdict
 from functools import cache
 from itertools import combinations
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
@@ -273,18 +273,18 @@ class Brick(HyperCuboid):
     def above_ground(self) -> int:
         return self.bottom_z - 1
 
-    def fall(self, by: int = 1) -> 'Brick':
+    def fall(self, by: int = 1) -> Self:
         x_1, y_1, z_1 = self.corner_min
         x_2, y_2, z_2 = self.corner_max
         return type(self)(self.id_, (x_1, y_1, z_1 - by), (x_2, y_2, z_2 - by))
 
-    def intersects(self, other: 'Brick') -> bool:
+    def intersects(self, other: Self) -> bool:
         return all(
             self[axis].start < other[axis].stop and other[axis].start < self[axis].stop
             for axis in range(3)
         )
 
-    def stands_on(self, other: 'Brick') -> bool:
+    def stands_on(self, other: Self) -> bool:
         if not self.bottom_z - 1 == other.top_z:
             return False
         return self.fall(by=1).intersects(other)
@@ -296,7 +296,7 @@ class Brick(HyperCuboid):
         return string.ascii_uppercase[self.id_ % len(string.ascii_uppercase)]
 
     @classmethod
-    def from_line(cls, line: str, id_: int = -1) -> 'Brick':
+    def from_line(cls, line: str, id_: int = -1) -> Self:
         # '0,2,3~2,2,3'
         x_1, y_1, z_1, x_2, y_2, z_2 = parse_line(line, '$,$,$~$,$,$')
         return cls(
@@ -305,8 +305,8 @@ class Brick(HyperCuboid):
             corner_2=(int(x_2), int(y_2), int(z_2)),
         )
 
-    @classmethod
-    def sorted(cls, bricks: Iterable['Brick'], axes: Iterable[str]) -> list['Brick']:
+    @staticmethod
+    def sorted(bricks: Iterable['Brick'], axes: Iterable[str]) -> list['Brick']:
         sort_indices = [('xyz'.index(axis[-1]), -1 if axis[0] == '-' else 1) for axis in axes]
 
         def key(brick: 'Brick') -> tuple[int, ...]:

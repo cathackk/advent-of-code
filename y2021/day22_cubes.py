@@ -7,14 +7,11 @@ https://adventofcode.com/2021/day/22
 import math
 from collections import Counter
 from itertools import chain
-from typing import Iterable
-from typing import Iterator
-from typing import Optional
+from typing import Iterable, Iterator, Self
 
 from tqdm import tqdm
 
-from common.iteration import separate
-from common.iteration import zip1
+from common.iteration import separate, zip1
 from common.rect import Rect
 from common.text import parse_line
 from meta.aoc_tools import data_path
@@ -203,7 +200,7 @@ class Cuboid:
         )
 
     @classmethod
-    def from_str(cls, line: str) -> 'Cuboid':
+    def from_str(cls, line: str) -> Self:
         def parse_edge(edge: str) -> tuple[int, int]:
             if '..' in edge:
                 left, right = edge.split('..')
@@ -264,24 +261,24 @@ class Cuboid:
         else:
             raise TypeError(type(other))
 
-    def is_fully_within(self, other: 'Cuboid') -> bool:
+    def is_fully_within(self, other: Self) -> bool:
         return (
             other.x_0 <= self.x_0 and self.x_1 <= other.x_1 and
             other.y_0 <= self.y_0 and self.y_1 <= other.y_1 and
             other.z_0 <= self.z_0 and self.z_1 <= other.z_1
         )
 
-    def is_fully_outside(self, other: 'Cuboid') -> bool:
+    def is_fully_outside(self, other: Self) -> bool:
         return not self.does_intersect(other)
 
-    def does_intersect(self, other: 'Cuboid') -> bool:
+    def does_intersect(self, other: Self) -> bool:
         return (
             self.x_0 <= other.x_1 and other.x_0 <= self.x_1 and
             self.y_0 <= other.y_1 and other.y_0 <= self.y_1 and
             self.z_0 <= other.z_1 and other.z_0 <= self.z_1
         )
 
-    def intersect(self, other: 'Cuboid') -> Optional['Cuboid']:
+    def intersect(self, other: Self) -> Self | None:
         if not self.does_intersect(other):
             return None
 
@@ -290,10 +287,10 @@ class Cuboid:
             corner_1=(min(self.x_1, other.x_1), min(self.y_1, other.y_1), min(self.z_1, other.z_1))
         )
 
-    def __and__(self, other: 'Cuboid') -> Optional['Cuboid']:
+    def __and__(self, other: Self) -> Self | None:
         return self.intersect(other)
 
-    def broken_by(self, other: 'Cuboid') -> Iterable['Cuboid']:
+    def broken_by(self, other: Self) -> Iterable[Self]:
         # break `self` into pieces which are all fully within or fully outside of `other`
 
         if not self.does_intersect(other):
@@ -334,7 +331,7 @@ class Cuboid:
             for (z_0, z_1) in z_split
         )
 
-    def union(self, other: 'Cuboid') -> Iterable['Cuboid']:
+    def union(self, other: Self) -> Iterable[Self]:
         """
             >>> a = Cuboid((1, 1, 1), (4, 5, 6))
             >>> b = Cuboid((3, 4, 5), (7, 7, 7))
@@ -367,10 +364,10 @@ class Cuboid:
         else:
             return chain((piece for piece in self_pieces if piece.is_fully_outside(other)), [other])
 
-    def __or__(self, other: 'Cuboid') -> Iterable['Cuboid']:
+    def __or__(self, other: Self) -> Iterable[Self]:
         return self.union(other)
 
-    def difference(self, other: 'Cuboid') -> Iterable['Cuboid']:
+    def difference(self, other: Self) -> Iterable[Self]:
         """
             >>> a = Cuboid((3, 0, 5), (8, 3, 9))
             >>> b = Cuboid((0, 2, 8), (4, 5, 12))
@@ -394,7 +391,7 @@ class Cuboid:
             if piece.is_fully_outside(other)
         )
 
-    def __sub__(self, other: 'Cuboid') -> Iterable['Cuboid']:
+    def __sub__(self, other: Self) -> Iterable[Self]:
         return self.difference(other)
 
 
@@ -499,7 +496,7 @@ class Step:
         return f'{state} {self.cuboid}'
 
     @classmethod
-    def from_str(cls, line: str) -> 'Step':
+    def from_str(cls, line: str) -> Self:
         # on x=-22..28,y=-29..23,z=-38..16
         # off x=-48..-32,y=-32..-16,z=-15..-5
         state, cuboid = line.split(' ')

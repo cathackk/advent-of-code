@@ -5,12 +5,10 @@ https://adventofcode.com/2020/day/16
 """
 
 import math
-from typing import Callable
-from typing import Iterable
+from typing import Callable, Iterable
 
 from common.iteration import single_value
-from common.text import line_groups
-from common.text import parse_line
+from common.text import line_groups, parse_line
 from meta.aoc_tools import data_path
 
 

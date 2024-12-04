@@ -6,7 +6,7 @@ https://adventofcode.com/2023/day/15
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Any, Iterable
+from typing import Any, Iterable, Self
 
 from common.file import relative_path
 from common.iteration import maybe_next
@@ -311,15 +311,15 @@ class Step:
         return hash_alg(self)
 
     @classmethod
-    def from_file(cls, fn: str) -> list['Step']:
+    def from_file(cls, fn: str) -> list[Self]:
         return list(cls.from_lines(open(relative_path(__file__, fn))))
 
     @classmethod
-    def from_text(cls, text: str) -> list['Step']:
+    def from_text(cls, text: str) -> list[Self]:
         return list(cls.from_lines(text.strip().splitlines()))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> Iterable['Step']:
+    def from_lines(cls, lines: Iterable[str]) -> Iterable[Self]:
         return (
             cls.from_str(step)
             for line in lines
@@ -327,7 +327,7 @@ class Step:
         )
 
     @classmethod
-    def from_str(cls, string: str) -> 'Step':
+    def from_str(cls, string: str) -> Self:
         if string.endswith('-'):
             return cls(string[:-1], '-')
         elif '=' in string:

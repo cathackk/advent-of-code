@@ -6,7 +6,7 @@ https://adventofcode.com/2019/day/6
 
 import functools
 from itertools import zip_longest
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.iteration import dgroupby_pairs
 from meta.aoc_tools import data_path
@@ -273,7 +273,7 @@ class OrbitMap:
         # -> A-B-C = 2 steps
         return len(self.path_between(moved, target_sibling)) - 3
 
-    def make_transfer(self, body: str, target_sibling: str) -> 'OrbitMap':
+    def make_transfer(self, body: str, target_sibling: str) -> Self:
         body_parent = self.parent_body(body)
         target_body = self.parent_body(target_sibling)
         # deep copy
@@ -324,11 +324,11 @@ class OrbitMap:
             prev_path = path
 
     @classmethod
-    def from_text(cls, text: str) -> 'OrbitMap':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'OrbitMap':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         def pair_from_line(line: str) -> tuple[str, str]:
             body_1, body_2 = line.strip().split(')')
             return body_1, body_2
@@ -336,7 +336,7 @@ class OrbitMap:
         return cls(dgroupby_pairs(pair_from_line(line) for line in lines))
 
     @classmethod
-    def from_file(cls, fn: str) -> 'OrbitMap':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
 

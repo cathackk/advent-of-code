@@ -4,7 +4,7 @@ Day 20: Trench Map
 https://adventofcode.com/2021/day/20
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
@@ -253,7 +253,7 @@ class Algorithm:
         return self.rules[n]
 
     @classmethod
-    def from_str(cls, string: str, light_char: str = '#', dark_char: str = '.') -> 'Algorithm':
+    def from_str(cls, string: str, light_char: str = '#', dark_char: str = '.') -> Self:
         assert len(light_char) == 1
         assert len(dark_char) == 1
         char_to_bool = {light_char: True, dark_char: False}

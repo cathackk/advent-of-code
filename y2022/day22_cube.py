@@ -6,11 +6,10 @@ https://adventofcode.com/2022/day/22
 
 import math
 from textwrap import dedent
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.heading import Heading
-from common.iteration import last
-from common.iteration import minmax
+from common.iteration import last, minmax
 from common.rect import Rect
 from common.text import line_groups
 from meta.aoc_tools import data_path
@@ -344,7 +343,7 @@ class Board:
         return last(self.trace_path(path))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Board':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             tiles=(
                 ((x, y), char)

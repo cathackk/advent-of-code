@@ -6,8 +6,7 @@ https://adventofcode.com/2015/day/17
 
 from typing import Iterable
 
-from common.iteration import following
-from common.iteration import min_all
+from common.iteration import following, min_all
 from meta.aoc_tools import data_path
 
 

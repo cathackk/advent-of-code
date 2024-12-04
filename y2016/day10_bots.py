@@ -6,13 +6,10 @@ https://adventofcode.com/2016/day/10
 
 import math
 from collections import defaultdict
-from typing import Generator
-from typing import Iterable
+from typing import Generator, Iterable
 
-from common.iteration import exhaust
-from common.iteration import single_value
-from common.text import join_and
-from common.text import parse_line
+from common.iteration import exhaust, single_value
+from common.text import join_and, parse_line
 from meta.aoc_tools import data_path
 
 

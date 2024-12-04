@@ -6,7 +6,7 @@ https://adventofcode.com/2022/day/24
 
 from enum import Enum
 from functools import lru_cache
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.graph import shortest_path
 from common.iteration import dgroupby_pairs
@@ -371,11 +371,12 @@ class Direction(Enum):
         return self in (Direction.LEFT, Direction.RIGHT)
 
     @classmethod
-    def from_char(cls, char: str) -> 'Direction':
+    def from_char(cls, char: str) -> Self:
         return next(d for d in cls if d.char == char)
 
 
 Path = list[Direction]
+
 
 class Map:
     def __init__(self, width: int, height: int, init_blizzards: dict[Pos, Direction]):
@@ -501,15 +502,15 @@ class Map:
             self.draw(minute=minute, highlight={pos: 'E'})
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Map':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_text(cls, text) -> 'Map':
+    def from_text(cls, text) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Map':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         blizzards: dict[Pos, Direction] = {}
         width, height = 0, 0
 

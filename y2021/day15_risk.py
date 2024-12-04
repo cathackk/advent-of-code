@@ -4,7 +4,7 @@ Day 15: Chiton
 https://adventofcode.com/2021/day/15
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.graph import shortest_path
 from common.rect import Rect
@@ -251,15 +251,15 @@ class RiskMap:
         return pos in self.values
 
     @classmethod
-    def from_text(cls, text: str) -> 'RiskMap':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'RiskMap':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'RiskMap':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             ((x, y), int(ch))
             for y, line in enumerate(lines)
@@ -292,7 +292,7 @@ class RiskMap:
     def risk_values(self, path: Path) -> list[int]:
         return [self[pos] for pos in path]
 
-    def extended(self, times: int) -> 'RiskMap':
+    def extended(self, times: int) -> Self:
         width, height = self.bounds.shape
 
         def new_risk(original_risk: int, offset: int) -> int:

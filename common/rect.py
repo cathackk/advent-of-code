@@ -1,11 +1,9 @@
 import itertools
 import math
 from itertools import chain
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator, Self
 
-from common.iteration import minmax
-from common.iteration import unique
+from common.iteration import minmax, unique
 from common.math import sgn
 
 Pos = tuple[int, int]
@@ -22,11 +20,11 @@ class Rect:
         return f'{type(self).__name__}({self.top_left!r}, {self.bottom_right!r})'
 
     @classmethod
-    def at_origin(cls, width: int, height: int) -> 'Rect':
+    def at_origin(cls, width: int, height: int) -> Self:
         return cls((0, 0), (width - 1, height - 1))
 
     @classmethod
-    def with_all(cls, positions: Iterable[Pos]) -> 'Rect':
+    def with_all(cls, positions: Iterable[Pos]) -> Self:
         positions = list(positions)
         x_min, x_max = minmax(x for x, _ in positions)
         y_min, y_max = minmax(y for _, y in positions)
@@ -37,13 +35,13 @@ class Rect:
         dx: int = 0, dy: int = 0, *,
         left_x: int = 0, right_x: int = 0,
         top_y: int = 0, bottom_y: int = 0,
-    ) -> 'Rect':
+    ) -> Self:
         return type(self)(
             (self.left_x - dx - left_x, self.top_y - dy - top_y),
             (self.right_x + dx + right_x, self.bottom_y + dy + bottom_y)
         )
 
-    def grow_to_fit(self, positions: Iterable[Pos]) -> 'Rect':
+    def grow_to_fit(self, positions: Iterable[Pos]) -> Self:
         return type(self).with_all(
             chain(
                 [self.top_left, self.bottom_right],
@@ -182,7 +180,7 @@ class HyperCuboid:
             return f'{type(self).__name__}({self.corner_min!r}, {self.corner_max!r})'
 
     @classmethod
-    def unit(cls, dimensions: int) -> 'HyperCuboid':
+    def unit(cls, dimensions: int) -> Self:
         """
             >>> (h := HyperCuboid.unit(3))
             HyperCuboid.unit(3)
@@ -193,7 +191,7 @@ class HyperCuboid:
         return cls(origin, origin)
 
     @classmethod
-    def at_origin(cls, lengths: HyperPos) -> 'HyperCuboid':
+    def at_origin(cls, lengths: HyperPos) -> Self:
         """
             >>> (h := HyperCuboid.at_origin((1, 2, 3)))
             HyperCuboid.at_origin((1, 2, 3))
@@ -214,7 +212,7 @@ class HyperCuboid:
         )
 
     @classmethod
-    def with_all(cls, positions: Iterable[HyperPos]) -> 'HyperCuboid':
+    def with_all(cls, positions: Iterable[HyperPos]) -> Self:
         positions = iter(positions)
 
         try:
@@ -234,10 +232,10 @@ class HyperCuboid:
 
         return cls(tuple(min_values), tuple(max_values))
 
-    def grow_to_fit(self, positions: Iterable[HyperPos]) -> 'HyperCuboid':
+    def grow_to_fit(self, positions: Iterable[HyperPos]) -> Self:
         return type(self).with_all(chain([self.corner_min, self.corner_max], positions))
 
-    def grow_by(self, delta: int) -> 'HyperCuboid':
+    def grow_by(self, delta: int) -> Self:
         return type(self)(
             tuple(v - delta for v in self.corner_min),
             tuple(v + delta for v in self.corner_max),

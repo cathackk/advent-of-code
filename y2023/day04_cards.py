@@ -5,7 +5,7 @@ https://adventofcode.com/2023/day/4
 """
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.text import parse_line
@@ -206,7 +206,7 @@ class Card:
     winning: list[int] = field(hash=False)
 
     @classmethod
-    def from_line(cls, line: str) -> 'Card':
+    def from_line(cls, line: str) -> Self:
         # 'Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53'
         no, you_have, winning = parse_line(line.strip(), 'Card $: $ | $')
         return cls(

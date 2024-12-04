@@ -8,10 +8,10 @@ import math
 from collections import Counter
 
 from meta.aoc_tools import data_path
-from y2016.assembunny import Command
-from y2016.assembunny import Tape
-from y2016.assembunny import run as assembunny_run
-from y2016.assembunny import run_generator as assembunny_run_generator
+from y2016.assembunny import (
+    Command, run as assembunny_run,
+    run_generator as assembunny_run_generator, Tape,
+)
 
 
 def part_1(tape: Tape):

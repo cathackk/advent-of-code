@@ -5,10 +5,9 @@ https://adventofcode.com/2018/day/3
 """
 
 from collections import Counter
-from typing import Iterable
+from typing import Iterable, Self
 
-from common.iteration import dgroupby_pairs
-from common.iteration import single_value
+from common.iteration import dgroupby_pairs, single_value
 from common.rect import Rect
 from common.text import parse_line
 from meta.aoc_tools import data_path
@@ -155,7 +154,7 @@ class Claim:
         return self.rect.height
 
     @classmethod
-    def from_str(cls, line: str) -> 'Claim':
+    def from_str(cls, line: str) -> Self:
         id_, left, top, width, height = parse_line(line, "#$ @ $,$: $x$")
         return cls(id_=int(id_), top=int(top), left=int(left), width=int(width), height=int(height))
 

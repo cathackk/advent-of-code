@@ -5,7 +5,7 @@ https://adventofcode.com/2021/day/8
 """
 
 from itertools import permutations
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
@@ -265,7 +265,7 @@ class Entry:
         return f'{ups} | {ops}'
 
     @classmethod
-    def from_line(cls, line: str) -> 'Entry':
+    def from_line(cls, line: str) -> Self:
         ups, ops = line.strip().split('|')
         return cls(ups.split(), ops.split())
 

@@ -6,7 +6,7 @@ https://adventofcode.com/2019/day/8
 
 import itertools
 from collections import Counter
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.ocr import FONT_6X5
 from common.rect import HyperCuboid
@@ -224,11 +224,11 @@ class Image:
         )
 
     @classmethod
-    def from_file(cls, fn: str, width: int, height: int) -> 'Image':
+    def from_file(cls, fn: str, width: int, height: int) -> Self:
         return cls.from_line(line=open(fn).readline(), width=width, height=height)
 
     @classmethod
-    def from_line(cls, line: str, width: int, height: int) -> 'Image':
+    def from_line(cls, line: str, width: int, height: int) -> Self:
         return cls(pixels=(int(char) for char in line.strip()), width=width, height=height)
 
 

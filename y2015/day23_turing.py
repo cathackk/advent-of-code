@@ -4,8 +4,7 @@ Day 23: Opening the Turing Lock
 https://adventofcode.com/2015/day/23
 """
 
-from typing import Final
-from typing import Iterable
+from typing import Final, Iterable, Self
 
 from meta.aoc_tools import data_path
 
@@ -101,7 +100,7 @@ class Command:
         return f'{self.op} {self.reg}{offset_str}'
 
     @classmethod
-    def from_str(cls, line: str) -> 'Command':
+    def from_str(cls, line: str) -> Self:
         """
             >>> Command.from_str('hlf a')
             Command('hlf', reg='a')

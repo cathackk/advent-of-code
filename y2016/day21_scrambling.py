@@ -4,8 +4,7 @@ Day 21: Scrambled Letters and Hash
 https://adventofcode.com/2016/day/21
 """
 
-from typing import Final
-from typing import Iterable
+from typing import Final, Iterable, Self
 
 from common.text import parse_line
 from meta.aoc_tools import data_path
@@ -312,7 +311,7 @@ class Command:
                 raise ValueError(repr(self))
 
     @classmethod
-    def from_str(cls, line: str) -> 'Command':
+    def from_str(cls, line: str) -> Self:
         line = line.strip()
 
         if line.startswith("swap position "):

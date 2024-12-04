@@ -5,8 +5,7 @@ https://adventofcode.com/2017/day/19
 """
 
 from dataclasses import dataclass
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator, Self
 
 from common.heading import Heading
 from meta.aoc_tools import data_path
@@ -217,15 +216,15 @@ class Diagram:
                 raise ValueError(f"nowhere to turn! pos={pos!r}, heading={heading!r}")
 
     @classmethod
-    def from_text(cls, text: str) -> 'Diagram':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip('\n').splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Diagram':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Diagram':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             ((x, y), char)
             for y, line in enumerate(lines)

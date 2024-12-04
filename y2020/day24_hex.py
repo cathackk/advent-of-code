@@ -7,7 +7,7 @@ https://adventofcode.com/2020/day/24
 from collections import Counter
 from enum import Enum
 from functools import cached_property
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.rect import Rect
 from meta.aoc_tools import data_path
@@ -238,7 +238,7 @@ class Step(Enum):
         return iter(self.value)
 
     @classmethod
-    def parse_line(cls, line: str) -> Iterable['Step']:
+    def parse_line(cls, line: str) -> Iterable[Self]:
         """
             >>> list(Step.parse_line("eseswwnenw"))
             [Step.E, Step.SE, Step.SW, Step.W, Step.NE, Step.NW]
@@ -264,15 +264,15 @@ class Walk:
         self.steps = list(steps)
 
     @classmethod
-    def parse_file(cls, fn: str) -> list['Walk']:
+    def parse_file(cls, fn: str) -> list[Self]:
         return list(cls.parse_lines(open(fn)))
 
     @classmethod
-    def parse_text(cls, text: str) -> list['Walk']:
+    def parse_text(cls, text: str) -> list[Self]:
         return list(cls.parse_lines(text.strip().splitlines()))
 
     @classmethod
-    def parse_lines(cls, lines: Iterable[str]) -> Iterable['Walk']:
+    def parse_lines(cls, lines: Iterable[str]) -> Iterable[Self]:
         return (
             cls(Step.parse_line(line.strip()))
             for line in lines

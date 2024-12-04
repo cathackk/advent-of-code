@@ -7,10 +7,8 @@ https://adventofcode.com/2018/day/6
 import string
 from typing import Iterable
 
-from common.iteration import dgroupby_pairs_set
-from common.iteration import single_value
-from common.rect import Pos
-from common.rect import Rect
+from common.iteration import dgroupby_pairs_set, single_value
+from common.rect import Pos, Rect
 from meta.aoc_tools import data_path
 
 

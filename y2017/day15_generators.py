@@ -4,8 +4,7 @@ Day 15: Dueling Generators
 https://adventofcode.com/2017/day/15
 """
 
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator
 
 from tqdm import tqdm
 

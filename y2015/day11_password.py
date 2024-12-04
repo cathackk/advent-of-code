@@ -5,8 +5,7 @@ https://adventofcode.com/2015/day/11
 """
 
 import string
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator
 
 from meta.aoc_tools import data_path
 

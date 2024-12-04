@@ -4,7 +4,7 @@ Day 22: Wizard Simulator 20XX
 https://adventofcode.com/2015/day/22
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 import yaml
 
@@ -240,11 +240,11 @@ class Character:
         return f'{type(self).__name__}(hit_points={self.hit_points!r}{dmg}{mana})'
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Character':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Character':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         prefixes = {
             'hit_points': "Hit Points: ",
             'damage': "Damage: ",
@@ -267,11 +267,11 @@ class SpellBook:
         self.spells_by_name = {spell.name: spell for spell in self.spells}
 
     @classmethod
-    def from_file(cls, fn: str) -> 'SpellBook':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_dict(yaml.safe_load(open(fn)))
 
     @classmethod
-    def from_dict(cls, d: dict) -> 'SpellBook':
+    def from_dict(cls, d: dict) -> Self:
         return cls(Spell.from_dict(spell_d) for spell_d in d['spells'])
 
     def __getitem__(self, spell_name: str) -> 'Spell':
@@ -302,7 +302,7 @@ class Spell:
         return f'{tn}({self.name!r}, {cost}{dmg}{heal}{effect})'
 
     @classmethod
-    def from_dict(cls, d: dict) -> 'Spell':
+    def from_dict(cls, d: dict) -> Self:
         if 'effect' in d:
             effect = Effect.from_dict(d['name'], d.pop('effect'))
         else:
@@ -333,7 +333,7 @@ class Effect:
         return f'{tn}({self.name!r}, {lasts}{armor}{dmg}{mana})'
 
     @classmethod
-    def from_dict(cls, name, d: dict) -> 'Effect':
+    def from_dict(cls, name, d: dict) -> Self:
         return cls(name, **d)
 
 
@@ -489,7 +489,7 @@ class BattleState:
             if (spell.effect is None or self.active_effects.get(spell.effect, 0) <= 1)
         )
 
-    def copy(self) -> 'BattleState':
+    def copy(self) -> Self:
         return type(self)(
             battle=self.battle,
             player_hp=self.player_hp,
@@ -500,7 +500,7 @@ class BattleState:
             logging=self.logging,
         )
 
-    def after_turn(self, spell: Spell | str) -> 'BattleState':
+    def after_turn(self, spell: Spell | str) -> Self:
         new_state = self.copy()
         try:
             new_state.do_turn(spell)

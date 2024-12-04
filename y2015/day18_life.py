@@ -5,7 +5,7 @@ https://adventofcode.com/2015/day/18
 """
 
 from collections import Counter
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
@@ -252,11 +252,11 @@ class Grid:
         self.lights_on.update(self.lights_stuck_on)
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Grid':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Grid':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         width = None
         height = 0
         lights_on: list[Pos] = []
@@ -276,7 +276,7 @@ class Grid:
         return cls(width=width, height=height, lights_on=lights_on)
 
 
-def animate(grid: Grid, steps: int, log: bool = False) -> 'Grid':
+def animate(grid: Grid, steps: int, log: bool = False) -> Grid:
     new_grid = type(grid)(
         width=grid.width,
         height=grid.height,

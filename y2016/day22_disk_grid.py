@@ -4,7 +4,7 @@ Day 22: Grid Computing
 https://adventofcode.com/2016/day/22
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.graph import shortest_path
 from common.iteration import single_value
@@ -250,7 +250,7 @@ class Node:
         return self.name
 
     @classmethod
-    def from_str(cls, line: str) -> 'Node':
+    def from_str(cls, line: str) -> Self:
         # '/dev/grid/node-x0-y2  85T  73T  12T  85%'
         name, size_str, used_str, avail_str, _ = [p for p in line.strip().split(' ') if p]
         x, y = parse_line(name, "/dev/grid/node-x$-y$")
@@ -261,7 +261,7 @@ class Node:
         avail = int(avail_str.rstrip('T'))
         assert size == used + avail
 
-        return Node(pos, size, used)
+        return cls(pos, size, used)
 
     @property
     def name(self) -> str:
@@ -344,7 +344,7 @@ class Grid:
     def __len__(self) -> int:
         return len(self.nodes)
 
-    def __getitem__(self, pos: Pos) -> 'Node':
+    def __getitem__(self, pos: Pos) -> Node:
         return self.nodes[pos]
 
     @property
@@ -391,7 +391,7 @@ class Grid:
             if node_a.used <= node_b.available
         )
 
-    def move_data(self, source: Pos | Node, target: Pos | Node) -> 'Grid':
+    def move_data(self, source: Pos | Node, target: Pos | Node) -> Self:
         source_node: Node = source if isinstance(source, Node) else self[source]
         target_node: Node = target if isinstance(target, Node) else self[target]
 
@@ -477,15 +477,15 @@ class Grid:
             print("".join(node_str(self[x, y]) for x in self.rect.range_x()).rstrip())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Grid':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Grid':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Grid':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         lines = iter(lines)
         assert "Filesystem" in next(lines)  # header
         return cls(Node.from_str(line) for line in lines)

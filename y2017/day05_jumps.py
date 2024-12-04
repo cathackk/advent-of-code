@@ -5,9 +5,7 @@ https://adventofcode.com/2017/day/5
 """
 
 from itertools import count
-from typing import Callable
-from typing import Generator
-from typing import Iterable
+from typing import Callable, Generator, Iterable
 
 from tqdm import tqdm
 

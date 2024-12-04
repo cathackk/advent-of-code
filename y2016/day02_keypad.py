@@ -4,7 +4,7 @@ Day 2: Bathroom Security
 https://adventofcode.com/2016/day/2
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.heading import Heading
 from common.rect import Rect
@@ -149,11 +149,11 @@ class Keypad:
         )
 
     @classmethod
-    def from_str(cls, text: str) -> 'Keypad':
+    def from_str(cls, text: str) -> Self:
         return cls.from_lines(text.strip("\n").splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Keypad':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             ((x, y), char)
             for y, line in enumerate(lines)

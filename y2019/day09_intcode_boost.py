@@ -5,9 +5,7 @@ https://adventofcode.com/2019/day/9
 """
 
 from meta.aoc_tools import data_path
-from y2019.intcode import load_tape
-from y2019.intcode import Machine
-from y2019.intcode import Tape
+from y2019.intcode import load_tape, Machine, Tape
 
 
 def part_1(tape: Tape) -> int:

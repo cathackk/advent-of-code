@@ -1,9 +1,5 @@
 from enum import Enum
-from typing import Any
-from typing import Callable
-from typing import Generator
-from typing import Iterable
-from typing import Optional
+from typing import Any, Callable, Generator, Iterable, Optional, Self
 
 from tqdm import tqdm
 
@@ -36,8 +32,8 @@ class OperationCode(Enum):
         self.argcount = argcount
 
     @classmethod
-    def from_code(cls, code: int) -> 'OperationCode':
-        opcode = next((op for op in OperationCode if op.intcode == code), None)
+    def from_code(cls, code: int) -> Self:
+        opcode = next((op for op in cls if op.intcode == code), None)
         if not opcode:
             raise KeyError(f"OperationCode with code={code} not found")
         return opcode

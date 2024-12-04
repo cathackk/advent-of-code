@@ -6,7 +6,7 @@ https://adventofcode.com/2017/day/10
 
 import operator
 from functools import reduce
-from typing import Iterable
+from typing import Iterable, Self
 
 from meta.aoc_tools import data_path
 
@@ -197,16 +197,16 @@ class Knot:
         return f'{tn}(pos={self.pos!r}, rope={self.rope!r}, skip_size={self.skip_size!r})'
 
     @classmethod
-    def of_length(cls, rope_length: int) -> 'Knot':
+    def of_length(cls, rope_length: int) -> Self:
         return cls(0, range(rope_length), 0)
 
-    def pinched(self, *lengths: int, rounds: int = 1) -> 'Knot':
+    def pinched(self, *lengths: int, rounds: int = 1) -> Self:
         assert rounds >= 1
         knot = self
 
         for _ in range(rounds):
             for length in lengths:
-                knot = Knot(
+                knot = type(self)(
                     pos=(knot.pos + knot.skip_size + length) % len(knot.rope),
                     rope=_reversed_rope(knot.rope, knot.pos, length),
                     skip_size=knot.skip_size + 1

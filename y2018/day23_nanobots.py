@@ -6,8 +6,7 @@ https://adventofcode.com/2018/day/23
 
 from collections import Counter
 from dataclasses import dataclass
-from typing import Iterable
-from typing import Union
+from typing import Iterable, Self
 
 from common.iteration import zip1
 from common.text import parse_line
@@ -159,12 +158,12 @@ class Nanobot:
     radius: int
 
     @classmethod
-    def from_line(cls, line: str) -> 'Nanobot':
+    def from_line(cls, line: str) -> Self:
         # "pos=<1,3,1>, r=1"
         x, y, z, r = parse_line(line.strip(), "pos=<$,$,$>, r=$")
         return cls(pos=(int(x), int(y), int(z)), radius=int(r))
 
-    def distance_to(self, other: Union['Nanobot', Pos3]) -> int:
+    def distance_to(self, other: Self | Pos3) -> int:
         if isinstance(other, tuple):
             return manhattan_distance(self.pos, other)
         elif hasattr(other, 'pos'):
@@ -172,10 +171,10 @@ class Nanobot:
         else:
             raise TypeError(type(other))
 
-    def in_range(self, other: 'Nanobot') -> bool:
+    def in_range(self, other: Self) -> bool:
         return self.distance_to(other) <= self.radius
 
-    def intersects(self, other: 'Nanobot') -> bool:
+    def intersects(self, other: Self) -> bool:
         return self.distance_to(other) <= self.radius + other.radius
 
 

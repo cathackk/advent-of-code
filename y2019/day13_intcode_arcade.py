@@ -5,16 +5,14 @@ https://adventofcode.com/2019/day/13
 """
 
 from enum import Enum
-from typing import Callable
+from typing import Callable, Self
 
 from tqdm import tqdm
 
 from common.math import sgn
 from common.rect import Rect
 from meta.aoc_tools import data_path
-from y2019.intcode import load_tape
-from y2019.intcode import Machine
-from y2019.intcode import Tape
+from y2019.intcode import load_tape, Machine, Tape
 
 
 def part_1(tape: Tape) -> int:
@@ -102,7 +100,7 @@ class Tile(Enum):
         self.char = char
 
     @classmethod
-    def from_code(cls, code: int) -> 'Tile':
+    def from_code(cls, code: int) -> Self:
         try:
             return next(tile for tile in cls if tile.code == code)
         except StopIteration as stop:
@@ -134,9 +132,9 @@ class Arcade():
 
     def play(
         self,
-        joystick: Callable[['Arcade'], int | None] = None,
+        joystick: Callable[[Self], int | None] = None,
         draw: bool = False,
-    ) -> 'Arcade':
+    ) -> Self:
 
         if joystick is None:
             joystick = self.perfect_joystick

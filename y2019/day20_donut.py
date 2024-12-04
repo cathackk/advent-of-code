@@ -6,7 +6,7 @@ https://adventofcode.com/2019/day/20
 
 from enum import Enum
 from itertools import groupby
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.graph import shortest_path
 from common.iteration import dgroupby_pairs
@@ -349,15 +349,15 @@ class Maze:
         return dict(sorted(items()))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Maze':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip('\n').splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Maze':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Maze':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         floors: set[Pos] = set()
         letters: dict[Pos, str] = {}
         letter_pairs: dict[tuple[Pos, Pos], str] = {}

@@ -5,7 +5,7 @@ https://adventofcode.com/2015/day/15
 """
 
 import math
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.iteration import maxk
 from common.text import parse_line
@@ -139,7 +139,7 @@ class Ingredient:
         return f"{self.name}: {attrs_str}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Ingredient':
+    def from_str(cls, line: str) -> Self:
         args = parse_line(line, "$: capacity $, durability $, flavor $, texture $, calories $")
         # pylint: disable=no-value-for-parameter
         return cls(*args)

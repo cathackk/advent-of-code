@@ -5,8 +5,7 @@ https://adventofcode.com/2018/day/4
 """
 
 from collections import Counter
-from typing import Iterable
-from typing import NamedTuple
+from typing import Iterable, NamedTuple, Self
 
 from common.text import parse_line
 from common.utils import some
@@ -187,9 +186,9 @@ class Timestamp(NamedTuple):
         return f'{tn}({self.year!r}, {self.month!r}, {self.day!r}, {self.hour!r}, {self.minute!r})'
 
     @classmethod
-    def from_str(cls, string: str) -> 'Timestamp':
+    def from_str(cls, string: str) -> Self:
         year, month, day, hour, minute = parse_line(string, "$-$-$ $:$")
-        return Timestamp(int(year), int(month), int(day), int(hour), int(minute))
+        return cls(int(year), int(month), int(day), int(hour), int(minute))
 
     @property
     def date(self) -> Date:
@@ -216,7 +215,7 @@ class Event:
         return self.time.date
 
     @classmethod
-    def from_str(cls, line: str) -> 'Event':
+    def from_str(cls, line: str) -> Self:
         # [1518-11-01 00:00] Guard #10 begins shift
         # [1518-11-01 00:05] falls asleep
 

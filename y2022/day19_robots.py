@@ -9,12 +9,11 @@ import functools
 import math
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
-from common.text import line_groups
-from common.text import parse_line
+from common.text import line_groups, parse_line
 from meta.aoc_tools import data_path
 
 
@@ -262,7 +261,7 @@ class Blueprint:
         return self.geode_robot_obsid_cost
 
     @classmethod
-    def from_line(cls, line: str) -> 'Blueprint':
+    def from_line(cls, line: str) -> Self:
         pattern = (
             "Blueprint $: "
             "Each ore robot costs $ ore. "

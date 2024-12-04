@@ -7,8 +7,7 @@ https://adventofcode.com/2015/day/13
 from itertools import permutations
 from typing import Iterable
 
-from common.iteration import slidingw
-from common.iteration import zip1
+from common.iteration import slidingw, zip1
 from common.text import parse_line
 from meta.aoc_tools import data_path
 

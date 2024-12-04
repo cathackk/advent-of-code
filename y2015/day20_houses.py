@@ -6,8 +6,7 @@ https://adventofcode.com/2015/day/20
 
 import math
 from itertools import count
-from typing import Callable
-from typing import Iterable
+from typing import Callable, Iterable
 
 from tqdm import tqdm
 

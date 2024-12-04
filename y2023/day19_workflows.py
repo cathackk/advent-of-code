@@ -6,7 +6,7 @@ https://adventofcode.com/2023/day/19
 
 from dataclasses import dataclass
 from math import prod
-from typing import Iterable, Iterator
+from typing import Iterable, Iterator, Self
 
 from common.file import relative_path
 from common.text import line_groups, parse_line
@@ -191,7 +191,7 @@ class Part:
         return self.ratings[variable]
 
     @classmethod
-    def from_line(cls, line: str) -> 'Part':
+    def from_line(cls, line: str) -> Self:
         # '{x=787,m=2655,a=1222,s=2876}'
         values = parse_line(line, '{x=$,m=$,a=$,s=$}')
         return cls({k: int(v) for k, v in zip('xmas', values, strict=True)})
@@ -213,22 +213,22 @@ class PartRange:
     def get(self, variable: str) -> range:
         return self.ranges[variable]
 
-    def split(self, variable: str, value: int) -> tuple['PartRange', 'PartRange']:
+    def split(self, variable: str, value: int) -> tuple[Self, Self]:
         range_og = self.get(variable)
         if value not in range_og:
             raise ValueError(f"{variable}={value} not in {range_og.start}..{range_og.stop}")
 
         return (
-            PartRange(self.ranges | {variable: range(range_og.start, value)}),
-            PartRange(self.ranges | {variable: range(value, range_og.stop)}),
+            type(self)(self.ranges | {variable: range(range_og.start, value)}),
+            type(self)(self.ranges | {variable: range(value, range_og.stop)}),
         )
 
     @classmethod
-    def full(cls, variables: Iterable[str], rating_range: range) -> 'PartRange':
+    def full(cls, variables: Iterable[str], rating_range: range) -> Self:
         return cls({var: rating_range for var in variables})
 
     @classmethod
-    def empty(cls) -> 'PartRange':
+    def empty(cls) -> Self:
         return cls({})
 
     def __str__(self) -> str:
@@ -288,7 +288,7 @@ class Condition:
                 raise ValueError(unsupported)
 
     @classmethod
-    def always(cls) -> 'Condition':
+    def always(cls) -> Self:
         return cls('', '', 0)
 
     def is_always_true(self) -> bool:
@@ -305,7 +305,7 @@ class Condition:
         return f'{type(self).__name__}({self.variable!r}, {self.op!r}, {self.value!r})'
 
     @classmethod
-    def from_str(cls, string: str) -> 'Condition':
+    def from_str(cls, string: str) -> Self:
         if '>' in string:
             variable, value = string.split('>')
             return cls(variable, '>', int(value))
@@ -327,7 +327,7 @@ class Rule:
         return f'{self.condition}:{self.target}'
 
     @classmethod
-    def from_str(cls, string: str) -> 'Rule':
+    def from_str(cls, string: str) -> Self:
         if ':' not in string:
             return cls(condition=Condition.always(), target=string)
 
@@ -346,7 +346,7 @@ class Workflow:
         return f'{self.name}{{{rules_str}}}'
 
     @classmethod
-    def from_line(cls, line: str) -> 'Workflow':
+    def from_line(cls, line: str) -> Self:
         # 'pv{a>1716:R,A}'
         name, rules_part = parse_line(line.strip(), '${$}')
         return cls(name, [Rule.from_str(rule_str) for rule_str in rules_part.split(',')])

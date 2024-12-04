@@ -4,8 +4,7 @@ Day 11: Seating System
 https://adventofcode.com/2020/day/11
 """
 
-from collections import Counter
-from collections import defaultdict
+from collections import Counter, defaultdict
 from functools import cached_property
 from typing import Iterable
 

@@ -5,7 +5,7 @@ https://adventofcode.com/2019/day/18
 """
 
 from itertools import chain
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.graph import shortest_path
 from common.rect import Rect
@@ -429,7 +429,7 @@ class KeysCollection:
         self.keys = self.keys | {new_key}
         self.current = self.current - {start} | {new_key}
 
-    def __add__(self, other) -> 'KeysCollection':
+    def __add__(self, other) -> Self:
         if not isinstance(other, tuple):
             return NotImplemented
 
@@ -583,7 +583,7 @@ class Map:
         for y in self.bounds.range_y():
             print(''.join(char((x, y)) for x in self.bounds.range_x()))
 
-    def split(self) -> 'Map':
+    def split(self) -> Self:
         if len(self.entrances) != 1:
             raise ValueError(f"cannot split map with {len(self.entrances)} entrances")
 
@@ -607,15 +607,15 @@ class Map:
         )
 
     @classmethod
-    def from_text(cls, text: str) -> 'Map':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Map':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Map':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         floors: list[Pos] = []
         keys: dict[Pos, str] = {}
         doors: dict[Pos, str] = {}

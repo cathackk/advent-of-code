@@ -6,9 +6,7 @@ from typing import Iterable
 
 from common.file import relative_path
 from common.logging import eprint
-from meta.aoc_tools import day_files
-from meta.aoc_tools import DayDescription
-from meta.aoc_tools import year_dirs
+from meta.aoc_tools import day_files, DayDescription, year_dirs
 
 
 def write_readme(readme_fn: str):

@@ -4,7 +4,7 @@ Day 20: Firewall Rules
 https://adventofcode.com/2016/day/20
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from meta.aoc_tools import data_path
 
@@ -270,15 +270,15 @@ class RangeSet:
             yield from r
 
     @classmethod
-    def from_file(cls, fn: str) -> 'RangeSet':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_text(cls, text: str) -> 'RangeSet':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'RangeSet':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(Range(*line.strip().split('-')) for line in lines)
 
 

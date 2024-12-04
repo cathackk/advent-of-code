@@ -5,8 +5,7 @@ https://adventofcode.com/2017/day/7
 """
 
 from collections import Counter
-from typing import Iterable
-from typing import Optional
+from typing import Iterable, Self
 
 from common.text import parse_line
 from common.utils import some
@@ -161,7 +160,7 @@ def part_2(tower: 'Tower') -> int:
 
 
 class Tower:
-    def __init__(self, name: str, weight: int, sub_towers: Iterable['Tower'] = ()):
+    def __init__(self, name: str, weight: int, sub_towers: Iterable[Self] = ()):
         self.name = name
         self.weight = weight
         self.sub_towers = list(sub_towers)
@@ -185,7 +184,7 @@ class Tower:
         else:
             return True
 
-    def find_unbalanced(self) -> Optional[tuple['Tower', int]]:
+    def find_unbalanced(self) -> tuple[Self, int] | None:
         """
         Returns tuple of:
 
@@ -214,15 +213,15 @@ class Tower:
         raise ValueError(f"cannot determine disbalanced with weights {weights}")
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Tower':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Tower':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Tower':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         # name -> weight, names of subtowers
         protos: dict[str, tuple[int, list[str]]] = {}
         # name -> parent (tower it stands on)
@@ -249,9 +248,9 @@ class Tower:
         return cls._from_protos(find_root_tower_name(depends_on), protos)
 
     @classmethod
-    def _from_protos(cls, name: str, protos: dict[str, tuple[int, list[str]]]) -> 'Tower':
+    def _from_protos(cls, name: str, protos: dict[str, tuple[int, list[str]]]) -> Self:
         weight, children_names = protos[name]
-        return Tower(
+        return cls(
             name=name,
             weight=weight,
             sub_towers=(cls._from_protos(cname, protos) for cname in children_names)

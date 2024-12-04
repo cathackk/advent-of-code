@@ -5,7 +5,7 @@ https://adventofcode.com/2023/day/10
 """
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.heading import Heading
@@ -374,15 +374,15 @@ class Maze:
                 break
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Maze':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Maze':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Maze':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         tiles = {
             (x, y): tile
             for y, line in enumerate(lines)

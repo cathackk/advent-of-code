@@ -7,7 +7,7 @@ https://adventofcode.com/2019/day/10
 import string
 from functools import cached_property
 from functools import partial
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.iteration import chunks
 from common.iteration import dgroupby_pairs
@@ -366,15 +366,15 @@ class Map:
             self.draw(labels)
 
     @classmethod
-    def from_text(cls, text: str) -> 'Map':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Map':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Map':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             (x, y)
             for y, line in enumerate(lines)

@@ -4,19 +4,15 @@ Day 19: Tractor Beam
 https://adventofcode.com/2019/day/19
 """
 
-from itertools import count
-from itertools import islice
-from typing import Callable
-from typing import Iterator
+from itertools import count, islice
+from typing import Callable, Iterator
 
 from tqdm import tqdm
 
 from common.iteration import slidingw
 from common.rect import Rect
 from meta.aoc_tools import data_path
-from y2019.intcode import load_tape
-from y2019.intcode import Machine
-from y2019.intcode import Tape
+from y2019.intcode import load_tape, Machine, Tape
 
 
 def part_1(beam_func: 'BeamFunc', area_size: int = 50) -> int:

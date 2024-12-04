@@ -6,7 +6,7 @@ https://adventofcode.com/2022/day/23
 
 from collections import Counter
 from enum import Enum
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
@@ -392,7 +392,7 @@ class State:
     def bounds(self) -> Rect:
         return Rect.with_all(self.elves)
 
-    def next_state(self) -> 'State':
+    def next_state(self) -> Self:
         dir_offset = self.round_ % len(Direction)
         directions = list(Direction)[dir_offset:] + list(Direction)[:dir_offset]
 
@@ -419,8 +419,7 @@ class State:
             round_=self.round_ + 1,
         )
 
-
-    def run(self, stop_at_round: int = None, draw_in: Rect = None) -> 'State':
+    def run(self, stop_at_round: int = None, draw_in: Rect = None) -> Self:
         state = self
         if draw_in:
             print("== Initial State ==")
@@ -446,7 +445,6 @@ class State:
 
             state = new_state
 
-
     def draw(self, bounds: Rect = None) -> None:
         if bounds is None:
             bounds = self.bounds()
@@ -458,15 +456,15 @@ class State:
             print(''.join(char((x, y)) for x in bounds.range_x()))
 
     @classmethod
-    def from_file(cls, fn: str) -> 'State':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_text(cls, text: str) -> 'State':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'State':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             (x, y)
             for y, line in enumerate(lines)

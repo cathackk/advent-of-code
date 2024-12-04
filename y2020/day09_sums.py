@@ -4,8 +4,7 @@ Day 9: Encoding Error
 https://adventofcode.com/2020/day/9
 """
 
-from typing import Collection
-from typing import Iterator
+from typing import Collection, Iterator
 
 from meta.aoc_tools import data_path
 

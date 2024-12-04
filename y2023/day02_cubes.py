@@ -10,7 +10,6 @@ from common.file import relative_path
 from common.iteration import dgroupby_pairs
 from common.text import parse_line
 
-
 Color = Literal['red', 'green', 'blue']
 CubeSet = dict[Color, int]
 Game = list[CubeSet]

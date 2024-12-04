@@ -9,7 +9,6 @@ from typing import Iterable
 
 from common.file import relative_path
 
-
 Pos = tuple[int, int]
 Numbers = dict[Pos, int]
 Symbols = dict[Pos, str]

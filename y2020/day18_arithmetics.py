@@ -5,9 +5,7 @@ https://adventofcode.com/2020/day/18
 """
 
 from enum import Enum
-from typing import Iterable
-from typing import Iterator
-from typing import Union
+from typing import Iterable, Iterator, Self, Union
 
 from meta.aoc_tools import data_path
 
@@ -274,7 +272,7 @@ class Expr:
         return cls.from_symbols(iter(tokens))
 
     @classmethod
-    def from_symbols(cls, symbols: Iterator[str]) -> 'Expr':
+    def from_symbols(cls, symbols: Iterator[str]) -> Self:
         parts: list[ExprPart] = []
 
         op: Operator | None = Operator.ADD
@@ -308,15 +306,15 @@ class Expr:
         return cls(parts)
 
     @classmethod
-    def load_from_file(cls, fn: str) -> list['Expr']:
+    def load_from_file(cls, fn: str) -> list[Self]:
         return list(cls.load_from_lines(open(fn)))
 
     @classmethod
-    def load_from_text(cls, text: str) -> list['Expr']:
+    def load_from_text(cls, text: str) -> list[Self]:
         return list(cls.load_from_lines(text.strip().splitlines()))
 
     @classmethod
-    def load_from_lines(cls, lines: Iterable[str]) -> Iterable['Expr']:
+    def load_from_lines(cls, lines: Iterable[str]) -> Iterable[Self]:
         return (cls.parse(line.strip()) for line in lines)
 
 

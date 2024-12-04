@@ -8,7 +8,7 @@ import math
 import re
 from ast import literal_eval
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.math import sgn
 from common.text import line_groups
@@ -264,7 +264,7 @@ class Packet:
             raise TypeError(type(left), type(right))
 
     @classmethod
-    def from_line(cls, line: str) -> 'Packet':
+    def from_line(cls, line: str) -> Self:
         line = line.strip()
 
         # make sure the input is safe for eval

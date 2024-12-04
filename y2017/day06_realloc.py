@@ -4,9 +4,7 @@ Day 6: Memory Reallocation
 https://adventofcode.com/2017/day/6
 """
 
-from typing import Any
-from typing import Iterable
-from typing import Iterator
+from typing import Any, Iterable, Iterator
 
 from meta.aoc_tools import data_path
 

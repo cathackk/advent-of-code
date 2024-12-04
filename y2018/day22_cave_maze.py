@@ -8,8 +8,7 @@ import functools
 from dataclasses import dataclass
 from enum import Enum
 from itertools import groupby
-from typing import Any
-from typing import Iterable
+from typing import Any, Iterable, Self
 
 from common.graph import shortest_path
 from common.rect import Rect
@@ -694,15 +693,15 @@ class Cave:
                 self.draw(bounds, {pos: 'X'})
 
     @classmethod
-    def from_text(cls, text: str) -> 'Cave':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Cave':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Cave':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         depth_line, target_line = lines
         depth, = parse_line(depth_line.strip(), "depth: $")
         target_x, target_y = parse_line(target_line.strip(), "target: $,$")

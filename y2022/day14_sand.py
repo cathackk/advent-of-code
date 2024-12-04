@@ -5,7 +5,7 @@ https://adventofcode.com/2022/day/14
 """
 
 from itertools import chain
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.iteration import zip1
 from common.math import sgn
@@ -313,15 +313,15 @@ class State:
         # y >= max_y -> falling out of bounds
         raise NoMoreSandException()
 
-    def next_state(self) -> 'State':
-        return State(
+    def next_state(self) -> Self:
+        return type(self)(
             walls=self.walls,
             sand_source=self.sand_source,
             sand=self.sand | {self.next_sand_pos()},
             bottom_floor=self.bottom_floor,
         )
 
-    def run(self, until_sand_amount: int = 0) -> 'State':
+    def run(self, until_sand_amount: int = 0) -> Self:
         state = self
 
         if not until_sand_amount and self.bottom_floor:
@@ -337,7 +337,7 @@ class State:
             except NoMoreSandException:
                 return state
 
-    def filled(self) -> 'State':
+    def filled(self) -> Self:
         _, source_y = self.sand_source
         floor_y = some(self.bottom_floor_y)
 
@@ -355,7 +355,7 @@ class State:
                 yield from line
                 last_line = line
 
-        return State(
+        return type(self)(
             walls=self.walls,
             sand_source=self.sand_source,
             sand=set(all_sand_positions()),

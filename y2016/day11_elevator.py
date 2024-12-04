@@ -5,11 +5,10 @@ https://adventofcode.com/2016/day/11
 """
 
 from itertools import combinations
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.graph import shortest_path
-from common.text import abc_rot
-from common.text import parse_line
+from common.text import abc_rot, parse_line
 from meta.aoc_tools import data_path
 
 
@@ -344,7 +343,7 @@ class State:
             if floor == self.elevator_floor
         )
 
-    def move(self, direction: int, *carried_items: str) -> 'State':
+    def move(self, direction: int, *carried_items: str) -> Self:
         if direction not in (-1, +1):
             raise ValueError(f"direction cannot be {direction}")
 
@@ -372,15 +371,15 @@ class State:
         )
 
     @classmethod
-    def from_text(cls, text: str) -> 'State':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'State':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'State':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         # "The first floor contains
         #  a hydrogen-compatible microchip, a plutonium generator, and a strontium generator."
         # "The third floor contains a lithium generator."
@@ -450,7 +449,7 @@ def extended_for_part_2(
         # dilithium generator and chip
         ('DG', 1), ('DM', 1)
     )
-) -> 'State':
+) -> State:
     new_items = list(new_items)
     assert all(new_item not in state for new_item, _ in new_items)
     return type(state)(

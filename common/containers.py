@@ -1,7 +1,4 @@
-from typing import Any
-from typing import Iterable
-from typing import Iterator
-from typing import MutableSet
+from typing import Any, Iterable, Iterator, MutableSet
 
 
 class IdentitySet(MutableSet):

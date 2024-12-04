@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.math import modular_inverse
 
@@ -46,13 +46,13 @@ class SPN:
             and self.m == other.m
         )
 
-    def __mul__(self, k: int) -> 'SPN':
+    def __mul__(self, k: int) -> Self:
         return type(self)(self.a * k, self.b * k, self.m)
 
-    def __add__(self, k: int) -> 'SPN':
+    def __add__(self, k: int) -> Self:
         return type(self)(self.a, self.b + k, self.m)
 
-    def __mod__(self, m: int) -> 'SPN':
+    def __mod__(self, m: int) -> Self:
         assert m == self.m
         return self
 
@@ -101,7 +101,7 @@ class SPN:
             return (self ** abs(power)) ** -1
 
     @classmethod
-    def combine(cls, spns: Iterable['SPN']) -> 'SPN':
+    def combine(cls, spns: Iterable[Self]) -> Self:
         """
         >>> SPN.combine([SPN(3, 0, 11), SPN(1, 2, 11), SPN(-1, -1, 11)])
         SPN(8, 3, 11)

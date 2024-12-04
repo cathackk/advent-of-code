@@ -3,7 +3,7 @@ Advent of Code 2023
 Day 5: If You Give A Seed A Fertilizer
 https://adventofcode.com/2023/day/5
 """
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.iteration import chunks, last
@@ -302,7 +302,7 @@ class RangeMap:
         )
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'RangeMap':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         def ranges() -> Iterable[tuple[range, int]]:
             for line in lines:
                 dest, src, length = line.split(' ')
@@ -369,15 +369,15 @@ class Almanac:
                 print(str(src_value).ljust(len(src)) + '  ' + str(dest_value))
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Almanac':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Almanac':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Almanac':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         groups = line_groups(lines)
         seeds_line, = next(groups)
         seeds = [int(val) for val in parse_line(seeds_line, 'seeds: $')[0].split(' ')]

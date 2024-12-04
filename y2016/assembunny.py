@@ -1,8 +1,5 @@
 from dataclasses import dataclass
-from typing import Final
-from typing import Generator
-from typing import Iterable
-from typing import Iterator
+from typing import Final, Generator, Iterable, Iterator, Self
 
 from common.iteration import exhaust
 
@@ -22,11 +19,11 @@ class Command:
         return " ".join(str(p) for p in (self.instr,) + self.args)
 
     @classmethod
-    def from_str(cls, line: str) -> 'Command':
+    def from_str(cls, line: str) -> Self:
         instr, *args = line.split()
         return cls(instr, *(try_int(arg) for arg in args))
 
-    def toggled(self) -> 'Command':
+    def toggled(self) -> Self:
         cls = type(self)
         match self:
             case Command('inc', (arg_1,)):
@@ -62,15 +59,15 @@ class Tape:
         return sep.join(str(cmd) for cmd in self)
 
     @classmethod
-    def from_text(cls, text: str) -> 'Tape':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Tape':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Tape':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(Command.from_str(cmd.strip()) for line in lines for cmd in line.split(';'))
 
     def __iter__(self) -> Iterator[Command]:

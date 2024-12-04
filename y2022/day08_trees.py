@@ -9,8 +9,7 @@ from itertools import count
 from typing import Iterable
 
 from common.heading import Heading
-from common.iteration import dgroupby_pairs
-from common.iteration import maxk
+from common.iteration import dgroupby_pairs, maxk
 from meta.aoc_tools import data_path
 
 

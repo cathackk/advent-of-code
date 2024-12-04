@@ -1,14 +1,10 @@
 import heapq
-from dataclasses import dataclass
-from dataclasses import field
-from typing import Callable
-from typing import Iterable
-from typing import TypeVar
+from dataclasses import dataclass, field
+from typing import Callable, Iterable, TypeVar
 
 from tqdm import tqdm
 
-from common.utils import is_callable
-from common.utils import some
+from common.utils import is_callable, some
 
 Node = TypeVar('Node')
 Edge = TypeVar('Edge')

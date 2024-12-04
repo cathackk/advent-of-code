@@ -6,7 +6,7 @@ https://adventofcode.com/2023/day/20
 
 from collections import Counter
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.iteration import dgroupby_pairs, diffs, single_value
@@ -308,15 +308,15 @@ class Configuration:
         )
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Configuration':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Configuration':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Configuration':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         types: dict[ModuleName, ModuleType] = {}
         destinations: dict[ModuleName, list[ModuleName]] = {}
 

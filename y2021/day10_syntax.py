@@ -5,8 +5,7 @@ https://adventofcode.com/2021/day/10
 """
 
 from dataclasses import dataclass
-from typing import ClassVar
-from typing import Iterable
+from typing import ClassVar, Iterable
 
 from meta.aoc_tools import data_path
 

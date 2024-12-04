@@ -4,11 +4,11 @@ Day 14: Parabolic Reflector Dish
 https://adventofcode.com/2023/day/14
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.heading import Heading
-from common.iteration import dgroupby_pairs_set, detect_cycle
+from common.iteration import detect_cycle, dgroupby_pairs_set
 from common.rect import Rect
 
 
@@ -190,7 +190,7 @@ class Map:
         self.walls = set(walls)
         self.bounds = Rect.with_all(self.rocks | self.walls)
 
-    def tilted(self, heading: Heading) -> 'Map':
+    def tilted(self, heading: Heading) -> Self:
         def tilt_key(pos: Pos):
             x, y = pos
             match heading:
@@ -228,7 +228,7 @@ class Map:
 
         return type(self)(rocks=new_rocks, walls=self.walls)
 
-    def spun(self) -> 'Map':
+    def spun(self) -> Self:
         map_ = self
         for heading in SPIN_CYCLE_HEADINGS:
             map_ = map_.tilted(heading)
@@ -292,15 +292,15 @@ class Map:
         return hash(tuple(sorted(self.rocks)))
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Map':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(relative_path(__file__, fn)))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Map':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Map':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         tile_positions = dgroupby_pairs_set(
             (tile, (x, y))
             for y, line in enumerate(lines)

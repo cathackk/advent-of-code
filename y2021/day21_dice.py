@@ -7,7 +7,7 @@ https://adventofcode.com/2021/day/21
 import itertools
 from collections import Counter
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.text import parse_line
 from common.utils import some
@@ -140,10 +140,10 @@ class PlayerState:
     pos: int
     score: int
 
-    def after_turn(self, roll_sum: int, board_size: int) -> 'PlayerState':
-        return PlayerState(
+    def after_turn(self, roll_sum: int, board_size: int) -> Self:
+        return type(self)(
             pos=(new_pos := 1 + (self.pos + roll_sum - 1) % board_size),
-            score=self.score + new_pos
+            score=self.score + new_pos,
         )
 
 
@@ -154,7 +154,7 @@ class GameState:
     winner: int | None = None
 
     @classmethod
-    def initial(cls, p1_position: int, p2_position: int) -> 'GameState':
+    def initial(cls, p1_position: int, p2_position: int) -> Self:
         return cls(
             p1_state=PlayerState(pos=p1_position, score=0),
             p2_state=PlayerState(pos=p2_position, score=0)

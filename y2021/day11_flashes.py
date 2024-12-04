@@ -4,7 +4,7 @@ Day 11: Dumbo Octopus
 https://adventofcode.com/2021/day/11
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.rect import Rect
 from meta.aoc_tools import data_path
@@ -437,15 +437,15 @@ class Map:
         assert len(self.values) == self.bounds.area
 
     @classmethod
-    def from_text(cls, text: str) -> 'Map':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Map':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Map':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             ((x, y), int(v))
             for y, line in enumerate(lines)

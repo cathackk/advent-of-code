@@ -4,10 +4,9 @@ Day 14: Reindeer Olympics
 https://adventofcode.com/2015/day/14
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
-from common.iteration import max_all
-from common.iteration import maxk
+from common.iteration import max_all, maxk
 from common.text import parse_line
 from meta.aoc_tools import data_path
 
@@ -174,7 +173,7 @@ class Reindeer:
         )
 
     @classmethod
-    def from_str(cls, line: str) -> 'Reindeer':
+    def from_str(cls, line: str) -> Self:
         # 'Vixen can fly 19 km/s for 7 seconds, but then must rest for 124 seconds.'
         args = parse_line(line, "$ can fly $ km/s for $ seconds, but then must rest for $ seconds.")
         # pylint: disable=no-value-for-parameter

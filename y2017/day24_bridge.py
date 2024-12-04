@@ -5,11 +5,7 @@ https://adventofcode.com/2017/day/24
 """
 
 from collections import defaultdict
-from typing import Any
-from typing import Callable
-from typing import Iterable
-from typing import Iterator
-from typing import Optional
+from typing import Any, Callable, Iterable, Iterator, Self
 
 from common.iteration import max_all
 from common.utils import some
@@ -159,7 +155,7 @@ class Link:
         return ''.join(delimiter(ix) + str(p) for ix, p in enumerate(self.ports))
 
     @classmethod
-    def from_str(cls, line: str) -> 'Link':
+    def from_str(cls, line: str) -> Self:
         # only single-link components supported
         left, right = line.split('/')
 
@@ -197,10 +193,10 @@ class Link:
         else:
             raise KeyError(port)
 
-    def reversed(self) -> 'Link':
+    def reversed(self) -> Self:
         return type(self)(*reversed(self.ports))
 
-    def oriented_left(self, port_to_left: int) -> 'Link':
+    def oriented_left(self, port_to_left: int) -> Self:
         if port_to_left == self.left_port:
             return self
         elif port_to_left == self.right_port:
@@ -208,7 +204,7 @@ class Link:
         else:
             raise KeyError(port_to_left)
 
-    def oriented_right(self, port_to_right: int) -> 'Link':
+    def oriented_right(self, port_to_right: int) -> Self:
         if port_to_right == self.right_port:
             return self
         elif port_to_right == self.left_port:
@@ -216,7 +212,7 @@ class Link:
         else:
             raise KeyError(port_to_right)
 
-    def __add__(self, other: Optional['Link']) -> 'Link':
+    def __add__(self, other: Self | None) -> Self:
         if other is not None:
             assert self.right_port == other.left_port
             return type(self)(*(self.ports + other.ports))
@@ -257,7 +253,7 @@ def longest_and_strongest_bridge(links: Iterable[Link]) -> Link:
     return some(max_bridge(from_port=0, links=set(links), key=lambda b: (len(b), b.strength)))
 
 
-def max_bridge(from_port: int, links: set[Link], key: Callable[[Link], Any]) -> Optional[Link]:
+def max_bridge(from_port: int, links: set[Link], key: Callable[[Link], Any]) -> Link | None:
     bridges: Iterable[Link] = (
         link.oriented_left(from_port) + max_bridge(
             from_port=link.other_port(from_port),

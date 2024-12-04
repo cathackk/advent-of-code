@@ -5,7 +5,7 @@ https://adventofcode.com/2021/day/2
 """
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from meta.aoc_tools import data_path
 
@@ -162,7 +162,7 @@ class Submarine:
     horizontal: int = 0
     depth: int = 0
 
-    def move(self, *commands: Command) -> 'Submarine':
+    def move(self, *commands: Command) -> Self:
         for command in commands:
             match command:
                 case 'forward', distance:
@@ -183,7 +183,7 @@ class Submarine2:
     depth: int = 0
     aim: int = 0
 
-    def move(self, *commands: Command) -> 'Submarine2':
+    def move(self, *commands: Command) -> Self:
         for command in commands:
             match command:
                 case 'forward', units:

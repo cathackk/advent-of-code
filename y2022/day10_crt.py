@@ -4,8 +4,7 @@ Day 10: Cathode-Ray Tube
 https://adventofcode.com/2022/day/10
 """
 
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator
 
 from common.ocr import FONT_6X5
 from meta.aoc_tools import data_path

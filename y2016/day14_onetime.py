@@ -5,10 +5,8 @@ https://adventofcode.com/2016/day/14
 """
 
 from functools import lru_cache
-from itertools import count
-from itertools import islice
-from typing import Callable
-from typing import Iterable
+from itertools import count, islice
+from typing import Callable, Iterable
 
 from tqdm import tqdm
 

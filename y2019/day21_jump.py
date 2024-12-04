@@ -1,7 +1,6 @@
 from typing import Optional
 
-from y2019.intcode import load_tape
-from y2019.intcode import Machine
+from y2019.intcode import load_tape, Machine
 
 
 def robot_run(*lines: str) -> Optional[int]:

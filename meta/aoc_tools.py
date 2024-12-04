@@ -1,7 +1,7 @@
 import os
 import re
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.text import parse_line
@@ -48,7 +48,7 @@ class DayDescription:
         return f"{self.path} -- AoC {self.year} Day {self.day}: {self.title}"
 
     @classmethod
-    def from_file(cls, path: str) -> 'DayDescription':
+    def from_file(cls, path: str) -> Self:
         with open(path) as file:
             # """
             # Advent of Code 2020

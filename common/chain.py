@@ -1,7 +1,4 @@
-from typing import Any
-from typing import Iterable
-from typing import Iterator
-from typing import Optional
+from typing import Any, Iterable, Iterator, Self
 
 from common.utils import some
 
@@ -9,13 +6,13 @@ from common.utils import some
 class Link:
     __slots__ = ['value', 'prev_link', 'next_link']
 
-    def __init__(self, value, prev_link: 'Link' = None, next_link: 'Link' = None):
+    def __init__(self, value, prev_link: Self = None, next_link: Self = None):
         self.value = value
         self.prev_link = prev_link
         self.next_link = next_link
 
     @classmethod
-    def build_chain(cls, items: Iterable[Any]) -> tuple['Link', 'Link', int]:
+    def build_chain(cls, items: Iterable[Any]) -> tuple[Self, Self, int]:
         items = iter(items)
 
         try:
@@ -30,7 +27,7 @@ class Link:
 
         return first_link, last_link, count
 
-    def connect_to(self, prev_link: 'Link' = None, next_link: 'Link' = None) -> 'Link':
+    def connect_to(self, prev_link: Self = None, next_link: Self = None) -> Self:
         if prev_link is not None:
             self.prev_link = prev_link
             self.prev_link.next_link = self
@@ -39,13 +36,13 @@ class Link:
             self.next_link.prev_link = self
         return self
 
-    def insert_after(self, value) -> 'Link':
+    def insert_after(self, value) -> Self:
         return type(self)(value).connect_to(prev_link=self, next_link=self.next_link)
 
-    def insert_before(self, value) -> 'Link':
+    def insert_before(self, value) -> Self:
         return type(self)(value).connect_to(prev_link=self.prev_link, next_link=self)
 
-    def disconnect(self) -> 'Link':
+    def disconnect(self) -> Self:
         if self.prev_link is not None:
             self.prev_link.next_link = self.next_link
         if self.next_link is not None:
@@ -67,8 +64,8 @@ class Link:
             count += 1
         return count
 
-    def follow(self, steps: int) -> Optional['Link']:
-        link: Optional['Link'] = self
+    def follow(self, steps: int) -> Self | None:
+        link: Self | None = self
 
         for _ in range(abs(steps)):
             if link is None:
@@ -78,7 +75,7 @@ class Link:
 
         return link
 
-    def _sub_repr(self, sublink: Optional['Link']) -> str:
+    def _sub_repr(self, sublink: Self | None) -> str:
         if sublink is None:
             return repr(None)
         elif sublink is self:

@@ -4,7 +4,7 @@ Day 12: Rain Risk
 https://adventofcode.com/2020/day/12
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.heading import Heading
 from common.utils import assert_single_not_none
@@ -201,7 +201,7 @@ class Ship:
         else:
             return f'{type(self).__name__}(pos={self.pos}, waypoint={self.waypoint})'
 
-    def step(self, instruction: Instruction) -> 'Ship':
+    def step(self, instruction: Instruction) -> Self:
         match instruction:
             case ('N' | 'E' | 'S' | 'W' as heading), value:
                 absolute_heading = Heading.from_letter(heading)
@@ -237,7 +237,7 @@ class Ship:
 
         return self
 
-    def follow(self, instructions: Iterable[Instruction]) -> 'Ship':
+    def follow(self, instructions: Iterable[Instruction]) -> Self:
         for instr in instructions:
             self.step(instr)
 

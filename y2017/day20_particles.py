@@ -5,12 +5,10 @@ https://adventofcode.com/2017/day/20
 """
 
 from collections import Counter
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator, Self
 
 from common.text import parse_line
-from common.xyz import Point3
-from common.xyz import Vector3
+from common.xyz import Point3, Vector3
 from meta.aoc_tools import data_path
 
 
@@ -141,20 +139,20 @@ class Particle:
         self.vel = vel
         self.acc = acc
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         tn = type(self).__name__
         return f'{tn}(pos={self.pos!r}, vel={self.vel!r}, acc={self.acc!r})'
 
-    def step(self) -> 'Particle':
+    def step(self) -> Self:
         new_vel = self.vel + self.acc
         new_pos = self.pos + new_vel
         return type(self)(pos=new_pos, vel=new_vel, acc=self.acc)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"p={self.pos:<>}, v={self.vel:<>}, a={self.acc:<>}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Particle':
+    def from_str(cls, line: str) -> Self:
         # 'p=<-201,-1266,-2683>, v=<-29,-181,-382>, a=<2,13,31>'
         vals = [int(val) for val in parse_line(line.strip(), "p=<$,$,$>, v=<$,$,$>, a=<$,$,$>")]
         assert len(vals) == 9
@@ -178,7 +176,7 @@ class RunState:
             for num, particle in self._all_particles.items()
         )
 
-    def next_state(self) -> 'RunState':
+    def next_state(self) -> Self:
         # count have many particles are at each position
         position_counter = Counter(p.pos for p in self.particles.values())
         # positions with more than one particle -> those will be destroyed

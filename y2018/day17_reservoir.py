@@ -1,6 +1,5 @@
 from itertools import count
-from typing import Iterable
-from typing import Optional
+from typing import Iterable, Optional
 
 from common.rect import Rect
 from common.text import parse_line

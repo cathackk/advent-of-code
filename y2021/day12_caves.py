@@ -4,7 +4,7 @@ Day 12: Passage Pathing
 https://adventofcode.com/2021/day/12
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from meta.aoc_tools import data_path
 
@@ -263,15 +263,15 @@ class Graph:
         return f'{type(self).__name__}({self.edges!r})'
 
     @classmethod
-    def from_text(cls, text: str) -> 'Graph':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Graph':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Graph':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         def parse_edge(t: str) -> Edge:
             cave_1, cave_2 = t.split('-')
             return cave_1, cave_2

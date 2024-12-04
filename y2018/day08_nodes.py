@@ -6,8 +6,7 @@ https://adventofcode.com/2018/day/8
 
 from collections import Counter
 from itertools import islice
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator, Self
 
 from meta.aoc_tools import data_path
 
@@ -158,15 +157,15 @@ class Node:
         return sum(self.children[index].value() * count for index, count in ch_counts.items())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Node':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_str(open(fn).readline())
 
     @classmethod
-    def from_str(cls, line: str) -> 'Node':
+    def from_str(cls, line: str) -> Self:
         return cls.from_data(int(v) for v in line.split())
 
     @classmethod
-    def from_data(cls, data: Iterable[int]) -> 'Node':
+    def from_data(cls, data: Iterable[int]) -> Self:
         data_iter = iter(data)
         children_count = next(data_iter)
         metadata_count = next(data_iter)

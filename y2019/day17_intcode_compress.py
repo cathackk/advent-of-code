@@ -6,16 +6,13 @@ https://adventofcode.com/2019/day/17
 
 from itertools import count
 from textwrap import dedent
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.heading import Heading
-from common.iteration import last
-from common.iteration import slidingw
+from common.iteration import last, slidingw
 from common.rect import Rect
 from meta.aoc_tools import data_path
-from y2019.intcode import load_tape
-from y2019.intcode import Machine
-from y2019.intcode import Tape
+from y2019.intcode import load_tape, Machine, Tape
 
 
 def part_1(tape: Tape) -> int:
@@ -258,16 +255,16 @@ class Map:
             print(''.join(char((x, y)) for x in self.bounds.range_x()))
 
     @classmethod
-    def from_tape(cls, tape: Tape) -> 'Map':
+    def from_tape(cls, tape: Tape) -> Self:
         text = ''.join(chr(val) for val in Machine(tape).run_output_only())
         return cls.from_text(text)
 
     @classmethod
-    def from_text(cls, text: str) -> 'Map':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(dedent(text.strip('\n')).splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Map':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             ((x, y), char)
             for y, line in enumerate(lines)

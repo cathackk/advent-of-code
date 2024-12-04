@@ -5,8 +5,7 @@ https://adventofcode.com/2021/day/4
 """
 
 from itertools import islice
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator, Self
 
 from common.iteration import last
 from common.utils import some
@@ -236,7 +235,7 @@ class Boards:
         self._boards = boards
 
     @classmethod
-    def from_lines(cls, lines: Iterator[str]) -> 'Boards':
+    def from_lines(cls, lines: Iterator[str]) -> Self:
         def boards() -> Iterable[Board]:
             while True:
                 rows = [[int(num) for num in line.split()] for line in islice(lines, BOARD_HEIGHT)]

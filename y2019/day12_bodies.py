@@ -4,7 +4,7 @@ Day 12: The N-Body Problem
 https://adventofcode.com/2019/day/12
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
@@ -322,7 +322,7 @@ class State:
     def bodies(self) -> Iterable[Body]:
         return zip(self.positions, self.velocities)
 
-    def next_state(self) -> 'State':
+    def next_state(self) -> Self:
         def sgn_v3(vector: Vector3) -> Vector3:
             return Vector3(*(sgn(v) for v in vector))
 

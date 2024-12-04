@@ -7,8 +7,7 @@ https://adventofcode.com/2020/day/20
 import itertools
 import math
 import re
-from typing import Iterable
-from typing import Optional
+from typing import Iterable, Self
 
 from common.iteration import single_value
 from common.rect import Rect
@@ -382,25 +381,25 @@ class Tile:
         pixels = list(lines_it)
         return cls(int(tile_id), pixels)
 
-    def flipped_x(self) -> 'Tile':
+    def flipped_x(self) -> Self:
         return type(self)(self.tile_id, self.pixel_rows[::-1])
 
-    def flipped_y(self) -> 'Tile':
+    def flipped_y(self) -> Self:
         return type(self)(self.tile_id, [row[::-1] for row in self.pixel_rows])
 
-    def rotated_cw(self) -> 'Tile':
+    def rotated_cw(self) -> Self:
         return type(self)(self.tile_id, [
             ''.join(self.pixel_rows[y][x] for y in range(self.size-1, -1, -1))
             for x in range(self.size)
         ])
 
-    def rotated_ccw(self) -> 'Tile':
+    def rotated_ccw(self) -> Self:
         return type(self)(self.tile_id, [
             ''.join(self.pixel_rows[y][x] for y in range(self.size))
             for x in range(self.size-1, -1, -1)
         ])
 
-    def orientations(self) -> Iterable['Tile']:
+    def orientations(self) -> Iterable[Self]:
         tile = self
         for _ in range(4):
             yield tile
@@ -489,31 +488,31 @@ class Image:
             for row, col in itertools.product(row_indexes, col_indexes)
         ]
 
-    def flipped_x(self) -> 'Image':
+    def flipped_x(self) -> Self:
         return type(self)(
             [tile.flipped_x() for tile in tile_row]
             for tile_row in reversed(self.tile_rows)
         )
 
-    def flipped_y(self) -> 'Image':
+    def flipped_y(self) -> Self:
         return type(self)(
             [tile.flipped_y() for tile in reversed(tile_row)]
             for tile_row in self.tile_rows
         )
 
-    def rotated_cw(self) -> 'Image':
+    def rotated_cw(self) -> Self:
         return type(self)(
             [self.tile_rows[y][x].rotated_cw() for y in range(self.height-1, -1, -1)]
             for x in range(self.width)
         )
 
-    def rotated_ccw(self) -> 'Image':
+    def rotated_ccw(self) -> Self:
         return type(self)(
             [self.tile_rows[y][x].rotated_ccw() for y in range(self.height)]
             for x in range(self.width-1, -1, -1)
         )
 
-    def orientations(self) -> Iterable['Image']:
+    def orientations(self) -> Iterable[Self]:
         image = self
         for _ in range(4):
             yield image
@@ -521,7 +520,7 @@ class Image:
             image = image.rotated_cw()
 
     @classmethod
-    def assemble(cls, tiles: Iterable[Tile]) -> Optional['Image']:
+    def assemble(cls, tiles: Iterable[Tile]) -> Self | None:
         tiles = list(tiles)
 
         # matrix of continuously placed tiles; bordering ones must match

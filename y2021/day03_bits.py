@@ -5,8 +5,7 @@ https://adventofcode.com/2021/day/3
 """
 
 from collections import Counter
-from typing import Callable
-from typing import Iterable
+from typing import Callable, Iterable
 
 from meta.aoc_tools import data_path
 

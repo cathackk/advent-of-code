@@ -5,8 +5,7 @@ https://adventofcode.com/2015/day/19
 """
 
 from collections import defaultdict
-from typing import Generator
-from typing import Iterable
+from typing import Generator, Iterable
 
 from common.iteration import exhaust
 from common.multibuffer import MultiBuffer

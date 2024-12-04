@@ -8,8 +8,7 @@ from collections import Counter
 from itertools import combinations
 from typing import Iterable
 
-from common.iteration import dgroupby_pairs
-from common.iteration import single_value
+from common.iteration import dgroupby_pairs, single_value
 from meta.aoc_tools import data_path
 
 

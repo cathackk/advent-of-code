@@ -5,10 +5,9 @@ https://adventofcode.com/2016/day/24
 """
 
 from itertools import permutations
-from typing import Iterable
+from typing import Iterable, Self
 
-from common.iteration import mink
-from common.iteration import slidingw
+from common.iteration import mink, slidingw
 from common.rect import Rect
 from meta.aoc_tools import data_path
 
@@ -202,15 +201,15 @@ class Maze:
         )
 
     @classmethod
-    def from_text(cls, text: str) -> 'Maze':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Maze':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Maze':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         passages: list[Pos] = []
         targets: list[Target] = []
 

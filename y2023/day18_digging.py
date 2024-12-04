@@ -6,7 +6,7 @@ https://adventofcode.com/2023/day/18
 
 from dataclasses import dataclass
 from itertools import accumulate
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.heading import Heading
@@ -181,13 +181,13 @@ class Dig:
         return f"{head} #{self.color}" if self.color else head
 
     @classmethod
-    def from_line(cls, line: str) -> 'Dig':
+    def from_line(cls, line: str) -> Self:
         # 'R 6 (#70c710)'
         h, d, color = parse_line(line, '$ $ (#$)')
         return cls(CHAR_TO_HEADING[h], int(d), color)
 
     @classmethod
-    def from_color(cls, color: str) -> 'Dig':
+    def from_color(cls, color: str) -> Self:
         assert len(color) == 6
         return cls(
             heading=HEADINGS[int(color[-1])],
@@ -195,7 +195,7 @@ class Dig:
         )
 
     @classmethod
-    def between(cls, pos_1: Pos, pos_2: Pos) -> 'Dig':
+    def between(cls, pos_1: Pos, pos_2: Pos) -> Self:
         x_1, y_1 = pos_1
         x_2, y_2 = pos_2
         match x_2 - x_1, y_2 - y_1:

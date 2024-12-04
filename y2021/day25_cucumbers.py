@@ -5,7 +5,7 @@ https://adventofcode.com/2021/day/25
 """
 
 from itertools import count
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
@@ -350,15 +350,15 @@ class Map:
         )
 
     @classmethod
-    def from_text(cls, text: str) -> 'Map':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Map':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Map':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         lines = [line.strip() for line in lines]
         assert len(lines) > 0
         width, height = len(lines[0]), len(lines)
@@ -373,7 +373,7 @@ class Map:
             else:
                 raise ValueError(c)
 
-        return Map(
+        return cls(
             width=width,
             height=height,
             cucumbers=(
@@ -384,7 +384,7 @@ class Map:
             )
         )
 
-    def step(self) -> 'Map':
+    def step(self) -> Self:
         # 1. move east
         def east(pos: Pos) -> Pos:
             x, y = pos

@@ -6,8 +6,7 @@ https://adventofcode.com/2017/day/11
 
 from typing import Iterable
 
-from common.iteration import last
-from common.iteration import maxk
+from common.iteration import last, maxk
 from meta.aoc_tools import data_path
 
 

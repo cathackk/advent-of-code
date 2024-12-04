@@ -4,7 +4,7 @@ Day 13: Transparent Origami
 https://adventofcode.com/2021/day/13
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common import ocr
 from common.rect import Rect
@@ -211,7 +211,7 @@ class Instruction:
         return 'fold along ' + (f'x={self.x}' if self.x is not None else f'y={self.y}')
 
     @classmethod
-    def parse_line(cls, line: str) -> 'Instruction':
+    def parse_line(cls, line: str) -> Self:
         # fold along x=655
         axis, value = parse_line(line, 'fold along $=$')
         return cls(**{axis: int(value)})

@@ -6,11 +6,9 @@ https://adventofcode.com/2018/day/15
 
 from collections import Counter
 from itertools import count
-from typing import Iterable
-from typing import Optional
+from typing import Iterable, Optional, Self
 
-from common.utils import ro
-from common.utils import some
+from common.utils import ro, some
 from meta.aoc_tools import data_path
 
 
@@ -632,7 +630,7 @@ class Unit:
             f'hp={self.hp!r})'
         )
 
-    def copy(self) -> 'Unit':
+    def copy(self) -> Self:
         return type(self)(self.code, self.num, pos=self.pos, hp=self.hp)
 
     def is_alive(self) -> bool:
@@ -683,7 +681,7 @@ class Battle:
         for team in self.teams.values():
             assert self.teams_unit_count[team.code] > 0
 
-    def copy(self) -> 'Battle':
+    def copy(self) -> Self:
         return type(self)(
             width=self.width,
             height=self.height,
@@ -692,7 +690,7 @@ class Battle:
             units=(unit.copy() for unit in self.units_by_pos.values())
         )
 
-    def with_attack(self, team_code: str, new_attack: int) -> 'Battle':
+    def with_attack(self, team_code: str, new_attack: int) -> Self:
         copy = self.copy()
         old_team = copy.teams[team_code]
         copy.teams[team_code] = Team(
@@ -901,11 +899,11 @@ class Battle:
             yield f"{map_line}   {units_line}".rstrip()
 
     @classmethod
-    def from_file(cls, fn: str, teams: Iterable[Team] = tuple(default_teams())) -> 'Battle':
+    def from_file(cls, fn: str, teams: Iterable[Team] = tuple(default_teams())) -> Self:
         return cls.from_lines(open(fn), teams)
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str], teams: Iterable[Team]) -> 'Battle':
+    def from_lines(cls, lines: Iterable[str], teams: Iterable[Team]) -> Self:
         teams_dict: dict[str, Team] = {team.code: team for team in teams}
         team_unit_count: dict[str, int] = {c: 0 for c in teams_dict}
         floors: list[Pos] = []

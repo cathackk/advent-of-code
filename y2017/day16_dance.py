@@ -4,8 +4,7 @@ Day 16: Permutation Promenade
 https://adventofcode.com/2017/day/16
 """
 
-from typing import Callable
-from typing import Iterable
+from typing import Callable, Iterable
 
 from common.text import parse_line
 from meta.aoc_tools import data_path
@@ -76,7 +75,7 @@ def part_1(moves: Iterable['Move'], dancers_count: int = 16) -> 'Dancers':
 def part_2(
     moves: Iterable['Move'],
     dancers_count: int = 16,
-    rounds: int = 1_000_000_000
+    rounds: int = 1_000_000_000,
 ) -> 'Dancers':
     """
     Now that you're starting to get a feel for the dance moves, you turn your attention to

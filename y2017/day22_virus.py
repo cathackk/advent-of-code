@@ -5,15 +5,12 @@ https://adventofcode.com/2017/day/22
 """
 
 from enum import Enum
-from typing import Iterable
-from typing import Iterator
-from typing import NamedTuple
+from typing import Iterable, Iterator, NamedTuple, Self
 
 from tqdm import tqdm
 
 from common.heading import Heading
-from common.iteration import last
-from common.iteration import single_value
+from common.iteration import last, single_value
 from common.rect import Rect
 from meta.aoc_tools import data_path
 
@@ -330,15 +327,15 @@ class Grid:
             self.nodes[pos] = state
 
     @classmethod
-    def from_text(cls, text: str) -> 'Grid':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Grid':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Grid':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         lines_list = [line.strip() for line in lines]
         height = len(lines_list)
         width = single_value(set(len(line) for line in lines_list))

@@ -6,14 +6,11 @@ https://adventofcode.com/2018/day/13
 
 from enum import Enum
 from itertools import count
-from typing import Iterable
-from typing import Iterator
-from typing import NamedTuple
+from typing import Iterable, Iterator, NamedTuple, Self
 
 from common.heading import Heading
 from common.iteration import single_value
-from common.rect import Pos
-from common.rect import Rect
+from common.rect import Pos, Rect
 from common.utils import ro
 from meta.aoc_tools import data_path
 
@@ -304,8 +301,8 @@ class Turn(Enum):
     STRAIGHT = 1
     RIGHT = 2
 
-    def following(self) -> 'Turn':
-        return Turn((self.value + 1) % 3)
+    def following(self) -> Self:
+        return type(self)((self.value + 1) % 3)
 
     def turn(self, heading: Heading) -> Heading:
         if self is Turn.LEFT:
@@ -340,7 +337,7 @@ class Map:
         self.carts, collisions = Map._place_carts(carts)
         assert not collisions
 
-    def copy(self) -> 'Map':
+    def copy(self) -> Self:
         return type(self)(self.tracks, self.carts.values())
 
     @staticmethod
@@ -457,15 +454,15 @@ class Map:
         print(self.drawn(collisions, coordinates))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Map':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Map':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Map':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         tracks: dict[Pos, str] = {}
         carts: list[Cart] = []
 
@@ -482,7 +479,7 @@ class Map:
                 else:
                     raise ValueError(c)
 
-        return Map(tracks, carts)
+        return cls(tracks, carts)
 
 
 def main(input_path: str = data_path(__file__)) -> tuple[str, str]:

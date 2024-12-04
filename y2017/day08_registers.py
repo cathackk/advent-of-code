@@ -6,9 +6,7 @@ https://adventofcode.com/2017/day/8
 
 import operator
 from dataclasses import dataclass
-from typing import Callable
-from typing import Iterable
-from typing import Iterator
+from typing import Callable, Iterable, Iterator, Self
 
 from common.iteration import last
 from common.text import parse_line
@@ -132,7 +130,7 @@ class Condition:
         return f"{self.reg} {self.op} {self.value}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Condition':
+    def from_str(cls, line: str) -> Self:
         # a >= 1
         reg, op, val = parse_line(line, "$ $ $")
         return cls(reg, op, int(val))
@@ -165,7 +163,7 @@ class Instruction:
         return f"{self.reg} {self.command} {self.value} if {self.condition}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Instruction':
+    def from_str(cls, line: str) -> Self:
         # c dec -10 if a >= 1
         reg, cmd, val, cond = parse_line(line, "$ $ $ if $")
         return cls(reg, cmd, int(val), Condition.from_str(cond))

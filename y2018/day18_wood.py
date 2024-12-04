@@ -1,7 +1,6 @@
 from collections import Counter
 from itertools import count
-from typing import Iterable
-from typing import Optional
+from typing import Iterable, Optional
 
 from common.iteration import single_value
 from common.rect import Rect

@@ -1,8 +1,6 @@
-from typing import Any, Iterator
-from typing import Iterable
+from typing import Any, Iterable, Iterator
 
-from common.iteration import single_value
-from common.iteration import slidingw
+from common.iteration import single_value, slidingw
 
 
 class ParseError(Exception):

@@ -4,7 +4,7 @@ Day 13: Point of Incidence
 https://adventofcode.com/2023/day/13
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.file import relative_path
 from common.iteration import maybe_next
@@ -316,15 +316,15 @@ class Pattern:
         )
 
     @classmethod
-    def from_file(cls, fn: str) -> list['Pattern']:
+    def from_file(cls, fn: str) -> list[Self]:
         return list(cls.from_lines(open(relative_path(__file__, fn))))
 
     @classmethod
-    def from_text(cls, text: str) -> list['Pattern']:
+    def from_text(cls, text: str) -> list[Self]:
         return list(cls.from_lines(text.strip().splitlines()))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> Iterable['Pattern']:
+    def from_lines(cls, lines: Iterable[str]) -> Iterable[Self]:
         return (
             cls(
                 (x, y)

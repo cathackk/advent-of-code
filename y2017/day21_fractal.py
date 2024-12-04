@@ -4,12 +4,9 @@ Day 21: Fractal Art
 https://adventofcode.com/2017/day/21
 """
 
-from typing import Callable
-from typing import Iterable
-from typing import Iterator
+from typing import Callable, Iterable, Iterator, Self
 
-from common.iteration import dgroupby_pairs
-from common.iteration import single_value
+from common.iteration import dgroupby_pairs, single_value
 from common.text import parse_line
 from meta.aoc_tools import data_path
 
@@ -236,7 +233,7 @@ class Grid:
         return (format_spec or "\n").join(self.str_lines())
 
     @classmethod
-    def from_line(cls, line: str) -> 'Grid':
+    def from_line(cls, line: str) -> Self:
         rows = line.split('/')
         size = len(rows)
         assert all(len(row) == size for row in rows), line
@@ -261,7 +258,7 @@ class Grid:
     def __hash__(self):
         return hash((self.size, int(self)))
 
-    def _transformed(self, trans: Transformation):
+    def _transformed(self, trans: Transformation) -> Self:
         def trm(x: int, y: int) -> Pos:
             x, y = trans(x, y)
             return x % self.size, y % self.size
@@ -271,7 +268,7 @@ class Grid:
             pixels=(trm(x, y) for x, y in self.pixels)
         )
 
-    def rotated(self, rotations: int) -> 'Grid':
+    def rotated(self, rotations: int) -> Self:
         """
         0 -> no rotation
         1 -> 90° clockwise
@@ -290,22 +287,22 @@ class Grid:
         else:
             raise ValueError(rotations)
 
-    def flipped_x(self) -> 'Grid':
+    def flipped_x(self) -> Self:
         return self._transformed(lambda x, y: (-x-1, y))
 
-    def flipped_y(self) -> 'Grid':
+    def flipped_y(self) -> Self:
         return self._transformed(lambda x, y: (x, -y-1))
 
-    def variants(self) -> Iterable['Grid']:
+    def variants(self) -> Iterable[Self]:
         flipped = self.flipped_x()
         for r in range(4):
             yield self.rotated(r)
             yield flipped.rotated(r)
 
-    def normalized(self) -> 'Grid':
+    def normalized(self) -> Self:
         return min(self.variants(), key=int)
 
-    def divide(self) -> Iterable[tuple[Pos, 'Grid']]:
+    def divide(self) -> Iterable[tuple[Pos, Self]]:
         if self.size % 2 == 0:
             return self.subgrids(2)
         elif self.size % 3 == 0:
@@ -313,7 +310,7 @@ class Grid:
         else:
             raise ValueError(f"grid size {self.size} not divisible by 2 or 3")
 
-    def subgrids(self, subsize: int) -> Iterable[tuple[Pos, 'Grid']]:
+    def subgrids(self, subsize: int) -> Iterable[tuple[Pos, Self]]:
         assert self.size % subsize == 0
 
         if self.size == subsize:
@@ -336,7 +333,7 @@ class Grid:
         )
 
     @classmethod
-    def join(cls, subgrids: Iterable[tuple[Pos, 'Grid']]) -> 'Grid':
+    def join(cls, subgrids: Iterable[tuple[Pos, Self]]) -> Self:
         subgrids_dict = dict(subgrids)
 
         sub_size = single_value(set(sg.size for sg in subgrids_dict.values()))
@@ -371,7 +368,7 @@ class Rule:
         return f"{self.grid_from:/} => {self.grid_to:/}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Rule':
+    def from_str(cls, line: str) -> Self:
         # "../.# => ##./#../..."
         g_from, g_to = parse_line(line.strip(), "$ => $")
         return cls(Grid.from_line(g_from), Grid.from_line(g_to))
@@ -412,15 +409,15 @@ class RuleBook:
             yield (ecx, ecy), expanded_subgrid
 
     @classmethod
-    def from_file(cls, fn: str) -> 'RuleBook':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_text(cls, text: str) -> 'RuleBook':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'RuleBook':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(Rule.from_str(line) for line in lines)
 
 

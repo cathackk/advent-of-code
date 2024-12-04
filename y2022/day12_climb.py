@@ -6,8 +6,7 @@ https://adventofcode.com/2022/day/12
 
 import functools
 import string
-from typing import Callable
-from typing import Iterable
+from typing import Callable, Iterable, Self
 
 from common.graph import shortest_path
 from common.heading import Heading
@@ -204,15 +203,15 @@ class HeightMap:
         print('\n'.join(lines))
 
     @classmethod
-    def from_file(cls, fn: str) -> 'HeightMap':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_text(cls, text: str) -> 'HeightMap':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'HeightMap':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         char_to_elevation = dict(zip(string.ascii_lowercase, range(26))) | {'S': 0, 'E': 25}
 
         elevations: dict[Pos, int] = {}

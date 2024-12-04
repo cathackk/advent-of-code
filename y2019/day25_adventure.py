@@ -1,8 +1,6 @@
-from typing import Generator
-from typing import Iterable
+from typing import Generator, Iterable
 
-from y2019.intcode import load_tape
-from y2019.intcode import Machine
+from y2019.intcode import load_tape, Machine
 
 
 def subsequences(items: Iterable[str]) -> Iterable[list[str]]:

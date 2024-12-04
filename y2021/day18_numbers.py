@@ -5,8 +5,7 @@ https://adventofcode.com/2021/day/18
 """
 
 from itertools import chain
-from typing import Iterable
-from typing import Optional
+from typing import Iterable, Self
 
 from common.iteration import zip1
 from meta.aoc_tools import data_path
@@ -354,19 +353,19 @@ class Number:
         return f'{type(self).__name__}({self.value_levels!r})'
 
     @classmethod
-    def many_from_text(cls, text: str) -> list['Number']:
+    def many_from_text(cls, text: str) -> list[Self]:
         return list(cls.many_from_lines(text.strip().splitlines()))
 
     @classmethod
-    def many_from_file(cls, fn: str) -> list['Number']:
+    def many_from_file(cls, fn: str) -> list[Self]:
         return list(cls.many_from_lines(open(fn)))
 
     @classmethod
-    def many_from_lines(cls, lines: Iterable[str]) -> Iterable['Number']:
+    def many_from_lines(cls, lines: Iterable[str]) -> Iterable[Self]:
         return (cls.from_str(line.strip()) for line in lines)
 
     @classmethod
-    def from_str(cls, line: str) -> 'Number':
+    def from_str(cls, line: str) -> Self:
         def vls() -> Iterable[ValueLevel]:
             level = 0
             num_buffer = []
@@ -385,7 +384,7 @@ class Number:
         return cls(vls())
 
     @classmethod
-    def singular_from_int(cls, n: int) -> 'Number':
+    def singular_from_int(cls, n: int) -> Self:
         return cls([(n, 0)])
 
     def __str__(self) -> str:
@@ -409,7 +408,7 @@ class Number:
 
         return ''.join(chars())
 
-    def __add__(self, other) -> 'Number':
+    def __add__(self, other) -> Self:
         cls = type(self)
         if not isinstance(other, cls):
             raise TypeError(
@@ -445,7 +444,7 @@ class Number:
 
         return result
 
-    def __radd__(self, other) -> 'Number':
+    def __radd__(self, other) -> Self:
         if isinstance(other, int) and other == 0:
             return self  # support for sum()
         else:
@@ -454,7 +453,7 @@ class Number:
                 f"{type(self).__name__!r} and {type(other).__name__!r}"
             )
 
-    def exploded(self, level_limit: int = 4) -> Optional['Number']:
+    def exploded(self, level_limit: int = 4) -> Self | None:
         try:
             left_index, right_index, level, left_value, right_value = next(
                 (index, index + 1, l1, v1, v2)
@@ -479,7 +478,7 @@ class Number:
 
         return type(self)(new_vls)
 
-    def split(self, value_limit: int = 10) -> Optional['Number']:
+    def split(self, value_limit: int = 10) -> Self | None:
         try:
             index, value, level = next(
                 (i, v, l)

@@ -4,14 +4,12 @@ Day 19: Monster Messages
 https://adventofcode.com/2020/day/19
 """
 
-from abc import ABC
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from functools import cached_property
 from typing import Iterable
 
 from common.iteration import single_value
-from common.text import line_groups
-from common.text import parse_line
+from common.text import line_groups, parse_line
 from meta.aoc_tools import data_path
 
 

@@ -4,8 +4,7 @@ Day 10: Adapter Array
 https://adventofcode.com/2020/day/10
 """
 
-from collections import Counter
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from common.iteration import diffs
 from meta.aoc_tools import data_path

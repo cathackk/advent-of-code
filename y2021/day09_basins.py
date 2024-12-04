@@ -4,7 +4,7 @@ Day 9: Smoke Basin
 https://adventofcode.com/2021/day/9
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.rect import Rect
 from common.utils import ro
@@ -163,15 +163,15 @@ class HeightMap:
         self.bounds = Rect.with_all(self.heights.keys())
 
     @classmethod
-    def from_text(cls, text: str) -> 'HeightMap':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'HeightMap':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'HeightMap':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         return cls(
             ((x, y), int(h))
             for y, line in enumerate(lines)

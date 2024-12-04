@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Self
 
 
 class Heading(Enum):
@@ -18,14 +19,14 @@ class Heading(Enum):
         return f'{type(self).__name__}.{self.name}'
 
     @classmethod
-    def from_letter(cls, letter: str) -> 'Heading':
+    def from_letter(cls, letter: str) -> Self:
         try:
             return next(h for h in cls if h.letter == letter)
         except StopIteration as stop:
             raise KeyError(letter) from stop
 
     @classmethod
-    def from_caret(cls, caret: str) -> 'Heading':
+    def from_caret(cls, caret: str) -> Self:
         try:
             return next(h for h in cls if h.caret == caret)
         except StopIteration as stop:

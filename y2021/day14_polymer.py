@@ -6,8 +6,7 @@ https://adventofcode.com/2021/day/14
 
 from collections import Counter
 from itertools import chain
-from typing import Iterable
-from typing import TypeVar
+from typing import Iterable, TypeVar
 
 from common.iteration import slidingw
 from common.text import parse_line

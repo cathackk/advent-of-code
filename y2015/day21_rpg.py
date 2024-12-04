@@ -5,10 +5,9 @@ https://adventofcode.com/2015/day/21
 """
 
 from itertools import combinations
-from typing import Iterable
+from typing import Iterable, Self
 
-from common.iteration import maxk
-from common.iteration import mink
+from common.iteration import maxk, mink
 from common.text import parse_line
 from meta.aoc_tools import data_path
 
@@ -184,7 +183,7 @@ class Item:
         return f'{type(self).__name__}({self.name!r}, cost={self.cost!r}{damage_repr}{armor_repr})'
 
     @classmethod
-    def from_line(cls, line: str) -> 'Item':
+    def from_line(cls, line: str) -> Self:
         return cls(*line.split())
 
 
@@ -223,11 +222,11 @@ class Shop:
         return "\n".join(lines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Shop':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Shop':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         lines_it = (line.strip() for line in lines)
 
         def category_from_lines(cat_name: str) -> Iterable[Item]:
@@ -281,18 +280,18 @@ class Character:
         )
 
     @classmethod
-    def from_file(cls, name: str, fn: str) -> 'Character':
+    def from_file(cls, name: str, fn: str) -> Self:
         return cls.from_lines(name, open(fn))
 
     @classmethod
-    def from_lines(cls, name: str, lines: Iterable[str]) -> 'Character':
+    def from_lines(cls, name: str, lines: Iterable[str]) -> Self:
         lines = (line.strip() for line in lines)
         hit_points, = parse_line(next(lines), "Hit Points: $")
         damage, = parse_line(next(lines), "Damage: $")
         armor, = parse_line(next(lines), "Armor: $")
         return cls(name, hit_points=int(hit_points), damage=int(damage), armor=int(armor))
 
-    def with_equipment(self, items: Iterable[Item]) -> 'Character':
+    def with_equipment(self, items: Iterable[Item]) -> Self:
         return type(self)(
             name=self.name,
             hit_points=self.hit_points,

@@ -6,7 +6,7 @@ https://adventofcode.com/2019/day/14
 
 from collections import Counter
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.bsrange import BSRange
 from common.math import ceildiv
@@ -187,7 +187,7 @@ class Recipe:
         return self.out[1]
 
     @classmethod
-    def from_line(cls, line: str) -> 'Recipe':
+    def from_line(cls, line: str) -> Self:
         def parse_amount(text: str) -> Amount:
             volume, material = text.split(' ')
             return int(volume), material

@@ -5,10 +5,7 @@ https://adventofcode.com/2017/day/18
 """
 
 from collections import defaultdict
-from typing import Final
-from typing import Generator
-from typing import Iterable
-from typing import Optional
+from typing import Final, Generator, Iterable, Optional
 
 from common.utils import some
 from meta.aoc_tools import data_path

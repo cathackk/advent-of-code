@@ -5,7 +5,7 @@ https://adventofcode.com/2021/day/23
 """
 
 from itertools import chain
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.graph import shortest_path
 from common.iteration import zip1
@@ -558,15 +558,15 @@ class State:
         return '\n'.join(lines())
 
     @classmethod
-    def from_text(cls, text: str) -> 'State':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'State':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'State':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         lines = [line.strip() for line in lines]
         assert len(lines) == 5
         assert lines[0] == '#############'
@@ -597,10 +597,10 @@ class State:
 
         return cls(rooms, hallway)
 
-    def extended(self) -> 'State':
+    def extended(self) -> Self:
         assert self.room_size == 2, "already extended"
         extensions = 'DD', 'BC', 'AB', 'CA'
-        return State(
+        return type(self)(
             rooms=(room[0] + ext + room[-1] for room, ext in zip(self.rooms, extensions)),
             hallway=self.hallway,
             room_size=4

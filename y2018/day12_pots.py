@@ -5,8 +5,7 @@ https://adventofcode.com/2018/day/12
 """
 
 from itertools import count
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator, Self
 
 from common.iteration import minmax
 from common.text import parse_line
@@ -170,7 +169,7 @@ class State:
         return f'{type(self).__name__}({sorted(self.alive)})'
 
     @classmethod
-    def from_line(cls, line: str) -> 'State':
+    def from_line(cls, line: str) -> Self:
         return cls(x for x, c in enumerate(line) if c == '#')
 
     def __str__(self) -> str:
@@ -201,7 +200,7 @@ class State:
     def __iter__(self) -> Iterator[tuple[int, bool]]:
         return ((plant, plant in self.alive) for plant in self._xrange())
 
-    def next_generation(self, rules: Rules) -> 'State':
+    def next_generation(self, rules: Rules) -> Self:
         def neighborhood() -> Iterator[tuple[int, int]]:
             nh_num = 0
             for rightmost_plant, alive in self:

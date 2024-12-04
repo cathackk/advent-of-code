@@ -5,10 +5,8 @@ https://adventofcode.com/2021/day/6
 """
 
 from collections import Counter
-from itertools import chain
-from itertools import islice
-from typing import Iterable
-from typing import Iterator
+from itertools import chain, islice
+from typing import Iterable, Iterator, Self
 
 from meta.aoc_tools import data_path
 
@@ -168,7 +166,7 @@ class State:
     def __len__(self) -> int:
         return len(self.values)
 
-    def next_state(self) -> 'State':
+    def next_state(self) -> Self:
         """
             >>> State([1, 2, 3, 3])
             State([1, 2, 3, 3])
@@ -211,7 +209,7 @@ class StateOptimized:
     def __len__(self) -> int:
         return sum(self.by_day.values())
 
-    def next_state(self) -> 'StateOptimized':
+    def next_state(self) -> Self:
         """
             >>> StateOptimized([1, 2, 3, 3])
             StateOptimized([1, 2, 3, 3])

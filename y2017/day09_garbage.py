@@ -4,11 +4,9 @@ Day 9: Stream Processing
 https://adventofcode.com/2017/day/9
 """
 
-from typing import Generator
-from typing import NamedTuple
+from typing import Generator, NamedTuple
 
-from common.iteration import exhaust
-from common.iteration import ilen
+from common.iteration import exhaust, ilen
 from meta.aoc_tools import data_path
 
 

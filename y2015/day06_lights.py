@@ -4,10 +4,9 @@ Day 6: Probably a Fire Hazard
 https://adventofcode.com/2015/day/6
 """
 
-from typing import Iterable
+from typing import Iterable, Self
 
-from common.rect import Pos
-from common.rect import Rect
+from common.rect import Pos, Rect
 from common.text import parse_line
 from meta.aoc_tools import data_path
 
@@ -125,7 +124,7 @@ class Instruction:
         return f"{self.phrase} {x1},{y1} through {x2},{y2}"
 
     @classmethod
-    def from_str(cls, line: str) -> 'Instruction':
+    def from_str(cls, line: str) -> Self:
         phrases = ('turn on', 'turn off', 'toggle')
         phrase = next(p for p in phrases if line.startswith(p + ' '))
         rect_str = line[len(phrase):]

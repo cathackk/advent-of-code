@@ -5,8 +5,7 @@ https://adventofcode.com/2022/day/7
 """
 
 from functools import lru_cache
-from typing import Iterable
-from typing import Union
+from typing import Iterable, Self, Union
 
 from meta.aoc_tools import data_path
 
@@ -294,15 +293,15 @@ class Directory:
                 raise TypeError(type(value))
 
     @classmethod
-    def from_text(cls, text: str) -> 'Directory':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Directory':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Directory':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         root = cls()
         current_path: list[str] = []
 

@@ -5,7 +5,7 @@ https://adventofcode.com/2017/day/25
 """
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Self
 
 from tqdm import tqdm
 
@@ -194,15 +194,15 @@ class Machine:
         return len(tape_ones)
 
     @classmethod
-    def from_text(cls, text: str) -> 'Machine':
+    def from_text(cls, text: str) -> Self:
         return cls.from_lines(text.strip().splitlines())
 
     @classmethod
-    def from_file(cls, fn: str) -> 'Machine':
+    def from_file(cls, fn: str) -> Self:
         return cls.from_lines(open(fn))
 
     @classmethod
-    def from_lines(cls, lines: Iterable[str]) -> 'Machine':
+    def from_lines(cls, lines: Iterable[str]) -> Self:
         lines_it = (line.strip() for line in lines)
 
         init_state, = parse_line(next(lines_it), "Begin in state $.")

@@ -7,8 +7,7 @@ https://adventofcode.com/2016/day/1
 from typing import Iterable
 
 from common.heading import Heading
-from common.iteration import first_repeat
-from common.iteration import last
+from common.iteration import first_repeat, last
 from common.utils import some
 from meta.aoc_tools import data_path
 

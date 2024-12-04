@@ -5,7 +5,7 @@ https://adventofcode.com/2022/day/9
 """
 
 from enum import Enum
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.iteration import dgroupby_pairs
 from common.math import sgn
@@ -713,6 +713,10 @@ def part_2(moves: Iterable['Move']) -> int:
     return result
 
 
+Pos = tuple[int, int]
+Rope = list[Pos]
+
+
 class Direction(Enum):
     # TODO: extract into common? (taken from 2016/17)
     UP = ('U', 0, -1)
@@ -728,14 +732,14 @@ class Direction(Enum):
     def __repr__(self) -> str:
         return f'{type(self).__name__}.{self.name}'
 
-    def __add__(self, pos: 'Pos') -> 'Pos':
+    def __add__(self, pos: Pos) -> Pos:
         x, y = pos
         return x + self.dx, y + self.dy
 
     __radd__ = __add__
 
     @classmethod
-    def from_letter(cls, letter: str) -> 'Direction':
+    def from_letter(cls, letter: str) -> Self:
         try:
             return next(d for d in cls if d.letter == letter)
         except StopIteration as stop:
@@ -743,8 +747,6 @@ class Direction(Enum):
 
 
 Move = tuple[Direction, int]
-Pos = tuple[int, int]
-Rope = list[Pos]
 
 
 def create_ropes(

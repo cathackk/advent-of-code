@@ -6,13 +6,11 @@ https://adventofcode.com/2021/day/19
 
 import itertools
 from functools import lru_cache
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator, Self
 
 from tqdm import tqdm
 
-from common.iteration import dgroupby_pairs
-from common.iteration import maxk
+from common.iteration import dgroupby_pairs, maxk
 from common.math import sgn
 from common.rect import Rect
 from common.text import parse_line
@@ -447,7 +445,7 @@ class Rotation:
         return f'x->{self.x_to_str}, y->{self.y_to_str}, z->{self.z_to_str}'
 
     @classmethod
-    def from_str(cls, line: str) -> 'Rotation':
+    def from_str(cls, line: str) -> Self:
         s_x, s_y, s_z = parse_line(line, 'x->$, y->$, z->$')
         return cls(
             x_to=cls.axis_from_str(s_x),
@@ -470,7 +468,7 @@ class Rotation:
         )
 
     @classmethod
-    def all(cls, mirrored: bool = None) -> Iterable['Rotation']:
+    def all(cls, mirrored: bool = None) -> Iterable[Self]:
         return (
             rot
             for x, y, z in itertools.permutations((1, 2, 3))
@@ -512,16 +510,14 @@ class Reading:
         return iter(self.beacons)
 
     @lru_cache(maxsize=10_000)
-    def rotated(self, rotation: Rotation) -> 'Reading':
+    def rotated(self, rotation: Rotation) -> Self:
         return type(self)(rotation.apply(beacon) for beacon in self)
 
-    def translated(self, vector: Vector3) -> 'Reading':
+    def translated(self, vector: Vector3) -> Self:
         return type(self)(beacon + vector for beacon in self)
 
     @lru_cache(maxsize=10_000)
-    def match(
-        self, other: 'Reading', min_overlaps: int = 12
-    ) -> tuple[Rotation, Vector3, 'Reading'] | None:
+    def match(self, other: Self, min_overlaps: int = 12) -> tuple[Rotation, Vector3, Self] | None:
 
         my_beacons_set = set(self.beacons)
         # number of pairs that must be matched
@@ -610,7 +606,7 @@ class Map:
         return list(self.fixed_readings.keys())
 
     @classmethod
-    def build(cls, readings: Iterable[Reading]) -> 'Map':
+    def build(cls, readings: Iterable[Reading]) -> Self:
         map_ = cls()
         unused_readings = list(readings)
 

@@ -5,7 +5,7 @@ https://adventofcode.com/2016/day/17
 """
 
 from enum import Enum
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.graph import shortest_path
 from common.md5 import md5
@@ -147,14 +147,14 @@ class Direction(Enum):
         return f'{type(self).__name__}.{self.name}'
 
     @classmethod
-    def from_letter(cls, letter: str) -> 'Direction':
+    def from_letter(cls, letter: str) -> Self:
         try:
             return next(d for d in cls if d.letter == letter)
         except StopIteration as stop:
             raise KeyError(letter) from stop
 
     @classmethod
-    def from_path(cls, path: str) -> Iterable['Direction']:
+    def from_path(cls, path: str) -> Iterable[Self]:
         return (cls.from_letter(letter) for letter in path)
 
     def __add__(self, other):

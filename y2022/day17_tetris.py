@@ -7,9 +7,7 @@ https://adventofcode.com/2022/day/17
 import itertools
 from collections import defaultdict
 from enum import IntEnum
-from typing import Iterable
-from typing import Iterator
-from typing import Literal
+from typing import Iterable, Iterator, Literal, Self
 
 from tqdm import tqdm
 
@@ -545,7 +543,7 @@ class Shape:
         return ((r_x + p_x, r_y + p_y) for r_x, r_y in self.rocks)
 
     @classmethod
-    def from_text(cls, text: str) -> 'Shape':
+    def from_text(cls, text: str) -> Self:
         lines = text.splitlines()
         return cls(
             (x, len(lines) - y1)
@@ -638,12 +636,13 @@ class Move(IntEnum):
 
     @classmethod
     def from_char(cls, char: str) -> 'Move':
-        if char == '<':
-            return Move.LEFT
-        elif char == '>':
-            return Move.RIGHT
-        else:
-            raise ValueError(char)
+        match char:
+            case '<':
+                return cls.LEFT
+            case '>':
+                return cls.RIGHT
+            case _:
+                raise ValueError(char)
 
 
 LogLevel = Literal['', 'moves', 'turn start']

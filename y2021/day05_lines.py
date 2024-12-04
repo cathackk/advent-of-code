@@ -5,7 +5,7 @@ https://adventofcode.com/2021/day/5
 """
 
 from collections import Counter
-from typing import Iterable
+from typing import Iterable, Self
 
 from common.math import sgn
 from common.rect import Rect
@@ -173,7 +173,7 @@ class Vent:
         return f'{self.x1},{self.y1} -> {self.x2},{self.y2}'
 
     @classmethod
-    def parse(cls, line: str) -> 'Vent':
+    def parse(cls, line: str) -> Self:
         # 3,4 -> 1,4
         x1, y1, x2, y2 = parse_line(line, '$,$ -> $,$')
         return cls((int(x1), int(y1)), (int(x2), int(y2)))

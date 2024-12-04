@@ -5,16 +5,14 @@ https://adventofcode.com/2018/day/10
 """
 
 from functools import lru_cache
-from typing import Iterable
-from typing import Iterator
+from typing import Iterable, Iterator
 
 from tqdm import tqdm
 
 from common import ocr
 from common.rect import Rect
 from common.text import parse_line
-from common.xy import Point
-from common.xy import Vector
+from common.xy import Point, Vector
 from meta.aoc_tools import data_path
 
 

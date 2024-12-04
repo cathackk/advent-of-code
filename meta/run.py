@@ -5,9 +5,7 @@ from importlib import import_module
 import click
 from click.exceptions import Exit
 
-from meta.aoc_tools import day_files
-from meta.aoc_tools import DayDescription
-from meta.aoc_tools import year_dirs
+from meta.aoc_tools import day_files, DayDescription, year_dirs
 
 
 # pylint: disable=unused-argument
