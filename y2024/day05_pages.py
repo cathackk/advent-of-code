@@ -5,7 +5,7 @@ https://adventofcode.com/2024/day/5
 """
 
 import functools
-from typing import Any, Iterable, Iterator
+from typing import Any, Iterable, Iterator, Self
 
 from common.file import relative_path
 from common.iteration import zip1
@@ -253,6 +253,14 @@ class Rules:
         self.rules_set = set(self.rules)
         self.key_func = functools.cmp_to_key(self.compare)
 
+    @classmethod
+    def from_lines(cls, lines: Iterable[str]) -> Self:
+        def parse_rule(line: str) -> Rule:
+            x, y = line.split('|')
+            return int(x), int(y)
+
+        return cls(parse_rule(line) for line in lines)
+
     def is_ordered(self, update: Update) -> bool:
         return all((x, y) in self for x, y in zip1(update))
 
@@ -273,14 +281,15 @@ class Rules:
     def __iter__(self) -> Iterator[Rule]:
         return iter(self.rules)
 
-    def __call__(self, page: int) -> Any:
-        return self.key_func(page)
+    def __len__(self) -> int:
+        return len(self.rules)
 
     def __repr__(self) -> str:
         return repr(self.rules)
 
-    def __len__(self) -> int:
-        return len(self.rules)
+    def __call__(self, page: int) -> Any:
+        # so that it can be used in `sort(..., key=rules)`
+        return self.key_func(page)
 
 
 def middle_page(update: Update) -> int:
@@ -299,16 +308,8 @@ def input_from_text(text: str) -> tuple[Rules, list[Update]]:
 def input_from_lines(lines: Iterable[str]) -> tuple[Rules, list[Update]]:
     rule_lines, update_lines = line_groups(lines)
 
-    def parse_rule(line: str) -> Rule:
-        x, y = line.split('|')
-        return int(x), int(y)
-
-    rules = Rules(parse_rule(line) for line in rule_lines)
-
-    def parse_update(line: str) -> Update:
-        return [int(val) for val in line.split(',')]
-
-    updates = [parse_update(line) for line in update_lines]
+    rules = Rules.from_lines(rule_lines)
+    updates = [[int(val) for val in line.split(',')] for line in update_lines]
 
     return rules, updates
 
