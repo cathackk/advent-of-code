@@ -92,28 +92,28 @@ def part_1(rules: 'Rules', updates: Iterable['Update']) -> int:
 
       - `75` is correctly first because there are rules that put each other page after it:
 
-        >>> sorted((x, y) for x, y in example_rules if x == 75 and y in example_updates[0])
+        >>> example_rules.relevant_rules(75, example_updates[0])
         [(75, 29), (75, 47), (75, 53), (75, 61)]
 
       - `47` is correctly second because `75` must be before it (see above) and every other page
         must be after it:
 
-        >>> sorted((x, y) for x, y in example_rules if x == 47 and y in example_updates[0])
+        >>> example_rules.relevant_rules(47, example_updates[0])
         [(47, 29), (47, 53), (47, 61)]
 
       - `61` is correctly in the middle because `75` and `47` are before it and others are after it:
 
-        >>> sorted((x, y) for x, y in example_rules if x == 61 and y in example_updates[0])
+        >>> example_rules.relevant_rules(61, example_updates[0])
         [(61, 29), (61, 53)]
 
       - `53` is correctly fourth because it is before page number `29`:
 
-        >>> [(x, y) for x, y in example_rules if x == 53 and y in example_updates[0]]
+        >>> example_rules.relevant_rules(53, example_updates[0])
         [(53, 29)]
 
       - `29` is the only page left and so is correctly last:
 
-        >>> [(x, y) for x, y in example_rules if x == 29 and y in example_updates[0]]
+        >>> example_rules.relevant_rules(29, example_updates[0])
         []
 
     Because the first update does not include some page numbers, the ordering rules involving those
@@ -255,6 +255,9 @@ class Rules:
 
     def is_ordered(self, update: Update) -> bool:
         return all((x, y) in self for x, y in zip1(update))
+
+    def relevant_rules(self, first_page: int, update: Update) -> list[Rule]:
+        return sorted((x, y) for x, y in self if x == first_page and y in update)
 
     def compare(self, page_x: int, page_y: int) -> int:
         if (page_x, page_y) in self:
