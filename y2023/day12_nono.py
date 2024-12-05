@@ -3,6 +3,7 @@ Advent of Code 2023
 Day 12: Hot Springs
 https://adventofcode.com/2023/day/12
 """
+
 from functools import lru_cache
 from typing import Iterable
 

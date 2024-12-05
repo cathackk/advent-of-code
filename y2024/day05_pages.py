@@ -3,6 +3,7 @@ Advent of Code 2024
 Day 5: Print Queue
 https://adventofcode.com/2024/day/5
 """
+
 import functools
 from typing import Any, Iterable, Iterator
 

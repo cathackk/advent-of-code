@@ -3,6 +3,7 @@ Advent of Code 2023
 Day 4: Scratchcards
 https://adventofcode.com/2023/day/4
 """
+
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Iterable, Self

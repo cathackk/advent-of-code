@@ -3,6 +3,7 @@ Advent of Code 2016
 Day 12: Leonardo's Monorail
 https://adventofcode.com/2016/day/12
 """
+
 from meta.aoc_tools import data_path
 from y2016 import assembunny
 
