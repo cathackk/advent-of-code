@@ -10,7 +10,7 @@ from typing import Iterable
 from tqdm import tqdm
 
 from common.iteration import ilen
-from common.math import sgn
+from common.maths import sgn
 from common.rect import Rect
 from common.text import parse_line
 from meta.aoc_tools import data_path

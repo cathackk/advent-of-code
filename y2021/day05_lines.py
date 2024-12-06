@@ -7,7 +7,7 @@ https://adventofcode.com/2021/day/5
 from collections import Counter
 from typing import Iterable, Self
 
-from common.math import sgn
+from common.maths import sgn
 from common.rect import Rect
 from common.text import parse_line
 from meta.aoc_tools import data_path

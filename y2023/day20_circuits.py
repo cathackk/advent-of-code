@@ -10,7 +10,7 @@ from typing import Iterable, Self
 
 from common.file import relative_path
 from common.iteration import dgroupby_pairs, diffs, single_value
-from common.math import lcm
+from common.maths import lcm
 from common.text import parse_line
 
 

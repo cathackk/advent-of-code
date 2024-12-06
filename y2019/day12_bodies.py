@@ -8,8 +8,8 @@ from typing import Iterable, Self
 
 from tqdm import tqdm
 
-from common.math import lcm
-from common.math import sgn
+from common.maths import lcm
+from common.maths import sgn
 from common.text import parse_line
 from common.xyz import Point3
 from common.xyz import Vector3

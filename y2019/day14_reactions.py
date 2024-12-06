@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import Iterable, Self
 
 from common.bsrange import BSRange
-from common.math import ceildiv
+from common.maths import ceildiv
 from meta.aoc_tools import data_path
 
 

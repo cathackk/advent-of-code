@@ -10,7 +10,7 @@ from ast import literal_eval
 from dataclasses import dataclass
 from typing import Iterable, Self
 
-from common.math import sgn
+from common.maths import sgn
 from common.text import line_groups
 from meta.aoc_tools import data_path
 

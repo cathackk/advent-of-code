@@ -9,7 +9,7 @@ from typing import Callable, Self
 
 from tqdm import tqdm
 
-from common.math import sgn
+from common.maths import sgn
 from common.rect import Rect
 from meta.aoc_tools import data_path
 from y2019.intcode import load_tape, Machine, Tape

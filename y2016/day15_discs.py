@@ -6,7 +6,7 @@ https://adventofcode.com/2016/day/15
 
 from typing import Iterable
 
-from common.math import modular_inverse
+from common.maths import modular_inverse
 from common.text import parse_line
 from meta.aoc_tools import data_path
 

@@ -8,7 +8,7 @@ import math
 from dataclasses import dataclass
 from typing import Callable, Iterable, Iterator, Self
 
-from common.math import lcm
+from common.maths import lcm
 from common.text import line_groups, parse_line
 from meta.aoc_tools import data_path
 

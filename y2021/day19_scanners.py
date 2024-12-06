@@ -11,7 +11,7 @@ from typing import Iterable, Iterator, Self
 from tqdm import tqdm
 
 from common.iteration import dgroupby_pairs, maxk
-from common.math import sgn
+from common.maths import sgn
 from common.rect import Rect
 from common.text import parse_line
 from common.xyz import Vector3

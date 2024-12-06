@@ -10,7 +10,7 @@ from typing import Iterable, Self
 
 from common.graph import shortest_path
 from common.iteration import dgroupby_pairs
-from common.math import mod1
+from common.maths import mod1
 from common.rect import Rect
 from meta.aoc_tools import data_path
 

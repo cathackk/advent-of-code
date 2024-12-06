@@ -1,7 +1,7 @@
 import math
 from typing import Iterator, Self
 
-from common.math import gcd2, sgn
+from common.maths import gcd2, sgn
 from common.mixin import Orderable
 
 

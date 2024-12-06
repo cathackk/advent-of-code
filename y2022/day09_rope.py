@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Iterable, Self
 
 from common.iteration import dgroupby_pairs
-from common.math import sgn
+from common.maths import sgn
 from common.rect import Rect
 from meta.aoc_tools import data_path
 

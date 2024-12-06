@@ -4,7 +4,7 @@ from itertools import chain
 from typing import Iterable, Iterator, Self
 
 from common.iteration import minmax, unique
-from common.math import sgn
+from common.maths import sgn
 
 Pos = tuple[int, int]
 
@@ -18,6 +18,12 @@ class Rect:
 
     def __repr__(self) -> str:
         return f'{type(self).__name__}({self.top_left!r}, {self.bottom_right!r})'
+
+    def __str__(self) -> str:
+        if self.top_left == (0, 0):
+            return f"[{self.width}x{self.height}]"
+        else:
+            return f"[{self.top_left!r}..{self.bottom_right!r}]"
 
     @classmethod
     def at_origin(cls, width: int, height: int) -> Self:

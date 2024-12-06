@@ -13,8 +13,8 @@ from common.iteration import chunks
 from common.iteration import dgroupby_pairs
 from common.iteration import maxk
 from common.iteration import nth
-from common.math import gcd2
-from common.math import sgn
+from common.maths import gcd2
+from common.maths import sgn
 from common.rect import Rect
 from common.utils import ro
 from meta.aoc_tools import data_path

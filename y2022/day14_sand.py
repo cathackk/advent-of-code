@@ -8,7 +8,7 @@ from itertools import chain
 from typing import Iterable, Self
 
 from common.iteration import zip1
-from common.math import sgn
+from common.maths import sgn
 from common.rect import Rect
 from common.utils import some
 from meta.aoc_tools import data_path

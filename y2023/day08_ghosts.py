@@ -9,7 +9,7 @@ from typing import Iterable, Iterator
 
 from common.file import relative_path
 from common.iteration import ilen
-from common.math import lcm
+from common.maths import lcm
 from common.text import parse_line
 
 

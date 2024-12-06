@@ -19,7 +19,7 @@ import math
 from textwrap import dedent
 from typing import Iterable
 
-from common.math import triangular_root
+from common.maths import triangular_root
 
 Pos = tuple[int, int]
 
