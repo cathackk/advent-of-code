@@ -14,8 +14,7 @@ pylint:
 	pylint --rcfile=.pylintrc common meta y2015 y2016 y2017 y2018 y2020 y2021 y2022 y2023 y2024
 
 doctests:
-    # TODO: y2019
-	py.test --doctest-modules common meta y2015 y2016 y2017 y2018 y2020 y2021 y2022 y2023 y2024
+	py.test --doctest-modules common meta y2015 y2016 y2017 y2018 y2019 y2020 y2021 y2022 y2023 y2024
 
 
 checks-2024: mypy-2024 pylint-2024 doctests-2024
