@@ -7,6 +7,7 @@ https://adventofcode.com/2018/day/3
 from collections import Counter
 from typing import Iterable, Self
 
+from common.canvas import Canvas
 from common.iteration import dgroupby_pairs, single_value
 from common.rect import Rect
 from common.text import parse_line
@@ -183,19 +184,16 @@ def print_claims(
     long_id_color: str = '#',
     bounds: Rect | None = None
 ):
-    canvas: dict[Pos, str] = {}
-    for claim in claims:
-        color = long_id_color if len(id_str := str(claim.id_)) > 1 else id_str
-        canvas.update(
-            (pos, overlapping_color if pos in canvas else color)
-            for pos in claim.rect
-        )
+    def color(claim: Claim) -> str:
+        id_str = str(claim.id_)
+        return id_str if len(id_str) == 1 else long_id_color
 
-    if bounds is None:
-        bounds = Rect.with_all(canvas).grow_by(1, 1)
+    canvas = Canvas(
+        chars=((pos, color(claim)) for claim in claims for pos in claim.rect),
+        blending=lambda a, b: overlapping_color if a != b else None
+    )
 
-    for y in bounds.range_y():
-        print(''.join(canvas.get((x, y), empty_color) for x in bounds.range_x()))
+    canvas.print(empty_char=empty_color, bounds=bounds)
 
 
 def claims_from_text(text: str) -> list[Claim]:

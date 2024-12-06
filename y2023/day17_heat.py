@@ -7,6 +7,7 @@ https://adventofcode.com/2023/day/17
 from dataclasses import dataclass
 from typing import Iterable, Self
 
+from common.canvas import Canvas
 from common.file import relative_path
 from common.graph import shortest_path
 from common.heading import Heading
@@ -262,16 +263,14 @@ def minimize_heat_loss(map_: Map, ultra: bool = False) -> tuple[int, Path]:
 
 
 def draw_path(map_: Map, path: Path) -> None:
-    canvas = {pos: str(val) for pos, val in map_.values.items()}
-    bounds = map_.bounds
+    canvas = Canvas(map_.values, bounds=map_.bounds)
 
-    pos = bounds.top_left
+    pos = map_.bounds.top_left
     for step in path:
         pos = step.move(pos)
-        canvas[pos] = step.caret
+        canvas.draw(pos, step.caret)
 
-    for y in bounds.range_y():
-        print(''.join(canvas[(x, y)] for x in bounds.range_x()))
+    canvas.print()
 
 
 def main(input_fn: str = 'data/17-input.txt') -> tuple[int, int]:

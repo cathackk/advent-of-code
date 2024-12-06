@@ -6,6 +6,7 @@ https://adventofcode.com/2023/day/13
 
 from typing import Iterable, Self
 
+from common.canvas import Canvas
 from common.file import relative_path
 from common.iteration import maybe_next
 from common.rect import Rect
@@ -272,23 +273,20 @@ class Pattern:
 
     def __format__(self, format_spec: str):
         bounds = self.bounds
-        canvas = {
-            pos: ('#' if pos in self.rocks else '·')
-            for pos in bounds
-        }
+        canvas = Canvas({pos: '#' if pos in self.rocks else '·' for pos in bounds})
 
         if format_spec == 'reflection':
             if (refl_x := self.column_reflection) is not None:
                 # arrows
                 bounds = bounds.grow_by(dy=1)
-                canvas.update(
+                canvas.draw_many(
                     ((x, y), char)
                     for x, char in ((refl_x, '>'), (refl_x + 1, '<'))
                     for y in (bounds.top_y, bounds.bottom_y)
                 )
                 # indices
                 bounds = bounds.grow_by(dy=1)
-                canvas.update(
+                canvas.draw_many(
                     ((x, y), str(x)[-1])
                     for x in self.bounds.range_x()
                     for y in (bounds.top_y, bounds.bottom_y)
@@ -297,23 +295,20 @@ class Pattern:
             if (refl_y := self.row_reflection) is not None:
                 # arrows
                 bounds = bounds.grow_by(dx=1)
-                canvas.update(
+                canvas.draw_many(
                     ((x, y), char)
                     for x in (bounds.left_x, bounds.right_x)
                     for y, char in ((refl_y, 'v'), (refl_y + 1, '^'))
                 )
                 # indices
                 bounds = bounds.grow_by(dx=1)
-                canvas.update(
+                canvas.draw_many(
                     ((x, y), str(y)[-1])
                     for x in (bounds.left_x, bounds.right_x)
                     for y in self.bounds.range_y()
                 )
 
-        return '\n'.join(
-            ''.join(canvas.get((x, y), ' ') for x in bounds.range_x()).rstrip()
-            for y in bounds.range_y()
-        )
+        return canvas.render(bounds=bounds)
 
     @classmethod
     def from_file(cls, fn: str) -> list[Self]:

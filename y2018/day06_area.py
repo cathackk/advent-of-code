@@ -7,6 +7,7 @@ https://adventofcode.com/2018/day/6
 import string
 from typing import Iterable
 
+from common.canvas import Canvas
 from common.iteration import dgroupby_pairs_set, single_value
 from common.rect import Pos, Rect
 from meta.aoc_tools import data_path
@@ -230,12 +231,12 @@ def draw_coordinates(
     coordinates_list = list(coordinates)
 
     # draw points
-    canvas = dict(zip(coordinates_list, string.ascii_uppercase))
+    canvas = Canvas(zip(coordinates_list, string.ascii_uppercase))
 
     if including_areas:
         # draw claims for part 1
         areas = claim_areas(coordinates_list, include_infinite=True)
-        canvas.update(
+        canvas.draw_many(
             (area_pos, canvas[pos].lower())
             for pos, area in areas.items()
             for area_pos in area
@@ -245,14 +246,13 @@ def draw_coordinates(
     elif distance_limit is not None:
         # draw safe region for part 2
         region = safe_region(coordinates_list, distance_limit)
-        canvas.update(
+        canvas.draw_many(
             (pos, safe_char)
             for pos in region
             if pos not in canvas
         )
 
-    for y in bounds.range_y():
-        print("".join(canvas.get((x, y), empty_char) for x in bounds.range_x()))
+    canvas.print(empty_char=empty_char, bounds=bounds)
 
 
 def coordinates_from_text(text: str) -> list[Pos]:

@@ -6,6 +6,7 @@ https://adventofcode.com/2019/day/3
 
 from typing import Iterable
 
+from common.canvas import Canvas
 from common.heading import Heading
 from common.iteration import mink
 from common.rect import Rect
@@ -33,7 +34,7 @@ def part_1(wire_1: 'Wire', wire_2: 'Wire') -> int:
 
         >>> (example_wire_1a := wire_from_line('R8,U5,L5,D3'))
         [(Heading.EAST, 8), (Heading.NORTH, 5), (Heading.WEST, 5), (Heading.SOUTH, 3)]
-        >>> draw_wires(example_wire_1a, bounds=Rect((-1, -8), (9, 1)))
+        >>> draw_wires(example_wire_1a, bounds=Rect((0, -7), (8, 0)))
         ···········
         ···········
         ···········
@@ -175,7 +176,7 @@ def draw_wires(
     bounds: Rect = None,
     origin: Pos = (0, 0),
 ) -> None:
-    canvas: dict[Pos, str] = {origin: 'o'}
+    canvas = Canvas({origin: 'o'})
     heading_chars = {
         Heading.NORTH: '|',
         Heading.SOUTH: '|',
@@ -188,25 +189,16 @@ def draw_wires(
         for pos, heading in follow(wire, origin):
             if prev_heading and prev_heading != heading:
                 assert prev_pos
-                assert canvas[prev_pos] in ('|', '-')
-                canvas[prev_pos] = '+'  # curve
+                canvas.draw(prev_pos, '+')  # curve
 
-            if pos not in canvas:
-                canvas[pos] = heading_chars[heading]
-            else:
-                assert canvas[pos] == heading_chars[heading.right()]
-                canvas[pos] = 'X'
+            canvas.draw(pos, heading_chars[heading], blending=lambda a, b: 'X' if a != b else None)
 
             prev_pos, prev_heading = pos, heading
 
     draw_wire(wire_1)
     draw_wire(wire_2 or [])
 
-    if not bounds:
-        bounds = Rect.with_all(canvas).grow_by(1, 1)
-
-    for y in bounds.range_y():
-        print(''.join(canvas.get((x, y), '·') for x in bounds.range_x()))
+    canvas.print(empty_char='·', bounds=bounds, margin=1)
 
 
 def follow(wire: Wire, origin: Pos = (0, 0)) -> Iterable[tuple[Pos, Heading]]:

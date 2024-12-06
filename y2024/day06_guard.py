@@ -458,7 +458,7 @@ class Map:
         show_directional_paths: bool = False,
         extra: dict[Pos, str] | None = None,
     ) -> str:
-        canvas = Canvas(default_char='·', bounds=self.bounds)
+        canvas = Canvas(bounds=self.bounds)
 
         # draw obstructions
         canvas.draw_many((pos, '#') for pos in self.obstructions)
@@ -483,7 +483,7 @@ class Map:
         if extra:
             canvas.draw_many(extra)
 
-        return str(canvas)
+        return canvas.render(empty_char='·')
 
     def draw_loop(self, new_obstruction: Pos) -> str:
         # places new obstruction at given position, the draws the loop the guard would make with it
