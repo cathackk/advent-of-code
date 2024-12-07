@@ -27,6 +27,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/4)) Day 4: [Ceres Search](y2024/day04_word_search.py)
 - ([aoc](https://adventofcode.com/2024/day/5)) Day 5: [Print Queue](y2024/day05_pages.py)
 - ([aoc](https://adventofcode.com/2024/day/6)) Day 6: [Guard Gallivant](y2024/day06_guard.py)
+- ([aoc](https://adventofcode.com/2024/day/7)) Day 7: [Bridge Repair](y2024/day07_equations.py)
 - ...
 
 

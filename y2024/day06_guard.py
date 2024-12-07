@@ -357,7 +357,7 @@ class Map:
 
         # follow the guard in the unmodified map
         original_path = list(self.trace_guard_path())
-        for guard in tqdm(original_path, desc="placing obstructions", unit=" positions"):
+        for guard in tqdm(original_path, desc="placing obstructions", unit=" positions", delay=1.0):
 
             # only consider positions where the guard doesn't face an existing obstruction
             if (facing_pos := guard.next_pos()) in self.obstructions:
