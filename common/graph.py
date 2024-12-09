@@ -62,7 +62,7 @@ def shortest_path(
         initial=1,
         unit=" nodes",
         unit_scale=True,
-        delay=1.0
+        delay=1.0,
     ) as progress:
         while True:
 

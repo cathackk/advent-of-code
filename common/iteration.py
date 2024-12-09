@@ -334,6 +334,7 @@ def slidingw(items: Iterable[T], size: int, wrap: bool = False) -> Iterable[tupl
             del buffer[0]
 
 
+# TODO: replace with itertools.batched
 def chunks(
     values: Iterable[T],
     chunk_size: int,

@@ -415,8 +415,8 @@ def part_2(deck_1: 'Deck', deck_2: 'Deck', print_progress: bool = False) -> int:
 class Deck:
     def __init__(self, cards: Iterable[int]):
         top_card, bottom_card, length = Link.build_chain(cards)
-        self._top_card: Link | None = top_card
-        self._bottom_card: Link | None = bottom_card
+        self._top_card: Link[int] | None = top_card
+        self._bottom_card: Link[int] | None = bottom_card
         self.length = length
 
     def __repr__(self):
@@ -430,14 +430,14 @@ class Deck:
             return "(empty)"
 
     @property
-    def top_card(self) -> Link:
+    def top_card(self) -> Link[int]:
         try:
             return some(self._top_card)
         except AssertionError as exc:
             raise IndexError("empty deck") from exc
 
     @property
-    def bottom_card(self) -> Link:
+    def bottom_card(self) -> Link[int]:
         try:
             return some(self._bottom_card)
         except AssertionError as exc:

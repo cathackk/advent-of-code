@@ -169,7 +169,13 @@ def count_active(beam_func: BeamFunc, area_size: int) -> int:
 def place_ship(beam_func: BeamFunc, ship_size: int) -> tuple[int, int]:
     assert ship_size > 1
 
-    for ship_top, ranges in tqdm(enumerate(slidingw(beam_x_ranges(beam_func), ship_size))):
+    for ship_top, ranges in tqdm(
+        enumerate(slidingw(beam_x_ranges(beam_func), ship_size)),
+        desc="placing ship",
+        unit=" positions",
+        unit_scale=True,
+        delay=1.0,
+    ):
         top, *_, bottom = ranges
         if len(bottom) >= ship_size:
             ship_left, ship_right = bottom.start, bottom.start + ship_size - 1

@@ -114,7 +114,8 @@ def create_groups(links: Iterable[Link]) -> list[SortedGroup]:
     groups_dict = create_groups_dict(links)
 
     # return only unique objects from the dict's values
-    return sorted(sorted(group) for group in IdentitySet(groups_dict.values()))
+    groups_set: IdentitySet[set[int]] = IdentitySet(groups_dict.values())
+    return sorted(sorted(group) for group in groups_set)
 
 
 def create_groups_dict(links: Iterable[Link]) -> dict[int, Group]:
