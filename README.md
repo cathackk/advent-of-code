@@ -29,6 +29,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/6)) Day 6: [Guard Gallivant](y2024/day06_guard.py)
 - ([aoc](https://adventofcode.com/2024/day/7)) Day 7: [Bridge Repair](y2024/day07_equations.py)
 - ([aoc](https://adventofcode.com/2024/day/8)) Day 8: [Resonant Collinearity](y2024/day08_antennas.py)
+- ([aoc](https://adventofcode.com/2024/day/9)) Day 9: [Disk Fragmenter](y2024/day09_defrag.py)
 - ...
 
 
