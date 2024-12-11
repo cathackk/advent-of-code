@@ -31,6 +31,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/8)) Day 8: [Resonant Collinearity](y2024/day08_antennas.py)
 - ([aoc](https://adventofcode.com/2024/day/9)) Day 9: [Disk Fragmenter](y2024/day09_defrag.py)
 - ([aoc](https://adventofcode.com/2024/day/10)) Day 10: [Hoof It](y2024/day10_trails.py)
+- ([aoc](https://adventofcode.com/2024/day/11)) Day 11: [Plutonian Pebbles](y2024/day11_stones.py)
 - ...
 
 
