@@ -6,6 +6,8 @@ https://adventofcode.com/2024/day/7
 
 from typing import Iterable
 
+from tqdm import tqdm
+
 from common.file import relative_path
 from common.text import parse_line
 
@@ -80,7 +82,7 @@ def part_1(equations: Iterable['Equation']) -> int:
     from just the equations that could possibly be true. In the above example, the sum of the test
     values for the three equations listed above is:
 
-        >>> sum(equation[0] for equation in example_equations if is_solvable(equation))
+        >>> sum(equation[0] for equation in solvables(example_equations))
         3749
 
     Determine which equations could possibly be true. **What is their total calibration result?**
@@ -90,12 +92,12 @@ def part_1(equations: Iterable['Equation']) -> int:
         3749
     """
 
-    solvables = [equation for equation in equations if is_solvable(equation)]
-    result = sum(test_value for test_value, _ in solvables)
+    solvable_equations = list(solvables(equations))
+    result = sum(test_value for test_value, _ in solvable_equations)
 
     print(
         f"part 1: "
-        f"{len(solvables)} equations can be true; "
+        f"{len(solvable_equations)} equations can be true; "
         f"their total calibration result is {result}"
     )
     return result
@@ -132,7 +134,7 @@ def part_2(equations: Iterable['Equation']) -> int:
     the new three that can now be made by also using `||`) produces the new **total calibration
     result** of:
 
-        >>> sum(eq[0] for eq in example_equations if is_solvable(eq, extended_operators))
+        >>> sum(eq[0] for eq in solvables(example_equations, extended_operators))
         11387
 
     Using your new knowledge of elephant hiding spots, determine which equations could possibly be
@@ -143,12 +145,12 @@ def part_2(equations: Iterable['Equation']) -> int:
         11387
     """
 
-    solvables = [equation for equation in equations if is_solvable(equation, ('+', '*', '||'))]
-    result = sum(test_value for test_value, _ in solvables)
+    solvable_equations = list(solvables(equations, ops=('+', '*', '||')))
+    result = sum(test_value for test_value, _ in solvable_equations)
 
     print(
         f"part 2: "
-        f"{len(solvables)} equations can be true; "
+        f"{len(solvable_equations)} equations can be true; "
         f"their total calibration result is {result}"
     )
     return result
@@ -159,6 +161,18 @@ Op = str
 Solution = list[Op]
 
 BASIC_OPS = ('+', '*')
+
+
+def solvables(equations: Iterable[Equation], ops: Iterable[Op] = BASIC_OPS) -> Iterable[Equation]:
+    equations_list = list(equations)
+    ops_tuple = tuple(ops)
+    return tqdm(
+        (eq for eq in equations_list if is_solvable(eq, ops_tuple)),
+        total=len(equations_list),
+        unit=" equations",
+        desc="solving equations",
+        delay=1.0,
+    )
 
 
 def is_solvable(equation: Equation, ops: tuple[Op, ...] = BASIC_OPS) -> bool:
