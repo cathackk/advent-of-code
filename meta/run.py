@@ -69,6 +69,9 @@ def run(year_dir: str, day_paths: list[str], input_path: str, show_description: 
             click.echo(f">> {exc}", err=True)
             raise Exit(1) from exc
 
+        if show_description and len(day_paths) > 1:
+            click.echo("", err=True)
+
 
 if __name__ == '__main__':
     # pylint: disable=no-value-for-parameter
