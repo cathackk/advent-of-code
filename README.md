@@ -32,6 +32,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/9)) Day 9: [Disk Fragmenter](y2024/day09_defrag.py)
 - ([aoc](https://adventofcode.com/2024/day/10)) Day 10: [Hoof It](y2024/day10_trails.py)
 - ([aoc](https://adventofcode.com/2024/day/11)) Day 11: [Plutonian Pebbles](y2024/day11_stones.py)
+- ([aoc](https://adventofcode.com/2024/day/12)) Day 12: [Garden Groups](y2024/day12_garden.py)
 - ...
 
 
