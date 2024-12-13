@@ -1,5 +1,5 @@
 import math
-from typing import Iterator, Self
+from typing import Any, Iterator, Self
 
 from common.maths import gcd2, sgn
 from common.mixin import Orderable
@@ -8,9 +8,9 @@ from common.mixin import Orderable
 class XY(Orderable):
     __slots__ = ['x', 'y']
 
-    def __init__(self, x: int, y: int):
-        self.x = x
-        self.y = y
+    def __init__(self, x: Any, y: Any):
+        self.x = int(x)
+        self.y = int(y)
 
     def __repr__(self) -> str:
         return f'{type(self).__name__}({self.x!r}, {self.y!r})'
@@ -27,8 +27,11 @@ class Vector(XY):
     def __add__(self, other: Self) -> Self:
         return type(self)(self.x + other.x, self.y + other.y)
 
-    def __mul__(self, k: int) -> Self:
-        return type(self)(self.x * k, self.y * k)
+    def __mul__(self, right: int) -> Self:
+        return type(self)(self.x * right, self.y * right)
+
+    def __rmul__(self, left: int) -> Self:
+        return self * left
 
     def __floordiv__(self, k: int) -> Self:
         return type(self)(self.x // k, self.y // k)
