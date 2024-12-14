@@ -4,7 +4,7 @@ from common.rect import Rect
 
 
 Pos = tuple[int, int]
-PosChar = tuple[Pos, Any]
+PosChar = tuple[Pos | Iterable[int], Any]
 PosChars = Iterable[PosChar] | dict[Pos, Any]
 Blending = Callable[[str, str], str | None]
 
@@ -41,7 +41,8 @@ class Canvas:
     def draw_many(self, chars: PosChars, blending: Blending | None = None) -> None:
         items: Iterable[PosChar] = chars.items() if isinstance(chars, dict) else chars
         for pos, obj in items:
-            self._draw_single_char(pos, str(obj), blending)
+            x, y = pos
+            self._draw_single_char((x, y), str(obj), blending)
 
     def draw(self, pos: Pos, obj: Any, blending: Blending | None = None) -> str:
         text = str(obj)
