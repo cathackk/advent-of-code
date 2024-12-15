@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Self
+from typing import Iterable, Self
 
 
 class Heading(Enum):
@@ -55,6 +55,14 @@ class Heading(Enum):
             Heading.SOUTH: Heading.NORTH,
             Heading.WEST: Heading.EAST,
         }[self]
+
+    # TODO: use where available
+    def __add__(self, right: Iterable[int]) -> tuple[int, int]:
+        x, y = right
+        return x + self.dx, y + self.dy
+
+    def __radd__(self, left: Iterable[int]) -> tuple[int, int]:
+        return self + left
 
     def move(self, pos: tuple[int, int], distance: int = 1) -> tuple[int, int]:
         x, y = pos

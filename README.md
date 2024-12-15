@@ -35,6 +35,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/12)) Day 12: [Garden Groups](y2024/day12_garden.py)
 - ([aoc](https://adventofcode.com/2024/day/13)) Day 13: [Claw Contraption](y2024/day13_claw.py)
 - ([aoc](https://adventofcode.com/2024/day/14)) Day 14: [Restroom Redoubt](y2024/day14_robots.py)
+- ([aoc](https://adventofcode.com/2024/day/15)) Day 15: [Warehouse Woes](y2024/day15_warehouse.py)
 - ...
 
 
