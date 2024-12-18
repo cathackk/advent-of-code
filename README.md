@@ -37,6 +37,8 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/14)) Day 14: [Restroom Redoubt](y2024/day14_robots.py)
 - ([aoc](https://adventofcode.com/2024/day/15)) Day 15: [Warehouse Woes](y2024/day15_warehouse.py)
 - ...
+- ([aoc](https://adventofcode.com/2024/day/18)) Day 18: [RAM Run](y2024/day18_ram.py)
+- ...
 
 
 ### 2023

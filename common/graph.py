@@ -67,6 +67,7 @@ def shortest_path(
         while True:
 
             if not unvisited_nodes:
+                # TODO: raise more specific error
                 raise ValueError("path not found")
             # visit cheapest unvisited node
             node_info = heapq.heappop(unvisited_nodes)
