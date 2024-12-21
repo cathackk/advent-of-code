@@ -1,4 +1,5 @@
 import itertools
+from collections import Counter
 from collections.abc import Sized
 from typing import Any, Callable, Generator, Iterable, Iterator, TypeVar
 
@@ -652,3 +653,17 @@ def sorted_dict(items: dict[K, V] | Iterable[tuple[K ,V]]) -> dict[K, V]:
 
     items_iterable = items.items() if isinstance(items, dict) else items
     return dict(sorted((k, v) for k, v in items_iterable))
+
+
+def sorted_counter(items: Iterable[T]) -> dict[T, int]:
+    """
+    Counter results with sorted by key:
+
+        >>> sorted_counter('ccaabccdda')
+        {'a': 3, 'b': 1, 'c': 4, 'd': 2}
+        >>> sorted_counter([200, 300, 100, 200])
+        {100: 1, 200: 2, 300: 1}
+        >>> sorted_counter([])
+        {}
+    """
+    return dict(sorted(Counter(items).items()))

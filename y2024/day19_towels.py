@@ -5,10 +5,9 @@ https://adventofcode.com/2024/day/19
 """
 
 from functools import lru_cache
-from typing import Iterable, Iterator, Sequence, TypeAlias
+from typing import Iterable, Sequence, TypeAlias
 
 from common.file import relative_path
-from common.iteration import maybe_next
 
 
 Pattern: TypeAlias = str
@@ -185,6 +184,7 @@ def _decompose_design_lru(design: Design, patterns: tuple[Pattern, ...]) -> list
 
 
 def decompose_design_all(design: Design, patterns: Patterns) -> Iterable[list[Pattern]]:
+    # only used in doctests
     if not design:
         yield []
         return

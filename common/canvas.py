@@ -42,9 +42,12 @@ class Canvas:
         items: Iterable[PosChar] = chars.items() if isinstance(chars, dict) else chars
         for pos, obj in items:
             x, y = pos
-            self._draw_single_char((x, y), str(obj), blending)
+            self.draw((x, y), obj, blending)
 
     def draw(self, pos: Pos, obj: Any, blending: Blending | None = None) -> str:
+        if obj is None:
+            return ''
+
         text = str(obj)
         if len(text) == 0:
             return ''
