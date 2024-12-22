@@ -667,3 +667,22 @@ def sorted_counter(items: Iterable[T]) -> dict[T, int]:
         {}
     """
     return dict(sorted(Counter(items).items()))
+
+
+def first_key_dict(items: Iterable[tuple[K, V]]) -> dict[K, V]:
+    """
+    Builds a dict, keeping the first key and its corresponding value.
+
+        >>> example = [('a', 1), ('a', 2), ('b', 3), ('b', 4), ('b', 5)]
+        >>> dict(example)
+        {'a': 2, 'b': 5}
+        >>> first_key_dict(example)
+        {'a': 1, 'b': 3}
+        >>> first_key_dict(((n % 4, n) for n in range(0, 100, 7)))
+        {0: 0, 3: 7, 2: 14, 1: 21}
+    """
+
+    result: dict[K, V] = {}
+    for key, value in items:
+        result.setdefault(key, value)
+    return result
