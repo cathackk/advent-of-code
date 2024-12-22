@@ -258,7 +258,8 @@ def part_2(race: 'Racetrack', threshold: int = 100) -> int:
         {50: 32, 52: 31, 54: 29, 56: 39, 58: 25, 60: 23, 62: 20,
          64: 19, 66: 12, 68: 14, 70: 12, 72: 22, 74: 4, 76: 3}
 
-    Find the best cheats using the updated cheating rules. How many cheats would save you at least 100 picoseconds?
+    Find the best cheats using the updated cheating rules.
+    **How many cheats would save you at least 100 picoseconds?**
 
         >>> part_2(example, threshold=50)
         part 2: to save at least 50 picoseconds, there are 285 long cheats
@@ -340,10 +341,10 @@ class Racetrack:
     def all_long_cheat_values(self, max_length: int = 20) -> Iterable[int]:
         return (
             save
-            for cheat_start in self.track
+            for cheat_start, time_start in self.track.items()
             for cheat_end, cheat_length in manhattan_iter(cheat_start, max_length)
             if cheat_end in self.track
-            if (normal_length := self.track[cheat_end] - self.track[cheat_start]) > 0
+            if (normal_length := self.track[cheat_end] - time_start) > 0
             if (save := normal_length - cheat_length) > 0
         )
 

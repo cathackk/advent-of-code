@@ -70,3 +70,17 @@ class Heading(Enum):
             x + self.dx * distance,
             y + self.dy * distance
         )
+
+    @classmethod
+    def from_vector(cls, vec: tuple[int, int]) -> Iterable['Heading']:
+        match vec:
+            case 0, dy if dy < 0:
+                return (cls.NORTH for _ in range(abs(dy)))
+            case dx, 0 if dx > 0:
+                return (cls.EAST for _ in range(dx))
+            case 0, dy if dy > 0:
+                return (cls.SOUTH for _ in range(dy))
+            case dx, 0 if dx < 0:
+                return (cls.WEST for _ in range(abs(dx)))
+            case _:
+                raise ValueError(f"vector must be ortogonal to one axis, got {vec}")
