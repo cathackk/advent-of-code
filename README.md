@@ -42,6 +42,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/20)) Day 20: [Race Condition](y2024/day20_race.py)
 - ([aoc](https://adventofcode.com/2024/day/21)) Day 21: [Keypad Conundrum](y2024/day21_keypads.py)
 - ([aoc](https://adventofcode.com/2024/day/22)) Day 22: [Monkey Market](y2024/day22_market.py)
+- ([aoc](https://adventofcode.com/2024/day/23)) Day 23: [LAN Party](y2024/day23_network.py)
 - ...
 
 
