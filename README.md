@@ -44,6 +44,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2024/day/22)) Day 22: [Monkey Market](y2024/day22_market.py)
 - ([aoc](https://adventofcode.com/2024/day/23)) Day 23: [LAN Party](y2024/day23_network.py)
 - ...
+- ([aoc](https://adventofcode.com/2024/day/25)) Day 25: [Code Chronicle](y2024/day25_locks.py)
 
 
 ### 2023
