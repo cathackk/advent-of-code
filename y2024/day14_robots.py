@@ -19,6 +19,8 @@ from common.xy import Point, Vector
 
 def part_1(robots: 'Robots', seconds: int = 100) -> int:
     """
+    BUMPY BUMPY
+    
     One of The Historians needs to use the bathroom; fortunately, you know there's a bathroom near
     an unvisited location on their list, and so you're all quickly teleported directly to the lobby
     of Easter Bunny Headquarters.
