@@ -5,6 +5,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 
 ## Index
 
+- [2025](#2025)
 - [2024](#2024)
 - [2023](#2023)
 - [2022](#2022)
@@ -15,6 +16,13 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - [2017](#2017)
 - [2016](#2016)
 - [2015](#2015)
+
+
+### 2025
+
+([aoc 2025 event](https://adventofcode.com/2025))
+
+- ...
 
 
 ### 2024
