@@ -34,6 +34,15 @@ def _set_current_path_to_root() -> None:
     os.chdir(os.path.realpath(root_dir))
 
 
+def days_count(year: int) -> int:
+    if year < 2015:
+        raise IndexError("year out of range")
+    elif year < 2025:
+        return 25
+    else:
+        return 12
+
+
 def index_lines() -> Iterable[str]:
     # years in reverse order
     years = list(year_dirs())[::-1]
@@ -66,7 +75,7 @@ def index_lines() -> Iterable[str]:
                 prev_day = day
                 yield f"- ([aoc]({desc.aoc_url})) Day {desc.day}: [{desc.title}]({desc.path})"
 
-        if prev_day < 25:
+        if prev_day < days_count(year):
             yield "- ..."
 
 
