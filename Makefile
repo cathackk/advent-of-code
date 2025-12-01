@@ -19,14 +19,14 @@ doctests:
 
 checks-2024: mypy-2024 pylint-2024 doctests-2024
 
-mypy-2024:
-	mypy -p common -p meta -p y2024
+mypy-2025:
+	mypy -p common -p meta -p y2025
 
-pylint-2024:
-	pylint --rcfile=.pylintrc common meta y2024
+pylint-2025:
+	pylint --rcfile=.pylintrc common meta y2025
 
-doctests-2024:
-	py.test --doctest-modules common meta y2024
+doctests-2025:
+	py.test --doctest-modules common meta y2025
 
 
 create-readme:
@@ -53,3 +53,4 @@ run:
 	python3 -m meta.run --year 2022 --day all
 	python3 -m meta.run --year 2023 --day all
 	python3 -m meta.run --year 2024 --day all
+	python3 -m meta.run --year 2025 --day all
