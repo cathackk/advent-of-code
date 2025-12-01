@@ -37,10 +37,7 @@ def _set_current_path_to_root() -> None:
 def days_count(year: int) -> int:
     if year < 2015:
         raise IndexError("year out of range")
-    elif year < 2025:
-        return 25
-    else:
-        return 12
+    return 25 if year < 2025 else 12
 
 
 def index_lines() -> Iterable[str]:
