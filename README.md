@@ -23,6 +23,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 ([aoc 2025 event](https://adventofcode.com/2025))
 
 - ([aoc](https://adventofcode.com/2025/day/1)) Day 1: [Secret Entrance](y2025/day01_safe.py)
+- ([aoc](https://adventofcode.com/2025/day/2)) Day 2: [Gift Shop](y2025/day02_digits.py)
 - ...
 
 
