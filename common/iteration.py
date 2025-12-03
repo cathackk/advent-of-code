@@ -517,6 +517,30 @@ def max_all(values: Iterable[T], key: Callable[[T], V] = None) -> list[T]:
         raise ValueError("max_all() arg is an empty sequence")
 
 
+def maxi(values: Iterable[T], key: Callable[[T], V] = None) -> tuple[T, int]:
+    """
+        >>> maxi(["dog", "llama", "monkey", "cat"], key=len)
+        ('monkey', 2)
+        >>> maxi([74, 92, 23, 48, 92, 40])
+        (92, 1)
+    """
+    max_k = None
+    max_v = None
+    max_index = None
+    any_value = False
+
+    for index, value in enumerate(values):
+        k = key(value) if key else value
+        if max_k is None or k > max_k:
+            max_k, max_v, max_index = k, value, index
+        any_value = True
+
+    if any_value:
+        return some(max_v), some(max_index)
+    else:
+        raise ValueError("maxi() arg is an empty sequence")
+
+
 def picking(items: Iterable[T]) -> Iterable[tuple[T, list[T]]]:
     """
         >>> list(picking('ABC'))
