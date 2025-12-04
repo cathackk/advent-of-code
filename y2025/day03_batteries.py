@@ -3,7 +3,7 @@ Advent of Code 2025
 Day 3: Lobby
 https://adventofcode.com/2025/day/3
 """
-from itertools import combinations
+
 from typing import Iterable
 
 from tqdm import tqdm
