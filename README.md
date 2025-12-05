@@ -26,6 +26,7 @@ My solutions for [Advent of Code](https://adventofcode.com/) events.
 - ([aoc](https://adventofcode.com/2025/day/2)) Day 2: [Gift Shop](y2025/day02_digits.py)
 - ([aoc](https://adventofcode.com/2025/day/3)) Day 3: [Lobby](y2025/day03_batteries.py)
 - ([aoc](https://adventofcode.com/2025/day/4)) Day 4: [Printing Department](y2025/day04_forklifts.py)
+- ([aoc](https://adventofcode.com/2025/day/5)) Day 5: [Cafeteria](y2025/day05_ranges.py)
 - ...
 
 
